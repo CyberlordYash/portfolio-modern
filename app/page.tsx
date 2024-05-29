@@ -1,8 +1,11 @@
+import Approach from "@/components/Approach";
+import Experience from "@/components/Experience";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import { FloatingNav } from "@/components/ui/FloatingNav";
+import { TracingBeam } from "@/components/ui/tracingBeam";
 import Image from "next/image";
 import { FaHome } from "react-icons/fa";
 
@@ -13,10 +16,14 @@ export default function Home() {
         <FloatingNav
           navItems={[{ name: "Home", link: "/", icon: <FaHome /> }]}
         />
-        <Hero />
-        <Grid />
-        <RecentProjects />
-        <Skills />
+        <TracingBeam>
+          <Hero />
+          <Grid />
+          <RecentProjects />
+          <Skills />
+          <Experience />
+          <Approach />
+        </TracingBeam>
       </div>
     </main>
   );
