@@ -17,7 +17,6 @@ const config = {
     "./src/**/*.{ts,tsx}",
     "./data/**/*.{ts,tsx}",
   ],
-  darkMode: "class",
   prefix: "",
   theme: {
     container: {
