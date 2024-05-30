@@ -2,7 +2,7 @@ import React from "react";
 import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
-import { SiLeetcode } from "react-icons/si";
+import { SiLeetcode, SiLinkedin } from "react-icons/si";
 import { Meteors } from "./ui/Metors";
 const Hero = () => {
   return (
@@ -41,10 +41,13 @@ const Hero = () => {
             <span className=" text-green-400">ia</span>
           </p>
 
-          <a href="" className=" mt-3">
+          <a
+            href="https://www.linkedin.com/in/yash-sachan-187405209/"
+            className=" mt-3"
+          >
             <MagicButton
-              title="Leetcode"
-              icon={<SiLeetcode />}
+              title="Let's Connect"
+              icon={<SiLinkedin />}
               position="left"
             />
           </a>

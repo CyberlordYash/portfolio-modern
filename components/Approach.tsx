@@ -27,13 +27,12 @@ const Approach = () => {
           description="Once we agree on the plan, I cue my lofi playlist and dive into coding. From initial sketches to polished code, I keep you updated every step of the way."
         >
           <CanvasRevealEffect
-            animationSpeed={3}
+            animationSpeed={5}
             containerClassName="bg-black"
             colors={[
               [236, 72, 153],
               [232, 121, 249],
             ]}
-            dotSize={2}
           />
           {/* Radial gradient for the cute fade */}
           <div className="absolute inset-0 [mask-image:radial-gradient(400px_at_center,white,transparent)] bg-black/50 dark:bg-black/90" />
@@ -44,7 +43,7 @@ const Approach = () => {
           description="This is where the magic happens! Based on the approved design, I'll translate everything into functional code, building your website from the ground up."
         >
           <CanvasRevealEffect
-            animationSpeed={3}
+            animationSpeed={5}
             containerClassName="bg-sky-600"
             colors={[[125, 211, 252]]}
           />

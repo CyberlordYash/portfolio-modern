@@ -120,12 +120,14 @@ export const BentoGridItem = ({
 
           {id === 3 && (
             <div className=" flex gap-1 lg:gap-5 w-fit absolute -right-3 lg:-right-2">
-              <MagicButton
-                title="Check my Skills"
-                icon={<IoCopyOutline />}
-                position="left"
-                otherClasses="bg-[#240750]"
-              />
+              <a href="#skills">
+                <MagicButton
+                  title="Check my Skills"
+                  icon={<IoCopyOutline />}
+                  position="left"
+                  otherClasses="bg-[#240750]"
+                />
+              </a>
               <div className=" flex flex-col gap-3 lg:gap-8 ">
                 {["React.js", "Next.js", "TypeScript"].map((item) => (
                   <span

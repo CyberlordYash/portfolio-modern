@@ -2,7 +2,7 @@ import { FaReact } from "react-icons/fa";
 export const navItems = [
   { name: "About", link: "#about" },
   { name: "Projects", link: "#projects" },
-  { name: "Testimonials", link: "#testimonials" },
+  { name: "Skills", link: "#skills" },
   { name: "Contact", link: "#contact" },
 ];
 
@@ -52,9 +52,9 @@ export const gridItems = [
 
   {
     id: 5,
-    title: "Currently building a JS Animation library",
-    description: "The Inside Scoop",
-    className: "md:col-span-3 md:row-span-2",
+    title: "College: Indian Institue of Information Technology Sonepat",
+    description: "Bachelor of Engineering in Computer Science",
+    className: "md:col-span-3 md:row-span-2 text-md",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
     titleClassName: "justify-center md:justify-start lg:justify-center",
     img: "/b5.svg",
@@ -204,6 +204,7 @@ export const socialMedia = [
   {
     id: 1,
     img: "/git.svg",
+    link: "https://github.com/CyberlordYash",
   },
   {
     id: 2,
@@ -212,5 +213,6 @@ export const socialMedia = [
   {
     id: 3,
     img: "/link.svg",
+    link: "https://www.linkedin.com/in/yash-sachan-187405209/",
   },
 ];
