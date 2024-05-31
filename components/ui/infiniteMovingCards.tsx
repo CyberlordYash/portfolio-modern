@@ -2,10 +2,12 @@
 
 import { cn } from "@/utils/cn";
 import React, { useEffect, useState } from "react";
-import { FaReact } from "react-icons/fa";
-import { SiNextdotjs } from "react-icons/si";
+import { FaNode, FaReact } from "react-icons/fa";
+import { SiExpress, SiMongodb, SiNextdotjs } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
 import { PiFileCppFill } from "react-icons/pi";
+import { PiFileSqlLight } from "react-icons/pi";
+import { RiFirebaseLine } from "react-icons/ri";
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -102,15 +104,28 @@ export const InfiniteMovingCards = ({
                 {item.quote}
               </span>
             </blockquote>
-            {item.title == "1" && <FaReact className=" w-[180px] h-[180px]" />}
+            {item.title == "1" && <FaReact className=" w-[170px] h-[170px]" />}
             {item.title == "2" && (
-              <SiNextdotjs className=" w-[180px] h-[180px]" />
+              <SiNextdotjs className=" w-[170px] h-[170px]" />
             )}
             {item.title == "3" && (
-              <IoLogoJavascript className=" w-[180px] h-[180px]" />
+              <IoLogoJavascript className=" w-[170px] h-[170px]" />
             )}
             {item.title == "4" && (
-              <PiFileCppFill className=" w-[180px] h-[180px]" />
+              <PiFileCppFill className=" w-[170px] h-[170px]" />
+            )}
+            {item.title == "5" && (
+              <PiFileSqlLight className=" w-[170px] h-[170px]" />
+            )}
+            {item.title == "6" && <FaNode className=" w-[170px] h-[170px]" />}
+            {item.title == "7" && (
+              <SiMongodb className=" w-[170px] h-[170px]" />
+            )}
+            {item.title == "8" && (
+              <RiFirebaseLine className=" w-[170px] h-[170px]" />
+            )}
+            {item.title == "9" && (
+              <SiExpress className=" w-[170px] h-[170px]" />
             )}
           </li>
         ))}

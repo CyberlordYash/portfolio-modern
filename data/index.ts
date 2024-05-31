@@ -129,9 +129,29 @@ export const testimonials = [
     title: "4",
   },
   {
-    quote: "React JS",
-    name: "Web Develop,emt",
-    title: "--",
+    quote: "SQL",
+    name: "Web Develop",
+    title: "5",
+  },
+  {
+    quote: "Node js",
+    name: "Web Develop",
+    title: "6",
+  },
+  {
+    quote: "Mongo DB",
+    name: "Web Develop",
+    title: "7",
+  },
+  {
+    quote: "FireBase",
+    name: "Web Develop",
+    title: "8",
+  },
+  {
+    quote: "Express",
+    name: "Web Develop",
+    title: "9",
   },
 ];
 
