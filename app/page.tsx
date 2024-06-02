@@ -1,5 +1,6 @@
 "use client";
 import Approach from "@/components/Approach";
+import Certificates from "@/components/Certificates";
 import Experience from "@/components/Experience";
 import Footer from "@/components/Footer";
 import Grid from "@/components/Grid";
@@ -24,7 +25,7 @@ export default function Home() {
           <RecentProjects />
 
           <Skills />
-
+          <Certificates />
           <Experience />
 
           <Approach />

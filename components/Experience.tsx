@@ -14,7 +14,7 @@ const Experience = () => {
           <Button
             key={card.id}
             duration={Math.floor(Math.random() * 8000) + 1000}
-            className=" hover:bg-blue-900 flex-1 text-white-100
+            className=" hover:bg-gradient-to-r from-violet-600 to-indigo-600 flex-1 text-white-100
       border-neutral-200 dark:border-slate-800
           "
           >
