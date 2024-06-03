@@ -13,13 +13,15 @@ const Certificates = () => {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
           <p>Web Dev Bootcamp</p>
-          <Image
-            src={Certificate1}
-            alt="dummy image"
-            width="1000"
-            height="1000"
-            className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
-          />
+          <a href="https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/">
+            <Image
+              src={Certificate1}
+              alt="dummy image"
+              width="1000"
+              height="1000"
+              className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
+            />
+          </a>
         </div>
       ),
     },
@@ -29,13 +31,15 @@ const Certificates = () => {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
           <p>DSA C++</p>
-          <Image
-            src={Certificate2}
-            alt="dummy image"
-            width="1000"
-            height="1000"
-            className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
-          />
+          <a href="https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/">
+            <Image
+              src={Certificate2}
+              alt="dummy image"
+              width="1000"
+              height="1000"
+              className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
+            />
+          </a>
         </div>
       ),
     },
@@ -45,13 +49,15 @@ const Certificates = () => {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
           <p>Node js</p>
-          <Image
-            src={Certificate3}
-            alt="dummy image"
-            width="1000"
-            height="1000"
-            className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
-          />
+          <a href="https://www.udemy.com/certificate/UC-e1548ade-aca5-40b4-a66c-d17e7230dbcc/">
+            <Image
+              src={Certificate3}
+              alt="dummy image"
+              width="1000"
+              height="1000"
+              className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
+            />
+          </a>
         </div>
       ),
     },
@@ -61,13 +67,15 @@ const Certificates = () => {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-lg md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
           <p>AWS</p>
-          <Image
-            src={Certificate4}
-            alt="dummy image"
-            width="1000"
-            height="1000"
-            className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
-          />
+          <a href="https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq">
+            <Image
+              src={Certificate4}
+              alt="dummy image"
+              width="1000"
+              height="1000"
+              className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
+            />
+          </a>
         </div>
       ),
     },
