@@ -3,7 +3,9 @@ import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
 import { SiLeetcode, SiLinkedin } from "react-icons/si";
+import "./hero.css";
 import { Meteors } from "./ui/Metors";
+import { SiCodechef } from "react-icons/si";
 const Hero = () => {
   return (
     <div className="pb-20 pt-36">
@@ -41,16 +43,26 @@ const Hero = () => {
             <span className=" text-green-400">ia</span>
           </p>
 
-          <a
-            href="https://www.linkedin.com/in/yash-sachan-187405209/"
-            className=" mt-3"
-          >
-            <MagicButton
-              title="Let's Connect"
-              icon={<SiLinkedin />}
-              position="left"
-            />
-          </a>
+          <ul className="wrapper">
+            <a href="https://www.linkedin.com/in/yashsachan321/">
+              <li className="icon facebook">
+                <span className="tooltip">Linkedin</span>
+                <SiLinkedin className=" w-[1.7rem] h-[1.7rem]" />
+              </li>
+            </a>
+            <a href="https://www.codechef.com/users/cyberlordyash">
+              <li className="icon twitter">
+                <span className="tooltip">CodeChef</span>
+                <SiCodechef className=" w-[1.8rem] h-[1.8rem]" />
+              </li>
+            </a>
+            <a href="https://leetcode.com/u/yashsachan/">
+              <li className="icon instagram">
+                <span className="tooltip">Leetcode</span>
+                <SiLeetcode className=" w-[1.7rem] h-[1.7rem]" />
+              </li>
+            </a>
+          </ul>
         </div>
       </div>
       <Meteors number={20} />
