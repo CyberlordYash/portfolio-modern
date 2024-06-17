@@ -3,9 +3,11 @@ import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
 import { SiLeetcode, SiLinkedin } from "react-icons/si";
+import Globe from "../public/globe.svg";
 import "./hero.css";
 import { Meteors } from "./ui/Metors";
 import { SiCodechef } from "react-icons/si";
+import Image from "next/image";
 const Hero = () => {
   return (
     <div className="pb-20 pt-36">
@@ -65,6 +67,7 @@ const Hero = () => {
           </ul>
         </div>
       </div>
+
       <Meteors number={20} />
     </div>
   );
