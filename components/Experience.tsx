@@ -9,39 +9,31 @@ const Experience = () => {
         My
         <span className=" text-purple"> Experience</span>
       </h1>
-      <div className=" w-full mt-12 grid lg:grid-cols-4 grid-cols-1 gap-10">
+      <div className=" w-full mt-12 grid  gap-1">
         {workExperience.map((card) => (
           <Button
             key={card.id}
             duration={Math.floor(Math.random() * 8000) + 1000}
-            className=" hover:bg-gradient-to-r from-violet-600 to-indigo-600 flex-1 text-white-100
-      border-neutral-200 dark:border-slate-800
-          "
+            className={` hover:bg-gradient-to-r from-violet-600 to-indigo-600 flex-1 text-white-100
+      border-neutral-200 dark:border-slate-800 flex items-center justify-center
+          ${card.className}`}
           >
-            <div className=" flex lg:flex-row flex-col lg:items-center  p-3 py-6 md:p-2 lg:p-4 gap-2">
-              {card.id == 2 ? (
+            <div className=" w-full flex lg:flex-row flex-col lg:items-center  p-3 py-6 md:p-2 lg:p-4 gap-2 justify-center items-center">
+              <>
                 <img
                   src={card.thumbnail}
                   alt="image"
-                  className=" w-[400px] h-[250px] overflow-hidden mix-blend-screen"
-                ></img>
-              ) : (
-                <>
-                  <img
-                    src={card.thumbnail}
-                    alt="image"
-                    className=" lg:w-32 md:w-20 w-16"
-                  />
-                  <div className=" lg:ms-5">
-                    <h1 className=" text-start text-xl md:text-2xl font-bold">
-                      {card.title}
-                    </h1>
-                    <p className=" text-start text-white-200 mt-3 font-semibold">
-                      {card.desc}
-                    </p>
-                  </div>
-                </>
-              )}
+                  className=" lg:w-[150px] md:w-[150px] w-[100px]"
+                />
+                <div className="lg:w-[50%] lg:ms-5">
+                  <h1 className=" lg:text-start text-center text-xl md:text-2xl font-bold">
+                    {card.title}
+                  </h1>
+                  <p className=" text-start text-white-200 mt-3 font-semibold">
+                    {card.desc}
+                  </p>
+                </div>
+              </>
             </div>
           </Button>
         ))}

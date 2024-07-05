@@ -8,16 +8,6 @@ export const navItems = [
 
 export const gridItems = [
   {
-    id: 2,
-    title: "I'm very flexible with time zone communications",
-    description: "",
-    className: " bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
-    imgClassName: "",
-    titleClassName: "justify-start",
-    img: "",
-    spareImg: "",
-  },
-  {
     id: 1,
     title: "Web Designer & Developer ",
     description:
@@ -25,7 +15,17 @@ export const gridItems = [
     className: "lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
-    img: "/b1.svg",
+    img: "/wave.gif",
+    spareImg: "",
+  },
+  {
+    id: 2,
+    title: "I'm very flexible with time zone communications",
+    description: "",
+    className: " bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
+    imgClassName: "",
+    titleClassName: "justify-start",
+    img: "",
     spareImg: "",
   },
 
@@ -64,7 +64,7 @@ export const gridItems = [
     id: 6,
     title: "Do you want to start a project together?",
     description: "",
-    className: "lg:col-span-2 md:col-span-3 md:row-span-1",
+    className: "bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-1 ",
     imgClassName: "",
     titleClassName: "justify-center md:max-w-full max-w-60 text-center",
     img: "",
@@ -190,32 +190,39 @@ export const companies = [
 
 export const workExperience = [
   {
+    id: 0,
+    title: "SDE Intern @ Modulus Technologies LLP",
+    desc: " Software Developer",
+    className:
+      "md:col-span-11 bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
+    thumbnail: "/hero.png",
+  },
+  {
     id: 1,
     title: "Knight @ Leetcode",
     desc: " Solved over 1100+ problems with multiple contests to earn the knight badge",
-    className: "md:col-span-2",
+    className: "md:col-span-1",
     thumbnail: "/knight.png",
   },
   {
     id: 2,
-    title: "Mobile App Dev - JSM Tech",
-    desc: "Designed and developed mobile app for both iOS & Android platforms using React Native.",
-    className: "md:col-span-2", // change to md:col-span-2
-    thumbnail:
-      "https://leetcard.jacoblin.cool/yashsachan?theme=dark&font=Rajdhani&ext=contest",
+    title: "3 Star @ Codechef",
+    desc: " Solved over 50+ problems on codechef contests to earn 3 stars",
+    className: "md:col-span-1", // change to md:col-span-2
+    thumbnail: "/codechef.svg",
   },
   {
     id: 3,
     title: "NDA",
     desc: "Got recommendation letter from Indian Army Officer Entry NDA after clearing 5day long SSB process with AIR: 193",
-    className: "md:col-span-2", // change to md:col-span-2
-    thumbnail: "/exp3.svg",
+    className: "md:col-span-1", // change to md:col-span-2
+    thumbnail: "/soldier.svg",
   },
   {
     id: 4,
     title: "Frontend Engineering + Backend Development",
     desc: "Developed and maintained user-facing features using modern technologies.",
-    className: "md:col-span-2",
+    className: "md:col-span-1",
     thumbnail: "/exp4.svg",
   },
 ];

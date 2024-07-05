@@ -21,12 +21,11 @@ export default function Home() {
           <Hero />
 
           <Grid />
-
+          <Experience />
           <RecentProjects />
 
           <Skills />
           <Certificates />
-          <Experience />
 
           <Approach />
 
