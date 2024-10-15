@@ -35,14 +35,16 @@ const Hero = () => {
           </p>
 
           <TextGenerateEffect
-            className=" text-center text-[40px] md:text-5xl lg:text-6xl font-Quicksand"
-            words="Delivering exceptional digital experiences and solutions"
+            className=" text-center text-[40px] md:text-5xl lg:text-5xl font-Quicksand"
+            words="Perpetual evolver and questing for pixel-perfect perfection!"
           />
-          <p className="text-center font-Quicksand">
-            Hi, I&apos;m<span className=" text-purple"> Yash</span> , a Website
-            Designer & Developer based in{" "}
-            <span className=" text-orange-400">In</span>d
-            <span className=" text-green-400">ia</span>
+          <p className="text-center font-Quicksand text-lg">
+            Hi, I&apos;m<span className=" text-purple"> Yash</span> , an
+            experienced software developer with a strong background in C++,
+            JavaScript specializing in frameworks such as React, Node.js,
+            Next.js based in <span className=" text-orange-400">In</span>d
+            <span className=" text-green-400">ia</span>. Continuously exploring
+            new avenues in development to drive innovation.
           </p>
 
           <ul className="wrapper">

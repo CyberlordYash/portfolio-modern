@@ -11,7 +11,7 @@ export const gridItems = [
     id: 1,
     title: "Web Designer & Developer ",
     description:
-      "I am a problem-solving full-stack developer with expertise in mobile and web application development.",
+      "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
     className: "lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
@@ -20,7 +20,8 @@ export const gridItems = [
   },
   {
     id: 2,
-    title: "I'm very flexible with time zone communications",
+    title:
+      "Driven by a thirst for innovation and a desire to make a tangible impact in the tech world",
     description: "",
     className: " bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
@@ -41,7 +42,7 @@ export const gridItems = [
   },
   {
     id: 4,
-    title: "Tech enthusiast with a passion for development.",
+    title: "Let's create something amazing together!.",
     description: "",
     className: "bg-[#06638d] lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
@@ -192,38 +193,52 @@ export const workExperience = [
   {
     id: 0,
     title: "SDE Intern @ Modulus Technologies LLP",
-    desc: " Software Developer",
+    desc: [
+      "• Developed a robust SAAS Billing application remotely using NextJS, FeatherJS, PostgreSQL, Typescript, and TailwindCSS.",
+      "• Engineered a Billing SAAS application with comprehensive business logic, including customer management, invoicing, company details, GST handling, and Chart of Accounts.",
+      "• Migrated the billing management system from React to Next.js, reducing page load times by 30% and improving user retention rates.",
+      "• Automated customer contact via email and WhatsApp for pending invoices, improving invoice recovery rates by 60%.",
+      "• Designed a scalable backend architecture using PostgreSQL, FeatherJS, and GCP.",
+      "• Collaborated with team members to deliver features to customers.",
+      "• Tested and monitored the software to ensure functionality.",
+    ],
     className:
       "md:col-span-11 bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
     thumbnail: "/hero.png",
   },
   {
+    id: 4,
+    title: "Frontend Engineering + Backend Development",
+    desc: [
+      "Developed and maintained user-facing features using modern technologies.",
+    ],
+    className: "md:col-span-1",
+    thumbnail: "/exp4.svg",
+  },
+  {
     id: 1,
     title: "Knight @ Leetcode",
-    desc: " Solved over 1100+ problems with multiple contests to earn the knight badge",
+    desc: [
+      " Solved over 1100+ problems with multiple contests to earn the knight badge",
+    ],
     className: "md:col-span-1",
     thumbnail: "/knight.png",
   },
   {
     id: 2,
     title: "3 Star @ Codechef",
-    desc: " Solved over 50+ problems on codechef contests to earn 3 stars",
+    desc: [" Solved over 50+ problems on codechef contests to earn 3 stars"],
     className: "md:col-span-1", // change to md:col-span-2
     thumbnail: "/codechef.svg",
   },
   {
     id: 3,
     title: "NDA",
-    desc: "Got recommendation letter from Indian Army Officer Entry NDA after clearing 5day long SSB process with AIR: 193",
+    desc: [
+      "Got recommendation letter from Indian Army Officer Entry NDA after clearing 5day long SSB process with AIR: 193",
+    ],
     className: "md:col-span-1", // change to md:col-span-2
     thumbnail: "/soldier.svg",
-  },
-  {
-    id: 4,
-    title: "Frontend Engineering + Backend Development",
-    desc: "Developed and maintained user-facing features using modern technologies.",
-    className: "md:col-span-1",
-    thumbnail: "/exp4.svg",
   },
 ];
 
