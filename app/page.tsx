@@ -21,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 200); // 2 seconds delay
+    }, 2000); // 2 seconds delay
 
     // Cleanup the timer in case the component is unmounted
     return () => clearTimeout(timer);
