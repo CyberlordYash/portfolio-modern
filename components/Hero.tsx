@@ -42,9 +42,9 @@ const Hero = () => {
             Hi, I&apos;m<span className=" text-purple"> Yash</span> , an
             experienced software developer with a strong background in C++,
             JavaScript specializing in frameworks such as React, Node.js,
-            Next.js based in <span className=" text-orange-400">In</span>d
-            <span className=" text-green-400">ia</span>. Continuously exploring
-            new avenues in development to drive innovation.
+            Next.js based in Greater Noida,{" "}
+            <span className=" text-orange-400">In</span>d
+            <span className=" text-green-400">ia</span>.
           </p>
 
           <ul className="wrapper">
