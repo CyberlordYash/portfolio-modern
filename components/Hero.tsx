@@ -30,12 +30,12 @@ const Hero = () => {
 
       <div className=" flex justify-center relative my-20 z-10 ">
         <div className=" max-w-[89vw] md:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center">
-          <p className=" uppercase tracking-widest text-xl text-center text-blue-100 max-w-80 font-Quicksand">
+          <p className=" uppercase tracking-widest text-xl text-center text-blue-100 max-w-80 font-Orbitron">
             Yash Sachan
           </p>
 
           <TextGenerateEffect
-            className=" text-center text-[40px] md:text-5xl lg:text-5xl font-Quicksand"
+            className=" text-center text-[40px] md:text-5xl lg:text-5xl font-Orbitron"
             words="Perpetual evolver and questing for pixel-perfect perfection!"
           />
           <p className="text-center font-Quicksand text-lg">
@@ -51,19 +51,19 @@ const Hero = () => {
             <a href="https://www.linkedin.com/in/yashsachan321/">
               <li className="icon facebook">
                 <span className="tooltip">Linkedin</span>
-                <SiLinkedin className=" w-[1.7rem] h-[1.7rem]" />
+                <SiLinkedin className=" w-[2rem] h-[2rem]" />
               </li>
             </a>
             <a href="https://www.codechef.com/users/cyberlordyash">
               <li className="icon twitter">
                 <span className="tooltip">CodeChef</span>
-                <SiCodechef className=" w-[1.8rem] h-[1.8rem]" />
+                <SiCodechef className=" w-[2rem] h-[2rem]" />
               </li>
             </a>
             <a href="https://leetcode.com/u/yashsachan/">
               <li className="icon instagram">
                 <span className="tooltip">Leetcode</span>
-                <SiLeetcode className=" w-[1.7rem] h-[1.7rem]" />
+                <SiLeetcode className=" w-[2rem] h-[2rem]" />
               </li>
             </a>
           </ul>

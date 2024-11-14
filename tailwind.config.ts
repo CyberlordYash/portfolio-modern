@@ -29,6 +29,7 @@ const config = {
     extend: {
       fontFamily: {
         Quicksand: ["Quicksand"],
+        Orbitron: ["Orbitron"],
       },
       colors: {
         black: {

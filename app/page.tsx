@@ -8,6 +8,7 @@ import Hero from "@/components/Hero";
 import Loading from "@/components/Loading";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
+import TopBar from "@/components/TopBar";
 import { FloatingNav } from "@/components/ui/FloatingNav";
 
 import { TracingBeam } from "@/components/ui/tracingBeam";
@@ -33,19 +34,23 @@ export default function Home() {
           <Loading /> {/* Center the Loading component */}
         </div>
       ) : (
-        <div className="max-w-7xl w-full">
-          <FloatingNav navItems={navItems} className="font-Quicksand" />
-          <TracingBeam>
-            <Hero />
-            <Grid />
-            <Experience />
-            <RecentProjects />
-            <Skills />
-            <Certificates />
-            <Approach />
-            <Footer />
-          </TracingBeam>
-        </div>
+        <>
+          {" "}
+          <TopBar />
+          <div className="max-w-7xl w-full">
+            <FloatingNav navItems={navItems} className="font-Quicksand" />
+            <TracingBeam>
+              <Hero />
+              <Grid />
+              <Experience />
+              <RecentProjects />
+              <Skills />
+              <Certificates />
+              <Approach />
+              <Footer />
+            </TracingBeam>
+          </div>
+        </>
       )}
     </main>
   );
