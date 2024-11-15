@@ -6,7 +6,7 @@ import { FaLocationArrow } from "react-icons/fa";
 const RecentProjects = () => {
   return (
     <div className=" py-20" id="projects">
-      <h1 className=" heading">
+      <h1 className=" heading font-Orbitron">
         My <span className=" text-purple">Projects</span> Section
       </h1>
       <div className=" flex flex-wrap items-center justify-center p-4  gap-x-24 gap-y-8 mt-10">
@@ -16,7 +16,7 @@ const RecentProjects = () => {
             className=" sm:h-[41rem] h-[30rem] j- lg:min-h-[32.5rem] flex items-center justify-center sm:w-[570px] w-[80vw]"
           >
             <PinContainer title={title} href={link}>
-              <div className=" bg-white relative flex items-center justify-center sm:w-[470px] w-[80vw] overflow-hidden h-[20vh]  sm:h-[30vh] mb-1 rounded-lg s">
+              <div className=" bg-white relative flex items-center justify-center sm:w-[470px] w-[80vw] overflow-hidden h-[20vh]  sm:h-[30vh] mb-1 rounded-m s">
                 <div className=" relative w-full h-full overflow-hidden lg:rounded-3xl object-center">
                   <img
                     src="/bg.png"

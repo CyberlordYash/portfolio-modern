@@ -217,7 +217,7 @@ export const workExperience = [
   },
   {
     id: 1,
-    title: "Knight @ Leetcode",
+    title: "Knight @ Leetcode (2000+)",
     desc: [
       " Solved over 1100+ problems with multiple contests to earn the knight badge",
     ],
@@ -226,7 +226,7 @@ export const workExperience = [
   },
   {
     id: 2,
-    title: "3 Star @ Codechef",
+    title: "4 Star @ Codechef (1850+)",
     desc: [" Solved over 50+ problems on codechef contests to earn 3 stars"],
     className: "md:col-span-1", // change to md:col-span-2
     thumbnail: "/codechef.svg",

@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { cn } from "@/utils/cn";
 
 export function Button({
-  borderRadius = "1.75rem",
+  borderRadius = "0.5rem",
   children,
   as: Component = "button",
   containerClassName,
@@ -41,7 +41,7 @@ export function Button({
       {...otherProps}
     >
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 border-b border-blue-800"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
         <MovingBorder duration={duration} rx="30%" ry="30%">

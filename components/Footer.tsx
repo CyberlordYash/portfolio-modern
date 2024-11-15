@@ -7,10 +7,11 @@ const Footer = () => {
   return (
     <footer className=" w-full pt-20 pb-10" id="contact">
       <div className=" flex flex-col items-center">
-        <h1 className=" heading max-w-[45vw]">Get In Touch</h1>
+        <h1 className=" heading max-w-[45vw] font-Orbitron">Get In Touch</h1>
         <p className=" text-white-200 md:mt-10 my-5 text-center">
           Reach out to me today and let&apos;s connect
         </p>
+        <p className=" text-white-200 md:mt-10 my-5 text-center"></p>
         <a href="mailto:yashsachan321@gmail.com">
           <MagicButton
             title="Let's get in touch"
@@ -21,7 +22,8 @@ const Footer = () => {
       </div>
       <div className=" flex mt-16 md:flex-row flex-col justify-between items-center">
         <p className=" text-lg  ">
-          Made with ❤️ by <span className=" text-red-200">Yash Sachan</span>{" "}
+          Made with ❤️ by{" "}
+          <span className=" text-red-200 font-Orbitron">Yash Sachan</span>{" "}
         </p>
 
         <div className=" flex items-center md:gap-3 gap-6 ">

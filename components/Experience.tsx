@@ -7,14 +7,14 @@ const Experience = () => {
     <div className=" py-20" id="experience">
       <h1 className=" heading">
         My
-        <span className=" text-purple"> Experience</span>
+        <span className=" text-purple  font-Orbitron"> Experience</span>
       </h1>
       <div className=" w-full mt-12 grid  gap-1">
         {workExperience.map((card) => (
           <Button
             key={card.id}
             duration={Math.floor(Math.random() * 8000) + 1000}
-            className={` hover:bg-gradient-to-r from-violet-600 to-indigo-600 flex-1 text-white-100
+            className={` hover:bg-gradient-to-r from-violet-900 to-indigo-900 flex-1 text-white-100
       border-neutral-200 dark:border-slate-800 flex items-center justify-center
           ${card.className}`}
           >
