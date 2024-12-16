@@ -12,10 +12,11 @@ export const gridItems = [
     title: "Web Designer & Developer ",
     description:
       "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
-    className: "lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
+    className:
+      " bg-gradient-to-r from-indigo-400 to-cyan-400 lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
-    img: "/wave.gif",
+    img: "",
     spareImg: "",
   },
   {
@@ -23,7 +24,8 @@ export const gridItems = [
     title:
       "Driven by a thirst for innovation and a desire to make a tangible impact in the tech world",
     description: "",
-    className: " bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
+    className:
+      "bg-[#9694FF] dark:bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-start",
     img: "",
@@ -34,7 +36,8 @@ export const gridItems = [
     id: 3,
     title: "My tech stack",
     description: "I constantly try to improve",
-    className: "bg-[#554590] lg:col-span-2 md:col-span-3 md:row-span-2",
+    className:
+      " bg-[#CDC1FF] dark:bg-[#554590] lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-center",
     img: "",
@@ -44,7 +47,8 @@ export const gridItems = [
     id: 4,
     title: "Let's create something amazing together!.",
     description: "",
-    className: "bg-[#06638d] lg:col-span-2 md:col-span-3 md:row-span-1",
+    className:
+      " bg-[#5DB996]  dark:bg-[#06638d] lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
     titleClassName: "justify-start",
     img: "/grid.svg",
@@ -55,7 +59,7 @@ export const gridItems = [
     id: 5,
     title: "College: Indian Institue of Information Technology Sonepat",
     description: "Bachelor of Engineering in Computer Science",
-    className: "md:col-span-3 md:row-span-2 text-md",
+    className: " bg-[#9694FF] md:col-span-3 md:row-span-2 text-md",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
     titleClassName: "justify-center md:justify-start lg:justify-center",
     img: "/b5.svg",
@@ -65,7 +69,8 @@ export const gridItems = [
     id: 6,
     title: "Do you want to start a project together?",
     description: "",
-    className: "bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-1 ",
+    className:
+      "bg-[#CDC1FF] dark:bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-1 ",
     imgClassName: "",
     titleClassName: "justify-center md:max-w-full max-w-60 text-center",
     img: "",
@@ -203,7 +208,7 @@ export const workExperience = [
       "• Tested and monitored the software to ensure functionality.",
     ],
     className:
-      "md:col-span-11 bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
+      "md:col-span-11 bg-[#e9e3ffee] dark:bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
     thumbnail: "/hero.png",
   },
   {

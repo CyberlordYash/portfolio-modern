@@ -7,6 +7,7 @@ import Globe from "../public/globe.svg";
 import "./hero.css";
 import { Meteors } from "./ui/Metors";
 import { SiCodechef } from "react-icons/si";
+
 import Image from "next/image";
 const Hero = () => {
   return (
@@ -23,14 +24,14 @@ const Hero = () => {
         <Spotlight className=" top-28 left-80 h-[80vh] w-[50vw]" fill="blue" />
       </div>
 
-      <div className="h-screen w-full dark:bg-black bg-white  dark:bg-grid-white/[0.04] bg-grid-black/[0.2] flex items-center justify-center absolute top-0 left-0">
+      <div className="h-screen w-full dark:bg-black bg-white  dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center absolute top-0 left-0">
         {/* Radial gradient for the container to give a faded look */}
         <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       </div>
 
       <div className=" flex justify-center relative my-20 z-10 ">
         <div className=" max-w-[89vw] md:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center">
-          <p className=" uppercase tracking-widest text-xl text-center text-blue-100 max-w-80 font-Orbitron">
+          <p className=" uppercase tracking-widest text-xl text-center dark:text-blue-100 max-w-80 font-Orbitron">
             Yash Sachan
           </p>
 
@@ -39,7 +40,7 @@ const Hero = () => {
             words="Perpetual evolver and questing for pixel-perfect perfection!"
           />
           <p className="text-center font-Quicksand text-lg">
-            Hi, I&apos;m<span className=" text-purple"> Yash</span> , an
+            Hi, I&apos;m<span className=" dark:text-purple"> Yash</span> , an
             experienced software developer with a strong background in C++,
             JavaScript specializing in frameworks such as React, Node.js,
             Next.js based in Greater Noida,{" "}
@@ -49,21 +50,21 @@ const Hero = () => {
 
           <ul className="wrapper">
             <a href="https://www.linkedin.com/in/yashsachan321/">
-              <li className="icon facebook">
+              <li className="icon facebook  text-black-100">
                 <span className="tooltip">Linkedin</span>
-                <SiLinkedin className=" w-[2rem] h-[2rem]" />
+                <SiLinkedin className=" text-black dark:text-white  w-[2rem] h-[2rem]" />
               </li>
             </a>
             <a href="https://www.codechef.com/users/cyberlordyash">
               <li className="icon twitter">
                 <span className="tooltip">CodeChef</span>
-                <SiCodechef className=" w-[2rem] h-[2rem]" />
+                <SiCodechef className="text-black dark:text-white w-[2rem] h-[2rem]" />
               </li>
             </a>
             <a href="https://leetcode.com/u/yashsachan/">
               <li className="icon instagram">
                 <span className="tooltip">Leetcode</span>
-                <SiLeetcode className=" w-[2rem] h-[2rem]" />
+                <SiLeetcode className="text-black dark:text-white w-[2rem] h-[2rem]" />
               </li>
             </a>
           </ul>

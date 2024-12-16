@@ -10,7 +10,7 @@ import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import TopBar from "@/components/TopBar";
 import { FloatingNav } from "@/components/ui/FloatingNav";
-
+import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import { TracingBeam } from "@/components/ui/tracingBeam";
 
 import { navItems } from "@/data";
@@ -28,7 +28,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
   return (
-    <main className="relative bg-black flex justify-center items-center flex-col mx-auto sm:px-10 px-5 overflow-clip font-Quicksand min-h-screen">
+    <main className=" overflow-hidden relative bg-white dark:bg-black flex justify-center items-center flex-col mx-auto sm:px-10 px-5  font-Quicksand min-h-screen">
       {isLoading ? (
         <div className="flex justify-center items-center h-full w-full">
           <Loading /> {/* Center the Loading component */}
@@ -36,19 +36,20 @@ export default function Home() {
       ) : (
         <>
           {" "}
+          <ToggleDarkModeButton />
           <TopBar />
-          <div className="max-w-7xl w-full">
+          <div className=" w-full">
             <FloatingNav navItems={navItems} className="font-Quicksand" />
-            <TracingBeam>
-              <Hero />
-              <Grid />
-              <Experience />
-              <RecentProjects />
-              <Skills />
-              <Certificates />
-              <Approach />
-              <Footer />
-            </TracingBeam>
+            <Hero />
+
+            <Grid />
+
+            <Experience />
+            <RecentProjects />
+            <Skills />
+            <Certificates />
+            <Approach />
+            <Footer />
           </div>
         </>
       )}
