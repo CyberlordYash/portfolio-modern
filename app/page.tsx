@@ -45,8 +45,9 @@ export default function Home() {
             <Grid />
 
             <Experience />
-            <RecentProjects />
             <Skills />
+            <RecentProjects />
+
             <Certificates />
             <Approach />
             <Footer />

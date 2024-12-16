@@ -10,6 +10,8 @@ function ToggleDarkModeButton() {
     if (savedTheme === "dark") {
       setIsDark(true);
       document.documentElement.classList.add("dark");
+    } else {
+      setIsDark(false);
     }
   }, []);
 

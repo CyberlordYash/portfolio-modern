@@ -86,7 +86,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[8rem] md:w-[10rem] h-[8rem] md:h-[10rem] rounded-2xl border border-b-0 flex-shrink-0 border-slate-800 p-2 md:p-4 lg:p-6 bg-[#01137c51]"
+            className="relative w-[120px] h-[120px] rounded-2xl border border-b-0 flex-shrink-0 p-2 md:p-4 lg:p-6 bg-violet-600"
             key={item.name}
           >
             <blockquote>
@@ -99,31 +99,31 @@ export const InfiniteMovingCards = ({
               </span>
             </blockquote>
             {item.title === "1" && (
-              <FaReact className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <FaReact className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "2" && (
-              <SiNextdotjs className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <SiNextdotjs className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "3" && (
-              <IoLogoJavascript className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <IoLogoJavascript className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "4" && (
-              <PiFileCppFill className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <PiFileCppFill className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "5" && (
-              <PiFileSqlLight className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <PiFileSqlLight className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "6" && (
-              <FaNode className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <FaNode className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "7" && (
-              <SiMongodb className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <SiMongodb className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "8" && (
-              <RiFirebaseLine className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <RiFirebaseLine className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "9" && (
-              <SiExpress className="w-[1.5rem] h-[1.5rem] md:w-[4rem] md:h-[4rem]" />
+              <SiExpress className="text-white w-[64px] h-[64px]" />
             )}
           </li>
         ))}
