@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { HiSun, HiMoon } from "react-icons/hi";
 
 function ToggleDarkModeButton() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   // Check local storage on initial load
   useEffect(() => {

@@ -196,6 +196,19 @@ export const companies = [
 
 export const workExperience = [
   {
+    id: 5,
+    title: "SDE Intern @ Onefinnet",
+    desc: [
+      "• Building Responsive, High-Performance Web Solutions",
+      "• Leading frontend development for key projects like Spot Chat Platform and Meeting Platform, boosting customer engagement and revenue",
+      "• Spearheading backend development for critical projects, leveraging Go language to build scalable and efficient systems.",
+    ],
+    className:
+      "md:col-span-11 bg-[#e9e3ffee] dark:bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
+    thumbnail: "/onefinnet.png",
+    date: "January 2025 - Present",
+  },
+  {
     id: 0,
     title: "SDE Intern @ Modulus Technologies LLP",
     desc: [
@@ -209,16 +222,17 @@ export const workExperience = [
     ],
     className:
       "md:col-span-11 bg-[#e9e3ffee] dark:bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
-    thumbnail: "/hero.png",
+    thumbnail: "/ambill.jpg",
+    date: "July 2024 - October 2024",
   },
   {
     id: 4,
-    title: "Frontend Engineering + Backend Development",
+    title: "Software Development",
     desc: [
       "Developed and maintained user-facing features using modern technologies.",
     ],
-    className: "md:col-span-1",
-    thumbnail: "/exp4.svg",
+    className: "md:col-span-5",
+    thumbnail: "/hero.png",
   },
   {
     id: 1,
@@ -226,14 +240,14 @@ export const workExperience = [
     desc: [
       " Solved over 1100+ problems with multiple contests to earn the knight badge",
     ],
-    className: "md:col-span-1",
+    className: "md:col-span-5",
     thumbnail: "/knight.png",
   },
   {
     id: 2,
     title: "4 Star @ Codechef (1850+)",
     desc: [" Solved over 50+ problems on codechef contests to earn 3 stars"],
-    className: "md:col-span-1", // change to md:col-span-2
+    className: "md:col-span-5", // change to md:col-span-2
     thumbnail: "/codechef.svg",
   },
   {
@@ -242,7 +256,7 @@ export const workExperience = [
     desc: [
       "Got recommendation letter from Indian Army Officer Entry NDA after clearing 5day long SSB process with AIR: 193",
     ],
-    className: "md:col-span-1", // change to md:col-span-2
+    className: "md:col-span-5", // change to md:col-span-2
     thumbnail: "/soldier.svg",
   },
 ];
