@@ -57,10 +57,12 @@ export const BentoGridItem = ({
   return (
     <div
       className={cn(
-        "row-span-1 relative overflow-hidden rounded-md group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none  border-transparent justify-between flex flex-col space-y-4 border border-white/[0.1] hover:bg-[#fff]",
+        " notification row-span-1 relative overflow-hidden rounded-md group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none  border-transparent justify-between flex flex-col space-y-4 border border-white/[0.1]",
         className
       )}
     >
+      <div className="notiglow"></div>
+      <div className="notiborderglow"></div>
       <div className={`${id === 6 && " flex justify-center"} h-full`}>
         <div className=" w-full h-full absolute">
           {img && (
@@ -91,11 +93,11 @@ export const BentoGridItem = ({
             "group-hover/bento:translate-x-2 transition duration-200 relative md:h-full min-h-40 flex flex-col px-5 p-5 lg:p-10"
           )}
         >
-          <div className=" font-Quicksand font-extralight  md:text-xs lg:text-base text-sm text-gray-900 z-10">
+          <div className=" font-Quicksand font-extralight  md:text-s lg:text-base text-sm  z-10">
             {description}
           </div>
           <div
-            className={` font-Quicksand text-lg lg:text-xl max-w-96 font-bold z-10`}
+            className={` font-Quicksand text-lg lg:text-2xl max-w-96 font-bold z-10`}
           >
             {title}
           </div>

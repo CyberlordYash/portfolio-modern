@@ -13,7 +13,7 @@ export const gridItems = [
     description:
       "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
     className:
-      " bg-gradient-to-r from-indigo-400 to-cyan-400 lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
+      " text-white bg-gradient-to-r from-violet-600 to-indigo-600 lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
     img: "",
@@ -25,7 +25,7 @@ export const gridItems = [
       "Driven by a thirst for innovation and a desire to make a tangible impact in the tech world",
     description: "",
     className:
-      "bg-[#9694FF] dark:bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
+      " text-white bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-start",
     img: "",
@@ -37,7 +37,7 @@ export const gridItems = [
     title: "My tech stack",
     description: "I constantly try to improve",
     className:
-      " bg-[#CDC1FF] dark:bg-[#554590] lg:col-span-2 md:col-span-3 md:row-span-2",
+      " text-white bg-[#554590] lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-center",
     img: "",
@@ -48,7 +48,7 @@ export const gridItems = [
     title: "Let's create something amazing together!.",
     description: "",
     className:
-      " bg-[#5DB996]  dark:bg-[#06638d] lg:col-span-2 md:col-span-3 md:row-span-1",
+      " text-white bg-[#06638d] lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
     titleClassName: "justify-start",
     img: "/grid.svg",
@@ -59,7 +59,7 @@ export const gridItems = [
     id: 5,
     title: "College: Indian Institue of Information Technology Sonepat",
     description: "Bachelor of Engineering in Computer Science",
-    className: " bg-[#9694FF] md:col-span-3 md:row-span-2 text-md",
+    className: " text-white bg-[#06638d] md:col-span-3 md:row-span-2 text-md",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
     titleClassName: "justify-center md:justify-start lg:justify-center",
     img: "/b5.svg",
@@ -70,7 +70,7 @@ export const gridItems = [
     title: "Do you want to start a project together?",
     description: "",
     className:
-      "bg-[#CDC1FF] dark:bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-1 ",
+      " text-white bg-[#293d9a] lg:col-span-2 md:col-span-3 md:row-span-1 ",
     imgClassName: "",
     titleClassName: "justify-center md:max-w-full max-w-60 text-center",
     img: "",
@@ -197,20 +197,19 @@ export const companies = [
 export const workExperience = [
   {
     id: 5,
-    title: "SDE Intern @ Onefinnet",
+    title: "Software Developer Intern @ Onefinnet",
     desc: [
       "• Building Responsive, High-Performance Web Solutions",
       "• Leading frontend development for key projects like Spot Chat Platform and Meeting Platform, boosting customer engagement and revenue",
       "• Spearheading backend development for critical projects, leveraging Go language to build scalable and efficient systems.",
     ],
-    className:
-      "md:col-span-11 bg-[#e9e3ffee] dark:bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
+    className: "md:col-span-11 w-[100%]",
     thumbnail: "/onefinnet.png",
     date: "January 2025 - Present",
   },
   {
     id: 0,
-    title: "SDE Intern @ Modulus Technologies LLP",
+    title: "Software Developer Intern @ Modulus Technologies LLP",
     desc: [
       "• Developed a robust SAAS Billing application remotely using NextJS, FeatherJS, PostgreSQL, Typescript, and TailwindCSS.",
       "• Engineered a Billing SAAS application with comprehensive business logic, including customer management, invoicing, company details, GST handling, and Chart of Accounts.",
@@ -220,8 +219,7 @@ export const workExperience = [
       "• Collaborated with team members to deliver features to customers.",
       "• Tested and monitored the software to ensure functionality.",
     ],
-    className:
-      "md:col-span-11 bg-[#e9e3ffee] dark:bg-gradient-to-r from-blue-800 to-indigo-900 w-[100%]",
+    className: "md:col-span-11  w-[100%]",
     thumbnail: "/ambill.jpg",
     date: "July 2024 - October 2024",
   },
