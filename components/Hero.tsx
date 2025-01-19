@@ -7,7 +7,7 @@ import Globe from "../public/globe.svg";
 import "./hero.css";
 import { Meteors } from "./ui/Metors";
 import { SiCodechef } from "react-icons/si";
-
+import onefinnet from "../public/onefinnet.png";
 import Image from "next/image";
 const Hero = () => {
   return (
@@ -31,7 +31,7 @@ const Hero = () => {
 
       <div className=" flex justify-center relative my-20 z-10 ">
         <div className=" max-w-[89vw] md:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center">
-          <p className=" uppercase tracking-widest text-xl text-center dark:text-blue-100 max-w-80 font-Orbitron">
+          <p className=" font-semibold uppercase tracking-widest text-xl text-center dark:text-blue-100 max-w-80 font-Orbitron">
             Yash Sachan
           </p>
 
@@ -39,13 +39,22 @@ const Hero = () => {
             className=" text-center text-[40px] md:text-5xl lg:text-5xl font-Orbitron"
             words="Perpetual evolver and questing for pixel-perfect perfection!"
           />
-          <p className="text-center font-Quicksand text-lg">
-            Hi, I&apos;m<span className=" dark:text-purple"> Yash</span> , an
-            experienced software developer with a strong background in C++,
-            JavaScript specializing in frameworks such as React, Node.js,
-            Next.js based in Greater Noida,{" "}
-            <span className=" text-orange-400">In</span>d
-            <span className=" text-green-400">ia</span>.
+          <p className="text-center font-Quicksand text-lg font-normal">
+            Hi, I&apos;m
+            <span className=" font-bold"> Yash</span> ,Software Developer,
+            Currently working at
+            <a href="https://onefinnet.com/" className=" font-bold underline">
+              <Image
+                src={onefinnet}
+                alt="Onefinnet"
+                className=" w-[28px] h-[28px] inline  rounded-md "
+              />
+              Onefinnet
+            </a>{" "}
+            based in New York, with a strong background in C++, JavaScript,
+            Golang specializing in frameworks such as React, Node.js, Next.js
+            based in Greater Noida, <span className=" text-orange-400">In</span>
+            d<span className=" text-green-400">ia</span>.
           </p>
 
           <ul className="wrapper">
