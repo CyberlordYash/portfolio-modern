@@ -216,8 +216,6 @@ export const workExperience = [
       "• Migrated the billing management system from React to Next.js, reducing page load times by 30% and improving user retention rates.",
       "• Automated customer contact via email and WhatsApp for pending invoices, improving invoice recovery rates by 60%.",
       "• Designed a scalable backend architecture using PostgreSQL, FeatherJS, and GCP.",
-      "• Collaborated with team members to deliver features to customers.",
-      "• Tested and monitored the software to ensure functionality.",
     ],
     className: "md:col-span-11  w-[100%]",
     thumbnail: "/ambill.jpg",
@@ -234,12 +232,12 @@ export const workExperience = [
   },
   {
     id: 1,
-    title: "Knight @ Leetcode (2000+)",
+    title: "Guardian @ Leetcode (2200+)",
     desc: [
-      " Solved over 1100+ problems with multiple contests to earn the knight badge",
+      " Solved over 1300+ problems with multiple contests to earn the Guardian badge",
     ],
     className: "md:col-span-5",
-    thumbnail: "/knight.png",
+    thumbnail: "/guardian.gif",
   },
   {
     id: 2,

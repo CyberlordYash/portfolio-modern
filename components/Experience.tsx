@@ -21,14 +21,8 @@ const Experience = () => {
       border-neutral-300 rounded-md dark:border-slate-600 flex items-center justify-center
           ${card.className}`}
           >
-            <div className="dot"></div>
             <div className="card p-2">
               <div className="ray"></div>
-
-              <div className="line topl"></div>
-              <div className="line leftl"></div>
-              <div className="line bottoml"></div>
-              <div className="line rightl"></div>
 
               <div className=" relative w-full flex flex-col gap-2 p-3 py-6 md:p-2 lg:p-2">
                 {/* Top section div */}
