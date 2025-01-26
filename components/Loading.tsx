@@ -3,7 +3,15 @@ import React from "react";
 const Loading = () => {
   return (
     <div className="loading">
-      <span className="loader"></span>
+      <div className="honeycomb">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   );
 };
