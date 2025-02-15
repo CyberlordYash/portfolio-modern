@@ -17,11 +17,11 @@ const Experience = () => {
         {workExperience.map((card: any) => (
           <div
             key={card.id}
-            className={` outer m-1  bg-[url('/Sprinkle.svg')] border-2  bg-[#0c0d0d] dark:bg-black hover:bg-[#e9e3ffee] flex-1 text-black dark:text-white-100
-      border-neutral-300 rounded-md dark:border-slate-600 flex items-center justify-center
+            className={` rounded-3xl outer m-1   flex-1 text-white dark:text-white-100
+      border-neutral-300   flex items-center justify-center
           ${card.className}`}
           >
-            <div className="card p-2">
+            <div className="card  p-2">
               <div className="ray"></div>
 
               <div className=" relative w-full flex flex-col gap-2 p-3 py-6 md:p-2 lg:p-2">
