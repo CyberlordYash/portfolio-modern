@@ -13,7 +13,7 @@ export const gridItems = [
     description:
       "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
     className:
-      " text-white bg-gradient-to-r from-violet-600 to-indigo-600 lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
+      " bg-[url('/bg-gradient.jpg')] bg-cover text-white  lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
     img: "",

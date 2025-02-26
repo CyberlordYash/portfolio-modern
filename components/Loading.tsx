@@ -2,16 +2,11 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div className="loading">
-      <div className="honeycomb">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+    <div className="loader">
+      <div className="circle c1"></div>
+      <div className="circle c2"></div>
+      <div className="circle c3"></div>
+      <div className="circle c4"></div>
     </div>
   );
 };

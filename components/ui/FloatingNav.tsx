@@ -46,23 +46,13 @@ export const FloatingNav = ({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        initial={{
-          opacity: 1,
-          y: -100,
-        }}
-        animate={{
-          y: visible ? 0 : -100,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.2,
-        }}
         className={cn(
           // change rounded-full to rounded-lg
           // remove dark:border-white/[0.2] dark:bg-black bg-white border-transparent
           // change  pr-2 pl-8 py-2 to px-10 py-5
-          " font-bold flex max-w-fit md:min-w-[70vw] lg:max-w-fit fixed z-[5000] top-10 inset-x-0 mx-auto px-4 py-4 rounded-lg items-center justify-center space-x-4",
-          className
+          " font-bold flex max-w-fit md:min-w-[70vw] lg:max-w-fit fixed z-[5000] top-0 inset-x-0 mx-auto px-8 py-5 rounded-3xl items-center justify-center space-x-4 rounded-t-none",
+          className,
+          "bg-[url('https://s1.ecnstatic.com/ecn/images/banner-redeem-image3.png')] bg-cover"
         )}
         style={{
           backdropFilter: "blur(10px) saturate(180%)",
@@ -74,7 +64,7 @@ export const FloatingNav = ({
             key={`link=${idx}`}
             href={navItem.link}
             className={cn(
-              "relative text-neutral-700 dark:text-neutral-50 items-center  flex space-x-1  dark:hover:text-neutral-300 hover:text-neutral-500"
+              "relative text-neutral-50 items-center  flex space-x-1  dark:hover:text-neutral-300 hover:text-neutral-500"
             )}
           >
             <span className="block sm:hidden">{navItem.icon}</span>
