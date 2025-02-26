@@ -52,7 +52,7 @@ export const FloatingNav = ({
           // change  pr-2 pl-8 py-2 to px-10 py-5
           " font-bold flex max-w-fit md:min-w-[70vw] lg:max-w-fit fixed z-[5000] top-0 inset-x-0 mx-auto px-8 py-5 rounded-3xl items-center justify-center space-x-4 rounded-t-none",
           className,
-          "bg-[url('https://s1.ecnstatic.com/ecn/images/banner-redeem-image3.png')] bg-cover"
+          "bg-[url('https://s1.ecnstatic.com/ecn/images/banner-redeem-image2.png')] bg-cover"
         )}
         style={{
           backdropFilter: "blur(10px) saturate(180%)",
