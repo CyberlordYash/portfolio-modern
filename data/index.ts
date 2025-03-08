@@ -80,6 +80,14 @@ export const gridItems = [
 
 export const projects = [
   {
+    id: 8,
+    title: "Secure File Share",
+    des: "Built a secure file-sharing web application with user authentication & authorization (JWT, MFA) and role-based access control (RBAC).",
+    img: "https://de.fi-group.com/wp-content/uploads/sites/19/2023/10/headers-sectors-cybersecurity.webp",
+    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/fm.svg"],
+    link: "https://github.com/CyberlordYash/SecureFileShare",
+  },
+  {
     id: 1,
     title: "Brain Bytes",
     des: "Collaborate and learn! Share your notes on this MERN-powered platform. FInd,create and discuss study materials with ease",

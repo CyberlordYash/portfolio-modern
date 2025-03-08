@@ -21,7 +21,7 @@ const Experience = () => {
       border-neutral-300   flex items-center justify-center
           ${card.className}`}
           >
-            <div className="card  p-2">
+            <div className=" p-2">
               <div className="ray"></div>
 
               <div className=" relative w-full flex flex-col gap-2 p-3 py-6 md:p-2 lg:p-2">

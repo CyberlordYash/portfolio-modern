@@ -10,25 +10,19 @@ const RecentProjects = () => {
         My <span className=" text-violet-700 dark:text-purple">Projects</span>{" "}
         Section
       </h1>
-      <div className=" flex flex-wrap items-center justify-center p-4  gap-x-24 gap-y-8 mt-10">
+      <div className=" flex flex-wrap items-center justify-center p-4 ">
         {projects.map(({ id, title, des, img, iconLists, link }) => (
           <div
             key={id}
-            className=" sm:h-[41rem] h-[30rem] j- lg:min-h-[32.5rem] flex items-center justify-center sm:w-[570px] w-[80vw]"
+            className=" sm:h-[41rem] h-[30rem] j- lg:min-h-[32.5rem] flex items-center justify-center sm:w-[470px] w-[80vw]"
           >
             <PinContainer title={title} href={link}>
-              <div className=" bg-white relative flex items-center justify-center sm:w-[470px] w-[80vw] overflow-hidden h-[20vh]  sm:h-[30vh] mb-1 rounded-m s">
-                <div className=" relative w-full h-full overflow-hidden lg:rounded-3xl object-center">
-                  <img
-                    src="/bg.png"
-                    alt="bgimage"
-                    className=" w-full h-full"
-                  ></img>
-                </div>
+              <div className=" bg-transparent relative flex items-center justify-center sm:w-[470px] w-[80vw] overflow-hidden h-[20vh]  sm:h-[30vh]  rounded-md">
+                <div className=" relative w-full h-full overflow-hidden lg:rounded-3xl object-center"></div>
                 <img
                   src={img}
                   alt={title}
-                  className=" rounded-lg z-10 absolute bottom-0 object-fill"
+                  className=" w-[105%] h-[105%] rounded-lg z-10 absolute bottom-0 object-fill"
                 ></img>
               </div>
               <h1 className=" font-bold lg:text-2xl md:text-xl text-base line-clamp-1">
