@@ -1,9 +1,31 @@
 import { FaReact } from "react-icons/fa";
-export const navItems = [
-  { name: "About", link: "#about" },
-  { name: "Projects", link: "#projects" },
-  { name: "Skills", link: "#skills" },
-  { name: "Contact", link: "#contact" },
+import { FaHome, FaBriefcase, FaEnvelope } from "react-icons/fa";
+import { HiHomeModern } from "react-icons/hi2";
+import { TbLayoutDashboard } from "react-icons/tb";
+import { MdOutlineMail } from "react-icons/md";
+
+type NavItem = {
+  name: string;
+  link: string;
+  icon: JSX.Element; // ✅ Correct
+};
+
+export const navItems: NavItem[] = [
+  {
+    name: "Home",
+    link: "#home",
+    icon: <HiHomeModern className="text-xl md:text-2xl" />,
+  },
+  {
+    name: "Projects",
+    link: "#projects",
+    icon: <TbLayoutDashboard className="text-xl md:text-2xl" />,
+  },
+  {
+    name: "Contact",
+    link: "#contact",
+    icon: <MdOutlineMail className="text-xl md:text-2xl" />,
+  },
 ];
 
 export const gridItems = [
@@ -13,7 +35,7 @@ export const gridItems = [
     description:
       "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
     className:
-      " bg-[url('/bg-gradient.jpg')] bg-cover text-white  lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
+      " bg-[#293d9a] bg-cover text-white  lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
     img: "",

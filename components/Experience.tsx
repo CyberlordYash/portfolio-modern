@@ -2,10 +2,13 @@ import { workExperience } from "@/data";
 import React from "react";
 import { Button } from "./ui/MovingBorders";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
 const Experience = () => {
   return (
-    <div className=" py-20" id="experience">
+    <div
+      className=" py-10 w-[100%] m-[auto] mt-2 p-6 rounded-2xl bg-white  dark:bg-black"
+      id="experience"
+    >
       <h1 className=" heading">
         My
         <span className=" text-violet-700 dark:text-purple  font-Orbitron">
@@ -15,15 +18,23 @@ const Experience = () => {
       </h1>
       <div className=" w-full mt-12 grid  gap-1">
         {workExperience.map((card: any) => (
-          <div
+          <motion.div
+            whileHover={{
+              y: -5,
+              scale: 1.01,
+              boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 15,
+            }}
             key={card.id}
-            className={` rounded-3xl outer m-1   flex-1 text-white dark:text-white-100
+            className={` rounded-2xl outer m-1   flex-1 text-white dark:text-white-100
       border-neutral-300   flex items-center justify-center
           ${card.className}`}
           >
             <div className=" p-2">
-              <div className="ray"></div>
-
               <div className=" relative w-full flex flex-col gap-2 p-3 py-6 md:p-2 lg:p-2">
                 {/* Top section div */}
                 {card.date != null && (
@@ -54,7 +65,7 @@ const Experience = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

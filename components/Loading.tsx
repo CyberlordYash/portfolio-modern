@@ -1,104 +1,64 @@
-import React from "react";
+"use client";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { BsStars } from "react-icons/bs";
+
+const loaderVariants = {
+  initial: { opacity: 1 },
+  exit: { opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } },
+};
+
+const iconVariants = {
+  pulse: {
+    scale: [1, 1.15, 1],
+    opacity: [0.6, 1, 0.6],
+    transition: {
+      repeat: Infinity,
+      duration: 1.8,
+      ease: "easeInOut",
+    },
+  },
+};
 
 const Loading = () => {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="truck">
-      <div className="truck__body">
-        <div className="truck__body truck__body--top">
-          <div className="truck__window">
-            <div className="truck__window-glass"></div>
-          </div>
-        </div>
-        <div className="truck__body truck__body--mid">
-          <div className="truck__mid-body"></div>
-        </div>
-        <div className="truck__body truck__body--bottom">
-          <div className="truck__underpanel"></div>
-          <div className="truck__rear-bumper"></div>
-          <div className="truck__side-skirt"></div>
-        </div>
-      </div>
-      <div className="truck__wheel truck__wheel--front">
-        <div className="truck__wheel-arch"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--top"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--left"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--right"></div>
-        <div className="truck-wheel">
-          <div className="truck-wheel__rim">
-            <div
-              style={{ "--index": 0 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 1 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 2 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 3 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 4 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 5 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 6 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-          </div>
-        </div>
-      </div>
-      <div className="truck__wheel truck__wheel--rear">
-        <div className="truck__wheel-arch"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--top"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--left"></div>
-        <div className="truck__wheel-arch-trim truck__wheel-arch-trim--right"></div>
-        <div className="truck-wheel">
-          <div className="truck-wheel__rim">
-            <div
-              style={{ "--index": 0 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 1 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 2 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 3 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 4 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 5 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-            <div
-              style={{ "--index": 6 } as React.CSSProperties}
-              className="truck-wheel__spoke"
-            ></div>
-          </div>
-        </div>
-      </div>
-      <div className="truck__headlight"></div>
-      <div className="truck__taillight"></div>
-      <div className="truck__indicator"></div>
-      <div className="truck__foglight"></div>
-    </div>
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          variants={loaderVariants}
+          initial="initial"
+          animate="initial"
+          exit="exit"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-black transition-colors duration-300"
+        >
+          {/* Glowing icon */}
+          <motion.div
+            variants={iconVariants}
+            animate="pulse"
+            className="p-5 rounded-full bg-blue-100 dark:bg-blue-900/30 shadow-xl"
+          >
+            <BsStars className="text-blue-600 dark:text-blue-300 w-10 h-10" />
+          </motion.div>
+
+          {/* Fading text */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-6 text-sm font-mono text-gray-500 dark:text-gray-400 animate-pulse"
+          >
+            Loading portfolio...
+          </motion.p>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

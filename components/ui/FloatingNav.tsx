@@ -1,11 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 
@@ -20,63 +15,68 @@ export const FloatingNav = ({
   }[];
   className?: string;
 }) => {
-  const { scrollYProgress } = useScroll();
+  const [time, setTime] = useState<string>("");
 
-  // set true for the initial state so that nav bar is visible in the hero section
-  const [visible, setVisible] = useState(true);
-
-  useMotionValueEvent(scrollYProgress, "change", (current) => {
-    // Check if current is not undefined and is a number
-    if (typeof current === "number") {
-      let direction = current! - scrollYProgress.getPrevious()!;
-
-      if (scrollYProgress.get() < 0.05) {
-        // also set true for the initial state
-        setVisible(true);
-      } else {
-        if (direction < 0) {
-          setVisible(true);
-        } else {
-          setVisible(false);
-        }
-      }
-    }
-  });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setTime(
+        now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         className={cn(
-          // change rounded-full to rounded-lg
-          // remove dark:border-white/[0.2] dark:bg-black bg-white border-transparent
-          // change  pr-2 pl-8 py-2 to px-10 py-5
-          " font-bold flex w-[100vw] fixed z-[5000] top-0 inset-x-0 mx-auto px-8 py-5 rounded-3xl items-center justify-center space-x-4 rounded-t-none",
+          "fixed top-4 left-[20px] transform -translate-x-1/2 z-[5000] px-4 py-2 md:px-6 md:py-3 rounded-2xl border border-gray-200 shadow-md bg-white dark:bg-black text-black dark:text-white font-semibold flex items-center justify-center gap-4 md:gap-6",
           className
         )}
         style={{
-          backdropFilter: "blur(10px) saturate(180%)",
-          backgroundColor: "",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
         }}
       >
-        {navItems.map((navItem: any, idx: number) => (
+        {/* 🕒 Clock - hidden on mobile */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="hidden md:block text-sm font-mono text-gray-700 dark:text-gray-300"
+        >
+          🕒 {time}
+        </motion.div>
+
+        {/* 🧭 Navigation Links */}
+        {navItems.map((navItem, idx) => (
           <Link
-            key={`link=${idx}`}
+            key={`nav-item-${idx}`}
             href={navItem.link}
-            className={cn(
-              "relative dark:text-neutral-50 items-center  flex space-x-1  dark:hover:text-neutral-300 hover:text-neutral-500"
-            )}
+            className="group relative flex items-center justify-center text-neutral-700 dark:text-neutral-200 hover:text-neutral-600 dark:hover:text-neutral-300 transition"
           >
-            <span className="block sm:hidden">{navItem.icon}</span>
-            {/* add !cursor-pointer */}
-            {/* remove hidden sm:block for the mobile responsive */}
-            <span className=" text-sm !cursor-pointer">{navItem.name}</span>
+            {/* Always show icon */}
+            {navItem.icon && <span className="text-lg">{navItem.icon}</span>}
+
+            {/* Show text only on md+ */}
+            <span className="hidden md:inline text-sm ml-1">
+              {navItem.name}
+            </span>
+
+            {/* Tooltip for small screens */}
+            <span className="absolute bottom-full mb-2 px-2 py-1 rounded text-xs text-white bg-black dark:bg-white dark:text-black opacity-0 group-hover:opacity-100 transition md:hidden whitespace-nowrap z-10">
+              {navItem.name}
+            </span>
           </Link>
         ))}
-        {/* remove this login btn */}
-        {/* <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
-          <span>Login</span>
-          <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
-        </button> */}
       </motion.div>
     </AnimatePresence>
   );

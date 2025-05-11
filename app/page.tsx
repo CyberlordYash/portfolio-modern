@@ -1,4 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
 import Approach from "@/components/Approach";
 import Certificates from "@/components/Certificates";
 import Experience from "@/components/Experience";
@@ -9,48 +13,85 @@ import Loading from "@/components/Loading";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import TopBar from "@/components/TopBar";
-import { FloatingNav } from "@/components/ui/FloatingNav";
 import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
-import { TracingBeam } from "@/components/ui/tracingBeam";
-
+import { FloatingNav } from "@/components/ui/FloatingNav";
 import { navItems } from "@/data";
-import { useEffect, useState } from "react";
+
+// 👇 Inline FadeInSection Component
+function FadeInSection({ children }: { children: React.ReactNode }) {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) controls.start("visible");
+  }, [controls, inView]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 40 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, ease: "easeOut" },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // This useEffect will set isLoading to false after 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // 2 seconds delay
-
-    // Cleanup the timer in case the component is unmounted
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
   return (
-    <main className=" overflow-hidden relative bg-white dark:bg-black flex justify-center items-center flex-col mx-auto sm:px-10 px-5  font-Quicksand min-h-screen">
+    <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto p-2 font-Quicksand min-h-screen">
       {isLoading ? (
         <div className="flex justify-center items-center h-full w-full">
-          <Loading /> {/* Center the Loading component */}
+          <Loading />
         </div>
       ) : (
         <>
-          {" "}
           <ToggleDarkModeButton />
           <TopBar />
-          <div className=" w-full">
+          <div className="w-full">
             <FloatingNav navItems={navItems} className="font-Quicksand" />
-            <Hero />
 
-            <Grid />
-
-            <Experience />
-            <Skills />
-            <RecentProjects />
-
-            <Certificates />
-            <Approach />
-            <Footer />
+            <FadeInSection>
+              <Hero />
+            </FadeInSection>
+            <FadeInSection>
+              <Skills />
+            </FadeInSection>
+            <FadeInSection>
+              <Grid />
+            </FadeInSection>
+            <FadeInSection>
+              <Experience />
+            </FadeInSection>
+            <FadeInSection>
+              <RecentProjects />
+            </FadeInSection>
+            <FadeInSection>
+              <Certificates />
+            </FadeInSection>
+            <FadeInSection>
+              <Approach />
+            </FadeInSection>
+            <FadeInSection>
+              <Footer />
+            </FadeInSection>
           </div>
         </>
       )}

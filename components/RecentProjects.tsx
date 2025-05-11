@@ -1,64 +1,101 @@
 import { projects } from "@/data";
 import React from "react";
-import { PinContainer } from "./ui/3d-pin";
 import { FaLocationArrow } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+// Animation variants
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  }),
+};
+
+const hoverEffect = {
+  scale: 1.04,
+  y: -5,
+  boxShadow: "0px 8px 20px rgba(0,0,0,0.15)",
+  transition: {
+    type: "spring",
+    stiffness: 200,
+    damping: 15,
+  },
+};
 
 const RecentProjects = () => {
   return (
-    <div className=" py-20" id="projects">
-      <h1 className=" heading font-Orbitron">
-        My <span className=" text-violet-700 dark:text-purple">Projects</span>{" "}
-        Section
+    <section className="py-12 w-full max-w-7xl mx-auto px-4" id="projects">
+      <h1 className="text-center text-3xl sm:text-4xl font-Orbitron font-bold mb-10 dark:text-violet-700 text-purple">
+        My <span className="">Projects</span> Section
       </h1>
-      <div className=" flex flex-wrap items-center justify-center p-4 ">
-        {projects.map(({ id, title, des, img, iconLists, link }) => (
-          <div
+
+      <div className="flex flex-wrap justify-center gap-6">
+        {projects.map(({ id, title, des, img, iconLists, link }, index) => (
+          <motion.div
             key={id}
-            className=" sm:h-[41rem] h-[30rem] j- lg:min-h-[32.5rem] flex items-center justify-center sm:w-[470px] w-[80vw]"
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={cardVariants}
+            whileHover={hoverEffect}
+            className="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden w-[85vw] sm:w-[380px] transition-all cursor-pointer"
           >
-            <PinContainer title={title} href={link}>
-              <div className=" bg-transparent relative flex items-center justify-center sm:w-[470px] w-[80vw] overflow-hidden h-[20vh]  sm:h-[30vh]  rounded-md">
-                <div className=" relative w-full h-full overflow-hidden lg:rounded-3xl object-center"></div>
-                <img
-                  src={img}
-                  alt={title}
-                  className=" w-[105%] h-[105%] rounded-lg z-10 absolute bottom-0 object-fill"
-                ></img>
-              </div>
-              <h1 className=" font-bold lg:text-2xl md:text-xl text-base line-clamp-1">
+            {/* Image */}
+            <div className="relative h-[170px] w-full">
+              <img
+                src={img}
+                alt={title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="p-5">
+              <h2 className="font-semibold text-lg sm:text-xl mb-1 line-clamp-1">
                 {title}
-              </h1>
-              <p className=" lg:font-normal font-light text-sm line-clamp-2">
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">
                 {des}
               </p>
 
-              <div className=" flex items-center justify-between mt-7 mb-3">
-                <div className=" flex items-center">
-                  {iconLists.map((icon, index) => (
-                    <div
-                      key={icon}
-                      className=" border border-white/[0.2] rounded-xl bg-black lg:w-10 lg:h-10 w-9 h-9 flex justify-center items-center"
-                      style={{ transform: ` translateX(-${5 * index * 2}px)` }}
-                    >
-                      <img src={icon} alt={icon} className=" p-2"></img>
-                    </div>
-                  ))}
-                  <a href={link}>
-                    <div className=" flex justify-center items-center">
-                      <p className=" flex lg:text-xl md:text-xs text-sm text-purple">
-                        {" "}
-                        Check Live Site
-                      </p>
-                      <FaLocationArrow className=" ms-3" color="#CBACF9" />
-                    </div>
-                  </a>
-                </div>
+              {/* Icons */}
+              <div className="flex items-center space-x-2 mb-4">
+                {iconLists.map((icon, index) => (
+                  <div
+                    key={icon}
+                    className="bg-black border border-white/20 rounded-md w-8 h-8 flex items-center justify-center"
+                  >
+                    <img
+                      src={icon}
+                      alt={icon}
+                      className="w-5 h-5 object-contain"
+                    />
+                  </div>
+                ))}
               </div>
-            </PinContainer>
-          </div>
+
+              {/* Link */}
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-purple hover:underline text-sm"
+              >
+                Check Live Site{" "}
+                <FaLocationArrow className="ml-2" color="#CBACF9" />
+              </a>
+            </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
