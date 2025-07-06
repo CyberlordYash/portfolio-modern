@@ -11,7 +11,7 @@ const Certificates = () => {
       title: "Web Dev",
       value: "web dev",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-800 to-indigo-800">
+        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-blue-800 to-indigo-800">
           <p>Web Dev Bootcamp</p>
           <a href="https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/">
             <Image
@@ -29,7 +29,7 @@ const Certificates = () => {
       title: "DSA C++",
       value: "services",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
+        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600">
           <p>DSA C++</p>
           <a href="https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/">
             <Image
@@ -47,7 +47,7 @@ const Certificates = () => {
       title: "Node js",
       value: "node js",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-violet-800 to-indigo-800">
+        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-blue-800 to-indigo-800">
           <p>Node js</p>
           <a href="https://www.udemy.com/certificate/UC-e1548ade-aca5-40b4-a66c-d17e7230dbcc/">
             <Image
@@ -65,7 +65,7 @@ const Certificates = () => {
       title: "AWS",
       value: "aws",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-lg md:text-4xl font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600">
+        <div className="w-full overflow-hidden relative h-full rounded-md p-10 text-lg md:text-4xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600">
           <p>AWS</p>
           <a href="https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq">
             <Image
@@ -84,7 +84,7 @@ const Certificates = () => {
   return (
     <div className=" w-[100%] m-[auto] mt-2 p-6 rounded-2xl bg-white  dark:bg-black">
       <h1 className=" heading font-Orbitron">
-        Certi<span className=" text-violet-700 dark:text-purple">ficates</span>
+        Certi<span className=" text-blue-800 dark:text-blue-200">ficates</span>
       </h1>
       <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-40">
         <Tabs tabs={tabs} />

@@ -78,6 +78,13 @@ export default function Home() {
               <Grid />
             </FadeInSection>
             <FadeInSection>
+              <h1 className=" p-4 heading dark:text-black-100 text-white-100">
+                My
+                <span className=" dark:text-blue-800 text-blue-200  font-Orbitron">
+                  {" "}
+                  Experience
+                </span>
+              </h1>
               <Experience />
             </FadeInSection>
             <FadeInSection>
@@ -87,6 +94,12 @@ export default function Home() {
               <Certificates />
             </FadeInSection>
             <FadeInSection>
+              <h1 className=" p-4 heading dark:text-black-100 text-white-100">
+                My Approach to{" "}
+                <span className="  dark:text-blue-800 text-blue-200">
+                  Development
+                </span>
+              </h1>
               <Approach />
             </FadeInSection>
             <FadeInSection>

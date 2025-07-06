@@ -31,7 +31,7 @@ const hoverEffect = {
 const RecentProjects = () => {
   return (
     <section className="py-12 w-full max-w-7xl mx-auto px-4" id="projects">
-      <h1 className="text-center text-3xl sm:text-4xl font-Orbitron font-bold mb-10 dark:text-violet-700 text-purple">
+      <h1 className="text-center text-3xl sm:text-4xl font-Orbitron font-bold mb-10 dark:text-blue-800 text-blue-200">
         My <span className="">Projects</span> Section
       </h1>
 

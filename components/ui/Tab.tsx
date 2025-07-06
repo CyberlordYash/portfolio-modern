@@ -53,7 +53,7 @@ export const Tabs = ({
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             className={cn(
-              "relative m-2 p-2 w-[6rem] h-[3rem] bg-violet-300 dark:bg-[#01137c51] rounded-md overflow-hidden text-sm",
+              "relative m-2 p-2 w-[6rem] h-[3rem] bg-blue-300 dark:bg-[#01137c51] rounded-md overflow-hidden text-sm",
               tabClassName
             )}
             style={{
@@ -65,7 +65,7 @@ export const Tabs = ({
                 layoutId="clickedbutton"
                 transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
                 className={cn(
-                  "absolute inset-0 bg-violet-500 dark:bg-violet-800 rounded-full ",
+                  "absolute inset-0 bg-blue-500 dark:bg-blue-900 rounded-full ",
                   activeTabClassName
                 )}
               />

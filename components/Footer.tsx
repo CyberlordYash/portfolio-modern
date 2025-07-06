@@ -7,7 +7,9 @@ const Footer = () => {
   return (
     <footer className=" w-full pt-20 pb-10" id="contact">
       <div className=" flex flex-col items-center">
-        <h1 className=" heading max-w-[45vw] font-Orbitron">Get In Touch</h1>
+        <h1 className=" heading max-w-[45vw] font-Orbitron dark:text-black-100 text-white-200">
+          Get In Touch
+        </h1>
         <p className=" text-white-200 md:mt-10 my-5 text-center">
           Reach out to me today and let&apos;s connect
         </p>
@@ -45,10 +47,7 @@ const Footer = () => {
         </div>
       </div>
       <hr></hr>
-      <p className=" mt-5 opacity-45 text-center md:text-base text-sm md:font-normal text-white-200">
-        Design Inspired by{" "}
-        <a href="https://github.com/adrianhajdin/">Adrian Hajdin</a>
-      </p>
+
       <p className=" opacity-40 text-center md:text-base text-sm md:font-normal text-white-200">
         Designed with Aceternity UI
       </p>

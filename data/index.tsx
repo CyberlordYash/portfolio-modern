@@ -222,6 +222,19 @@ export const companies = [
 
 export const workExperience = [
   {
+    id: 6,
+    title: "Associate Software Engineer @ Zanskar Securities",
+    desc: [
+      "• Building low-latency backend systems in Go for high-frequency trading (HFT)",
+      "• Working on real-time data processing and order execution pipelines",
+      "• Optimizing performance using Go routines, channels, and efficient system design",
+    ],
+
+    className: " md:col-span-11 w-[100%]",
+    thumbnail: "/logo.jpg",
+    date: "July 2025 - Present",
+  },
+  {
     id: 5,
     title: "Software Developer Intern @ Onefinnet",
     desc: [
@@ -229,10 +242,9 @@ export const workExperience = [
       "• Leading frontend development for key projects like Spot Chat Platform and Meeting Platform, boosting customer engagement and revenue",
       "• Spearheading backend development for critical projects, leveraging Go language to build scalable and efficient systems.",
     ],
-    className:
-      " bg-gradient-to-r from-violet-600 to-indigo-600 md:col-span-11 w-[100%]",
+    className: " md:col-span-11 w-[100%]",
     thumbnail: "/onefinnet.png",
-    date: "January 2025 - Present",
+    date: "January 2025 - June 2025",
   },
   {
     id: 0,
@@ -244,7 +256,7 @@ export const workExperience = [
       "• Automated customer contact via email and WhatsApp for pending invoices, improving invoice recovery rates by 60%.",
       "• Designed a scalable backend architecture using PostgreSQL, FeatherJS, and GCP.",
     ],
-    className: "bg-[#293d9a] md:col-span-11  w-[100%]",
+    className: " md:col-span-11  w-[100%]",
     thumbnail: "/ambill.jpg",
     date: "July 2024 - October 2024",
   },
@@ -254,7 +266,7 @@ export const workExperience = [
     desc: [
       "Developed and maintained user-facing features using modern technologies.",
     ],
-    className: "bg-[#06638d] md:col-span-5",
+    className: " md:col-span-5",
     thumbnail: "/hero.png",
   },
   {
@@ -263,14 +275,14 @@ export const workExperience = [
     desc: [
       " Solved over 1300+ problems with multiple contests to earn the Guardian badge",
     ],
-    className: "bg-[#554590] md:col-span-5",
+    className: " md:col-span-5",
     thumbnail: "/guardian.gif",
   },
   {
     id: 2,
     title: "4 Star @ Codechef (1850+)",
     desc: [" Solved over 50+ problems on codechef contests to earn 3 stars"],
-    className: "bg-[#293d9a] md:col-span-5", // change to md:col-span-2
+    className: " md:col-span-5", // change to md:col-span-2
     thumbnail: "/codechef.svg",
   },
   {
@@ -279,7 +291,7 @@ export const workExperience = [
     desc: [
       "Got recommendation letter from Indian Army Officer Entry NDA after clearing 5day long SSB process with AIR: 193",
     ],
-    className: "bg-[#06638d] md:col-span-5", // change to md:col-span-2
+    className: "md:col-span-5", // change to md:col-span-2
     thumbnail: "/soldier.svg",
   },
 ];

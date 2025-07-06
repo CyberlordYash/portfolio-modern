@@ -66,7 +66,6 @@ export const BentoGridItem = ({
         className
       )}
     >
-      {/* ✅ Glowing Effect moved up, placed directly inside relative container */}
       <GlowingEffect
         blur={0}
         borderWidth={3}

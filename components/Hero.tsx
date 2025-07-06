@@ -16,7 +16,7 @@ const Hero = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-      className="min-h-[93vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6"
+      className="min-h-[90vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6"
     >
       {/* 🌟 Spotlights */}
       <div>
@@ -65,9 +65,8 @@ const Hero = () => {
             , a high-frequency trading and algorithmic research platform
             building ultra-low-latency systems. I specialize in backend systems
             using <span className="text-cyan-500 font-semibold">Golang</span>,{" "}
-            <span className="text-yellow-500">Node.js</span>, and scalable
-            cloud-native architecture. My frontend roots lie in{" "}
-            <span className="text-blue-500">React</span> and{" "}
+            <span className="text-yellow-500">Node.js</span>. My frontend roots
+            lie in <span className="text-blue-500">React</span> and{" "}
             <span className="text-green-500">Next.js</span>, with a strong
             foundation in <span className="text-orange-400">C++</span> and
             performance-oriented engineering — building from{" "}
@@ -76,7 +75,7 @@ const Hero = () => {
           </p>
 
           {/* 🔗 Social Links */}
-          <ul className="wrapper mt-6 flex flex-wrap justify-center gap-4">
+          <ul className="wrapper mt-4 flex flex-wrap justify-center gap-4">
             <a
               href="https://www.linkedin.com/in/yashsachan321/"
               target="_blank"

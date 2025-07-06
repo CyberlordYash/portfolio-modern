@@ -6,10 +6,7 @@ import { CanvasRevealEffect } from "@/components/ui/CanvanRevealEffect";
 
 const Approach = () => {
   return (
-    <section className=" py-10  w-[100%] m-[auto] mt-2 p-6 rounded-2xl bg-white  dark:bg-black">
-      <h1 className="heading">
-        My Approach to <span className=" text-purple">Development</span>
-      </h1>
+    <section className=" py-1  w-[100%] m-[auto] mt-2 p-6 rounded-2xl bg-white  dark:bg-black">
       <div className="my-20 flex flex-col lg:flex-row items-center justify-center gap-4">
         <Card
           title="Planning & Strategy"
