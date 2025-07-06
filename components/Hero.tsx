@@ -5,7 +5,7 @@ import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
 import { SiLeetcode, SiLinkedin, SiCodechef } from "react-icons/si";
 import Image from "next/image";
-import onefinnet from "../public/onefinnet.png";
+import logo from "../public/logo.jpg";
 import { motion } from "framer-motion";
 import { Meteors } from "./ui/Metors";
 import "./hero.css";
@@ -26,7 +26,7 @@ const Hero = () => {
         />
         <Spotlight
           className="top-10 -left-full h-[80vh] w-[50vw]"
-          fill="purple"
+          fill="blue"
         />
         <Spotlight className="top-28 left-80 h-[80vh] w-[50vw]" fill="blue" />
       </div>
@@ -48,29 +48,31 @@ const Hero = () => {
             <strong className="text-black dark:text-white">Yash</strong>, a
             passionate Software Engineer at{" "}
             <a
-              href="https://onefinnet.com/"
+              href="https://zanskar.xyz/"
               target="_blank"
               rel="noopener noreferrer"
               className="underline font-semibold text-black dark:text-white"
             >
               <Image
-                src={onefinnet}
-                alt="Onefinnet logo"
+                src={logo}
+                alt="Zanskar logo"
                 width={24}
                 height={24}
                 className="inline-block rounded-md mr-1"
               />
-              Onefinnet
+              Zanskar
             </a>
-            , headquartered in New York. I specialize in modern web platforms
-            using <span className="text-blue-500">React</span>,{" "}
-            <span className="text-green-500">Next.js</span>,{" "}
-            <span className="text-yellow-500">Node.js</span>, and{" "}
-            <span className="text-pink-500">Golang</span>. My roots lie in{" "}
-            <span className="text-orange-400">C++</span> and frontend
-            engineering — building high-quality UIs from{" "}
+            , a high-frequency trading and algorithmic research platform
+            building ultra-low-latency systems. I specialize in backend systems
+            using <span className="text-cyan-500 font-semibold">Golang</span>,{" "}
+            <span className="text-yellow-500">Node.js</span>, and scalable
+            cloud-native architecture. My frontend roots lie in{" "}
+            <span className="text-blue-500">React</span> and{" "}
+            <span className="text-green-500">Next.js</span>, with a strong
+            foundation in <span className="text-orange-400">C++</span> and
+            performance-oriented engineering — building from{" "}
             <span className="text-orange-400">In</span>
-            <span className="text-green-400">dia</span>.
+            <span className="text-green-400">dia</span>.{" "}
           </p>
 
           {/* 🔗 Social Links */}

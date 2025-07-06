@@ -34,7 +34,7 @@ export const TextGenerateEffect = ({
               key={word + idx}
               className={`${
                 idx > 1
-                  ? " text-violet-700 dark:text-purple"
+                  ? " text-blue-800 dark:text-blue-300"
                   : "dark:text-white text-black"
               } opacity-0`}
             >
