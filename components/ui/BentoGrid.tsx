@@ -106,13 +106,13 @@ export const BentoGridItem = ({
         <div
           className={cn(
             titleClassName,
-            "relative z-10 min-h-40 px-5 py-5 lg:p-10 flex flex-col gap-4"
+            "relative z-10 min-h-40 px-5 py-5 lg:px-10 flex flex-col gap-4"
           )}
         >
-          <div className="font-Quicksand font-extralight md:text-s lg:text-base text-sm">
+          <div className="font-Quicksand font-extralight md:text-s lg:text-m text-sm">
             {description}
           </div>
-          <div className="font-Quicksand text-lg lg:text-2xl max-w-96 font-bold">
+          <div className="font-Quicksand text-m lg:text-lg max-w-96 font-bold">
             {title}
           </div>
 

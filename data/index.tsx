@@ -35,7 +35,7 @@ export const gridItems = [
     description:
       "I am a problem-solving full-stack developer with expertise in mobile and web application development. + A fast learner who thrives on collaborating with clients to develop efficient, scalable, and user-friendly solutions that address real-world challenges",
     className:
-      "h-[20vh] bg-cover   lg:col-span-3 md:col-span-3 md:row-span-2 lg:min-h-[60vh]",
+      "h-[40vh] bg-cover   lg:col-span-3 md:col-span-3 md:row-span-2 lg:min-h-[10vh]",
     imgClassName: "w-full h-full",
     titleClassName: "justify-end",
     img: "",
@@ -46,7 +46,7 @@ export const gridItems = [
     title:
       "Driven by a thirst for innovation and a desire to make a tangible impact in the tech world",
     description: "",
-    className: "  lg:col-span-2 md:col-span-3 md:row-span-1",
+    className: "h-[20vh]  lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
     titleClassName: "justify-start",
     img: "",
@@ -57,7 +57,7 @@ export const gridItems = [
     id: 3,
     title: "My tech stack",
     description: "I constantly try to improve",
-    className: "lg:col-span-2 md:col-span-3 md:row-span-1",
+    className: "h-[20vh] lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
     titleClassName: "justify-center",
     img: "",

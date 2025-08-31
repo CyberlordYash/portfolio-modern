@@ -9,6 +9,7 @@ import logo from "../public/logo.jpg";
 import { motion } from "framer-motion";
 import { Meteors } from "./ui/Metors";
 import "./hero.css";
+import { SparklesCore } from "./ui/sparkles";
 
 const Hero = () => {
   return (
@@ -16,7 +17,7 @@ const Hero = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-      className="min-h-[90vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6"
+      className="min-h-[93vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6"
     >
       {/* 🌟 Spotlights */}
       <div>
@@ -37,13 +38,18 @@ const Hero = () => {
           <p className="font-semibold uppercase tracking-widest text-base sm:text-lg dark:text-blue-100 text-gray-800 font-Orbitron mb-2">
             Yash Sachan
           </p>
-
+          <div className="w-[40rem] h-10 relative">
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+          </div>
           <TextGenerateEffect
-            className="text-xl sm:text-3xl md:text-5xl lg:text-5xl font-Orbitron"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-3xl font-Orbitron"
             words="Engineering impactful digital experiences with precision and purpose."
           />
 
-          <p className="font-Quicksand text-sm sm:text-base font-normal mt-4 text-gray-700 dark:text-gray-300 leading-relaxed px-1">
+          <p className="font-Quicksand text-sm sm:text-m font-normal mt-4 text-gray-700 dark:text-gray-300 leading-relaxed px-1">
             Hello, I&apos;m{" "}
             <strong className="text-black dark:text-white">Yash</strong>, a
             passionate Software Engineer at{" "}
