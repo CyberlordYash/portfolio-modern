@@ -49,6 +49,12 @@ const Experience = () => {
                     <h1 className="lg:text-start text-center text-xl md:text-2xl font-bold text-black-100 dark:text-white-100">
                       {card.title}
                     </h1>
+                    <div className="w-[40rem] h-5 relative">
+                      <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+                      <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+                      <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+                      <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+                    </div>
                     <div className="m-1 text-start text-black-200 dark:text-white-100 mt-3 font-semibold">
                       {card.desc.map((point: any, index: any) => (
                         <p key={index}>{point}</p>
