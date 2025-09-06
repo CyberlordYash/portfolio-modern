@@ -96,7 +96,7 @@ export default function Home() {
   return (
     <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
       {isLoading ? (
-        <div className="flex justify-center items-center h-full w-full">
+        <div className="flex justify-center items-center h-screen w-full">
           <Loading />
         </div>
       ) : (
@@ -142,48 +142,39 @@ export default function Home() {
             </SidebarBody>
           </Sidebar>
           <div className="flex-1 h-screen overflow-y-auto">
-            {/* <ToggleDarkModeButton /> */}
+            <ToggleDarkModeButton />
             <TopBar />
             <div className="w-full p-2">
               <FloatingNav navItems={navItems} className="font-Quicksand" />
 
-              <FadeInSection>
-                <Hero />
-              </FadeInSection>
-              <FadeInSection>
-                <Skills />
-              </FadeInSection>
-              <FadeInSection>
-                <Grid />
-              </FadeInSection>
-              <FadeInSection>
-                <h1 className="p-4 heading dark:text-black-100 text-white-100">
-                  My
-                  <span className="dark:text-blue-800 text-blue-200 font-Orbitron">
-                    {" "}
-                    Experience
-                  </span>
-                </h1>
-                <Experience />
-              </FadeInSection>
-              <FadeInSection>
-                <RecentProjects />
-              </FadeInSection>
-              <FadeInSection>
-                <Certificates />
-              </FadeInSection>
-              <FadeInSection>
-                <h1 className="p-4 heading dark:text-black-100 text-white-100">
-                  My Approach to{" "}
-                  <span className="dark:text-blue-800 text-blue-200">
-                    Development
-                  </span>
-                </h1>
-                <Approach />
-              </FadeInSection>
-              <FadeInSection>
-                <Footer />
-              </FadeInSection>
+              <Hero />
+
+              <Skills />
+
+              <Grid />
+
+              <h1 className="p-4 heading dark:text-black-100 text-white-100">
+                My
+                <span className="dark:text-blue-800 text-blue-200 font-Orbitron">
+                  {" "}
+                  Experience
+                </span>
+              </h1>
+              <Experience />
+
+              <RecentProjects />
+
+              <Certificates />
+
+              <h1 className="p-4 heading dark:text-black-100 text-white-100">
+                My Approach to{" "}
+                <span className="dark:text-blue-800 text-blue-200">
+                  Development
+                </span>
+              </h1>
+              <Approach />
+
+              <Footer />
             </div>
           </div>
         </div>
