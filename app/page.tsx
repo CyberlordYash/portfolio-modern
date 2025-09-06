@@ -17,6 +17,15 @@ import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import { FloatingNav } from "@/components/ui/FloatingNav";
 import { navItems } from "@/data";
 
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import {
+  IconArrowLeft,
+  IconBrandTabler,
+  IconSettings,
+  IconUserBolt,
+} from "@tabler/icons-react";
+import { cn } from "@/utils/cn";
+
 // 👇 Inline FadeInSection Component
 function FadeInSection({ children }: { children: React.ReactNode }) {
   const controls = useAnimation();
@@ -44,7 +53,36 @@ function FadeInSection({ children }: { children: React.ReactNode }) {
     </motion.div>
   );
 }
-
+const links = [
+  {
+    label: "Home",
+    href: "#home",
+    icon: (
+      <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+    ),
+  },
+  {
+    label: "Projects",
+    href: "#projects",
+    icon: (
+      <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+    ),
+  },
+  {
+    label: "Contact",
+    href: "#contact",
+    icon: (
+      <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+    ),
+  },
+  {
+    label: "",
+    href: "#",
+    icon: (
+      <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+    ),
+  },
+];
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,59 +92,101 @@ export default function Home() {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-
+  const [open, setOpen] = useState(false);
   return (
-    <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto p-2 font-Quicksand min-h-screen">
+    <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
       {isLoading ? (
         <div className="flex justify-center items-center h-full w-full">
           <Loading />
         </div>
       ) : (
-        <>
-          <ToggleDarkModeButton />
-          <TopBar />
-          <div className="w-full">
-            <FloatingNav navItems={navItems} className="font-Quicksand" />
+        <div
+          className={cn(
+            "mx-auto flex w-full  flex-1 flex-col overflow-hidden rounded-md border md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
+            "h-screen"
+          )}
+        >
+          <Sidebar open={open} setOpen={setOpen}>
+            <SidebarBody className="justify-between gap-10">
+              <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+                <img
+                  src="/logo.png"
+                  className="h-7 w-7 shrink-0 rounded-full"
+                  width={50}
+                  height={50}
+                  alt="Avatar"
+                />
+                <div className="mt-8 flex flex-col gap-2">
+                  {links.map((link, idx) => (
+                    <SidebarLink key={idx} link={link} />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <SidebarLink
+                  link={{
+                    label: "Yash Sachan",
+                    href: "#",
+                    icon: (
+                      <img
+                        src="https://media.licdn.com/dms/image/v2/D5603AQFmD9Vyo4Smww/profile-displayphoto-shrink_400_400/B56ZWKZbrcHEAk-/0/1741783681329?e=1759968000&v=beta&t=vLvMCe-qhRcLhOjx76IA2nVDmQ5T4k2exgFzSh4kf3A"
+                        className="h-7 w-7 shrink-0 rounded-full"
+                        width={50}
+                        height={50}
+                        alt="Avatar"
+                      />
+                    ),
+                  }}
+                />
+              </div>
+            </SidebarBody>
+          </Sidebar>
+          <div className="flex-1 h-screen overflow-y-auto">
+            {/* <ToggleDarkModeButton /> */}
+            <TopBar />
+            <div className="w-full p-2">
+              <FloatingNav navItems={navItems} className="font-Quicksand" />
 
-            <FadeInSection>
-              <Hero />
-            </FadeInSection>
-            <FadeInSection>
-              <Skills />
-            </FadeInSection>
-            <FadeInSection>
-              <Grid />
-            </FadeInSection>
-            <FadeInSection>
-              <h1 className=" p-4 heading dark:text-black-100 text-white-100">
-                My
-                <span className=" dark:text-blue-800 text-blue-200  font-Orbitron">
-                  {" "}
-                  Experience
-                </span>
-              </h1>
-              <Experience />
-            </FadeInSection>
-            <FadeInSection>
-              <RecentProjects />
-            </FadeInSection>
-            <FadeInSection>
-              <Certificates />
-            </FadeInSection>
-            <FadeInSection>
-              <h1 className=" p-4 heading dark:text-black-100 text-white-100">
-                My Approach to{" "}
-                <span className="  dark:text-blue-800 text-blue-200">
-                  Development
-                </span>
-              </h1>
-              <Approach />
-            </FadeInSection>
-            <FadeInSection>
-              <Footer />
-            </FadeInSection>
+              <FadeInSection>
+                <Hero />
+              </FadeInSection>
+              <FadeInSection>
+                <Skills />
+              </FadeInSection>
+              <FadeInSection>
+                <Grid />
+              </FadeInSection>
+              <FadeInSection>
+                <h1 className="p-4 heading dark:text-black-100 text-white-100">
+                  My
+                  <span className="dark:text-blue-800 text-blue-200 font-Orbitron">
+                    {" "}
+                    Experience
+                  </span>
+                </h1>
+                <Experience />
+              </FadeInSection>
+              <FadeInSection>
+                <RecentProjects />
+              </FadeInSection>
+              <FadeInSection>
+                <Certificates />
+              </FadeInSection>
+              <FadeInSection>
+                <h1 className="p-4 heading dark:text-black-100 text-white-100">
+                  My Approach to{" "}
+                  <span className="dark:text-blue-800 text-blue-200">
+                    Development
+                  </span>
+                </h1>
+                <Approach />
+              </FadeInSection>
+              <FadeInSection>
+                <Footer />
+              </FadeInSection>
+            </div>
           </div>
-        </>
+        </div>
       )}
     </main>
   );
