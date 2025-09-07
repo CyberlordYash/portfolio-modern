@@ -60,7 +60,7 @@ export const FloatingNav = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "ml-8 fixed bottom-6 right-[45px] transform -translate-x-1/2 z-[5000] px-3 py-2 rounded-2xl border shadow-md bg-white dark:bg-black text-black dark:text-white font-semibold flex items-center justify-center gap-3 md:gap-6",
+        "fixed bottom-2 right-[25%] md:right-[35%] transform -translate-x-1/2 z-[5000] px-3 py-2 rounded-2xl border shadow-md bg-white dark:bg-black text-black dark:text-white font-semibold flex items-center justify-center gap-3 md:gap-6",
         className
       )}
       style={{

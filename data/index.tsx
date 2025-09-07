@@ -140,50 +140,27 @@ export const projects = [
 ];
 
 export const testimonials = [
+  { quote: "React.js", name: "Frontend Development", title: "1" },
+  { quote: "Next.js", name: "Fullstack Development", title: "2" },
+  { quote: "JavaScript (ES6+)", name: "Programming", title: "3" },
+  { quote: "C++", name: "DSA & Competitive Programming", title: "4" },
+  { quote: "SQL / PostgreSQL", name: "Database Management", title: "5" },
+  { quote: "Node.js", name: "Backend Development", title: "6" },
+  { quote: "MongoDB", name: "NoSQL Databases", title: "7" },
+  { quote: "Golang", name: "Backend & HFT Systems", title: "8" },
+  { quote: "Spring Boot", name: "Java Backend Framework", title: "9" },
+  { quote: "Java", name: "Object-Oriented Programming", title: "10" },
+  { quote: "PostgreSQL", name: "Relational Databases", title: "11" },
+  { quote: "TailwindCSS", name: "UI Styling & Design", title: "12" },
   {
-    quote: "React JS",
-    name: "Web Develop,emt",
-    title: "1",
+    quote: "GCP",
+    name: "Cloud Infrastructure",
+    title: "13",
   },
   {
-    quote: "Next JS",
-    name: "Web Develop,emt",
-    title: "2",
-  },
-  {
-    quote: "JavaScript",
-    name: "Web Develop,emt",
-    title: "3",
-  },
-  {
-    quote: "C++",
-    name: "Programming",
-    title: "4",
-  },
-  {
-    quote: "SQL",
-    name: "Web Develop",
-    title: "5",
-  },
-  {
-    quote: "Node js",
-    name: "Web Develop",
-    title: "6",
-  },
-  {
-    quote: "Mongo DB",
-    name: "Web Develop",
-    title: "7",
-  },
-  {
-    quote: "FireBase",
-    name: "Web Develop",
-    title: "8",
-  },
-  {
-    quote: "Express",
-    name: "Web Develop",
-    title: "9",
+    quote: "Git / GitHub",
+    name: "Version Control & Collaboration",
+    title: "14",
   },
 ];
 

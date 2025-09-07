@@ -2,11 +2,19 @@
 
 import { cn } from "@/utils/cn";
 import React, { useEffect, useState } from "react";
-import { FaNode, FaReact } from "react-icons/fa";
-import { SiExpress, SiMongodb, SiNextdotjs } from "react-icons/si";
+import { FaGitAlt, FaJava, FaNode, FaReact } from "react-icons/fa";
+import {
+  SiExpress,
+  SiGo,
+  SiGooglecloud,
+  SiMongodb,
+  SiNextdotjs,
+  SiPostgresql,
+  SiSpringboot,
+  SiTailwindcss,
+} from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
 import { PiFileCppFill, PiFileSqlLight } from "react-icons/pi";
-import { RiFirebaseLine } from "react-icons/ri";
 
 export const InfiniteMovingCards = ({
   items,
@@ -86,44 +94,59 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[120px] h-[120px] rounded-2xl  flex-shrink-0 p-2 md:p-4 lg:p-6 bg-blue-700"
+            className="relative w-[120px] h-[120px] rounded-2xl  flex-shrink-0 p-2 md:p-4 lg:p-6 bg-blue-700 overflow-hidden"
             key={item.name}
           >
             <blockquote>
               <div
                 aria-hidden="true"
-                className="user-select-none pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
+                className="user-select-none pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)] overflow-hidden"
               ></div>
               <span className="relative z-20 text-xs md:text-sm lg:text-base leading-[1.6] text-gray-100 font-normal">
                 {item.quote}
               </span>
             </blockquote>
             {item.title === "1" && (
-              <FaReact className="text-white w-[64px] h-[64px]" />
+              <FaReact className="text-cyan-400 w-[64px] h-[64px]" />
             )}
             {item.title === "2" && (
               <SiNextdotjs className="text-white w-[64px] h-[64px]" />
             )}
             {item.title === "3" && (
-              <IoLogoJavascript className="text-white w-[64px] h-[64px]" />
+              <IoLogoJavascript className="text-yellow-400 w-[64px] h-[64px]" />
             )}
             {item.title === "4" && (
-              <PiFileCppFill className="text-white w-[64px] h-[64px]" />
+              <PiFileCppFill className="text-blue-500 w-[64px] h-[64px]" />
             )}
             {item.title === "5" && (
-              <PiFileSqlLight className="text-white w-[64px] h-[64px]" />
+              <PiFileSqlLight className="text-green-400 w-[64px] h-[64px]" />
             )}
             {item.title === "6" && (
-              <FaNode className="text-white w-[64px] h-[64px]" />
+              <FaNode className="text-green-500 w-[64px] h-[64px]" />
             )}
             {item.title === "7" && (
-              <SiMongodb className="text-white w-[64px] h-[64px]" />
+              <SiMongodb className="text-green-600 w-[64px] h-[64px]" />
             )}
             {item.title === "8" && (
-              <RiFirebaseLine className="text-white w-[64px] h-[64px]" />
+              <SiGo className="text-sky-500 w-[64px] h-[64px]" />
             )}
             {item.title === "9" && (
-              <SiExpress className="text-white w-[64px] h-[64px]" />
+              <SiSpringboot className="text-green-500 w-[64px] h-[64px]" />
+            )}
+            {item.title === "10" && (
+              <FaJava className="text-red-500 w-[64px] h-[64px]" />
+            )}
+            {item.title === "11" && (
+              <SiPostgresql className="text-sky-700 w-[64px] h-[64px]" />
+            )}
+            {item.title === "12" && (
+              <SiTailwindcss className="text-sky-400 w-[64px] h-[64px]" />
+            )}
+            {item.title === "13" && (
+              <SiGooglecloud className="text-blue-500 w-[64px] h-[64px]" />
+            )}
+            {item.title === "14" && (
+              <FaGitAlt className="text-orange-500 w-[64px] h-[64px]" />
             )}
           </li>
         ))}

@@ -150,8 +150,6 @@ export default function Home() {
 
               <Skills />
 
-              <Grid />
-
               <h1 className="p-4 heading dark:text-black-100 text-white-100">
                 My
                 <span className="dark:text-blue-800 text-blue-200 font-Orbitron">
@@ -161,6 +159,8 @@ export default function Home() {
               </h1>
 
               <Experience />
+
+              <Grid />
 
               <RecentProjects />
 

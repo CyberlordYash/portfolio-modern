@@ -4,6 +4,148 @@ import { Button } from "./ui/MovingBorders";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GlowingEffect } from "./ui/glowing-effect";
+import { Timeline } from "@/components/ui/timeline";
+const data = [
+  {
+    title: "July 2025 - Present",
+    content: (
+      <div>
+        <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
+          Associate Software Engineer @ Zanskar Securities
+        </p>
+        <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          • Building low-latency backend systems in Go for high-frequency
+          trading (HFT) <br />• Working on real-time data processing and order
+          execution pipelines <br />• Optimizing performance using Go routines,
+          channels, and efficient system design
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.4),_0_0_30px_rgba(34,197,94,0.2)] md:h-44 lg:h-60">
+            <img
+              src="/logo.jpg"
+              alt="Zanskar Securities"
+              className="max-h-full max-w-full object-contain p-4"
+            />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "January 2025 - June 2025",
+    content: (
+      <div>
+        <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
+          Software Developer Intern @ Onefinnet
+        </p>
+
+        <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          • Building Responsive, High-Performance Web Solutions <br />
+          • Leading frontend development for Spot Chat Platform & Meeting
+          Platform <br />• Spearheading backend development using Go to build
+          scalable systems
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-blue-400/30 shadow-[0_0_15px_rgba(59,130,246,0.4),_0_0_30px_rgba(59,130,246,0.2)] md:h-44 lg:h-60">
+            <img
+              src="/onefinnet.png"
+              alt="Onefinnet"
+              className="max-h-full max-w-full object-contain p-4"
+            />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "July 2024 - October 2024",
+    content: (
+      <div>
+        <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-500 via-emerald-500 to-lime-500 dark:from-green-400 dark:via-emerald-400 dark:to-lime-400">
+          Software Developer Intern @ Modulus Technologies LLP
+        </p>
+
+        <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          • Developed SAAS Billing app with NextJS, FeatherJS, PostgreSQL,
+          Typescript, TailwindCSS <br />
+          • Engineered customer management, invoicing, GST handling, Chart of
+          Accounts <br />
+          • Migrated system from React → Next.js (30% faster load times, better
+          retention) <br />
+          • Automated email & WhatsApp follow-ups, improving recovery rates by
+          60% <br />• Designed scalable backend with PostgreSQL, FeatherJS, and
+          GCP
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-purple-400/30 shadow-[0_0_15px_rgba(168,85,247,0.4),_0_0_30px_rgba(168,85,247,0.2)] md:h-44 lg:h-60">
+            <img
+              src="/ambill.jpg"
+              alt="Ambill"
+              className="max-h-full max-w-full object-contain p-4"
+            />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Competitive Programming",
+    content: (
+      <div>
+        <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 dark:from-orange-400 dark:via-amber-400 dark:to-yellow-400">
+          Guardian @ LeetCode (2200+) & 4⭐ @ CodeChef (1850+)
+        </p>
+
+        <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          • Solved 1300+ problems on LeetCode, Guardian badge holder <br />• 4⭐
+          on CodeChef with 50+ solved problems
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <img
+            src="/guardian.gif"
+            alt="LeetCode Guardian"
+            width={500}
+            height={500}
+            className="h-20 w-full rounded-lg object-contain shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] md:h-44 lg:h-60"
+          />
+          <img
+            src="/codechef.svg"
+            alt="CodeChef 4 Star"
+            width={500}
+            height={500}
+            className="h-20 w-full rounded-lg object-contain shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] md:h-44 lg:h-60"
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "AIR 193 - NDA",
+    content: (
+      <div>
+        <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-red-500 dark:from-blue-400 dark:via-indigo-400 dark:to-red-400">
+          Cleared NDA SSB Interview with All India Rank 193
+        </p>
+
+        <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          • Recommended by Indian Army Officer Entry after a 5-day long SSB
+          process <br />• Showcased leadership, strategy, and decision-making
+          under pressure
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <img
+            src="/soldier.svg"
+            alt="NDA"
+            width={500}
+            height={500}
+            className="h-20 w-full rounded-lg object-contain shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] md:h-44 lg:h-60"
+          />
+        </div>
+      </div>
+    ),
+  },
+];
+
 const Experience = () => {
   return (
     <div
@@ -11,56 +153,7 @@ const Experience = () => {
       id="experience"
     >
       <div className=" w-full mt-12 grid  gap-1">
-        {workExperience.map((card: any) => (
-          <div
-            key={card.id}
-            className={` border-2 relative overflow-visible border-black/[0.1] dark:border-white/[0.2] rounded-2xl outer m-1   flex-1 text-white dark:text-white-100
-        flex items-center justify-center 
-          ${card.className}`}
-          >
-            <GlowingEffect
-              blur={0}
-              borderWidth={5}
-              spread={100}
-              glow={true}
-              disabled={false}
-              proximity={84}
-              inactiveZone={0.01}
-            />
-            <div className=" w-[100%]">
-              <div className=" relative w-full flex flex-col gap-2 p-3 py-6 md:p-2 lg:p-2">
-                {/* Top section div */}
-                {card.date != null && (
-                  <div className="  absolute top-1 right-1 w-full max-w-xs h-6 rounded-md text-center font-bold bg-gray-700 text-white">
-                    {card.date}
-                  </div>
-                )}
-
-                {/* Existing content section (row) */}
-                <div className="w-full flex lg:flex-row flex-col  gap-2 justify-center items-center">
-                  <Image
-                    src={card.thumbnail}
-                    alt="image"
-                    width={80}
-                    height={80}
-                    className="lg:w-[130px] md:w-[130px] w-[80px] rounded-xl"
-                  />
-                  <div className="lg:w-[65%] lg:ms-5">
-                    <h1 className="lg:text-start text-center text-xl md:text-2xl font-bold text-black-100 dark:text-white-100">
-                      {card.title}
-                    </h1>
-
-                    <div className="m-1 text-start text-black-200 dark:text-white-100 mt-3 font-semibold">
-                      {card.desc.map((point: any, index: any) => (
-                        <p key={index}>{point}</p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <Timeline data={data} />
       </div>
     </div>
   );
