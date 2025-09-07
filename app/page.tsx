@@ -96,14 +96,14 @@ export default function Home() {
   return (
     <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
       {isLoading ? (
-        <div className="flex justify-center items-center h-dvh w-full">
+        <div className="flex justify-center items-center min-h-screen md:h-screen w-full">
           <Loading />
         </div>
       ) : (
         <div
           className={cn(
             "mx-auto flex w-full  flex-1 flex-col overflow-hidden rounded-md  md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
-            "h-dvh"
+            "min-h-screen md:h-screen"
           )}
         >
           <Sidebar open={open} setOpen={setOpen}>
@@ -141,7 +141,7 @@ export default function Home() {
               </div>
             </SidebarBody>
           </Sidebar>
-          <div className="flex-1 h-dvh overflow-y-auto">
+          <div className="flex-1 min-h-screen md:h-screen overflow-y-auto">
             <ToggleDarkModeButton />
             <TopBar />
             <div className="w-full p-2">
