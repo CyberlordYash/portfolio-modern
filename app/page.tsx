@@ -141,9 +141,8 @@ export default function Home() {
               </div>
             </SidebarBody>
           </Sidebar>
-          <div className="flex-1 min-h-screen md:h-screen overflow-y-auto">
-            <ToggleDarkModeButton />
-            <TopBar />
+          <div className="flex-1 min-h-screen md:h-screen overflow-y-auto overflow-x-hidden">
+            {/* <TopBar /> */}
             <div className="w-full p-2">
               <FloatingNav navItems={navItems} className="font-Quicksand" />
 

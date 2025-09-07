@@ -32,7 +32,7 @@ function ToggleDarkModeButton() {
   return (
     <>
       <div
-        className=" mb-10 mr-4  z-[1000000000000000] bg-red-600 p-1  h-1 fixed  right-0 p-2 rounded-full text-gray-900 dark:text-gray-900 bottom-0"
+        className=" relative z-[1000000000000000] bg-red-600 h-1   right-0 rounded-full text-gray-900 dark:text-gray-900"
         aria-label="Toggle Dark Mode"
       >
         <label className="switch">
