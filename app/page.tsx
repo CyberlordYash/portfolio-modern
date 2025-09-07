@@ -102,7 +102,7 @@ export default function Home() {
       ) : (
         <div
           className={cn(
-            "mx-auto flex w-full  flex-1 flex-col overflow-hidden rounded-md  md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
+            "mx-auto flex w-full  flex-1 flex-col overflow-hidden  md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
             "min-h-screen md:h-screen"
           )}
         >
@@ -160,6 +160,7 @@ export default function Home() {
                   Experience
                 </span>
               </h1>
+
               <Experience />
 
               <RecentProjects />
