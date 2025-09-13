@@ -3,6 +3,24 @@ import { FaHome, FaBriefcase, FaEnvelope } from "react-icons/fa";
 import { HiHomeModern } from "react-icons/hi2";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { MdOutlineMail } from "react-icons/md";
+import {
+  SiApachemaven,
+  SiCss3,
+  SiExpress,
+  SiGradle,
+  SiHibernate,
+  SiJavascript,
+  SiMongodb,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPostman,
+  SiReact,
+  SiRedux,
+  SiSanity,
+  SiSass,
+  SiSocketdotio,
+  SiSpringboot,
+} from "react-icons/si";
 
 type NavItem = {
   name: string;
@@ -101,8 +119,14 @@ export const projects = [
     id: 8,
     title: "Secure File Share",
     des: "Built a secure file-sharing web application with user authentication & authorization (JWT, MFA) and role-based access control (RBAC).",
-    img: "https://de.fi-group.com/wp-content/uploads/sites/19/2023/10/headers-sectors-cybersecurity.webp",
-    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/fm.svg"],
+    img: "/fileshare.png",
+    iconLists: [
+      <SiSpringboot key="spring" className="w-5 h-5 text-green-500" />,
+      <SiJavascript key="java" className="w-5 h-5 text-orange-500" />,
+      <SiApachemaven key="maven" className="w-5 h-5 text-red-500" />,
+      <SiGradle key="gradle" className="w-5 h-5 text-gray-400" />,
+      <SiHibernate key="hibernate" className="w-5 h-5 text-yellow-500" />,
+    ],
     link: "https://github.com/CyberlordYash/SecureFileShare",
   },
   {
@@ -110,7 +134,13 @@ export const projects = [
     title: "Brain Bytes",
     des: "Collaborate and learn! Share your notes on this MERN-powered platform. FInd,create and discuss study materials with ease",
     img: "/brainbytes.jpg",
-    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/fm.svg"],
+    iconLists: [
+      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />,
+      <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express icon is gray by default
+      <SiReact key="react" className="w-5 h-5 text-cyan-400" />,
+      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />,
+      <SiRedux key="redux" className="w-5 h-5 text-purple-500" />,
+    ],
     link: "https://brainbytes-yash.netlify.app/",
   },
   {
@@ -118,7 +148,12 @@ export const projects = [
     title: "Flow Chat",
     des: "Collaborate and learn! Share gour notes on this MERN-powered platform. Find, create, and discuss study materials with ease.",
     img: "/flowchat.jpg",
-    iconLists: ["/next.svg", "/tail.svg", "/ts.svg", "/stream.svg", "/c.svg"],
+    iconLists: [
+      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />,
+      <SiExpress key="express" className="w-5 h-5 text-gray-300" />,
+      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />,
+      <SiSocketdotio key="socketio" className="w-5 h-5 text-yellow-400" />,
+    ],
     link: "https://flowchat-rcnd.onrender.com/",
   },
   {
@@ -126,7 +161,13 @@ export const projects = [
     title: "E bazaar",
     des: "A robust CRUD e-commerce website,browse products, add items to their cart, and complete purchases",
     img: "/ebazaar.jpg",
-    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/c.svg"],
+    iconLists: [
+      <SiNextdotjs key="nextjs" className="w-5 h-5 text-white" />, // Next.js (white/black depending on theme)
+      <SiCss3 key="css" className="w-5 h-5 text-blue-500" />, // CSS
+      <SiSass key="scss" className="w-5 h-5 text-pink-400" />, // SCSS (Sass)
+      <SiSanity key="sanity" className="w-5 h-5 text-red-500" />, // Sanity CMS
+      <SiRedux key="redux" className="w-5 h-5 text-purple-500" />,
+    ],
     link: "https://dev-yash-ebazaar.netlify.app/",
   },
   {
@@ -134,7 +175,12 @@ export const projects = [
     title: "Summarize it",
     des: "Summarize any sites with openAI GPT4",
     img: "/summarise.jpg",
-    iconLists: ["/next.svg", "/tail.svg", "/ts.svg", "/three.svg", "/gsap.svg"],
+    iconLists: [
+      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />, // MongoDB
+      <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express
+      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />, // Node.js
+      <SiPostman key="postman" className="w-5 h-5 text-orange-500" />,
+    ],
     link: "https://dev-yash-summarizeit.netlify.app/",
   },
 ];
