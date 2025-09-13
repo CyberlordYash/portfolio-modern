@@ -15,7 +15,7 @@ const Grid = () => {
       }}
       id="about"
     >
-      <BentoGrid className=" w-[100%] m-[auto] mt-2 p-2 rounded-2xl bg-white  dark:bg-black overflow-hidden">
+      <BentoGrid className=" w-[100%] m-[auto] mt-6 p-2 rounded-2xl bg-white  dark:bg-black overflow-hidden">
         {gridItems.map(
           ({
             id,
