@@ -35,7 +35,7 @@ const Hero = () => {
       {/* 🌐 Main Content */}
       <div className="flex justify-center relative my-12 sm:my-20 z-10 w-full">
         <div className="w-full max-w-[90vw] sm:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center text-center">
-          <p className="font-semibold uppercase tracking-widest text-base sm:text-lg dark:text-blue-100 text-gray-800 font-Orbitron mb-2">
+          <p className="font-semibold uppercase tracking-widest text-xl sm:text-xl dark:text-blue-100 text-gray-800 font-Orbitron mb-2">
             Yash Sachan
           </p>
           <div className="w-[40rem] h-10 relative">
@@ -80,38 +80,48 @@ const Hero = () => {
             <span className="text-green-400">dia</span>.{" "}
           </p>
 
-          {/* 🔗 Social Links */}
-          <ul className="wrapper mt-4 flex flex-wrap justify-center gap-4">
-            <a
-              href="https://www.linkedin.com/in/yashsachan321/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <li className="icon facebook text-black-100">
+          <ul className="social-buttons mt-6 flex flex-wrap justify-center gap-3 sm:gap-4">
+            {/* LinkedIn */}
+            <li>
+              <a
+                href="https://www.linkedin.com/in/yashsachan321/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open LinkedIn profile in a new tab"
+                className="social-btn linkedin group"
+              >
+                <SiLinkedin className="icon" />
                 <span className="tooltip">LinkedIn</span>
-                <SiLinkedin className="text-black dark:text-white w-7 h-7 sm:w-8 sm:h-8" />
-              </li>
-            </a>
-            <a
-              href="https://www.codechef.com/users/cyberlordyash"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <li className="icon twitter">
+              </a>
+            </li>
+
+            {/* CodeChef */}
+            <li>
+              <a
+                href="https://www.codechef.com/users/cyberlordyash"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open CodeChef profile in a new tab"
+                className="social-btn codechef group"
+              >
+                <SiCodechef className="icon" />
                 <span className="tooltip">CodeChef</span>
-                <SiCodechef className="text-black dark:text-white w-7 h-7 sm:w-8 sm:h-8" />
-              </li>
-            </a>
-            <a
-              href="https://leetcode.com/u/yashsachan/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <li className="icon instagram">
+              </a>
+            </li>
+
+            {/* LeetCode */}
+            <li>
+              <a
+                href="https://leetcode.com/u/yashsachan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open LeetCode profile in a new tab"
+                className="social-btn leetcode group"
+              >
+                <SiLeetcode className="icon" />
                 <span className="tooltip">LeetCode</span>
-                <SiLeetcode className="text-black dark:text-white w-7 h-7 sm:w-8 sm:h-8" />
-              </li>
-            </a>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

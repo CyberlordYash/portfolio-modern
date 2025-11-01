@@ -19,19 +19,19 @@ export const FloatingNav = ({
   const [messageIndex, setMessageIndex] = useState(0);
 
   const messages = [
-    "Hello, World! 🌍",
-    "Deploying ideas 🚀",
-    "Code. Debug. Repeat 🔁",
-    "git commit -m 'Welcome' ✅",
-    "Full-stack in progress ⚡",
-    "Debug mode: ON 🐛",
-    "const life = { code: true } 💻",
-    "Automating coffee ☕",
-    "Scaling dreams 📈",
-    "404 Boredom Not Found 😎",
+    "Hello, World!",
+    "Deploying ideas",
+    "Code. Debug. Repeat",
+    "git commit -m 'Welcome'",
+    "Full-stack in progress",
+    "Debug mode: ON",
+    "const life = { code: true }",
+    "Automating coffee",
+    "Scaling dreams",
+    "404 Boredom Not Found",
   ];
 
-  // ⏰ Clock
+  // Clock
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -46,11 +46,11 @@ export const FloatingNav = ({
     return () => clearInterval(interval);
   }, []);
 
-  // 🔄 Rotating messages
+  // Rotating messages
   useEffect(() => {
     const msgInterval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % messages.length);
-    }, 4000); // change every 4 seconds
+    }, 4000);
     return () => clearInterval(msgInterval);
   }, [messages.length]);
 
@@ -60,25 +60,24 @@ export const FloatingNav = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "fixed bottom-2 right-[25%] md:right-[35%] transform -translate-x-1/2 z-[5000] px-3 py-2 rounded-2xl border shadow-md bg-white dark:bg-black text-black dark:text-white font-semibold flex items-center justify-center gap-3 md:gap-6",
+        "floating-nav fixed bottom-2 right-[25%] md:right-[35%] -translate-x-1/2 z-[5000] px-3 py-2 rounded-2xl border font-semibold flex items-center justify-center gap-3 md:gap-6",
+        "text-black dark:text-white",
         className
       )}
-      style={{
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
-      }}
+      role="region"
+      aria-label="Floating navigation and status"
     >
-      {/* 🕒 Clock */}
+      {/* Clock */}
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2, duration: 0.4 }}
         className="text-[10px] sm:text-xs md:text-sm lg:text-base font-mono text-gray-700 dark:text-gray-300"
       >
-        🕒 {time}
+        {time}
       </motion.div>
 
-      {/* 🌟 Rotating Messages */}
+      {/* Rotating Messages */}
       <AnimatePresence mode="wait">
         <motion.div
           key={messageIndex}
@@ -92,7 +91,7 @@ export const FloatingNav = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* 🌙 Toggle Button */}
+      {/* Toggle */}
       <ToggleDarkModeButton />
     </motion.div>
   );

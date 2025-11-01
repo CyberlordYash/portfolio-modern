@@ -1,88 +1,158 @@
-.wrapper {
-  display: inline-flex;
-  list-style: none;
-  height: 120px;
-  width: 100%;
-  padding-top: 40px;
-  font-family: "Poppins", sans-serif;
+@keyframes gradient-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.social-buttons {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  color: rgb(255, 255, 255);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+
+  li {
+    list-style: none;
+  }
+
+  .social-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: 300% 300%;
+    animation: gradient-wave 8s ease infinite;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    background-blend-mode: overlay;
+    transition: transform 0.3s ease, background 0.3s ease;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      z-index: 2;
+      transition: transform 0.25s ease;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:hover svg {
+      transform: scale(1.1);
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -2.2rem;
+      left: 50%;
+      transform: translateX(-50%) scale(0.95);
+      opacity: 0;
+      background: rgba(15, 15, 15, 0.9);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    &:hover .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* === Darker Transparent Gradients === */
+
+    &.linkedin {
+      background-image: linear-gradient(
+        -45deg,
+        rgba(10, 102, 194, 0.25),
+        rgba(3, 60, 120, 0.2),
+        rgba(10, 102, 194, 0.25),
+        rgba(3, 60, 120, 0.2)
+      );
+    }
+
+    &.codechef {
+      background-image: linear-gradient(
+        -45deg,
+        rgba(160, 90, 30, 0.3),
+        rgba(110, 60, 20, 0.25),
+        rgba(160, 90, 30, 0.3),
+        rgba(110, 60, 20, 0.25)
+      );
+    }
+
+    &.leetcode {
+      background-image: linear-gradient(
+        -45deg,
+        rgba(255, 161, 22, 0.3),
+        rgba(0, 160, 120, 0.25),
+        rgba(255, 161, 22, 0.3),
+        rgba(0, 160, 120, 0.25)
+      );
+    }
+
+    /* === Brand-colored Icons === */
+    .linkedin-icon {
+      color: #0a66c2;
+    }
+
+    .codechef-icon {
+      color: #964b00;
+    }
+
+    .leetcode-icon {
+      color: #f89f1b;
+    }
+
+    /* === Dark Mode Tweaks === */
+    @media (prefers-color-scheme: dark) {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background-blend-mode: soft-light;
+
+      .linkedin-icon {
+        color: #33a1f2;
+      }
+
+      .codechef-icon {
+        color: #c4894b;
+      }
+
+      .leetcode-icon {
+        color: #ffb84c;
+      }
+    }
+  }
+}
+
+/* Optional: subtle entrance animation */
+@keyframes iconFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .wrapper .icon {
-  position: relative;
-  background: #ffffff00;
-  border-radius: 50%;
-  margin: 10px;
-  width: 50px;
-  height: 50px;
-  font-size: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .tooltip {
-  position: absolute;
-  top: 0;
-  font-size: 14px;
-  background: #fff;
-  color: #fff;
-  padding: 5px 8px;
-  border-radius: 5px;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .tooltip::before {
-  position: absolute;
-  content: "";
-  height: 8px;
-  width: 8px;
-  background: #fff;
-  bottom: -3px;
-  left: 50%;
-  transform: translate(-50%) rotate(45deg);
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .icon:hover .tooltip {
-  top: -45px;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.wrapper .icon:hover span,
-.wrapper .icon:hover .tooltip {
-  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
-}
-
-.wrapper .facebook:hover,
-.wrapper .facebook:hover .tooltip,
-.wrapper .facebook:hover .tooltip::before {
-  background: #75bbe4;
-  color: #fff;
-}
-
-.wrapper .twitter:hover,
-.wrapper .twitter:hover .tooltip,
-.wrapper .twitter:hover .tooltip::before {
-  background: #ffbb8d;
-  color: #fff;
-}
-
-.wrapper .instagram:hover,
-.wrapper .instagram:hover .tooltip,
-.wrapper .instagram:hover .tooltip::before {
-  background: #f09a1a;
-  color: #fff;
+  animation: iconFadeIn 0.5s ease forwards;
+  animation-delay: calc(var(--index, 0) * 0.1s);
 }
 
 /* bento grid */

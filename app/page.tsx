@@ -94,7 +94,7 @@ export default function Home() {
   }, []);
   const [open, setOpen] = useState(false);
   return (
-    <main className="overflow-hidden relative bg-black dark:bg-white flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
+    <main className="overflow-hidden relative bg-black  flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
       {isLoading ? (
         <div className="flex justify-center items-center min-h-screen md:h-screen w-full">
           <Loading />

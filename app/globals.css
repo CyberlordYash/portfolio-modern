@@ -910,107 +910,147 @@ body {
   height: 100%;
 }
 
-/* //loader */
-/* From Uiverse.io by satyamchaudharydev */
+/* From Uiverse.io by andrew-manzyk */
 .loader {
-  --loader: rgb(49, 180, 255);
-  --loader-size: 30px;
+  --color-one: #4854ff;
+  --color-two: #1dabbe;
+  --color-three: #a647ff80;
+  --color-four: #4213ba80;
+  --color-five: #4d47ff40;
+  --time-animation: 2s;
+  --size: 1; /* You can change the size */
   position: relative;
-  width: 100px;
-  height: 40px;
-  overflow: hidden;
-  transition: 0.5s;
-  letter-spacing: 2px;
+  border-radius: 50%;
+  transform: scale(var(--size));
+  box-shadow: 0 0 25px 0 var(--color-three), 0 20px 50px 0 var(--color-four);
+  animation: colorize calc(var(--time-animation) * 3) ease-in-out infinite;
 }
 
-.loader span {
+.loader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border-top: solid 1px var(--color-one);
+  border-bottom: solid 1px var(--color-two);
+  background: linear-gradient(180deg, var(--color-five), var(--color-four));
+  box-shadow: inset 0 10px 10px 0 var(--color-three),
+    inset 0 -10px 10px 0 var(--color-four);
+}
+
+.loader .box {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(
+    180deg,
+    var(--color-one) 30%,
+    var(--color-two) 70%
+  );
+  mask: url(#clipping);
+  -webkit-mask: url(#clipping);
+}
+
+.loader svg {
   position: absolute;
 }
 
-.loader span:nth-child(1) {
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: var(--loader-size);
-  background: linear-gradient(90deg, transparent, var(--loader));
-  animation: loader-anim1 1s linear infinite;
+.loader svg #clipping {
+  filter: contrast(15);
+  animation: roundness calc(var(--time-animation) / 2) linear infinite;
 }
 
-@keyframes loader-anim1 {
+.loader svg #clipping polygon {
+  filter: blur(7px);
+}
+
+.loader svg #clipping polygon:nth-child(1) {
+  transform-origin: 75% 25%;
+  transform: rotate(90deg);
+}
+
+.loader svg #clipping polygon:nth-child(2) {
+  transform-origin: 50% 50%;
+  animation: rotation var(--time-animation) linear infinite reverse;
+}
+
+.loader svg #clipping polygon:nth-child(3) {
+  transform-origin: 50% 60%;
+  animation: rotation var(--time-animation) linear infinite;
+  animation-delay: calc(var(--time-animation) / -3);
+}
+
+.loader svg #clipping polygon:nth-child(4) {
+  transform-origin: 40% 40%;
+  animation: rotation var(--time-animation) linear infinite reverse;
+}
+
+.loader svg #clipping polygon:nth-child(5) {
+  transform-origin: 40% 40%;
+  animation: rotation var(--time-animation) linear infinite reverse;
+  animation-delay: calc(var(--time-animation) / -2);
+}
+
+.loader svg #clipping polygon:nth-child(6) {
+  transform-origin: 60% 40%;
+  animation: rotation var(--time-animation) linear infinite;
+}
+
+.loader svg #clipping polygon:nth-child(7) {
+  transform-origin: 60% 40%;
+  animation: rotation var(--time-animation) linear infinite;
+  animation-delay: calc(var(--time-animation) / -1.5);
+}
+
+@keyframes rotation {
   0% {
-    left: -100%;
+    transform: rotate(0deg);
   }
-
-  50%,
   100% {
-    left: 100%;
+    transform: rotate(360deg);
   }
 }
 
-.loader span:nth-child(2) {
-  top: -100%;
-  right: 0;
-  width: var(--loader-size);
-  height: 100%;
-  background: linear-gradient(180deg, transparent, var(--loader));
-  animation: loader-anim2 1s linear infinite;
-  animation-delay: 0.25s;
-}
-
-@keyframes loader-anim2 {
+@keyframes roundness {
   0% {
-    top: -100%;
+    filter: contrast(15);
   }
-
-  50%,
+  20% {
+    filter: contrast(3);
+  }
+  40% {
+    filter: contrast(3);
+  }
+  60% {
+    filter: contrast(15);
+  }
   100% {
-    top: 100%;
+    filter: contrast(15);
   }
 }
 
-.loader span:nth-child(3) {
-  bottom: 0;
-  right: -100%;
-  width: 100%;
-  height: var(--loader-size);
-  background: linear-gradient(270deg, transparent, var(--loader));
-  animation: loader-anim3 1s linear infinite;
-  animation-delay: 0.5s;
-}
-
-@keyframes loader-anim3 {
+@keyframes colorize {
   0% {
-    right: -100%;
+    filter: hue-rotate(0deg);
   }
-
-  50%,
+  20% {
+    filter: hue-rotate(-30deg);
+  }
+  40% {
+    filter: hue-rotate(-60deg);
+  }
+  60% {
+    filter: hue-rotate(-90deg);
+  }
+  80% {
+    filter: hue-rotate(-45deg);
+  }
   100% {
-    right: 100%;
+    filter: hue-rotate(0deg);
   }
 }
-
-.loader span:nth-child(4) {
-  bottom: -100%;
-  left: 0;
-  width: var(--loader-size);
-  height: 100%;
-  background: linear-gradient(360deg, transparent, var(--loader));
-  animation: loader-anim4 1s linear infinite;
-  animation-delay: 0.75s;
-}
-
-@keyframes loader-anim4 {
-  0% {
-    bottom: -100%;
-  }
-
-  50%,
-  100% {
-    bottom: 100%;
-  }
-}
-
-
 
 @layer base {
   * {
@@ -1018,5 +1058,164 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.glass {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6),
+    0 16px 32px rgba(0, 0, 0, 0.12);
+  backdrop-filter: url(#frosted);
+  -webkit-backdrop-filter: url(#frosted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  outline: 0;
+}
+
+.glass::before,
+.glass::after {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 10px;
+  background: #fff;
+  border-radius: 10px;
+}
+.glass::after {
+  transform: rotate(90deg);
+}
+
+/* ===== Liquid Glass FloatingNav ===== */
+
+@keyframes glass-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+    filter: saturate(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: saturate(1.05);
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: saturate(1);
+  }
+}
+
+.floating-nav {
+  /* Base glass */
+  --glass-bg-light: rgba(255, 255, 255, 0.45);
+  --glass-bg-dark: rgba(12, 12, 14, 0.45);
+  --glass-border-light: rgba(0, 0, 0, 0.08);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
+
+  position: fixed;
+  isolation: isolate; /* make pseudo-elements clip to this */
+  border: 1px solid var(--glass-border-light);
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* remove heavy shadow; keep it flat and premium */
+  box-shadow: none;
+
+  /* animated gradient wash (subtle) */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    background-image: linear-gradient(
+      120deg,
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(16, 185, 129, 0.1) 35%,
+      rgba(234, 179, 8, 0.1) 65%,
+      rgba(147, 51, 234, 0.1) 100%
+    );
+    background-size: 200% 200%;
+    animation: glass-gradient-shift 14s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* inner highlight (liquid rim) */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+        120% 80% at 0% 0%,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0.04) 35%,
+        transparent 60%
+      )
+      no-repeat;
+    mix-blend-mode: soft-light;
+    z-index: 0;
+  }
+
+  /* super subtle noise to sell the glass */
+  .noise {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+
+    mix-blend-mode: overlay;
+  }
+
+  /* Light/Dark theming */
+  @media (prefers-color-scheme: dark) {
+    background: var(--glass-bg-dark);
+    border-color: var(--glass-border-dark);
+
+    &::before {
+      background-image: linear-gradient(
+        120deg,
+        rgba(37, 99, 235, 0.1) 0%,
+        rgba(5, 150, 105, 0.1) 35%,
+        rgba(217, 119, 6, 0.1) 65%,
+        rgba(126, 34, 206, 0.1) 100%
+      );
+    }
+
+    &::after {
+      background: radial-gradient(
+          120% 80% at 0% 0%,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.03) 35%,
+          transparent 60%
+        )
+        no-repeat;
+    }
+  }
+
+  /* micro-interaction polish */
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    background 0.25s ease;
+  will-change: transform;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Optional: if you want a slightly softer content contrast over glass */
+.floating-nav .text-muted {
+  color: rgba(0, 0, 0, 0.65);
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.72);
   }
 }
