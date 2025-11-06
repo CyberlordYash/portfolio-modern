@@ -83,7 +83,7 @@ const Certificates = () => {
 
   return (
     <div className=" w-[100%] m-[auto] mt-2 p-6 rounded-2xl bg-white  dark:bg-black">
-      <h1 className=" heading font-Orbitron">
+      <h1 className=" heading  tron">
         Certi<span className=" text-blue-800 dark:text-blue-200">ficates</span>
       </h1>
       <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-40">

@@ -10,7 +10,7 @@ const Skills = () => {
     >
       {/* <h1 className=" heading">
         My{" "}
-        <span className=" text-violet-700 dark:text-purple font-Orbitron">
+        <span className=" text-violet-700 dark:text-purple  tron">
           Skills
         </span>
       </h1> */}

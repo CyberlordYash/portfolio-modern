@@ -35,7 +35,7 @@ const Hero = () => {
       {/* 🌐 Main Content */}
       <div className="flex justify-center relative my-12 sm:my-20 z-10 w-full">
         <div className="w-full max-w-[90vw] sm:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center text-center">
-          <p className="font-semibold uppercase tracking-widest text-xl sm:text-xl dark:text-blue-100 text-gray-800 font-Orbitron mb-2">
+          <p className="font-semibold uppercase tracking-widest text-xl sm:text-xl dark:text-blue-100 text-gray-800  tron mb-2">
             Yash Sachan
           </p>
           <div className="w-[40rem] h-10 relative">
@@ -45,7 +45,7 @@ const Hero = () => {
             <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
           </div>
           <TextGenerateEffect
-            className="text-xl sm:text-2xl md:text-3xl lg:text-3xl font-Orbitron"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-3xl s"
             words="Engineering impactful digital experiences with precision and purpose."
           />
 
