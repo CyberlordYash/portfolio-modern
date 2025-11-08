@@ -15,16 +15,29 @@ const data = [
         </p>
         <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
           • Building low-latency backend systems in Go for high-frequency
-          trading (HFT) <br />• Working on real-time data processing and order
-          execution pipelines <br />• Optimizing performance using Go routines,
-          channels, and efficient system design
+          trading (HFT)
+          <br />
+          • Working on real-time data processing and order execution pipelines
+          <br />
+          • Optimizing performance using Go routines, channels, and efficient
+          system design
+          <br />• Working on trading platform{" "}
+          <a
+            href="https://nubra.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline font-medium"
+          >
+            Nubra
+          </a>
         </p>
+
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.4),_0_0_30px_rgba(34,197,94,0.2)] md:h-44 lg:h-60">
+          <div className="relative flex items-center justify-center h-20 w-full rounded-lg bg-white border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.4),_0_0_30px_rgba(34,197,94,0.2)] md:h-44 lg:h-60 overflow-hidden">
             <img
-              src="/logo.jpg"
+              src="/nubra.webp"
               alt="Zanskar Securities"
-              className="max-h-full max-w-full object-contain p-4"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
         </div>
@@ -42,9 +55,9 @@ const data = [
         <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
           • Designing and developing scalable backend systems using Go <br />
           • Building high-performance APIs and microservices for real-time
-          platforms <br />
-          • Leading backend architecture for Spot Chat and Meeting Platforms{" "}
-          <br />• Optimizing database performance and system reliability
+          platforms <br />• Leading backend architecture for Spot Chat and
+          Meeting Platforms <br />• Optimizing database performance and system
+          reliability
         </p>
 
         <div className="grid grid-cols-2 gap-4">
