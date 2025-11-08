@@ -56,8 +56,17 @@ const data = [
           • Designing and developing scalable backend systems using Go <br />
           • Building high-performance APIs and microservices for real-time
           platforms <br />• Leading backend architecture for Spot Chat and
-          Meeting Platforms <br />• Optimizing database performance and system
-          reliability
+          Meeting Platforms <br />
+          • Optimizing database performance and system reliability <br />• Build
+          hiring platform{" "}
+          <a
+            href="https://onefinnet.com/talent"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            OneFinnet Talent
+          </a>
         </p>
 
         <div className="grid grid-cols-2 gap-4">
@@ -88,9 +97,19 @@ const data = [
           • Migrated system from React → Next.js (30% faster load times, better
           retention) <br />
           • Automated email & WhatsApp follow-ups, improving recovery rates by
-          60% <br />• Designed scalable backend with PostgreSQL, FeatherJS, and
-          GCP
+          60% <br />
+          • Designed scalable backend with PostgreSQL, FeatherJS, and GCP <br />
+          • Built invoice automation system{" "}
+          <a
+            href="https://www.ambill.ai/about-us"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Ambill
+          </a>
         </p>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-purple-400/30 shadow-[0_0_15px_rgba(168,85,247,0.4),_0_0_30px_rgba(168,85,247,0.2)] md:h-44 lg:h-60">
             <img
