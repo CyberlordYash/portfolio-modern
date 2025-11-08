@@ -61,7 +61,7 @@ export const FloatingNav = ({
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
         "floating-nav fixed bottom-2 right-[25%] md:right-[35%] -translate-x-1/2 z-[5000] px-3 py-2 rounded-2xl border font-semibold flex items-center justify-center gap-3 md:gap-6",
-        "text-black dark:text-white",
+        " text-white",
         className
       )}
       role="region"
@@ -72,7 +72,7 @@ export const FloatingNav = ({
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2, duration: 0.4 }}
-        className="text-[10px] sm:text-xs md:text-sm lg:text-base font-mono text-gray-700 dark:text-gray-300"
+        className="text-[10px] sm:text-xs md:text-sm lg:text-base font-mono  dark:text-gray-300"
       >
         {time}
       </motion.div>

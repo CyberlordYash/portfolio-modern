@@ -7,9 +7,7 @@ const Footer = () => {
   return (
     <footer className=" w-full pt-20 pb-10" id="contact">
       <div className=" flex flex-col items-center">
-        <h1 className=" heading max-w-[45vw]  tron dark:text-black-100 text-white-200">
-          Get In Touch
-        </h1>
+        <h1 className=" heading max-w-[45vw]   text-white-200">Get In Touch</h1>
         <p className=" text-white-200 md:mt-10 my-5 text-center">
           Reach out to me today and let&apos;s connect
         </p>

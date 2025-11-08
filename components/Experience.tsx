@@ -11,7 +11,7 @@ const data = [
     content: (
       <div>
         <p className="mb-8 text-lg md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
-          Associate Software Engineer @ Zanskar Securities
+          Analyst Software Engineer @ Zanskar Securities
         </p>
         <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
           • Building low-latency backend systems in Go for high-frequency
@@ -40,11 +40,13 @@ const data = [
         </p>
 
         <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
-          • Building Responsive, High-Performance Web Solutions <br />
-          • Leading frontend development for Spot Chat Platform & Meeting
-          Platform <br />• Spearheading backend development using Go to build
-          scalable systems
+          • Designing and developing scalable backend systems using Go <br />
+          • Building high-performance APIs and microservices for real-time
+          platforms <br />
+          • Leading backend architecture for Spot Chat and Meeting Platforms{" "}
+          <br />• Optimizing database performance and system reliability
         </p>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center justify-center h-20 w-full rounded-lg bg-white  border border-blue-400/30 shadow-[0_0_15px_rgba(59,130,246,0.4),_0_0_30px_rgba(59,130,246,0.2)] md:h-44 lg:h-60">
             <img

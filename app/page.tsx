@@ -21,7 +21,11 @@ import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
   IconBrandTabler,
+  IconFolderCode,
+  IconHome,
+  IconMail,
   IconSettings,
+  IconUser,
   IconUserBolt,
 } from "@tabler/icons-react";
 import { cn } from "@/utils/cn";
@@ -58,28 +62,28 @@ const links = [
     label: "Home",
     href: "#home",
     icon: (
-      <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      <IconHome className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-blue-600 dark:text-neutral-300 dark:group-hover:text-blue-400" />
     ),
   },
   {
     label: "Projects",
     href: "#projects",
     icon: (
-      <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      <IconFolderCode className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-emerald-600 dark:text-neutral-300 dark:group-hover:text-emerald-400" />
     ),
   },
   {
     label: "Contact",
     href: "#contact",
     icon: (
-      <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      <IconMail className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-rose-600 dark:text-neutral-300 dark:group-hover:text-rose-400" />
     ),
   },
   {
-    label: "",
-    href: "#",
+    label: "About",
+    href: "#about",
     icon: (
-      <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      <IconUser className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400" />
     ),
   },
 ];
@@ -129,7 +133,7 @@ export default function Home() {
                     href: "#",
                     icon: (
                       <img
-                        src="https://media.licdn.com/dms/image/v2/D5603AQFmD9Vyo4Smww/profile-displayphoto-shrink_400_400/B56ZWKZbrcHEAk-/0/1741783681329?e=1759968000&v=beta&t=vLvMCe-qhRcLhOjx76IA2nVDmQ5T4k2exgFzSh4kf3A"
+                        src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
                         className="h-7 w-7 shrink-0 rounded-full"
                         width={50}
                         height={50}
@@ -150,12 +154,9 @@ export default function Home() {
 
               <Skills />
 
-              <h1 className="p-4 heading dark:text-black-100 text-white-100">
+              <h1 className="p-4 heading text-white-100">
                 My
-                <span className="dark:text-blue-800 text-blue-200  tron">
-                  {" "}
-                  Experience
-                </span>
+                <span className=" text-blue-200  tron"> Experience</span>
               </h1>
 
               <Experience />
@@ -166,11 +167,9 @@ export default function Home() {
 
               <Certificates />
 
-              <h1 className="p-4 heading dark:text-black-100 text-white-100">
+              <h1 className="p-4 heading  text-white-100">
                 My Approach to{" "}
-                <span className="dark:text-blue-800 text-blue-200">
-                  Development
-                </span>
+                <span className=" text-blue-200">Development</span>
               </h1>
               <Approach />
 

@@ -35,21 +35,27 @@ const Hero = () => {
       {/* 🌐 Main Content */}
       <div className="flex justify-center relative my-12 sm:my-20 z-10 w-full">
         <div className="w-full max-w-[90vw] sm:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center text-center">
-          <p className="font-semibold uppercase tracking-widest text-xl sm:text-xl dark:text-blue-100 text-gray-800  tron mb-2">
+          {/* 🔹 Name */}
+          <p className="font-orbitron font-semibold uppercase tracking-widest text-lg sm:text-xl md:text-2xl lg:text-3xl dark:text-blue-100 text-gray-800 tron mb-2 font-Orbitron">
             Yash Sachan
           </p>
-          <div className="w-[40rem] h-10 relative">
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+
+          {/* 🔹 Gradient Line */}
+          <div className="w-[80%] h-8 relative mb-4">
+            <div className="absolute inset-x-16 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+            <div className="absolute inset-x-16 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+            <div className="absolute inset-x-44 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[4px] w-1/4 blur-sm" />
+            <div className="absolute inset-x-44 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
           </div>
+
+          {/* 🔹 Tagline */}
           <TextGenerateEffect
-            className="text-xl sm:text-2xl md:text-3xl lg:text-3xl s"
+            className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-medium leading-snug sm:leading-snug md:leading-tight tracking-tight"
             words="Engineering impactful digital experiences with precision and purpose."
           />
 
-          <p className="font-Quicksand text-sm sm:text-m font-normal mt-4 text-gray-700 dark:text-gray-300 leading-relaxed px-1">
+          {/* 🔹 Description */}
+          <p className="font-Quicksand text-xs sm:text-sm md:text-base lg:text-base font-normal mt-4 sm:mt-6 text-gray-700 dark:text-gray-300 leading-relaxed px-1 sm:px-2">
             Hello, I&apos;m{" "}
             <strong className="text-black dark:text-white">Yash</strong>, a
             passionate Software Engineer at{" "}
@@ -71,15 +77,18 @@ const Hero = () => {
             , a high-frequency trading and algorithmic research platform
             building ultra-low-latency systems. I specialize in backend systems
             using <span className="text-cyan-500 font-semibold">Golang</span>,{" "}
-            <span className="text-yellow-500">Node.js</span>. My frontend roots
-            lie in <span className="text-blue-500">React</span> and{" "}
-            <span className="text-green-500">Next.js</span>, with a strong
-            foundation in <span className="text-orange-400">C++</span> and
+            <span className="text-yellow-500 font-semibold">Node.js</span>. My
+            frontend roots lie in{" "}
+            <span className="text-blue-500 font-semibold">React</span> and{" "}
+            <span className="text-green-500 font-semibold">Next.js</span>, with
+            a strong foundation in{" "}
+            <span className="text-orange-400 font-semibold">C++</span> and
             performance-oriented engineering — building from{" "}
-            <span className="text-orange-400">In</span>
-            <span className="text-green-400">dia</span>.{" "}
+            <span className="text-orange-400 font-semibold">In</span>
+            <span className="text-green-400 font-semibold">dia</span>.
           </p>
 
+          {/* 🔹 Social Links */}
           <ul className="social-buttons mt-6 flex flex-wrap justify-center gap-3 sm:gap-4">
             {/* LinkedIn */}
             <li>
@@ -90,7 +99,7 @@ const Hero = () => {
                 aria-label="Open LinkedIn profile in a new tab"
                 className="social-btn linkedin group"
               >
-                <SiLinkedin className="icon" />
+                <SiLinkedin className="icon text-lg sm:text-xl md:text-2xl" />
                 <span className="tooltip">LinkedIn</span>
               </a>
             </li>
@@ -104,7 +113,7 @@ const Hero = () => {
                 aria-label="Open CodeChef profile in a new tab"
                 className="social-btn codechef group"
               >
-                <SiCodechef className="icon" />
+                <SiCodechef className="icon text-lg sm:text-xl md:text-2xl" />
                 <span className="tooltip">CodeChef</span>
               </a>
             </li>
@@ -118,7 +127,7 @@ const Hero = () => {
                 aria-label="Open LeetCode profile in a new tab"
                 className="social-btn leetcode group"
               >
-                <SiLeetcode className="icon" />
+                <SiLeetcode className="icon text-lg sm:text-xl md:text-2xl" />
                 <span className="tooltip">LeetCode</span>
               </a>
             </li>
