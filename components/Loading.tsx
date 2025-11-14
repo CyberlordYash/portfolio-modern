@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BsStars } from "react-icons/bs";
-
+import { EncryptedText } from "@/components/ui/encrypted-text";
+import dynamic from "next/dynamic";
 const loaderVariants = {
   initial: { opacity: 1 },
   exit: { opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } },
@@ -29,33 +30,10 @@ const Loading = () => {
   }, []);
 
   return (
-    <AnimatePresence>
-      {show && (
-        <div className="loader">
-          <div
-            className="orbe"
-            style={{ "--index": 0 } as React.CSSProperties}
-          ></div>
-          <div
-            className="orbe"
-            style={{ "--index": 1 } as React.CSSProperties}
-          ></div>
-          <div
-            className="orbe"
-            style={{ "--index": 2 } as React.CSSProperties}
-          ></div>
-          <div
-            className="orbe"
-            style={{ "--index": 3 } as React.CSSProperties}
-          ></div>
-          <div
-            className="orbe"
-            style={{ "--index": 4 } as React.CSSProperties}
-          ></div>
-        </div>
-      )}
-    </AnimatePresence>
+    <div className="mx-auto flex max-w-lg items-center justify-center text-white">
+      <EncryptedText flipDelayMs={18000} text="Yash Sachan" />
+    </div>
   );
 };
 
-export default Loading;
+export default dynamic(() => Promise.resolve(Loading), { ssr: false });

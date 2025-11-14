@@ -4,10 +4,12 @@ import { cn } from "@/utils/cn";
 import React, { useEffect, useState } from "react";
 import { FaGitAlt, FaJava, FaNode, FaReact } from "react-icons/fa";
 import {
+  SiApachekafka,
   SiExpress,
   SiGo,
   SiGooglecloud,
   SiMongodb,
+  SiNatsdotio,
   SiNextdotjs,
   SiPostgresql,
   SiSpringboot,
@@ -147,6 +149,13 @@ export const InfiniteMovingCards = ({
             )}
             {item.title === "14" && (
               <FaGitAlt className="text-orange-500 w-[64px] h-[64px]" />
+            )}
+            {item.title === "15" && (
+              <SiNatsdotio className="text-blue-400 w-[64px] h-[64px]" />
+            )}
+
+            {item.title === "16" && (
+              <SiApachekafka className="text-black w-[64px] h-[64px]" />
             )}
           </li>
         ))}

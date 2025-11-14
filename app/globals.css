@@ -1118,6 +1118,43 @@ body {
 .floating-nav .text-muted {
   color: rgba(0, 0, 0, 0.65);
   @media (prefers-color-scheme: dark) {
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0);
   }
+}
+
+.fade-rectangular {
+  mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 30%,
+      black 70%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 30%,
+      black 70%,
+      transparent 100%
+    );
+  mask-size: 100% 100%, 100% 100%;
+  mask-composite: intersect;
+
+  /* Safari support */
+  -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 30%,
+      black 70%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 30%,
+      black 70%,
+      transparent 100%
+    );
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
 }

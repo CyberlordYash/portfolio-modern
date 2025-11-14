@@ -208,6 +208,16 @@ export const testimonials = [
     name: "Version Control & Collaboration",
     title: "14",
   },
+  {
+    quote: "NATS Jetstream",
+    name: "MQ",
+    title: "15",
+  },
+  {
+    quote: "Kafka",
+    name: "Distributed Streaming",
+    title: "16",
+  },
 ];
 
 export const companies = [

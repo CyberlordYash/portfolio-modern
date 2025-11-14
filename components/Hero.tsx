@@ -13,12 +13,7 @@ import { SparklesCore } from "./ui/sparkles";
 
 const Hero = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-      className="min-h-[93vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6"
-    >
+    <div className="min-h-[93vh] w-full mx-auto rounded-2xl bg-white dark:bg-black dark:bg-grid-white/[0.04] bg-grid-black/[0.02] flex items-center justify-center px-4 sm:px-6">
       {/* 🌟 Spotlights */}
       <div>
         <Spotlight
@@ -137,7 +132,7 @@ const Hero = () => {
 
       {/* 🌠 Meteor Effect */}
       <Meteors number={20} />
-    </motion.div>
+    </div>
   );
 };
 
