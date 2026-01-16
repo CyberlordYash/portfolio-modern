@@ -12,7 +12,8 @@ import "./hero.css";
 
 const Hero = () => {
   return (
-    <div className="relative h-screen max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-[#020617] dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden border border-gray-200 dark:border-white/5 shadow-2xl transition-colors duration-500 px-6 md:px-12">
+    <div className="relative min-h-screen lg:h-screen lg:max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-[#020617] dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden border border-gray-200 dark:border-white/5 shadow-2xl transition-colors duration-500 px-6 md:px-12 py-12 lg:py-0">
+      {" "}
       {/* 🌟 Background Sparks */}
       <div className="absolute inset-0 z-0 hidden dark:block">
         <SparklesCore
@@ -25,7 +26,6 @@ const Hero = () => {
           particleColor="#3b82f6"
         />
       </div>
-
       {/* 🔦 Spotlights */}
       <div className="pointer-events-none">
         <Spotlight
@@ -37,7 +37,6 @@ const Hero = () => {
           fill="#3b82f6"
         />
       </div>
-
       {/* 🌐 Main Content Container */}
       <div className="flex flex-col items-center justify-center relative z-20 w-full max-w-6xl">
         {/* 🔹 Name Section */}
@@ -183,7 +182,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
       <Meteors number={8} />
     </div>
   );

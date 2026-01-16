@@ -4,22 +4,27 @@ import { gridItems } from "@/data";
 
 const Grid = () => {
   return (
-    <section id="about" className="py-20 w-full">
-      <div className="max-w-[92vw] 2xl:max-w-[1600px] mx-auto px-4">
-        {/* Consistent Section Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-1 w-8 bg-indigo-600 dark:bg-indigo-500 rounded-full" />
-            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase">
-              System_Overview
-            </span>
+    <section id="about" className="py-12 w-full bg-slate-50 dark:bg-[#020617]">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Sleek Minimalist Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="h-[2px] w-4 bg-indigo-500 rounded-full" />
+              <span className="text-[10px] font-mono font-bold text-indigo-500 uppercase tracking-[0.3em]">
+                System_Core.v2
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tighter">
+              About_<span className="text-indigo-500">Me</span>
+            </h2>
           </div>
-          <h2 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white tracking-tighter">
-            About_Me
-          </h2>
+          <p className="text-slate-500 dark:text-slate-400 font-mono text-xs max-w-xs md:text-right">
+            Technical overview of core competencies and professional background.
+          </p>
         </div>
 
-        <BentoGrid className="w-full">
+        <BentoGrid className="grid-auto-rows-[12rem]">
           {gridItems.map((item) => (
             <BentoGridItem
               id={item.id}

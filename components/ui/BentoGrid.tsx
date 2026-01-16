@@ -6,7 +6,6 @@ import animationData from "@/data/confetti.json";
 import MagicButton from "./MagicButton";
 import { IoCopyOutline, IoCheckmarkDoneOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
-import { GlowingEffect } from "./glowing-effect";
 
 export const BentoGrid = ({
   className,
@@ -18,7 +17,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-6 lg:grid-cols-5 gap-4 lg:gap-8 mx-auto",
+        "grid grid-cols-1 md:grid-cols-6 gap-4 lg:gap-4 mx-auto",
         className
       )}
     >
@@ -56,125 +55,92 @@ export const BentoGridItem = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
       viewport={{ once: true }}
       className={cn(
-        // Smooth rounded corners and adaptive borders
-        "relative overflow-hidden rounded-[2.5rem] group/bento transition duration-300 flex flex-col justify-between space-y-4",
-        "bg-white dark:bg-black border border-slate-200 dark:border-white/[0.1] shadow-sm dark:shadow-none",
+        "relative overflow-hidden rounded-3xl group/bento flex flex-col justify-between",
+        "bg-white dark:bg-[#030712] border border-slate-200 dark:border-white/[0.05]",
+        "hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:border-indigo-500/30 transition-all",
         className
       )}
     >
-      {/* 1. High-Performance Glow Effect */}
-      <div className="absolute inset-0 z-0">
-        <GlowingEffect
-          blur={0}
-          borderWidth={2}
-          spread={60}
-          glow={true}
-          disabled={false}
-          proximity={64}
-          inactiveZone={0.01}
-        />
+      {/* Visual background decorations */}
+      {img && (
+        <div className="absolute inset-0 opacity-20 group-hover/bento:opacity-30 transition-opacity">
+          <img
+            src={img}
+            alt=""
+            className={cn(imgClassName, "object-cover w-full h-full")}
+          />
+        </div>
+      )}
+
+      {/* Terminal-style header bar */}
+      <div className="flex items-center justify-between px-5 pt-4 z-30 pointer-events-none">
+        <div className="flex gap-1.5">
+          <div className="h-1.5 w-1.5 rounded-full bg-red-500/40" />
+          <div className="h-1.5 w-1.5 rounded-full bg-amber-500/40" />
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40" />
+        </div>
+        <div className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter">
+          id_0{id}
+        </div>
       </div>
 
       <div
-        className={`${id === 6 && "flex justify-center"} h-full relative z-10`}
+        className={cn(
+          "relative z-20 flex flex-col h-full px-5 pb-6 pt-2",
+          titleClassName
+        )}
       >
-        {/* ✅ Optimized Image Layers */}
-        {img && (
-          <div className="absolute inset-0 w-full h-full opacity-40 dark:opacity-50 group-hover/bento:opacity-60 transition duration-500">
-            <img
-              src={img}
-              alt={img}
-              className={cn(
-                imgClassName,
-                "object-cover object-center w-full h-full"
-              )}
+        <div className="font-mono text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">
+          {description}
+        </div>
+        <div className="font-bold text-lg lg:text-xl text-slate-900 dark:text-slate-100 leading-tight tracking-tight">
+          {title}
+        </div>
+
+        {/* Action Button: Condensed styling */}
+        {id === 3 && (
+          <div className="mt-4">
+            <MagicButton
+              title="View Skills"
+              icon={<IoCopyOutline />}
+              position="left"
+              otherClasses="!h-9 !text-xs dark:!bg-indigo-950/30 border-indigo-500/20"
             />
           </div>
         )}
 
-        {spareImg && (
-          <div
-            className={`absolute right-0 bottom-0 z-0 ${
-              id === 5 && "w-full opacity-80"
-            }`}
-          >
-            <img
-              src={spareImg}
-              alt={spareImg}
-              className="object-cover object-center w-full h-full opacity-50 dark:opacity-100"
-            />
-          </div>
-        )}
-
-        {/* ✅ Content Layer with High-Contrast Text */}
-        <div
-          className={cn(
-            titleClassName,
-            "relative z-20 min-h-40 px-6 py-8 lg:px-10 flex flex-col transition duration-200 group-hover/bento:translate-x-1"
-          )}
-        >
-          <div className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">
-            {description}
-          </div>
-          <div className="font-bold text-xl lg:text-3xl text-slate-900 dark:text-slate-100 leading-tight tracking-tighter max-w-96">
-            {title}
-          </div>
-
-          {/* Special ID rendering remains functional but styled cleaner */}
-          {id === 3 && (
-            <div className="mt-6">
-              <a href="#skills">
-                <MagicButton
-                  title="View Matrix"
-                  icon={<IoCopyOutline />}
-                  position="left"
-                  otherClasses="!bg-indigo-600 dark:!bg-[#240750] text-white"
-                />
-              </a>
-            </div>
-          )}
-
-          {id === 6 && (
-            <div className="mt-8 relative">
-              <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? "block" : "hidden"
-                }`}
-              >
-                <Lottie
-                  options={{
-                    loop: false,
-                    autoplay: true,
-                    animationData,
-                    rendererSettings: { preserveAspectRatio: "xMidYMid slice" },
-                  }}
-                  height={200}
-                  width={400}
-                />
-              </div>
-              <MagicButton
-                title={
-                  copied ? "Email Encrypted & Copied" : "Copy_Email_Address"
-                }
-                icon={
-                  copied ? (
-                    <IoCheckmarkDoneOutline className="text-emerald-400" />
-                  ) : (
-                    <IoCopyOutline />
-                  )
-                }
-                position="left"
-                otherClasses="!bg-slate-900 dark:!bg-[#161a31] text-white border border-white/10"
-                handleClick={handleCopy}
+        {id === 6 && (
+          <div className="mt-auto pt-4 relative">
+            <div
+              className={`absolute -top-20 left-1/2 -translate-x-1/2 ${
+                copied ? "block" : "hidden"
+              }`}
+            >
+              <Lottie
+                options={{ loop: false, autoplay: true, animationData }}
+                height={120}
+                width={200}
               />
             </div>
-          )}
-        </div>
+            <button
+              onClick={handleCopy}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black font-mono text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity border border-white/10"
+            >
+              {copied ? (
+                <IoCheckmarkDoneOutline size={14} />
+              ) : (
+                <IoCopyOutline size={14} />
+              )}
+              {copied ? "Copied" : "Get_Contact"}
+            </button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
