@@ -59,25 +59,26 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-[#020617] text-slate-200 font-Quicksand selection:bg-blue-500/30">
+    // Pure Black Background
+    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div
             key="loader"
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#020617]"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
           >
             <Loading />
           </motion.div>
         ) : (
-          <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+          <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-black">
             {/* RESPONSIVE SIDEBAR */}
             <Sidebar open={open} setOpen={setOpen} animate={true}>
-              <SidebarBody className="justify-between gap-10 border-r border-white/5 bg-black/40 backdrop-blur-2xl px-4 md:px-2">
+              {/* Added bg-black and subtle white border for OLED contrast */}
+              <SidebarBody className="justify-between gap-10 border-r border-white/[0.05] bg-black px-4 md:px-2">
                 <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                  {/* Brand Section: Centered on mobile, Start on desktop */}
                   <div className="flex items-center justify-start gap-3 h-20 px-2">
-                    <div className="h-8 w-1 min-w-[4px] bg-gradient-to-b from-blue-600 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.6)]" />
+                    <div className="h-8 w-1 min-w-[4px] bg-gradient-to-b from-blue-600 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]" />
                     <span
                       className={cn(
                         "font-mono font-bold tracking-tighter text-xl text-white whitespace-nowrap transition-opacity duration-300",
@@ -88,20 +89,18 @@ export default function Home() {
                     </span>
                   </div>
 
-                  {/* Nav Links: Padding adjusted for mobile tap targets */}
                   <div className="mt-4 md:mt-8 flex flex-col gap-4 md:gap-2">
                     {links.map((link, idx) => (
                       <SidebarLink
                         key={idx}
                         link={link}
-                        className="group flex items-center gap-4 py-3 md:py-2 px-2 rounded-xl hover:bg-blue-500/10 transition-all duration-200"
+                        className="group flex items-center gap-4 py-3 md:py-2 px-2 rounded-xl hover:bg-white/[0.03] transition-all duration-200"
                       />
                     ))}
                   </div>
                 </div>
 
-                {/* Profile Section */}
-                <div className="border-t border-white/5 py-6 flex flex-col gap-4">
+                <div className="border-t border-white/[0.05] py-6 flex flex-col gap-4">
                   <div className="flex items-center gap-4 px-2">
                     <div className="relative h-2 w-2 shrink-0">
                       <div className="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-75" />
@@ -132,40 +131,42 @@ export default function Home() {
               </SidebarBody>
             </Sidebar>
 
-            {/* MAIN CONTENT: Adjusted padding and scroll behavior for mobile */}
-            <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-[#020617]">
-              {/* Background Grid: Hidden on very small screens for performance and clarity */}
-              <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:20px_20px] md:bg-[size:40px_40px] pointer-events-none" />
+            {/* MAIN CONTENT AREA */}
+            <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-black">
+              {/* Pure Black Grid Pattern */}
+              <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
               <div className="relative z-10 w-full">
                 <div className="hidden md:block">
                   <FloatingNav navItems={navItems} />
                 </div>
 
-                <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2  space-y-4 md:space-y-6">
+                <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
                   <section id="home" className="pt-10 md:pt-8">
                     <Hero />
                   </section>
 
                   <section id="skills" className="relative">
                     <div className="flex flex-col items-center mb-10 md:mb-16">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-[10px] md:text-xs font-mono mb-4">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.02] text-blue-400 text-[10px] md:text-xs font-mono mb-4">
                         <IconActivity size={14} className="animate-pulse" />{" "}
                         SYSTEM_RUNTIME
                       </div>
-                      <h2 className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+                      <h2 className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600">
                         Technical Stack
                       </h2>
                     </div>
                     <Skills />
                   </section>
 
+                  {/* Section Wrappers adjusted for Pure Black */}
                   <section id="experience" className="px-2 md:px-0">
                     <Experience />
                   </section>
+
                   <section
                     id="architecture"
-                    className="overflow-hidden rounded-2xl md:rounded-[2.5rem]"
+                    className="overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
                   >
                     <Grid />
                   </section>
@@ -175,7 +176,7 @@ export default function Home() {
                       <h2 className="text-2xl md:text-4xl font-bold text-white uppercase tracking-tighter">
                         Production
                       </h2>
-                      <p className="text-slate-500 font-mono text-xs md:text-sm">
+                      <p className="text-neutral-500 font-mono text-xs md:text-sm">
                         Deployment logs & system designs
                       </p>
                     </div>
@@ -185,9 +186,11 @@ export default function Home() {
                   <section id="certificates">
                     <Certificates />
                   </section>
+
                   <section id="approach" className="pb-20">
                     <Approach />
                   </section>
+
                   <Footer />
                 </div>
               </div>
