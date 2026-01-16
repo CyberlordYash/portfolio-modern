@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/utils/cn";
 
+// Components
 import Approach from "@/components/Approach";
 import Certificates from "@/components/Certificates";
 import Experience from "@/components/Experience";
@@ -12,138 +13,188 @@ import Hero from "@/components/Hero";
 import Loading from "@/components/Loading";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
-import TopBar from "@/components/TopBar";
-import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import { FloatingNav } from "@/components/ui/FloatingNav";
 import { navItems } from "@/data";
 
+// UI & Icons
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconFolderCode,
-  IconHome,
-  IconMail,
-  IconSettings,
-  IconUser,
-  IconUserBolt,
+  IconTerminal2,
+  IconCpu,
+  IconDatabase,
+  IconServer,
+  IconActivity,
 } from "@tabler/icons-react";
-import { cn } from "@/utils/cn";
 
 const links = [
   {
-    label: "Home",
+    label: "Terminal",
     href: "#home",
-    icon: (
-      <IconHome className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-blue-600 dark:text-neutral-300 dark:group-hover:text-blue-400" />
-    ),
+    icon: <IconTerminal2 className="h-6 w-6 shrink-0 text-blue-500" />,
   },
   {
-    label: "Projects",
+    label: "Infrastructure",
+    href: "#skills",
+    icon: <IconCpu className="h-6 w-6 shrink-0 text-purple-500" />,
+  },
+  {
+    label: "Systems",
     href: "#projects",
-    icon: (
-      <IconFolderCode className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-emerald-600 dark:text-neutral-300 dark:group-hover:text-emerald-400" />
-    ),
+    icon: <IconServer className="h-6 w-6 shrink-0 text-emerald-500" />,
   },
   {
-    label: "Contact",
-    href: "#contact",
-    icon: (
-      <IconMail className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-rose-600 dark:text-neutral-300 dark:group-hover:text-rose-400" />
-    ),
-  },
-  {
-    label: "About",
-    href: "#about",
-    icon: (
-      <IconUser className="h-5 w-5 shrink-0 text-neutral-600 transition-colors duration-200 group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400" />
-    ),
+    label: "Architecture",
+    href: "#approach",
+    icon: <IconDatabase className="h-6 w-6 shrink-0 text-amber-500" />,
   },
 ];
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
-  const [open, setOpen] = useState(false);
+
   return (
-    <main className="overflow-hidden relative bg-black  flex justify-center items-center flex-col mx-auto pb-4 font-Quicksand">
-      {isLoading ? (
-        <div className="flex justify-center items-center min-h-screen md:h-screen w-full">
-          <Loading />
-        </div>
-      ) : (
-        <div
-          className={cn(
-            "mx-auto flex w-full  flex-1 flex-col overflow-hidden  md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
-            "min-h-screen md:h-screen"
-          )}
-        >
-          <Sidebar open={open} setOpen={setOpen}>
-            <SidebarBody className="justify-between gap-10">
-              <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-                <div className="mt-8 flex flex-col gap-2">
-                  {links.map((link, idx) => (
-                    <SidebarLink key={idx} link={link} />
-                  ))}
+    <main className="relative min-h-screen bg-[#020617] text-slate-200 font-Quicksand selection:bg-blue-500/30">
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="loader"
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#020617]"
+          >
+            <Loading />
+          </motion.div>
+        ) : (
+          <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+            {/* RESPONSIVE SIDEBAR */}
+            <Sidebar open={open} setOpen={setOpen} animate={true}>
+              <SidebarBody className="justify-between gap-10 border-r border-white/5 bg-black/40 backdrop-blur-2xl px-4 md:px-2">
+                <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+                  {/* Brand Section: Centered on mobile, Start on desktop */}
+                  <div className="flex items-center justify-start gap-3 h-20 px-2">
+                    <div className="h-8 w-1 min-w-[4px] bg-gradient-to-b from-blue-600 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.6)]" />
+                    <span
+                      className={cn(
+                        "font-mono font-bold tracking-tighter text-xl text-white whitespace-nowrap transition-opacity duration-300",
+                        open ? "opacity-100" : "opacity-0 md:hidden"
+                      )}
+                    >
+                      SYS_ROOT
+                    </span>
+                  </div>
+
+                  {/* Nav Links: Padding adjusted for mobile tap targets */}
+                  <div className="mt-4 md:mt-8 flex flex-col gap-4 md:gap-2">
+                    {links.map((link, idx) => (
+                      <SidebarLink
+                        key={idx}
+                        link={link}
+                        className="group flex items-center gap-4 py-3 md:py-2 px-2 rounded-xl hover:bg-blue-500/10 transition-all duration-200"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Profile Section */}
+                <div className="border-t border-white/5 py-6 flex flex-col gap-4">
+                  <div className="flex items-center gap-4 px-2">
+                    <div className="relative h-2 w-2 shrink-0">
+                      <div className="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-75" />
+                      <div className="relative h-2 w-2 bg-emerald-500 rounded-full" />
+                    </div>
+                    {open && (
+                      <span className="text-[10px] font-mono text-emerald-500 tracking-widest uppercase">
+                        Server Online
+                      </span>
+                    )}
+                  </div>
+
+                  <SidebarLink
+                    link={{
+                      label: "Yash Sachan",
+                      href: "#",
+                      icon: (
+                        <img
+                          src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
+                          className="h-8 w-8 rounded-full border border-white/20 object-cover shrink-0"
+                          alt="Avatar"
+                        />
+                      ),
+                    }}
+                    className="flex items-center gap-4 px-2"
+                  />
+                </div>
+              </SidebarBody>
+            </Sidebar>
+
+            {/* MAIN CONTENT: Adjusted padding and scroll behavior for mobile */}
+            <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-[#020617]">
+              {/* Background Grid: Hidden on very small screens for performance and clarity */}
+              <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:20px_20px] md:bg-[size:40px_40px] pointer-events-none" />
+
+              <div className="relative z-10 w-full">
+                <div className="hidden md:block">
+                  <FloatingNav navItems={navItems} />
+                </div>
+
+                <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2  space-y-4 md:space-y-6">
+                  <section id="home" className="pt-10 md:pt-8">
+                    <Hero />
+                  </section>
+
+                  <section id="skills" className="relative">
+                    <div className="flex flex-col items-center mb-10 md:mb-16">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-[10px] md:text-xs font-mono mb-4">
+                        <IconActivity size={14} className="animate-pulse" />{" "}
+                        SYSTEM_RUNTIME
+                      </div>
+                      <h2 className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+                        Technical Stack
+                      </h2>
+                    </div>
+                    <Skills />
+                  </section>
+
+                  <section id="experience" className="px-2 md:px-0">
+                    <Experience />
+                  </section>
+                  <section
+                    id="architecture"
+                    className="overflow-hidden rounded-2xl md:rounded-[2.5rem]"
+                  >
+                    <Grid />
+                  </section>
+
+                  <section id="projects">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-12 border-l-4 border-blue-600 pl-4 md:pl-6">
+                      <h2 className="text-2xl md:text-4xl font-bold text-white uppercase tracking-tighter">
+                        Production
+                      </h2>
+                      <p className="text-slate-500 font-mono text-xs md:text-sm">
+                        Deployment logs & system designs
+                      </p>
+                    </div>
+                    <RecentProjects />
+                  </section>
+
+                  <section id="certificates">
+                    <Certificates />
+                  </section>
+                  <section id="approach" className="pb-20">
+                    <Approach />
+                  </section>
+                  <Footer />
                 </div>
               </div>
-              <div>
-                <SidebarLink
-                  link={{
-                    label: "Yash Sachan",
-                    href: "#",
-                    icon: (
-                      <img
-                        src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
-                        className="h-7 w-7 shrink-0 rounded-full"
-                        width={50}
-                        height={50}
-                        alt="Avatar"
-                      />
-                    ),
-                  }}
-                />
-              </div>
-            </SidebarBody>
-          </Sidebar>
-          <div className="flex-1 min-h-screen md:h-screen overflow-y-auto overflow-x-hidden">
-            {/* <TopBar /> */}
-            <div className="w-full p-2">
-              <FloatingNav navItems={navItems} className="font-Quicksand" />
-
-              <Hero />
-
-              <Skills />
-
-              <h1 className="p-4 heading text-white-100">
-                My
-                <span className=" text-blue-200  tron"> Experience</span>
-              </h1>
-
-              <Experience />
-
-              <Grid />
-
-              <RecentProjects />
-
-              <Certificates />
-
-              <h1 className="p-4 heading  text-white-100">
-                My Approach to{" "}
-                <span className=" text-blue-200">Development</span>
-              </h1>
-              <Approach />
-
-              <Footer />
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </main>
   );
 }
