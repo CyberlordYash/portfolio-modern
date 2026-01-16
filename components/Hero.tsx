@@ -8,7 +8,6 @@ import logo from "../public/logo.jpg";
 import { motion } from "framer-motion";
 import { Meteors } from "./ui/Metors";
 import { SparklesCore } from "./ui/sparkles";
-import "./hero.css";
 
 const Hero = () => {
   return (
