@@ -1,51 +1,88 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, Quicksand } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-quicksand",
+});
 
+// 1. Dynamic Viewport Configuration
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+// 2. SEO Metadata
 export const metadata: Metadata = {
-  title: "Yash Sachan | Software Engineer",
+  title: {
+    default: "Yash Sachan | Software Engineer",
+    template: "%s | Yash Sachan", // Allows sub-pages to look like "Projects | Yash Sachan"
+  },
   description:
-    "Portfolio of Yash Sachan – Software Engineer specializing in Backend Development, Golang, Java, Spring Boot, APIs, Cloud, and High-Frequency Trading (HFT).",
+    "Software Engineer specializing in High-Performance Backend Systems, Golang, and HFT Infrastructure. Building scalable distributed systems at Zanskar Research.",
   keywords: [
     "Yash Sachan",
-    "Portfolio",
+    "Backend Engineer",
     "Software Engineer",
-    "Backend Developer",
-    "Golang",
+    "Golang Developer",
+    "HFT Engineer",
     "Spring Boot",
+    "Distributed Systems",
+
     "High Frequency Trading",
     "HFT",
     "API Development",
     "IIIT Sonepat",
-    "Full Stack Developer",
+    "Zanskar Research",
+    "Java Spring Boot",
   ],
   authors: [{ name: "Yash Sachan", url: "https://yashsachan.in" }],
   creator: "Yash Sachan",
-  publisher: "Yash Sachan",
   metadataBase: new URL("https://yashsachan.in"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Yash Sachan | Software Engineer Portfolio",
-    description:
-      "Explore the portfolio of Yash Sachan, a Software Engineer skilled in Golang, Java, Spring Boot, API design, and HFT systems.",
-    url: "https://yashsachan.in",
+    title: "Yash Sachan | Backend & Systems Engineer",
+    description: "Specializing in Golang, HFT, and Low-Latency Infrastructure.",
+    url: "https://yashsachan.com",
     siteName: "Yash Sachan Portfolio",
     images: [
       {
-        url: "https://yashsachan.in/og-image.png", // replace with your OG image
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Yash Sachan Portfolio",
+        alt: "Yash Sachan - Systems Engineer Portfolio",
       },
     ],
     locale: "en_US",
     type: "website",
   },
-  alternates: {
-    canonical: "https://yashsachan.in",
+  twitter: {
+    card: "summary_large_image",
+    title: "Yash Sachan | Software Engineer",
+    description: "Backend Developer specializing in Golang and HFT Systems.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -55,79 +92,64 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=5"
-        />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#000000" />
-
-        {/* Google Analytics */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-KNCPRRLQFR"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-KNCPRRLQFR');
-            `,
-          }}
-        />
-
-        {/* Schema.org structured data for SEO */}
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Yash Sachan",
-              url: "https://yashsachan.in",
-              sameAs: [
-                "https://www.linkedin.com/in/yashsachan",
-                "https://github.com/yashsachan",
-                "https://leetcode.com/yashsachan",
-              ],
-              jobTitle: "Software Engineer",
-              worksFor: {
-                "@type": "Organization",
-                name: "Zanskar Research",
-              },
-              alumniOf: {
-                "@type": "CollegeOrUniversity",
-                name: "IIIT Sonepat",
-              },
-              knowsAbout: [
-                "Golang",
-                "Spring Boot",
-                "Java",
-                "Backend Development",
-                "High Frequency Trading",
-                "API Development",
-              ],
-            }),
-          }}
-        />
-      </head>
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} ${quicksand.variable} font-sans antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <main className="relative z-10">{children}</main>
+
+          {/* Structured Data: Professional Person Schema */}
+          <Script
+            id="structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Person",
+                name: "Yash Sachan",
+                url: "https://yashsachan.in",
+                jobTitle: "Software Engineer",
+                worksFor: {
+                  "@type": "Organization",
+                  name: "Zanskar Research",
+                },
+                alumniOf: {
+                  "@type": "CollegeOrUniversity",
+                  name: "IIIT Sonepat",
+                },
+                description:
+                  "Software Engineer focused on Backend, HFT, and distributed systems.",
+                sameAs: [
+                  "https://github.com/yashsachan",
+                  "https://linkedin.com/in/yashsachan",
+                ],
+              }),
+            }}
+          />
+
+          {/* Google Analytics */}
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=G-KNCPRRLQFR`}
+          />
+          <Script
+            id="ga-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-KNCPRRLQFR');
+              `,
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
