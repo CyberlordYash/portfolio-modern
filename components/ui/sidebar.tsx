@@ -12,7 +12,7 @@ interface SidebarContextProps {
 }
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export const useSidebar = () => {
@@ -66,7 +66,7 @@ export const DesktopSidebar = ({
     <motion.div
       className={cn(
         "h-full px-4 py-4 hidden md:flex md:flex-col w-[280px] shrink-0 bg-[#020617] border-r border-white/10",
-        className
+        className,
       )}
       animate={{ width: animate ? (open ? "280px" : "80px") : "280px" }}
       onMouseEnter={() => setOpen(true)}
@@ -88,7 +88,7 @@ export const MobileSidebar = ({
   return (
     <div
       className={cn(
-        "h-14 px-6 py-4 flex flex-row md:hidden items-center justify-between bg-[#020617] w-full fixed top-0 left-0 z-[500] border-b border-white/10 shadow-lg"
+        "h-14 px-6 py-4 flex flex-row md:hidden items-center justify-between bg-[#020617] w-full fixed top-0 left-0 z-[500]  shadow-lg",
       )}
       {...props}
     >
@@ -127,7 +127,7 @@ export const MobileSidebar = ({
               className={cn(
                 "fixed right-0 top-0 h-full w-[80%] flex flex-col p-8 z-[700] shadow-[-10px_0_30px_rgba(0,0,0,0.8)]",
                 "bg-[#020617] border-l border-white/20", // Hard Background Color
-                className
+                className,
               )}
             >
               <div className="flex items-center justify-between mb-10 border-b border-white/5 pb-4">
@@ -186,7 +186,7 @@ export const SidebarLink = ({
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-3 group/sidebar py-3 px-3 rounded-xl transition-all hover:bg-white/5",
-        className
+        className,
       )}
       {...props}
     >

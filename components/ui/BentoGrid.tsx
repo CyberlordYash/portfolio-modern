@@ -18,7 +18,7 @@ export const BentoGrid = ({
     <div
       className={cn(
         "grid grid-cols-1 md:grid-cols-6 gap-4 lg:gap-4 mx-auto",
-        className
+        className,
       )}
     >
       {children}
@@ -64,7 +64,7 @@ export const BentoGridItem = ({
         "relative overflow-hidden rounded-3xl group/bento flex flex-col justify-between",
         "bg-white dark:bg-[#030712] border border-slate-200 dark:border-white/[0.05]",
         "hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:border-indigo-500/30 transition-all",
-        className
+        className,
       )}
     >
       {/* Visual background decorations */}
@@ -93,7 +93,7 @@ export const BentoGridItem = ({
       <div
         className={cn(
           "relative z-20 flex flex-col h-full px-5 pb-6 pt-2",
-          titleClassName
+          titleClassName,
         )}
       >
         <div className="font-mono text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">
