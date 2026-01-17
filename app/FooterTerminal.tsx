@@ -7,63 +7,59 @@ import {
   IconMaximize,
   IconMinimize,
   IconShieldCheck,
-  IconHistory,
-  IconDownload,
-  IconDeviceDesktop,
-  IconNetwork,
-  IconChevronRight,
   IconTrophy,
+  IconChevronRight,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
 
-// --- PERSONALIZED DATA FROM RESUME ---
+// --- SYSTEM DATA (Cleaned of problematic syntax) ---
 const SYSTEM_CONFIG = {
-  user: "yash_sachan",
-  hostname: "nodes.yashsachan.in",
-  version: "8.3.0-stable", // Based on your CGPA [cite: 9]
+  user: "yash",
+  hostname: "nodes",
+  version: "8.3.0-stable",
   kernel: "LINUX-AARCH64-CSE",
 };
 
 const FILES = {
   "education.md":
-    "INSTITUTION: IIIT Sonepat [cite: 5]\nDEGREE: B.Tech in Computer Science & Engineering [cite: 5]\nCGPA: 8.3/10 [cite: 9]",
+    "INSTITUTION: IIIT Sonepat\nDEGREE: B.Tech in CSE\nCGPA: 8.3/10",
   "experience.json": JSON.stringify(
     {
-      current: "Analyst Software Engineer @ Zanskar Securities [cite: 7, 8]",
+      current: "Analyst Software Engineer @ Zanskar Securities",
       previous: [
-        "Software Engineering Intern @ Onefinnet [cite: 16, 17]",
-        "Software Engineering Intern @ Modulus Technologies [cite: 23, 24]",
+        "Software Engineering Intern @ Onefinnet",
+        "Software Engineering Intern @ Modulus Technologies",
       ],
     },
     null,
     2,
   ),
   "achievements.log":
-    "• LeetCode: Guardian (2200+ Rating) - Top 1% Globally \n• CodeChef: 4-Star (1800+ Rating) \n• NDA: AIR 193 & Recommended by Indian Army (SSB) ",
+    "• LeetCode: Guardian (2200+ Rating)\n• CodeChef: 4-Star (1800+ Rating)\n• NDA: AIR 193 & Recommended by Indian Army",
+  "matching_engine.go":
+    "// High-performance Price-Time Priority Matching\nfunc (ob *OrderBook) Process(order *Order) {\n  // Logic: Mutex Lock -> Match -> Sort -> Unlock\n  // Optimized for low-latency HFT workloads",
   "stack.sh":
-    "# Systems & Backend\nexport LANGUAGES='Golang, C++, TypeScript, Java, SQL' [cite: 36]\nexport CLOUD='GCP, AWS, Docker, Kubernetes' [cite: 39]\nexport TOOLS='NATS, Elasticsearch, Prometheus, Grafana' [cite: 13, 14, 22]",
-  "contact.txt":
-    "Email: yashsachan321@gmail.com [cite: 4]\nLinkedIn: linkedin.com/in/yashsachan [cite: 4]\nWeb: yashsachan.in [cite: 4]",
+    "export LANGUAGES='Golang, C++, TS, Java'\nexport TOOLS='NATS, Elasticsearch, Prometheus, Docker'",
 };
 
 const BOOT_SEQUENCE = [
   { delay: 100, text: "YASH_OS v5.0.0-PROD INITIALIZING...", type: "system" },
-  { delay: 400, text: "AUTHENTICATING: Yash Sachan [cite: 3]", type: "info" },
-  { delay: 700, text: "SECURE_BOOT: AIR-193 NDA Verified ", type: "success" },
+  { delay: 400, text: "AUTHENTICATING: Yash Sachan", type: "info" },
+  { delay: 700, text: "SECURE_BOOT: AIR-193 NDA Verified", type: "success" },
   {
     delay: 1000,
-    text: "LOADING_MODULE: Low-Latency Golang Services... [OK] ",
+    text: "LOADING: Golang Concurrency Patterns... [OK]",
     type: "system",
   },
   {
     delay: 1300,
-    text: "LOADING_MODULE: WebSocket Pipelines... [OK] [cite: 12]",
+    text: "LOADING: NATS JetStream & WebSockets... [OK]",
     type: "system",
   },
   {
     delay: 1600,
-    text: "SYNCING: LeetCode Guardian Data (Rating 2200+) ",
+    text: "SYNC: LeetCode Guardian Data (2200+)",
     type: "success",
   },
   {
@@ -71,17 +67,8 @@ const BOOT_SEQUENCE = [
     text: "------------------------------------------------",
     type: "system",
   },
-  {
-    delay: 2400,
-    text: "CURRENT_STATUS: Analyst Software Engineer @ Zanskar [cite: 7, 8]",
-    type: "info",
-  },
-  { delay: 2700, text: "LOCATION: Bengaluru, IN [cite: 10]", type: "info" },
-  {
-    delay: 3000,
-    text: "SYSTEM READY. Type 'ls' to browse my core files.",
-    type: "success",
-  },
+  { delay: 2400, text: "STATUS: Analyst SE @ Zanskar", type: "info" },
+  { delay: 3000, text: "SYSTEM READY. Type 'ls' to start.", type: "success" },
 ];
 
 const FooterTerminal = () => {
@@ -91,7 +78,6 @@ const FooterTerminal = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
-  const [historyPointer, setHistoryPointer] = useState(-1);
   const [isBooted, setIsBooted] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -122,7 +108,7 @@ const FooterTerminal = () => {
           setIsAutoPlaying(false);
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.1 },
     );
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
@@ -139,7 +125,6 @@ const FooterTerminal = () => {
       if (!trimmed) return;
 
       setCommandHistory((prev) => [...prev, trimmed]);
-      setHistoryPointer(-1);
       setHistory((prev) => [
         ...prev,
         {
@@ -155,7 +140,7 @@ const FooterTerminal = () => {
           setHistory((prev) => [
             ...prev,
             {
-              text: "AVAILABLE: ls, cat <file>, clear, whoami, neofetch, resume, achievements",
+              text: "ls, cat <file>, clear, whoami, neofetch, resume",
               type: "system",
             },
           ]);
@@ -163,7 +148,7 @@ const FooterTerminal = () => {
         case "ls":
           setHistory((prev) => [
             ...prev,
-            { text: Object.keys(FILES).join("    "), type: "info" },
+            { text: Object.keys(FILES).join("  "), type: "info" },
           ]);
           break;
         case "cat":
@@ -184,17 +169,8 @@ const FooterTerminal = () => {
           setHistory((prev) => [
             ...prev,
             {
-              text: "Yash Sachan [cite: 3] | Software Engineer [cite: 8] | Competitive Programmer ",
+              text: "Yash Sachan | Analyst Software Engineer @ Zanskar",
               type: "info",
-            },
-          ]);
-          break;
-        case "achievements":
-          setHistory((prev) => [
-            ...prev,
-            {
-              text: "LeetCode Guardian  | CodeChef 4*  | NDA AIR-193 ",
-              type: "success",
             },
           ]);
           break;
@@ -202,7 +178,7 @@ const FooterTerminal = () => {
           setHistory((prev) => [
             ...prev,
             {
-              text: `OS: ${SYSTEM_CONFIG.kernel}\nHOST: ${SYSTEM_CONFIG.hostname}\nUPTIME: High Performance\nCPU: Distributed-Go-Engine\nMEMORY: 8.3/10 CGPA [cite: 9]`,
+              text: `OS: ${SYSTEM_CONFIG.kernel}\nUPTIME: High Performance\nRAM: 8.3/10 CGPA\nRANK: LeetCode Guardian`,
               type: "data",
             },
           ]);
@@ -213,10 +189,7 @@ const FooterTerminal = () => {
         case "resume":
           setHistory((prev) => [
             ...prev,
-            {
-              text: "Redirecting to secure PDF storage... [cite: 4]",
-              type: "system",
-            },
+            { text: "Opening yashsachan.in...", type: "system" },
           ]);
           window.open("https://yashsachan.in/", "_blank");
           break;
@@ -234,17 +207,17 @@ const FooterTerminal = () => {
   const getLineClass = (type: string) => {
     switch (type) {
       case "command":
-        return "text-cyan-400 font-bold flex gap-2";
+        return "text-cyan-400 font-bold break-all";
       case "system":
-        return "text-neutral-600 italic";
+        return "text-neutral-600 italic break-words";
       case "success":
-        return "text-emerald-500 font-medium";
+        return "text-emerald-500 font-medium break-words";
       case "info":
-        return "text-blue-500 font-semibold";
+        return "text-blue-500 font-semibold break-words";
       case "data":
-        return "text-neutral-300 leading-relaxed whitespace-pre-wrap";
+        return "text-neutral-300 leading-relaxed whitespace-pre-wrap break-all";
       case "error":
-        return "text-red-500";
+        return "text-red-500 break-words";
       default:
         return "text-neutral-400";
     }
@@ -256,28 +229,32 @@ const FooterTerminal = () => {
       ref={containerRef}
       className={cn(
         "w-full mx-auto font-mono",
-        isFullscreen ? "fixed inset-0 z-[999]" : "max-w-5xl mt-20 px-4",
+        isFullscreen
+          ? "fixed inset-0 z-[999]"
+          : "max-w-5xl mt-10 md:mt-20 px-2 md:px-4",
       )}
     >
       <div
         className={cn(
-          "bg-[#020202] border border-white/10 flex flex-col relative",
-          isFullscreen ? "h-screen" : "h-[600px] rounded-2xl shadow-2xl",
+          "bg-[#020202] border border-white/10 flex flex-col relative overflow-hidden transition-all",
+          isFullscreen
+            ? "h-screen rounded-none"
+            : "min-h-[400px] h-[60vh] md:h-[600px] rounded-xl shadow-2xl",
         )}
       >
         {/* Header */}
-        <div className="bg-[#0a0a0a] px-5 py-4 border-b border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-              <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-              <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+        <div className="bg-[#0a0a0a] px-4 py-3 border-b border-white/5 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
             </div>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold ml-4">
+            <span className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold hidden sm:inline">
               Terminal — {SYSTEM_CONFIG.user}@{SYSTEM_CONFIG.hostname}
             </span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
               className="text-neutral-500 hover:text-white transition-colors"
@@ -288,28 +265,26 @@ const FooterTerminal = () => {
                 <IconMaximize size={18} />
               )}
             </button>
-            <span className="text-neutral-500 text-xs tabular-nums">
+            <span className="text-neutral-500 text-[10px] tabular-nums">
               {time}
             </span>
           </div>
         </div>
 
-        {/* Body */}
+        {/* Terminal Body */}
         <div
           ref={scrollRef}
           onClick={() => inputRef.current?.focus()}
-          className="flex-1 overflow-y-auto p-8 space-y-2 bg-[#020202] custom-scrollbar relative"
+          className="flex-1 overflow-y-auto p-4 md:p-8 space-y-2 bg-[#020202] relative custom-scrollbar"
         >
-          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%),linear-gradient(90deg,rgba(255,0,0,0.01),rgba(0,255,0,0.01),rgba(0,0,255,0.01))] bg-[length:100%_4px,3px_100%] z-10" />
-
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {history.map((line, i) => (
               <motion.div
                 initial={{ opacity: 0, x: -5 }}
                 animate={{ opacity: 1, x: 0 }}
                 key={i}
                 className={cn(
-                  "text-xs md:text-sm relative z-20",
+                  "text-[11px] md:text-sm relative z-20",
                   getLineClass(line.type),
                 )}
               >
@@ -324,17 +299,17 @@ const FooterTerminal = () => {
                 e.preventDefault();
                 executeCommand(input);
               }}
-              className="flex items-center gap-3 pt-4 relative z-20"
+              className="flex items-center gap-2 pt-2 relative z-20"
             >
-              <span className="text-emerald-500 font-bold shrink-0">
-                {SYSTEM_CONFIG.user}@sys:~$
+              <span className="text-emerald-500 font-bold shrink-0 text-[11px] md:text-sm">
+                ➜
               </span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="bg-transparent border-none outline-none flex-1 text-white caret-cyan-500 font-mono text-sm"
+                className="bg-transparent border-none outline-none flex-1 text-white caret-cyan-500 font-mono text-[11px] md:text-sm"
                 spellCheck={false}
                 autoComplete="off"
                 autoFocus
@@ -343,18 +318,18 @@ const FooterTerminal = () => {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="bg-[#080808] px-6 py-2 border-t border-white/5 flex items-center justify-between text-[10px] text-neutral-600">
-          <div className="flex gap-6">
-            <span className="flex items-center gap-1.5">
-              <IconTrophy size={12} /> RANK: GUARDIAN{" "}
+        {/* Footer Bar */}
+        <div className="bg-[#080808] px-4 py-2 border-t border-white/5 flex items-center justify-between text-[9px] text-neutral-600 shrink-0">
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1">
+              <IconTrophy size={12} /> GUARDIAN
             </span>
-            <span className="flex items-center gap-1.5">
-              <IconCpu size={12} /> GO_CONCURRENCY: ENABLED{" "}
+            <span className="flex items-center gap-1">
+              <IconShieldCheck size={12} /> SECURE
             </span>
           </div>
-          <span className="text-emerald-500/50 uppercase tracking-tighter">
-            ● CONNECTION_SECURE
+          <span className="text-emerald-500/50 hidden xs:inline">
+            ● SESSION_ACTIVE
           </span>
         </div>
       </div>
