@@ -7,88 +7,64 @@ function ToggleDarkModeButton() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "dark";
-    const isDarkTheme = savedTheme === "dark";
-    setIsDark(isDarkTheme);
-    if (isDarkTheme) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    setIsDark(savedTheme === "dark");
   }, []);
 
   const toggleTheme = () => {
     const newTheme = !isDark;
     setIsDark(newTheme);
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    document.documentElement.classList.toggle("dark", newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
   };
 
   return (
-    <div className="flex items-center justify-center p-1">
-      <button
-        onClick={toggleTheme}
+    <button
+      onClick={toggleTheme}
+      className={`
+        relative w-16 h-8 rounded-full transition-all duration-500
+        flex items-center px-1 overflow-hidden
+        ${
+          isDark
+            ? "bg-slate-900/80 shadow-[inset_0_2px_10px_rgba(0,0,0,1)]"
+            : "bg-blue-100/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)]"
+        }
+        border border-white/20 dark:border-white/5
+      `}
+    >
+      {/* The Liquid Knob */}
+      <div
         className={`
-          relative w-[80px] h-[40px] rounded-full transition-all duration-500 ease-in-out flex items-center px-1.5
-          /* Large Inner Depth */
+          relative w-6 h-6 rounded-full transition-all duration-500 z-20
+          flex items-center justify-center
           ${
             isDark
-              ? "bg-slate-900 shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-slate-800"
-              : "bg-slate-200 shadow-[inset_0_4px_10px_rgba(0,0,0,0.1)] border-slate-300"
+              ? "translate-x-8 bg-gradient-to-tr from-indigo-500 to-purple-400 shadow-[0_0_15px_rgba(99,102,241,0.6)]"
+              : "translate-x-0 bg-gradient-to-tr from-orange-400 to-yellow-200 shadow-[0_0_15px_rgba(251,146,60,0.4)]"
           }
-          border-2 hover:border-slate-400 dark:hover:border-slate-600 transition-colors group
         `}
-        aria-label="Toggle Theme"
       >
-        {/* Track Labels - Fixed positions */}
-        <div className="absolute inset-0 flex items-center justify-between px-3.5 pointer-events-none">
-          <HiMoon
-            className={`w-4 h-4 transition-all duration-700 ${
-              isDark
-                ? "text-slate-600 opacity-100 scale-110"
-                : "opacity-0 scale-50"
-            }`}
-          />
-          <HiSun
-            className={`w-4 h-4 transition-all duration-700 ${
-              !isDark
-                ? "text-orange-500 opacity-100 scale-110"
-                : "opacity-0 scale-50"
-            }`}
-          />
-        </div>
+        {isDark ? (
+          <HiMoon className="text-white w-3.5 h-3.5" />
+        ) : (
+          <HiSun className="text-orange-900 w-3.5 h-3.5" />
+        )}
 
-        {/* The Bold Professional Knob */}
-        <div
-          className={`
-            relative w-[32px] h-[32px] rounded-full transform transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)
-            flex items-center justify-center z-10
-            /* Knob Material Surface */
-            ${
-              isDark
-                ? "translate-x-[38px] bg-gradient-to-b from-slate-600 to-slate-800 shadow-[0_6px_12px_rgba(0,0,0,0.6)]"
-                : "translate-x-0 bg-gradient-to-b from-white to-slate-100 shadow-[0_4px_8px_rgba(0,0,0,0.15)]"
-            }
-          `}
-        >
-          {/* Subtle Icon Glow inside Knob */}
-          <div
-            className={`transition-all duration-500 ${
-              isDark
-                ? "text-indigo-300 drop-shadow-[0_0_8px_rgba(165,180,252,0.4)]"
-                : "text-slate-500"
-            }`}
-          >
-            {isDark ? <HiMoon size={18} /> : <HiSun size={18} />}
-          </div>
+        {/* Specular Highlight (The "Glass" Sparkle) */}
+        <div className="absolute top-1 left-1.5 w-1.5 h-1 bg-white/40 rounded-full blur-[0.5px]" />
+      </div>
 
-          {/* Luxury High-Light Rim */}
-          <div className="absolute inset-0 rounded-full border-t border-white/20 pointer-events-none" />
-          <div className="absolute inset-0 rounded-full border-b border-black/20 pointer-events-none" />
-        </div>
-      </button>
-    </div>
+      {/* Background Icons */}
+      <div className="absolute inset-0 flex items-center justify-between px-2 opacity-20 dark:opacity-40">
+        <HiSun
+          size={14}
+          className={isDark ? "text-white" : "text-orange-500"}
+        />
+        <HiMoon
+          size={14}
+          className={isDark ? "text-indigo-400" : "text-slate-400"}
+        />
+      </div>
+    </button>
   );
 }
 

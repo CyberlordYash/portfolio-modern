@@ -4,33 +4,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
 import ToggleDarkModeButton from "../ToggleDarkModeButton";
 
-export const FloatingNav = ({
-  navItems,
-  className,
-}: {
-  navItems?: {
-    name: string;
-    link: string;
-    icon?: JSX.Element;
-  }[];
-  className?: string;
-}) => {
+export const FloatingNav = ({ navItems, className }: any) => {
   const [time, setTime] = useState<string>("00:00:00");
   const [messageIndex, setMessageIndex] = useState(0);
 
   const messages = [
     "SYSTEM_READY",
     "CODE.DEBUG.REPEAT",
-    "GIT_COMMIT_WELCOME",
     "SCALING_DREAMS",
-    "404_BOREDOM_NOT_FOUND",
     "DEBUG_MODE_ON",
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const now = new Date();
-      setTime(now.toLocaleTimeString([], { hour12: false }));
+      setTime(new Date().toLocaleTimeString([], { hour12: false }));
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -44,50 +31,48 @@ export const FloatingNav = ({
 
   return (
     <motion.div
-      initial={{ y: 50, opacity: 0, x: "-50%" }} // Explicitly include x: "-50%" for centering
+      initial={{ y: 50, opacity: 0, x: "-50%" }}
       animate={{ y: 0, opacity: 1, x: "-50%" }}
       className={cn(
-        // Centering Fix: ensure no "right" or "left" from className overrides this
         "fixed bottom-8 left-1/2 z-[5000]",
-        "flex items-center gap-3 px-3 py-1.5 rounded-3xl", // Reduced padding (px-4 -> px-3, py-2.5 -> py-1.5)
-        "bg-white/80 dark:bg-black/60 backdrop-blur-xl",
-        "border border-slate-200 dark:border-white/10 shadow-2xl shadow-indigo-500/10",
-        className
+        "flex items-center gap-4 px-4 py-2 rounded-2xl",
+        // Liquid Glass Effect
+        "bg-white/40 dark:bg-black/20 backdrop-blur-2xl",
+        "border border-white/40 dark:border-white/10",
+        "shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]",
+        "after:absolute after:inset-0 after:rounded-2xl after:bg-gradient-to-br after:from-white/20 after:to-transparent after:pointer-events-none",
+        className,
       )}
     >
-      {/* System Status Indicator */}
-      <div className="flex items-center gap-2 border-r border-slate-200 dark:border-white/10 pr-3">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 hidden xs:block">
+      {/* Status Section */}
+      <div className="flex items-center gap-3 pr-3 border-r border-black/5 dark:border-white/10">
+        <div className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
+        </div>
+        <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300">
           {time}
         </span>
       </div>
 
-      {/* Rotating Terminal Messages */}
-      <div className="min-w-[100px] md:min-w-[130px] overflow-hidden">
+      {/* Messaging Engine */}
+      <div className="min-w-[120px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={messageIndex}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
-            className="text-[10px] md:text-[11px] font-mono font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-tighter"
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(4px)" }}
+            className="text-[10px] font-mono font-bold text-blue-600 dark:text-cyan-400 tracking-widest"
           >
             {messages[messageIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Action Area: Bigger Dark Mode Toggle */}
-      <div className="pl-3 border-l border-slate-200 dark:border-white/10 flex items-center">
-        <div className="scale-110 sm:scale-125 hover:scale-135 transition-transform duration-300">
-          {/* Increased scale from 90 to 110/125 to make it look bigger */}
-          <ToggleDarkModeButton />
-        </div>
+      {/* Action Section */}
+      <div className="pl-3 border-l border-black/5 dark:border-white/10 flex items-center">
+        <ToggleDarkModeButton />
       </div>
     </motion.div>
   );

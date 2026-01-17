@@ -11,7 +11,7 @@ import { SparklesCore } from "./ui/sparkles";
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen lg:h-screen lg:max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-black dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden border border-gray-200 dark:border-white/5 shadow-2xl transition-colors duration-500 px-6 md:px-12 py-12 lg:py-0">
+    <div className="relative min-h-screen lg:h-screen lg:max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-black dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden border border-gray-200 dark:border-white/5 shadow-md transition-colors duration-500 px-6 md:px-12 py-12 lg:py-0">
       {" "}
       {/* 🌟 Background Sparks */}
       <div className="absolute inset-0 z-0 hidden dark:block">

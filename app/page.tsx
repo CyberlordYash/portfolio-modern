@@ -75,14 +75,14 @@ export default function Home() {
             {/* RESPONSIVE SIDEBAR */}
             <Sidebar open={open} setOpen={setOpen} animate={true}>
               {/* Added bg-black and subtle white border for OLED contrast */}
-              <SidebarBody className="justify-between gap-10 border-r border-white/[0.05] bg-black px-4 md:px-2">
+              <SidebarBody className="justify-between gap-10 border-r border-white/[0.05] bg-white dark:bg-black px-4 md:px-2">
                 <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                   <div className="flex items-center justify-start gap-3 h-20 px-2">
                     <div className="h-8 w-1 min-w-[4px] bg-gradient-to-b from-blue-600 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]" />
                     <span
                       className={cn(
                         "font-mono font-bold tracking-tighter text-xl text-white whitespace-nowrap transition-opacity duration-300",
-                        open ? "opacity-100" : "opacity-0 md:hidden"
+                        open ? "opacity-100" : "opacity-0 md:hidden",
                       )}
                     >
                       SYS_ROOT
@@ -132,17 +132,17 @@ export default function Home() {
             </Sidebar>
 
             {/* MAIN CONTENT AREA */}
-            <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-black">
+            <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-black">
               {/* Pure Black Grid Pattern */}
               <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
               <div className="relative z-10 w-full">
-                <div className="hidden md:block">
+                <div className="">
                   <FloatingNav navItems={navItems} />
                 </div>
 
                 <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
-                  <section id="home" className="pt-10 md:pt-8">
+                  <section id="home" className="pt-12 md:pt-4">
                     <Hero />
                   </section>
 
