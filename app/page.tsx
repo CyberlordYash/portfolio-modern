@@ -25,6 +25,7 @@ import {
   IconServer,
   IconActivity,
 } from "@tabler/icons-react";
+import TerminalSnake from "./TerminalSnake";
 
 const links = [
   {
@@ -158,7 +159,9 @@ export default function Home() {
                     </div>
                     <Skills />
                   </section>
-
+                  <section id="game" className="px-2 md:px-0">
+                    <TerminalSnake />
+                  </section>
                   {/* Section Wrappers adjusted for Pure Black */}
                   <section id="experience" className="px-2 md:px-0">
                     <Experience />
