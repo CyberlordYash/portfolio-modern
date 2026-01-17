@@ -26,6 +26,7 @@ import {
   IconActivity,
 } from "@tabler/icons-react";
 import TerminalSnake from "./TerminalSnake";
+import FooterTerminal from "./FooterTerminal";
 
 const links = [
   {
@@ -55,7 +56,7 @@ export default function Home() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1500);
+    const timer = setTimeout(() => setIsLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -192,6 +193,10 @@ export default function Home() {
 
                   <section id="approach" className="pb-20">
                     <Approach />
+                  </section>
+
+                  <section id="terminal-console" className="px-4 md:px-0 py-10">
+                    <FooterTerminal />
                   </section>
 
                   <Footer />
