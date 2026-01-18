@@ -174,6 +174,27 @@ export default function Home() {
                   >
                     <Grid />
                   </section>
+                  <section className="flex justify-center pb-10">
+                    <button
+                      onClick={() =>
+                        window.open(
+                          "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                          "_blank",
+                        )
+                      }
+                      className="group relative px-4 py-2 font-mono text-[10px] text-red-500/50 hover:text-red-500 transition-colors"
+                    >
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        [!] sudo rm -rf /
+                      </span>
+                      <span className="mx-2 underline decoration-dotted">
+                        Access Restricted Archive
+                      </span>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        [!]
+                      </span>
+                    </button>
+                  </section>
 
                   <section id="projects">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-12 border-l-4 border-blue-600 pl-4 md:pl-6">
