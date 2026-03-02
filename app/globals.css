@@ -194,7 +194,9 @@ body {
   z-index: 10;
   transform: rotate(4deg);
   background: #fff;
-  box-shadow: 0 0 40px 5px #9bf, 0 0 2px 2px #b3ccff inset;
+  box-shadow:
+    0 0 40px 5px #9bf,
+    0 0 2px 2px #b3ccff inset;
 }
 
 .truck__wheel {
@@ -247,12 +249,8 @@ body {
   content: "";
   height: 35%;
   width: 35%;
-  background: radial-gradient(
-      circle at center,
-      #0d0d0d,
-      #0d0d0d 40%,
-      transparent 40%
-    ),
+  background:
+    radial-gradient(circle at center, #0d0d0d, #0d0d0d 40%, transparent 40%),
     radial-gradient(circle at center, #262626, #262626 40%, transparent),
     #8c8c8c;
   border: 1px solid #1a1a1a;
@@ -355,7 +353,8 @@ body {
 .truck__body--top:before {
   --groove: #999;
   content: "";
-  background: linear-gradient(
+  background:
+    linear-gradient(
       95deg,
       transparent,
       transparent 2%,
@@ -455,7 +454,8 @@ body {
   --groove: #262626;
   height: 100%;
   width: 100%;
-  background: linear-gradient(
+  background:
+    linear-gradient(
       84deg,
       transparent,
       transparent 36.75%,
@@ -511,7 +511,8 @@ body {
   clip-path: polygon(0 100%, 0 55%, 34.5% 11%, 85% 108%);
 }
 .truck__window-glass {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       var(--window-black) 0,
       var(--window-black) 15%,
@@ -972,7 +973,8 @@ body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid transparent;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6),
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.6),
     0 16px 32px rgba(0, 0, 0, 0.12);
   backdrop-filter: url(#frosted);
   -webkit-backdrop-filter: url(#frosted);
@@ -1105,7 +1107,9 @@ body {
   }
 
   /* micro-interaction polish */
-  transition: transform 0.25s ease, border-color 0.25s ease,
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
     background 0.25s ease;
   will-change: transform;
 
@@ -1123,7 +1127,8 @@ body {
 }
 
 .fade-rectangular {
-  mask-image: linear-gradient(
+  mask-image:
+    linear-gradient(
       to bottom,
       transparent 0%,
       black 30%,
@@ -1137,11 +1142,14 @@ body {
       black 70%,
       transparent 100%
     );
-  mask-size: 100% 100%, 100% 100%;
+  mask-size:
+    100% 100%,
+    100% 100%;
   mask-composite: intersect;
 
   /* Safari support */
-  -webkit-mask-image: linear-gradient(
+  -webkit-mask-image:
+    linear-gradient(
       to bottom,
       transparent 0%,
       black 30%,
@@ -1155,6 +1163,8 @@ body {
       black 70%,
       transparent 100%
     );
-  -webkit-mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-size:
+    100% 100%,
+    100% 100%;
   -webkit-mask-composite: source-in;
 }

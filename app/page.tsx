@@ -19,35 +19,45 @@ import { navItems } from "@/data";
 // UI & Icons
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
-  IconTerminal2,
-  IconCpu,
-  IconDatabase,
-  IconServer,
   IconActivity,
+  IconBrandGolang,
+  IconTopologyComplex,
+  IconLayoutDashboard,
+  IconShieldLock,
+  IconBoxPadding,
 } from "@tabler/icons-react";
 import TerminalSnake from "./TerminalSnake";
 import FooterTerminal from "./FooterTerminal";
 
+// Updated Links with specialized professional icons
 const links = [
   {
     label: "Terminal",
     href: "#home",
-    icon: <IconTerminal2 className="h-6 w-6 shrink-0 text-blue-500" />,
+    icon: (
+      <IconLayoutDashboard className="h-6 w-6 shrink-0 text-blue-500 transition-colors group-hover:text-blue-400" />
+    ),
   },
   {
     label: "Infrastructure",
     href: "#skills",
-    icon: <IconCpu className="h-6 w-6 shrink-0 text-purple-500" />,
+    icon: (
+      <IconBoxPadding className="h-6 w-6 shrink-0 text-purple-500 transition-colors group-hover:text-purple-400" />
+    ),
   },
   {
     label: "Systems",
     href: "#projects",
-    icon: <IconServer className="h-6 w-6 shrink-0 text-emerald-500" />,
+    icon: (
+      <IconTopologyComplex className="h-6 w-6 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-400" />
+    ),
   },
   {
     label: "Architecture",
     href: "#approach",
-    icon: <IconDatabase className="h-6 w-6 shrink-0 text-amber-500" />,
+    icon: (
+      <IconShieldLock className="h-6 w-6 shrink-0 text-amber-500 transition-colors group-hover:text-amber-400" />
+    ),
   },
 ];
 
@@ -61,7 +71,6 @@ export default function Home() {
   }, []);
 
   return (
-    // Pure Black Background
     <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
       <AnimatePresence mode="wait">
         {isLoading ? (
@@ -76,11 +85,21 @@ export default function Home() {
           <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-black">
             {/* RESPONSIVE SIDEBAR */}
             <Sidebar open={open} setOpen={setOpen} animate={true}>
-              {/* Added bg-black and subtle white border for OLED contrast */}
               <SidebarBody className="justify-between gap-10 border-r border-white/[0.05] bg-white dark:bg-black px-4 md:px-2">
                 <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                   <div className="flex items-center justify-start gap-3 h-20 px-2">
-                    <div className="h-8 w-1 min-w-[4px] bg-gradient-to-b from-blue-600 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]" />
+                    {/* Animated Brand Gradient Line */}
+                    <motion.div
+                      animate={{
+                        background: [
+                          "linear-gradient(to bottom, #2563eb, #22d3ee)",
+                          "linear-gradient(to bottom, #22d3ee, #2563eb)",
+                          "linear-gradient(to bottom, #2563eb, #22d3ee)",
+                        ],
+                      }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                      className="h-8 w-1 min-w-[4px] rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]"
+                    />
                     <span
                       className={cn(
                         "font-mono font-bold tracking-tighter text-xl text-white whitespace-nowrap transition-opacity duration-300",
@@ -120,11 +139,15 @@ export default function Home() {
                       label: "Yash Sachan",
                       href: "#",
                       icon: (
-                        <img
-                          src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
-                          className="h-8 w-8 rounded-full border border-white/20 object-cover shrink-0"
-                          alt="Avatar"
-                        />
+                        <div className="relative">
+                          {/* Subtle Glow behind profile icon */}
+                          <div className="absolute inset-0 bg-blue-500/20 blur-sm rounded-full" />
+                          <img
+                            src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
+                            className="relative h-8 w-8 rounded-full border border-white/20 object-cover shrink-0"
+                            alt="Avatar"
+                          />
+                        </div>
                       ),
                     }}
                     className="flex items-center gap-4 px-2"
@@ -135,13 +158,10 @@ export default function Home() {
 
             {/* MAIN CONTENT AREA */}
             <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-black">
-              {/* Pure Black Grid Pattern */}
               <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
               <div className="relative z-10 w-full">
-                <div className="">
-                  <FloatingNav navItems={navItems} />
-                </div>
+                <FloatingNav navItems={navItems} />
 
                 <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
                   <section id="home" className="pt-12 md:pt-4">
@@ -151,7 +171,12 @@ export default function Home() {
                   <section id="skills" className="relative">
                     <div className="flex flex-col items-center mb-10 md:mb-16">
                       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.02] text-blue-400 text-[10px] md:text-xs font-mono mb-4">
-                        <IconActivity size={14} className="animate-pulse" />{" "}
+                        <motion.div
+                          animate={{ opacity: [1, 0.5, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <IconActivity size={14} />
+                        </motion.div>
                         SYSTEM_RUNTIME
                       </div>
                       <h2 className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600">
@@ -160,10 +185,11 @@ export default function Home() {
                     </div>
                     <Skills />
                   </section>
+
                   <section id="game" className="px-2 md:px-0">
                     <TerminalSnake />
                   </section>
-                  {/* Section Wrappers adjusted for Pure Black */}
+
                   <section id="experience" className="px-2 md:px-0">
                     <Experience />
                   </section>
@@ -174,6 +200,7 @@ export default function Home() {
                   >
                     <Grid />
                   </section>
+
                   <section className="flex justify-center pb-10">
                     <button
                       onClick={() =>
