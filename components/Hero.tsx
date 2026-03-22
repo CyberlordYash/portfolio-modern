@@ -4,10 +4,12 @@ import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import { SiLeetcode, SiLinkedin, SiCodechef } from "react-icons/si";
 import Image from "next/image";
+import Link from "next/link";
 import logo from "../public/logo.jpg";
 import { motion } from "framer-motion";
 import { Meteors } from "./ui/Metors";
 import { SparklesCore } from "./ui/sparkles";
+import { ArrowUpRight, NotebookPen } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -134,6 +136,7 @@ const Hero = () => {
               <TechTag label="Performance Tuning" color="orange" />
               <TechTag label="Cloud Native" color="emerald" />
             </div>
+
           </div>
         </motion.div>
 
@@ -169,6 +172,24 @@ const Hero = () => {
               hoverColor="hover:border-[#FFA116]/40"
               gradient="from-[#FFA116]/20 via-[#FFA116]/5 to-transparent"
             />
+          </div>
+
+          <div className="mt-5 flex justify-center md:justify-start">
+            <Link
+              href="/worklog"
+              className="group inline-flex items-center gap-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/15"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-400/20 bg-black/30">
+                <NotebookPen className="h-4 w-4" />
+              </span>
+              <span className="flex flex-col items-start gap-1">
+                <span>Open Worklog</span>
+                <span className="text-[9px] tracking-[0.2em] text-slate-400 transition group-hover:text-slate-300">
+                  Save daily company updates
+                </span>
+              </span>
+              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
           </div>
         </div>
       </div>
