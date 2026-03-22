@@ -336,6 +336,9 @@ export default function GymPage() {
                   <h2 className="bg-gradient-to-b from-slate-950 to-slate-500 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-slate-500 md:text-5xl">
                     Daily progress.
                   </h2>
+                  <p className="max-w-2xl font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400 md:text-base">
+                    I store my daily progress here. You can only see it.
+                  </p>
                 </div>
               </div>
 

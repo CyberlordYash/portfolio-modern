@@ -144,6 +144,9 @@ export default function WorklogPage() {
                   <h1 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white md:text-3xl">
                     Worklog
                   </h1>
+                  <p className="mt-2 max-w-md font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    I store my work tasks here. You can&apos;t access it.
+                  </p>
                 </div>
               </div>
 
