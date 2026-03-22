@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
 
@@ -10,7 +10,6 @@ import Experience from "@/components/Experience";
 import Footer from "@/components/Footer";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
-import Loading from "@/components/Loading";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import { FloatingNav } from "@/components/ui/FloatingNav";
@@ -62,18 +61,18 @@ const links = [
 ];
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setIsLoading(false), 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
       <AnimatePresence mode="wait">
-        {isLoading ? (
+        {false ? (
           <motion.div
             key="loader"
             exit={{ opacity: 0 }}
