@@ -9,7 +9,7 @@ import logo from "../public/logo.jpg";
 import { motion } from "framer-motion";
 import { Meteors } from "./ui/Metors";
 import { SparklesCore } from "./ui/sparkles";
-import { ArrowUpRight, NotebookPen } from "lucide-react";
+import { ArrowUpRight, BookOpenText, NotebookPen } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -174,7 +174,7 @@ const Hero = () => {
             />
           </div>
 
-          <div className="mt-5 flex justify-center md:justify-start">
+          <div className="mt-5 flex flex-wrap justify-center gap-3 md:justify-start">
             <Link
               href="/worklog"
               className="group inline-flex items-center gap-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/15"
@@ -186,6 +186,22 @@ const Hero = () => {
                 <span>Open Worklog</span>
                 <span className="text-[9px] tracking-[0.2em] text-slate-400 transition group-hover:text-slate-300">
                   Save daily company updates
+                </span>
+              </span>
+              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+
+            <Link
+              href="/blogs"
+              className="group inline-flex items-center gap-3 rounded-2xl border border-amber-400/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.14),rgba(250,204,21,0.08))] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-amber-700 transition hover:border-amber-400/45 hover:bg-[linear-gradient(135deg,rgba(245,158,11,0.18),rgba(250,204,21,0.12))] dark:text-amber-200"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-400/20 bg-white/50 dark:bg-black/30">
+                <BookOpenText className="h-4 w-4" />
+              </span>
+              <span className="flex flex-col items-start gap-1">
+                <span>Blogs</span>
+                <span className="text-[9px] tracking-[0.2em] text-slate-500 transition group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300">
+                  Public blogs
                 </span>
               </span>
               <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

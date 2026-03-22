@@ -205,17 +205,12 @@ export default function WorkJournal({
           <div className="space-y-4">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-cyan-700 dark:border-cyan-400/20 dark:bg-cyan-400/10 dark:text-cyan-300">
               <BriefcaseBusiness className="h-3.5 w-3.5" />
-              Daily Work Vault
+              Worklog
             </div>
             <div className="space-y-2">
               <h2 className="bg-gradient-to-b from-slate-950 to-slate-500 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-slate-500 md:text-5xl">
-                Company updates, saved online.
+                Daily notes.
               </h2>
-              <p className="max-w-2xl font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400 md:text-base">
-                Log what you shipped, fixed, or learned each day. Entries are
-                now stored through your backend, so they stay available after
-                deployment and across devices.
-              </p>
             </div>
           </div>
 
@@ -223,7 +218,7 @@ export default function WorkJournal({
             <StatsCard
               label="Entries"
               value={String(totalUpdates).padStart(2, "0")}
-              helper={isLoading ? "Syncing..." : "Stored online"}
+              helper={isLoading ? "Syncing..." : "Saved"}
             />
             <StatsCard
               label="Last Update"
@@ -343,15 +338,15 @@ export default function WorkJournal({
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-mono uppercase tracking-[0.35em] text-slate-500">
-                  Stored Notes
+                  Notes
                 </p>
                 <h3 className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">
                   Worklog timeline
                 </h3>
               </div>
-              <div className="rounded-full border border-slate-200 bg-slate-100/80 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.28em] text-slate-500 dark:border-white/10 dark:bg-black/30 dark:text-slate-400">
-                backend-sync
-              </div>
+                <div className="rounded-full border border-slate-200 bg-slate-100/80 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.28em] text-slate-500 dark:border-white/10 dark:bg-black/30 dark:text-slate-400">
+                online
+                </div>
             </div>
 
             <div className="space-y-4">
@@ -362,7 +357,7 @@ export default function WorkJournal({
                     Syncing notes
                   </p>
                   <p className="mt-2 font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    Loading your worklog from the server.
+                    Loading...
                   </p>
                 </div>
               ) : sortedEntries.length === 0 ? (

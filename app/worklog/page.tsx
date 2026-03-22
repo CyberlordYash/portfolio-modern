@@ -22,7 +22,7 @@ export default function WorklogPage() {
   useEffect(() => {
     const loadAuthState = async () => {
       try {
-        const response = await fetch("/api/worklog/auth", {
+        const response = await fetch("/api/admin/auth", {
           cache: "no-store",
         });
 
@@ -50,7 +50,7 @@ export default function WorklogPage() {
       setIsSubmitting(true);
       setHasError(false);
 
-      const response = await fetch("/api/worklog/auth", {
+      const response = await fetch("/api/admin/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export default function WorklogPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/worklog/auth", { method: "DELETE" });
+      await fetch("/api/admin/auth", { method: "DELETE" });
     } catch (error) {
       console.error(error);
     } finally {
@@ -112,7 +112,7 @@ export default function WorklogPage() {
 
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-cyan-700 dark:border-cyan-400/20 dark:bg-cyan-400/10 dark:text-cyan-300">
             <BriefcaseBusiness className="h-3.5 w-3.5" />
-            Private Work Dashboard
+            Worklog
           </div>
         </div>
 
@@ -142,16 +142,10 @@ export default function WorklogPage() {
                     Access Control
                   </p>
                   <h1 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white md:text-3xl">
-                    Protected worklog
+                    Worklog
                   </h1>
                 </div>
               </div>
-
-              <p className="max-w-xl font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400 md:text-base">
-                Enter the password to open your private company notes dashboard.
-                Once unlocked, your session stays active with a secure browser
-                cookie.
-              </p>
 
               <form onSubmit={handleUnlock} className="mt-6 space-y-4">
                 <label className="block space-y-2">
