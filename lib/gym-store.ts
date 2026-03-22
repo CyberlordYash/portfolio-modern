@@ -9,6 +9,7 @@ export type GymEntry = {
   running: boolean;
   weightLifting: boolean;
   abs: boolean;
+  restDay: boolean;
   updatedAt: string;
 };
 

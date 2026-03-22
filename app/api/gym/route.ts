@@ -9,6 +9,7 @@ type GymPayload = {
   running?: boolean;
   weightLifting?: boolean;
   abs?: boolean;
+  restDay?: boolean;
 };
 
 function sortEntries(entries: GymEntry[]) {
@@ -20,20 +21,14 @@ function sortEntries(entries: GymEntry[]) {
 }
 
 export async function GET(request: Request) {
-  if (!(await isAdminAuthorized())) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401, headers: { "Cache-Control": "no-store" } },
-    );
-  }
-
   const { searchParams } = new URL(request.url);
   const date = searchParams.get("date")?.trim();
   const entries = sortEntries(await readGymEntries());
   const entry = date ? entries.find((item) => item.date === date) ?? null : null;
+  const admin = await isAdminAuthorized();
 
   return NextResponse.json(
-    { entries, entry },
+    { entries, entry, admin },
     {
       headers: {
         "Cache-Control": "no-store",
@@ -60,14 +55,17 @@ export async function POST(request: Request) {
     );
   }
 
+  const restDay = Boolean(payload.restDay);
+
   const timestamp = new Date().toISOString();
   const normalizedEntry: GymEntry = {
     date,
-    protein: Boolean(payload.protein),
-    creatine: Boolean(payload.creatine),
-    running: Boolean(payload.running),
-    weightLifting: Boolean(payload.weightLifting),
-    abs: Boolean(payload.abs),
+    protein: restDay ? false : Boolean(payload.protein),
+    creatine: restDay ? false : Boolean(payload.creatine),
+    running: restDay ? false : Boolean(payload.running),
+    weightLifting: restDay ? false : Boolean(payload.weightLifting),
+    abs: restDay ? false : Boolean(payload.abs),
+    restDay,
     updatedAt: timestamp,
   };
 
@@ -87,6 +85,7 @@ export async function POST(request: Request) {
     {
       entries: sortedEntries,
       entry: normalizedEntry,
+      admin: true,
     },
     {
       headers: {
