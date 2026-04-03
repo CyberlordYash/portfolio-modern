@@ -112,7 +112,7 @@ const Grid = () => {
               {/* Name */}
               <h3 className="mb-1 text-3xl font-extrabold tracking-tight md:text-4xl">
                 <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400">
-                  Hey, I'm Yash
+                  Hey, I&apos;m Yash
                 </span>
               </h3>
               <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-500">
@@ -131,8 +131,8 @@ const Grid = () => {
                 <span className="font-semibold text-slate-800 dark:text-slate-200">
                   correctness
                 </span>
-                , and clean architecture. When I'm not profiling Go binaries,
-                I'm in the gym or grinding algorithms.
+                , and clean architecture. When I&apos;m not profiling Go
+                binaries, I&apos;m in the gym or grinding algorithms.
               </p>
 
               {/* Tags */}
@@ -246,9 +246,7 @@ const Grid = () => {
           >
             <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500/60 to-transparent" />
             {/* Big quote mark */}
-            <div className="pointer-events-none absolute -bottom-3 right-4 font-serif text-8xl font-bold leading-none text-amber-500/10 select-none">
-              "
-            </div>
+            <div className="pointer-events-none absolute -bottom-3 right-4 font-serif text-8xl font-bold leading-none text-amber-500/10 select-none"></div>
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
@@ -258,8 +256,8 @@ const Grid = () => {
                 </span>
               </div>
               <p className="text-[13px] font-medium italic leading-relaxed text-slate-700 dark:text-slate-300">
-                "Performance is a feature, not an afterthought. Great software
-                is invisible; it just works."
+                {`Performance is a feature, not an afterthought. Great software
+  is invisible; it just works.`}
               </p>
             </div>
           </Cell>
@@ -333,7 +331,7 @@ const Grid = () => {
             <div className="relative z-10 flex flex-col items-center justify-between gap-6 px-8 py-9 text-center md:flex-row md:text-left">
               <div>
                 <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-indigo-500/70 dark:text-indigo-400/60">
-                  Let's Collaborate
+                  Let&apos;s Collaborate
                 </p>
                 <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white md:text-2xl">
                   Want to build something{" "}
