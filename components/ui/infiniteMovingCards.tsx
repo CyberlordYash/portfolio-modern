@@ -18,6 +18,25 @@ import {
 import { IoLogoJavascript } from "react-icons/io5";
 import { PiFileCppFill, PiFileSqlLight } from "react-icons/pi";
 
+const iconMap: Record<string, React.ReactNode> = {
+  "1": <FaReact className="h-8 w-8 text-cyan-400" />,
+  "2": <SiNextdotjs className="h-8 w-8 text-gray-800 dark:text-white" />,
+  "3": <IoLogoJavascript className="h-8 w-8 text-yellow-400" />,
+  "4": <PiFileCppFill className="h-8 w-8 text-blue-500" />,
+  "5": <PiFileSqlLight className="h-8 w-8 text-emerald-400" />,
+  "6": <FaNode className="h-8 w-8 text-green-500" />,
+  "7": <SiMongodb className="h-8 w-8 text-green-500" />,
+  "8": <SiGo className="h-8 w-8 text-sky-400" />,
+  "9": <SiSpringboot className="h-8 w-8 text-green-400" />,
+  "10": <FaJava className="h-8 w-8 text-red-400" />,
+  "11": <SiPostgresql className="h-8 w-8 text-sky-600" />,
+  "12": <SiTailwindcss className="h-8 w-8 text-sky-400" />,
+  "13": <SiGooglecloud className="h-8 w-8 text-blue-400" />,
+  "14": <FaGitAlt className="h-8 w-8 text-orange-500" />,
+  "15": <SiNatsdotio className="h-8 w-8 text-blue-400" />,
+  "16": <SiApachekafka className="h-8 w-8 text-gray-700 dark:text-gray-300" />,
+};
+
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -47,14 +66,12 @@ export const InfiniteMovingCards = ({
   function addAnimation() {
     if (containerRef.current && scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
-
       scrollerContent.forEach((item) => {
         const duplicatedItem = item.cloneNode(true);
         if (scrollerRef.current) {
           scrollerRef.current.appendChild(duplicatedItem);
         }
       });
-
       getDirection();
       getSpeed();
       setStart(true);
@@ -83,80 +100,40 @@ export const InfiniteMovingCards = ({
       ref={containerRef}
       className={cn(
         "scroller relative z-20 max-w-7xl overflow-hidden",
+        "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
         className,
       )}
     >
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 gap-6 md:gap-10 py-4 w-max flex-nowrap",
+          "flex min-w-full shrink-0 w-max flex-nowrap gap-4 py-3",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]",
         )}
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[120px] h-[120px] rounded-2xl  flex-shrink-0 p-2 md:p-4 lg:p-6 bg-blue-700 overflow-hidden"
-            key={item.name}
+            key={`${item.name}-${idx}`}
+            className="group relative flex w-[136px] shrink-0 flex-col items-center gap-3 overflow-hidden rounded-2xl border border-gray-200/70 bg-gray-50/80 p-4 transition-all duration-300 hover:border-gray-300/80 hover:bg-white hover:shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-white/10 dark:hover:bg-white/[0.04]"
           >
-            <blockquote>
-              <div
-                aria-hidden="true"
-                className="user-select-none pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)] overflow-hidden"
-              ></div>
-              <span className="relative z-20 text-xs md:text-sm lg:text-base leading-[1.6] text-gray-100 font-normal">
-                {item.quote}
-              </span>
-            </blockquote>
-            {item.title === "1" && (
-              <FaReact className="text-cyan-400 w-[64px] h-[64px]" />
-            )}
-            {item.title === "2" && (
-              <SiNextdotjs className="text-white w-[64px] h-[64px]" />
-            )}
-            {item.title === "3" && (
-              <IoLogoJavascript className="text-yellow-400 w-[64px] h-[64px]" />
-            )}
-            {item.title === "4" && (
-              <PiFileCppFill className="text-blue-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "5" && (
-              <PiFileSqlLight className="text-green-400 w-[64px] h-[64px]" />
-            )}
-            {item.title === "6" && (
-              <FaNode className="text-green-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "7" && (
-              <SiMongodb className="text-green-600 w-[64px] h-[64px]" />
-            )}
-            {item.title === "8" && (
-              <SiGo className="text-sky-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "9" && (
-              <SiSpringboot className="text-green-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "10" && (
-              <FaJava className="text-red-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "11" && (
-              <SiPostgresql className="text-sky-700 w-[64px] h-[64px]" />
-            )}
-            {item.title === "12" && (
-              <SiTailwindcss className="text-sky-400 w-[64px] h-[64px]" />
-            )}
-            {item.title === "13" && (
-              <SiGooglecloud className="text-blue-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "14" && (
-              <FaGitAlt className="text-orange-500 w-[64px] h-[64px]" />
-            )}
-            {item.title === "15" && (
-              <SiNatsdotio className="text-blue-400 w-[64px] h-[64px]" />
-            )}
+            {/* Hover accent glow */}
+            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-            {item.title === "16" && (
-              <SiApachekafka className="text-black w-[64px] h-[64px]" />
-            )}
+            {/* Icon container */}
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 group-hover:shadow-md dark:border-white/[0.07] dark:bg-black/50">
+              {iconMap[item.title]}
+            </div>
+
+            {/* Text */}
+            <div className="relative z-10 flex flex-col items-center gap-0.5 text-center">
+              <p className="font-mono text-[11px] font-semibold leading-tight text-gray-800 dark:text-slate-200">
+                {item.quote}
+              </p>
+              <p className="font-mono text-[8px] uppercase tracking-wider text-gray-400 dark:text-slate-500 leading-tight">
+                {item.name}
+              </p>
+            </div>
           </li>
         ))}
       </ul>

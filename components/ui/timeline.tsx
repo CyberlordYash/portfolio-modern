@@ -1,10 +1,5 @@
 "use client";
-import {
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  motion,
-} from "motion/react";
+import { useScroll, useTransform, motion } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 
 interface TimelineEntry {
@@ -19,8 +14,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
   useEffect(() => {
     if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      setHeight(rect.height);
+      setHeight(ref.current.getBoundingClientRect().height);
     }
   }, [ref]);
 
@@ -33,57 +27,75 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
   return (
-    <div
-      className="w-full bg-white dark:bg-neutral-950 font-sans md:px-10"
-      ref={containerRef}
-    >
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-5">
-        <h2 className="text-2xl md:text-5xl mb-4 font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
-          My Developer Journey
-        </h2>
-        <p className="text-neutral-700 dark:text-neutral-300 text-base md:text-lg max-w-2xl leading-relaxed">
-          From writing my first lines of code to building high-performance
-          trading systems, here’s a timeline of my growth as a developer.
-        </p>
-      </div>
-
-      <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
+    <div className="w-full font-sans" ref={containerRef}>
+      <div ref={ref} className="relative mx-auto max-w-7xl pb-20">
         {data.map((item, index) => (
           <div
             key={index}
-            className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            className="flex justify-start pt-10 md:gap-10 md:pt-36"
           >
-            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
+            {/* Sticky date + dot */}
+            <div className="sticky top-40 z-40 flex max-w-xs self-start items-center md:w-full md:flex-row lg:max-w-sm">
+              <div className="absolute left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-[#030303]">
+                <div className="h-3 w-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 ring-2 ring-indigo-500/30 ring-offset-2 ring-offset-white dark:ring-offset-[#030303]" />
               </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-neutral-500 dark:text-neutral-500 ">
+              <h3 className="hidden pl-20 font-mono text-[13px] tracking-tight text-neutral-400 dark:text-neutral-500 md:block">
                 {item.title}
               </h3>
             </div>
 
-            <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-neutral-500 dark:text-neutral-500">
+            {/* Content */}
+            <div className="relative w-full pl-20 pr-4 md:pl-4">
+              <h3 className="mb-4 block text-left font-mono text-sm tracking-tight text-neutral-400 dark:text-neutral-500 md:hidden">
                 {item.title}
               </h3>
-              {item.content}{" "}
+              {item.content}
             </div>
           </div>
         ))}
+
+        {/* ── Vertical line system ── */}
+
+        {/* 1. Static rail — always full height, faint */}
         <div
-          style={{
-            height: height + "px",
-          }}
-          className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-neutral-200 dark:via-neutral-700 to-transparent to-[99%]  [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] "
-        >
-          <motion.div
-            style={{
-              height: heightTransform,
-              opacity: opacityTransform,
-            }}
-            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] rounded-full"
-          />
-        </div>
+          style={{ height: height + "px" }}
+          className="absolute left-8 top-0 w-[2px] bg-neutral-200 dark:bg-neutral-800/50
+                     [mask-image:linear-gradient(to_bottom,transparent_0%,black_8%,black_92%,transparent_100%)]"
+        />
+
+        {/* 2. Wide soft glow halo — largest, most diffuse layer */}
+        <motion.div
+          style={{ top: heightTransform, opacity: opacityTransform }}
+          className="pointer-events-none absolute left-8 h-48 w-[2px]
+                     -translate-x-1/2 -translate-y-1/2
+                     bg-gradient-to-b from-transparent via-indigo-400/40 to-transparent
+                     blur-[6px]"
+        />
+
+        {/* 3. Mid glow — tighter and brighter */}
+        <motion.div
+          style={{ top: heightTransform, opacity: opacityTransform }}
+          className="pointer-events-none absolute left-8 h-28 w-[2px]
+                     -translate-x-1/2 -translate-y-1/2
+                     bg-gradient-to-b from-transparent via-violet-400/90 to-transparent
+                     blur-[2px]"
+        />
+
+        {/* 4. Sharp bright core line — crisp white centre */}
+        <motion.div
+          style={{ top: heightTransform, opacity: opacityTransform }}
+          className="pointer-events-none absolute left-8 h-16 w-[2px]
+                     -translate-x-1/2 -translate-y-1/2
+                     bg-gradient-to-b from-transparent via-white to-transparent"
+        />
+
+        {/* 5. Bright dot at the centre of the shine */}
+        <motion.div
+          style={{ top: heightTransform, opacity: opacityTransform }}
+          className="pointer-events-none absolute left-8 z-10 h-2.5 w-2.5
+                     -translate-x-1/2 -translate-y-1/2 rounded-full bg-white
+                     shadow-[0_0_0_2px_rgba(139,92,246,0.3),0_0_8px_4px_rgba(139,92,246,0.8),0_0_20px_8px_rgba(99,102,241,0.4)]"
+        />
       </div>
     </div>
   );

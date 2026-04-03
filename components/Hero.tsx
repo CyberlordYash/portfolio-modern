@@ -16,90 +16,108 @@ import {
   NotebookPen,
 } from "lucide-react";
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+      delay,
+    },
+  }),
+};
+
 const Hero = () => {
   return (
-    <div className="relative min-h-screen lg:h-screen lg:max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-black dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden transition-colors duration-500 px-6 md:px-12 py-12 lg:py-0">
-      {" "}
-      {/* 🌟 Background Sparks */}
+    <div className="relative min-h-screen lg:h-screen lg:max-h-[900px] w-full mx-auto rounded-3xl bg-white dark:bg-[#030303] dark:bg-grid-white/[0.02] bg-grid-black/[0.01] flex items-center justify-center overflow-hidden transition-colors duration-500 px-6 md:px-12 py-16 lg:py-0">
+
+      {/* Background Sparkles */}
       <div className="absolute inset-0 z-0 hidden dark:block">
         <SparklesCore
           id="tsparticleshero"
           background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={12}
+          minSize={0.3}
+          maxSize={0.8}
+          particleDensity={8}
           className="w-full h-full"
           particleColor="#3b82f6"
         />
       </div>
-      {/* 🔦 Spotlights */}
+
+      {/* Radial glow — dark mode only */}
+      <div className="pointer-events-none absolute inset-0 z-0 hidden dark:block">
+        <div className="absolute left-1/2 top-1/3 h-[380px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/[0.04] blur-[110px]" />
+      </div>
+
+      {/* Spotlights */}
       <div className="pointer-events-none">
         <Spotlight
-          className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen opacity-50 dark:opacity-70"
+          className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen opacity-40 dark:opacity-55"
           fill="gray"
         />
         <Spotlight
-          className="top-10 left-full h-[80vh] w-[50vw] opacity-10 dark:opacity-30"
+          className="top-10 left-full h-[80vh] w-[50vw] opacity-10 dark:opacity-20"
           fill="#3b82f6"
         />
       </div>
-      {/* 🌐 Main Content Container */}
-      <div className="flex flex-col items-center justify-center relative z-20 w-full max-w-5xl">
-        {/* 🔹 Name Section */}
+
+      {/* Main Content */}
+      <div className="relative z-20 flex w-full max-w-5xl flex-col items-center justify-center">
+
+        {/* Name & Role */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-1 mb-6 text-center"
+          variants={fadeUp}
+          custom={0}
+          initial="hidden"
+          animate="visible"
+          className="mb-8 space-y-2 text-center"
         >
-          <p className="font-orbitron font-semibold uppercase tracking-[0.4em] text-2xl md:text-3xl text-gray-900 dark:text-white/90">
+          <p className="bg-gradient-to-b from-gray-900 to-gray-500 bg-clip-text font-orbitron text-2xl font-bold uppercase tracking-[0.45em] text-transparent dark:from-white dark:to-white/50 md:text-3xl">
             Yash Sachan
           </p>
           <div className="flex items-center justify-center gap-3">
-            <span className="h-px w-8 bg-blue-500/20" />
-            <span className="text-[9px] font-mono text-blue-500/80 tracking-[0.3em] uppercase font-medium">
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-blue-500/40" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-blue-500/70">
               Systems Engineer
             </span>
-            <span className="h-px w-8 bg-blue-500/20" />
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-blue-500/40" />
           </div>
         </motion.div>
 
-        {/* 🔹 NEW INTEGRATED CENTER SECTION */}
+        {/* Content Block */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="relative w-full max-w-3xl group"
+          variants={fadeUp}
+          custom={0.15}
+          initial="hidden"
+          animate="visible"
+          className="group relative w-full max-w-3xl"
         >
-          {/* Shining Animated Gradient Line */}
-          <div className="absolute left-0 top-0 bottom-0 w-[1.5px] overflow-hidden rounded-full">
-            <div className="h-full w-full bg-gray-200 dark:bg-white/5" />
+          {/* Animated left accent line */}
+          <div className="absolute bottom-0 left-0 top-0 w-[1px] overflow-hidden">
+            <div className="h-full w-full bg-gray-100 dark:bg-white/[0.04]" />
             <motion.div
-              animate={{
-                y: ["-100%", "200%"],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-transparent via-blue-500 to-transparent shadow-[0_0_12px_#3b82f6]"
+              animate={{ y: ["-100%", "200%"] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+              className="absolute left-0 top-0 h-20 w-full bg-gradient-to-b from-transparent via-blue-500/60 to-transparent"
             />
           </div>
 
-          <div className="relative space-y-5 text-left pl-8 py-2">
-            {/* Tagline: More professional size */}
+          <div className="space-y-5 py-1 pl-8">
+            {/* Tagline */}
             <div className="max-w-2xl">
               <TextGenerateEffect
-                className="text-xl md:text-2xl font-medium tracking-tight text-gray-800 dark:text-slate-200"
+                className="text-xl font-medium leading-snug tracking-tight text-gray-800 dark:text-slate-200 md:text-2xl"
                 words="Engineering impactful digital experiences with precision and purpose."
               />
             </div>
 
-            {/* Main Bio: Clean and Integrated */}
-            <div className="space-y-4">
-              <p className="font-Quicksand text-base md:text-lg text-gray-600 dark:text-slate-400 leading-relaxed">
+            {/* Bio */}
+            <div className="space-y-3">
+              <p className="font-Quicksand text-base leading-relaxed text-gray-600 dark:text-slate-400 md:text-[17px]">
                 Hello, I&apos;m{" "}
-                <span className="text-gray-900 dark:text-white font-semibold">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   Yash Sachan
                 </span>
                 . I architect{" "}
@@ -111,51 +129,63 @@ const Hero = () => {
                   href="https://zanskar.xyz/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-baseline gap-1.5 hover:opacity-80 transition-opacity font-semibold text-gray-900 dark:text-white"
+                  className="inline-flex items-baseline gap-1 font-semibold text-gray-900 transition-opacity duration-200 hover:opacity-70 dark:text-white"
                 >
                   <Image
                     src={logo}
                     alt="Zanskar"
-                    width={14}
-                    height={14}
-                    className="rounded-full inline-block mb-0.5 grayscale group-hover:grayscale-0 transition-all duration-500"
+                    width={13}
+                    height={13}
+                    className="mb-0.5 inline-block rounded-full grayscale transition-all duration-500 group-hover:grayscale-0"
                   />
                   Zanskar
                 </a>
                 .
               </p>
 
-              <p className="font-mono text-[10px] md:text-[11px] text-gray-500 dark:text-slate-500 max-w-2xl leading-relaxed uppercase tracking-wider">
-                Specialized in <span className="text-blue-500/80">Golang</span>{" "}
-                performance engineering &{" "}
-                <span className="text-blue-500/80 font-semibold">
+              <p className="max-w-xl font-mono text-[10px] uppercase leading-relaxed tracking-widest text-gray-400 dark:text-slate-500 md:text-[11px]">
+                Specialized in{" "}
+                <span className="text-blue-500/90">Golang</span> performance
+                engineering &{" "}
+                <span className="font-medium text-blue-500/90">
                   distributed systems
                 </span>
-                .
               </p>
             </div>
 
-            {/* Tech Chips: Small and Sharp */}
-            <div className="flex flex-wrap gap-2 pt-1">
+            {/* Tech Tags */}
+            <motion.div
+              variants={fadeUp}
+              custom={0.3}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-wrap gap-1.5 pt-0.5"
+            >
               <TechTag label="Distributed Systems" color="blue" />
               <TechTag label="Performance Tuning" color="orange" />
               <TechTag label="Cloud Native" color="emerald" />
-            </div>
-
+            </motion.div>
           </div>
         </motion.div>
 
-        {/* 🔹 DASHBOARD SOCIAL BAR */}
-        <div className="w-full mt-12 pt-6 border-t border-gray-200 dark:border-white/5">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Social + Action Links */}
+        <motion.div
+          variants={fadeUp}
+          custom={0.4}
+          initial="hidden"
+          animate="visible"
+          className="mt-10 w-full border-t border-gray-100 pt-6 dark:border-white/[0.05]"
+        >
+          {/* Social Cards */}
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <SocialCard
               href="https://www.linkedin.com/in/yashsachan321/"
               icon={<SiLinkedin className="text-[#0A66C2]" />}
               platform="LinkedIn"
               status="Professional Network"
               tag="Connect"
-              hoverColor="hover:border-[#0A66C2]/40"
-              gradient="from-[#0A66C2]/20 via-[#0A66C2]/5 to-transparent"
+              hoverColor="hover:border-[#0A66C2]/30"
+              gradient="from-[#0A66C2]/12 via-[#0A66C2]/5 to-transparent"
             />
             <SocialCard
               href="https://www.codechef.com/users/cyberlordyash"
@@ -165,8 +195,8 @@ const Hero = () => {
               platform="CodeChef"
               status="Competitive Programming"
               tag="4★ Rated"
-              hoverColor="hover:border-amber-500/40"
-              gradient="from-amber-500/20 via-amber-500/5 to-transparent"
+              hoverColor="hover:border-amber-500/30"
+              gradient="from-amber-500/12 via-amber-500/5 to-transparent"
             />
             <SocialCard
               href="https://leetcode.com/u/yashsachan/"
@@ -174,63 +204,42 @@ const Hero = () => {
               platform="LeetCode"
               status="Algorithm Mastery"
               tag="Top 5%"
-              hoverColor="hover:border-[#FFA116]/40"
-              gradient="from-[#FFA116]/20 via-[#FFA116]/5 to-transparent"
+              hoverColor="hover:border-[#FFA116]/30"
+              gradient="from-[#FFA116]/12 via-[#FFA116]/5 to-transparent"
             />
           </div>
 
-          <div className="mt-5 flex flex-wrap justify-center gap-3 md:justify-start">
-            <Link
+          {/* Action Links */}
+          <div className="mt-4 flex flex-wrap justify-center gap-2.5 md:justify-start">
+            <ActionLink
               href="/worklog"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/15"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-400/20 bg-black/30">
-                <NotebookPen className="h-4 w-4" />
-              </span>
-              <span className="flex flex-col items-start gap-1">
-                <span>Open Worklog</span>
-                <span className="text-[9px] tracking-[0.2em] text-slate-400 transition group-hover:text-slate-300">
-                  Save daily company updates
-                </span>
-              </span>
-              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-
-            <Link
+              icon={<NotebookPen className="h-3.5 w-3.5" />}
+              label="Open Worklog"
+              sublabel="Daily company updates"
+              colorClass="border-cyan-500/20 bg-cyan-500/[0.06] text-cyan-600 dark:text-cyan-300 hover:border-cyan-500/40 hover:bg-cyan-500/10"
+              iconBg="border-cyan-500/15 bg-white/30 dark:bg-black/40"
+            />
+            <ActionLink
               href="/blogs"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-amber-400/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.14),rgba(250,204,21,0.08))] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-amber-700 transition hover:border-amber-400/45 hover:bg-[linear-gradient(135deg,rgba(245,158,11,0.18),rgba(250,204,21,0.12))] dark:text-amber-200"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-400/20 bg-white/50 dark:bg-black/30">
-                <BookOpenText className="h-4 w-4" />
-              </span>
-              <span className="flex flex-col items-start gap-1">
-                <span>Blogs</span>
-                <span className="text-[9px] tracking-[0.2em] text-slate-500 transition group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300">
-                  Public blogs
-                </span>
-              </span>
-              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-
-            <Link
+              icon={<BookOpenText className="h-3.5 w-3.5" />}
+              label="Blogs"
+              sublabel="Public articles"
+              colorClass="border-amber-500/20 bg-amber-500/[0.06] text-amber-700 dark:text-amber-300 hover:border-amber-500/40 hover:bg-amber-500/10"
+              iconBg="border-amber-500/15 bg-white/50 dark:bg-black/40"
+            />
+            <ActionLink
               href="/gym"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-red-400/25 bg-[linear-gradient(135deg,rgba(239,68,68,0.14),rgba(248,113,113,0.08))] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-red-700 transition hover:border-red-400/45 hover:bg-[linear-gradient(135deg,rgba(239,68,68,0.18),rgba(248,113,113,0.12))] dark:text-red-200"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-red-400/20 bg-white/50 dark:bg-black/30">
-                <Dumbbell className="h-4 w-4" />
-              </span>
-              <span className="flex flex-col items-start gap-1">
-                <span>Gym</span>
-                <span className="text-[9px] tracking-[0.2em] text-slate-500 transition group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300">
-                  Daily tracker
-                </span>
-              </span>
-              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
+              icon={<Dumbbell className="h-3.5 w-3.5" />}
+              label="Gym"
+              sublabel="Daily tracker"
+              colorClass="border-red-500/20 bg-red-500/[0.06] text-red-700 dark:text-red-300 hover:border-red-500/40 hover:bg-red-500/10"
+              iconBg="border-red-500/15 bg-white/50 dark:bg-black/40"
+            />
           </div>
-        </div>
+        </motion.div>
       </div>
-      <Meteors number={8} />
+
+      <Meteors number={6} />
     </div>
   );
 };
@@ -238,14 +247,14 @@ const Hero = () => {
 // --- Helper Components ---
 
 const TechTag = ({ label, color }: { label: string; color: string }) => {
-  const colors: any = {
-    orange: "text-orange-500/80 border-orange-500/10",
-    blue: "text-blue-500/80 border-blue-500/10",
-    emerald: "text-emerald-500/80 border-emerald-500/10",
+  const colors: Record<string, string> = {
+    orange: "text-orange-500/70 border-orange-500/15 bg-orange-500/5",
+    blue: "text-blue-500/70 border-blue-500/15 bg-blue-500/5",
+    emerald: "text-emerald-500/70 border-emerald-500/15 bg-emerald-500/5",
   };
   return (
     <span
-      className={`text-[8px] font-mono px-2 py-0.5 rounded border uppercase font-semibold tracking-wider ${colors[color]}`}
+      className={`rounded-md border px-2.5 py-[3px] font-mono text-[9px] font-medium uppercase tracking-wider ${colors[color]}`}
     >
       {label}
     </span>
@@ -260,54 +269,87 @@ const SocialCard = ({
   tag,
   hoverColor,
   gradient,
-}: any) => (
+}: {
+  href: string;
+  icon: React.ReactNode;
+  platform: string;
+  status: string;
+  tag: string;
+  hoverColor: string;
+  gradient: string;
+}) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className={`group relative flex items-center gap-4 p-3 rounded-xl bg-gray-50/50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/5 transition-all duration-500 ${hoverColor} backdrop-blur-md overflow-hidden`}
+    className={`group relative flex items-center gap-3.5 overflow-hidden rounded-xl border border-gray-200/80 bg-gray-50/60 p-3 backdrop-blur-sm transition-all duration-300 dark:border-white/[0.06] dark:bg-white/[0.02] ${hoverColor}`}
   >
+    {/* Gradient fill on hover */}
     <div
-      className={`absolute inset-0 opacity-40 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br ${gradient} pointer-events-none`}
+      className={`pointer-events-none absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${gradient}`}
     />
-    <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
-    <div
-      className={`absolute -right-2 -bottom-2 opacity-5 group-hover:opacity-20 transition-all duration-700 rotate-12 group-hover:rotate-0`}
-    >
-      <span className="text-5xl">{icon}</span>
+    {/* Shimmer sweep */}
+    <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.07] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
+    {/* Icon */}
+    <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white transition-all duration-300 dark:border-white/[0.08] dark:bg-black/50">
+      <span className="text-lg">{icon}</span>
     </div>
-    <div className="relative z-10 flex items-center justify-center h-10 w-10 rounded-lg bg-white dark:bg-black/40 border border-gray-200 dark:border-white/10 group-hover:border-white/20 transition-all duration-300">
-      <span className="text-xl">{icon}</span>
-    </div>
-    <div className="relative z-10 flex flex-col items-start text-left">
+
+    {/* Text */}
+    <div className="relative z-10 min-w-0 flex-1">
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-semibold tracking-tight text-gray-900 dark:text-white uppercase">
+        <span className="text-[11px] font-semibold uppercase tracking-tight text-gray-900 dark:text-white/90">
           {platform}
         </span>
-        <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 border border-blue-500/10 uppercase font-bold">
+        <span className="rounded border border-blue-500/15 bg-blue-500/[0.08] px-1.5 py-0.5 font-mono text-[8px] font-bold uppercase text-blue-500/80">
           {tag}
         </span>
       </div>
-      <span className="text-[10px] font-mono text-gray-500 dark:text-slate-500 mt-0.5 uppercase tracking-tighter font-medium">
+      <span className="font-mono text-[10px] uppercase tracking-tight text-gray-400 dark:text-slate-500">
         {status}
       </span>
     </div>
-    <div className="ml-auto relative z-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-500">
-      <svg
-        className="h-3.5 w-3.5 text-gray-400 dark:text-gray-300"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M14 5l7 7m0 0l-7 7m7-7H3"
-        />
-      </svg>
+
+    {/* Arrow */}
+    <div className="relative z-10 shrink-0 translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+      <ArrowUpRight className="h-3.5 w-3.5 text-gray-400 dark:text-gray-400" />
     </div>
   </a>
+);
+
+const ActionLink = ({
+  href,
+  icon,
+  label,
+  sublabel,
+  colorClass,
+  iconBg,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  sublabel: string;
+  colorClass: string;
+  iconBg: string;
+}) => (
+  <Link
+    href={href}
+    className={`group inline-flex items-center gap-3 rounded-xl border px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] transition-all duration-200 ${colorClass}`}
+  >
+    <span
+      className={`flex h-7 w-7 items-center justify-center rounded-lg border ${iconBg}`}
+    >
+      {icon}
+    </span>
+    <span className="flex flex-col items-start gap-0.5">
+      <span className="font-semibold">{label}</span>
+      <span className="text-[8px] tracking-[0.15em] opacity-55">
+        {sublabel}
+      </span>
+    </span>
+    <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
+  </Link>
 );
 
 export default Hero;
