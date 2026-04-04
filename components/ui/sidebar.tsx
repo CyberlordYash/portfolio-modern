@@ -1,14 +1,11 @@
 "use client";
 import { cn } from "@/utils/cn";
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
-/* ── FIX: Safe Motion Props Type ── */
-type MotionDivProps = Omit<
-  React.ComponentProps<typeof motion.div>,
-  "children"
-> & {
+type MotionDivProps = Omit<React.ComponentProps<typeof motion.div>, "children"> & {
   children?: React.ReactNode;
 };
 
@@ -18,15 +15,12 @@ interface SidebarContextProps {
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined,
-);
+const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
 
 export const useSidebar = () => {
-  const context = useContext(SidebarContext);
-  if (!context)
-    throw new Error("useSidebar must be used within a SidebarProvider");
-  return context;
+  const ctx = useContext(SidebarContext);
+  if (!ctx) throw new Error("useSidebar must be used within SidebarProvider");
+  return ctx;
 };
 
 export const Sidebar = ({
@@ -43,7 +37,6 @@ export const Sidebar = ({
   const [openState, setOpenState] = useState(false);
   const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
-
   return (
     <SidebarContext.Provider value={{ open, setOpen, animate }}>
       {children}
@@ -51,7 +44,6 @@ export const Sidebar = ({
   );
 };
 
-/* ── FIXED SidebarBody ── */
 export const SidebarBody = (props: MotionDivProps) => (
   <>
     <DesktopSidebar {...props} />
@@ -59,192 +51,264 @@ export const SidebarBody = (props: MotionDivProps) => (
   </>
 );
 
-/* ── Desktop Sidebar ── */
-export const DesktopSidebar = ({
-  className,
-  children,
-  ...props
-}: MotionDivProps) => {
+/* ─────────────────────────────────────────────────────────────
+   DESKTOP SIDEBAR
+───────────────────────────────────────────────────────────── */
+export const DesktopSidebar = ({ className, children, ...props }: MotionDivProps) => {
   const { open, setOpen, animate } = useSidebar();
 
   return (
     <motion.div
       className={cn(
-        "h-full py-4 hidden md:flex md:flex-col shrink-0 relative",
-        className,
+        "h-full hidden md:flex md:flex-col shrink-0 relative overflow-visible",
+        "bg-slate-50 dark:bg-[#030712]",
+        className
       )}
       animate={{ width: animate ? (open ? "260px" : "72px") : "260px" }}
+      transition={{ type: "spring", stiffness: 280, damping: 28 }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       {...props}
     >
-      <div className="absolute right-0 top-[10%] bottom-[10%] w-[1px] bg-gradient-to-b from-transparent via-indigo-500/25 to-transparent" />
+      {/* Divider line */}
+      <div className="absolute right-0 top-[8%] bottom-[8%] w-px bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent" />
+
+      {/* Collapsed scan-line shimmer */}
+      <AnimatePresence>
+        {!open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+          >
+            <motion.div
+              animate={{ y: ["-100%", "200%"] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
+              className="absolute inset-x-0 h-16 bg-gradient-to-b from-transparent via-indigo-500/[0.06] to-transparent"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {children}
     </motion.div>
   );
 };
 
-/* ── Mobile Sidebar ── */
-export const MobileSidebar = ({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"div">) => {
+/* ─────────────────────────────────────────────────────────────
+   MOBILE SIDEBAR
+───────────────────────────────────────────────────────────── */
+export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   return (
-    <div
-      className={cn(
-        "h-14 px-5 flex flex-row md:hidden items-center justify-between w-full fixed top-0 left-0 z-[500]",
-        "bg-white/80 border-b border-slate-200/80 backdrop-blur-xl",
-        "dark:bg-[#030712]/80 dark:border-white/[0.06]",
-      )}
-      {...props}
-    >
-      {/* Brand */}
-      <div className="flex items-center gap-2.5">
-        <div className="relative flex h-6 w-1 overflow-hidden rounded-full">
-          <motion.div
-            animate={{
-              background: [
-                "linear-gradient(to bottom, #6366f1, #a855f7)",
-                "linear-gradient(to bottom, #a855f7, #ec4899)",
-                "linear-gradient(to bottom, #ec4899, #6366f1)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute inset-0"
-          />
-        </div>
-        <span className="font-mono font-black text-sm tracking-tighter text-slate-800 dark:text-white uppercase">
-          YS
-          <span className="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">
-            .DEV
-          </span>
-        </span>
-      </div>
-
-      {/* Hamburger */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 transition-all duration-200 hover:border-indigo-500/40 hover:shadow-[0_0_12px_rgba(99,102,241,0.2)] dark:border-white/[0.08] dark:bg-white/[0.04] dark:hover:border-indigo-500/40"
+    <>
+      {/* ── Floating hamburger button (mobile only) ── */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.4, type: "spring", stiffness: 260, damping: 20 }}
+        onClick={() => setOpen(true)}
+        whileTap={{ scale: 0.88 }}
+        className="md:hidden fixed top-5 left-5 z-[500] flex h-10 w-10 items-center justify-center rounded-2xl
+          bg-white/30 dark:bg-black/30 backdrop-blur-xl
+          border border-white/40 dark:border-white/10
+          shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)]
+          transition-colors hover:border-indigo-400/50 hover:bg-white/50 dark:hover:bg-indigo-500/10"
       >
-        <IconMenu2 size={16} className="text-slate-600 dark:text-slate-300" />
-      </button>
+        <IconMenu2 size={18} className="text-slate-700 dark:text-slate-200" />
+      </motion.button>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[600]"
-            />
-
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.28, ease: "circOut" }}
-              className={cn(
-                "fixed right-0 top-0 h-full w-[78%] max-w-[320px] flex flex-col z-[700]",
-                "bg-white/95 backdrop-blur-xl border-l border-slate-200/80",
-                "dark:bg-[#030712]/95 dark:border-white/[0.07]",
-                className,
-              )}
-            >
-              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-rose-500" />
-
-              <div className="flex items-center justify-between px-6 pt-7 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30">
-                    <span className="font-mono text-[9px] font-black text-white">
-                      YS
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[11px] font-black uppercase tracking-widest text-slate-800 dark:text-white">
-                      Navigation
-                    </p>
-                    <p className="font-mono text-[8px] uppercase tracking-widest text-slate-400 dark:text-slate-600">
-                      Portfolio
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-50 transition-all hover:border-rose-500/40 hover:text-rose-500 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-400"
-                >
-                  <IconX size={14} />
-                </button>
-              </div>
-
-              <div
-                className="flex flex-col gap-1 px-4 pt-4 flex-1"
+      {/* ── Drawer — portalled to body to escape any containing-block trap ── */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {open && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setOpen(false)}
-              >
-                {children}
-              </div>
+                className="fixed inset-0 z-[800] bg-black/60 backdrop-blur-sm"
+              />
 
-              <div className="px-6 pb-8 pt-5 border-t border-slate-100 dark:border-white/[0.06]">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              {/* Panel */}
+              <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", stiffness: 320, damping: 32 }}
+                className={cn(
+                  "fixed left-0 top-0 h-full w-[78%] max-w-[300px] z-[900]",
+                  "flex flex-col",
+                  "bg-slate-50 dark:bg-[#080c14]",
+                  "border-r border-slate-200/70 dark:border-white/[0.07]",
+                  "shadow-[4px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[4px_0_40px_rgba(0,0,0,0.6)]",
+                  className
+                )}
+              >
+                {/* Top accent bar */}
+                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500" />
+
+                {/* Header */}
+                <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
+                    /// menu
                   </span>
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-500">
-                    Available for work
-                  </span>
+                  <motion.button
+                    onClick={() => setOpen(false)}
+                    whileTap={{ scale: 0.88 }}
+                    className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-white/[0.08] dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 transition-colors hover:border-rose-400/50 hover:text-rose-500 dark:hover:text-rose-400"
+                  >
+                    <IconX size={14} />
+                  </motion.button>
                 </div>
-                <p className="font-mono text-[8px] text-slate-400 dark:text-slate-600 uppercase tracking-wider">
-                  yash_sachan // secure_tls_1.3
-                </p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
+
+                {/* Content */}
+                <div className="flex flex-col flex-1 overflow-y-auto px-3 py-3" onClick={() => setOpen(false)}>
+                  {React.Children.map(children, (child, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + i * 0.07, type: "spring", stiffness: 280, damping: 26 }}
+                      className="flex flex-col"
+                    >
+                      {child}
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 };
 
-/* ── Sidebar Link ── */
+/* ─────────────────────────────────────────────────────────────
+   SIDEBAR LINK
+───────────────────────────────────────────────────────────── */
 export const SidebarLink = ({
   link,
   className,
-  ...props
 }: {
   link: { label: string; href: string; icon: React.ReactNode };
   className?: string;
 }) => {
   const { open, animate } = useSidebar();
+  const [isActive, setIsActive] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [tooltipY, setTooltipY] = useState(0);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  /* Active section tracking */
+  useEffect(() => {
+    const id = link.href.replace("#", "");
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setIsActive(entry.isIntersecting),
+      { threshold: 0.3, rootMargin: "-5% 0px -5% 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [link.href]);
+
+  const handleMouseEnter = () => {
+    const rect = linkRef.current?.getBoundingClientRect();
+    if (rect) setTooltipY(rect.top + rect.height / 2);
+    setHovered(true);
+  };
 
   return (
-    <a
-      href={link.href}
-      className={cn(
-        "group/sidebar relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
-        "border-l-2 border-transparent",
-        "hover:border-indigo-500/50 hover:bg-gradient-to-r hover:from-indigo-500/[0.08] hover:to-transparent",
-        "dark:hover:from-indigo-500/[0.1] dark:hover:to-transparent",
-        className,
-      )}
-      {...props}
-    >
-      <div className="shrink-0 text-slate-500 dark:text-slate-400 transition-colors duration-200 group-hover/sidebar:text-indigo-600 dark:group-hover/sidebar:text-indigo-400">
-        {link.icon}
-      </div>
-      <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className="text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap transition-colors duration-200 group-hover/sidebar:text-slate-900 dark:group-hover/sidebar:text-white"
+    <>
+      <a
+        ref={linkRef}
+        href={link.href}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={() => setHovered(false)}
+        className={cn(
+          "group/link relative flex items-center gap-3 rounded-xl px-3 py-2.5",
+          "transition-all duration-200 overflow-hidden",
+          // Active state
+          isActive
+            ? "bg-gradient-to-r from-indigo-500/12 to-transparent dark:from-indigo-500/15 dark:to-transparent text-indigo-600 dark:text-indigo-400"
+            : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white",
+          className
+        )}
       >
-        {link.label}
-      </motion.span>
-    </a>
+        {/* Active left bar */}
+        <motion.div
+          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-gradient-to-b from-indigo-500 to-violet-500"
+          initial={{ scaleY: 0, opacity: 0 }}
+          animate={{ scaleY: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        />
+
+        {/* Active background glow */}
+        {isActive && (
+          <motion.div
+            layoutId="sidebarActiveGlow"
+            className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-transparent rounded-xl"
+            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+          />
+        )}
+
+        {/* Icon */}
+        <motion.div
+          className="relative z-10 shrink-0"
+          whileHover={{ scale: 1.15, rotate: -4 }}
+          transition={{ type: "spring", stiffness: 400, damping: 18 }}
+        >
+          {link.icon}
+        </motion.div>
+
+        {/* Label */}
+        <motion.span
+          animate={{
+            display: animate ? (open ? "inline-block" : "none") : "inline-block",
+            opacity: animate ? (open ? 1 : 0) : 1,
+            x: animate ? (open ? 0 : -4) : 0,
+          }}
+          transition={{ duration: 0.18 }}
+          className="relative z-10 text-sm font-medium whitespace-nowrap tracking-tight"
+        >
+          {link.label}
+        </motion.span>
+      </a>
+
+      {/* Collapsed tooltip — rendered at fixed position to escape any clip */}
+      {animate && !open && hovered && (
+        <div
+          style={{ top: tooltipY, left: 80 }}
+          className="fixed z-[9999] -translate-y-1/2 pointer-events-none"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -6, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono font-semibold whitespace-nowrap
+              bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-sm
+              border border-white/10 shadow-xl"
+          >
+            {isActive && (
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 shrink-0" />
+            )}
+            {link.label}
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 };

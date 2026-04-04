@@ -20,43 +20,40 @@ import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconActivity,
   IconBrandGolang,
-  IconTopologyComplex,
-  IconLayoutDashboard,
-  IconShieldLock,
-  IconBoxPadding,
+  IconSmartHome,
+  IconUser,
+  IconBriefcase,
+  IconFolderCode,
+  IconBulb,
 } from "@tabler/icons-react";
 import TerminalSnake from "./TerminalSnake";
 import FooterTerminal from "./FooterTerminal";
 
-// Updated Links with specialized professional icons
 const links = [
   {
-    label: "Terminal",
+    label: "Home",
     href: "#home",
-    icon: (
-      <IconLayoutDashboard className="h-6 w-6 shrink-0 text-blue-500 transition-colors group-hover:text-blue-400" />
-    ),
+    icon: <IconSmartHome className="h-6 w-6 shrink-0 text-blue-500 transition-colors group-hover:text-blue-400" />,
   },
   {
-    label: "Infrastructure",
+    label: "About Me",
     href: "#skills",
-    icon: (
-      <IconBoxPadding className="h-6 w-6 shrink-0 text-purple-500 transition-colors group-hover:text-purple-400" />
-    ),
+    icon: <IconUser className="h-6 w-6 shrink-0 text-purple-500 transition-colors group-hover:text-purple-400" />,
   },
   {
-    label: "Systems",
+    label: "Experience",
+    href: "#experience",
+    icon: <IconBriefcase className="h-6 w-6 shrink-0 text-cyan-500 transition-colors group-hover:text-cyan-400" />,
+  },
+  {
+    label: "Projects",
     href: "#projects",
-    icon: (
-      <IconTopologyComplex className="h-6 w-6 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-400" />
-    ),
+    icon: <IconFolderCode className="h-6 w-6 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-400" />,
   },
   {
-    label: "Architecture",
+    label: "Approach",
     href: "#approach",
-    icon: (
-      <IconShieldLock className="h-6 w-6 shrink-0 text-amber-500 transition-colors group-hover:text-amber-400" />
-    ),
+    icon: <IconBulb className="h-6 w-6 shrink-0 text-amber-500 transition-colors group-hover:text-amber-400" />,
   },
 ];
 
@@ -158,7 +155,7 @@ export default function Home() {
             <FloatingNav navItems={navItems} />
 
             <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
-              <section id="home" className="pt-12 md:pt-4">
+              <section id="home" className="pt-4">
                 <Hero />
               </section>
 
