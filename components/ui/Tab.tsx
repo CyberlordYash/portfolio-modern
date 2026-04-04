@@ -40,40 +40,30 @@ export const Tabs = ({
     <>
       <div
         className={cn(
-          "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
+          "flex flex-row items-center justify-start relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
           containerClassName
         )}
       >
         {propTabs.map((tab, idx) => (
           <button
             key={tab.title}
-            onClick={() => {
-              moveSelectedTabToTop(idx);
-            }}
+            onClick={() => moveSelectedTabToTop(idx)}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             className={cn(
-              "relative m-2 p-2 w-[6rem] h-[3rem] bg-blue-300 dark:bg-[#01137c51] rounded-md overflow-hidden text-sm",
+              "relative overflow-hidden text-sm transition-all duration-300",
               tabClassName
             )}
-            style={{
-              transformStyle: "preserve-3d",
-            }}
+            style={{ transformStyle: "preserve-3d" }}
           >
             {active.value === tab.value && (
               <motion.div
                 layoutId="clickedbutton"
                 transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
-                className={cn(
-                  "absolute inset-0 bg-blue-500 dark:bg-blue-900 rounded-full ",
-                  activeTabClassName
-                )}
+                className={cn("absolute inset-0 rounded-full", activeTabClassName)}
               />
             )}
-
-            <span className="relative block text-black dark:text-white">
-              {tab.title}
-            </span>
+            <span className="relative block">{tab.title}</span>
           </button>
         ))}
       </div>
@@ -99,9 +89,7 @@ export const FadeInDiv = ({
   active: Tab;
   hovering?: boolean;
 }) => {
-  const isActive = (tab: Tab) => {
-    return tab.value === tabs[0].value;
-  };
+  const isActive = (tab: Tab) => tab.value === tabs[0].value;
   return (
     <div className="relative w-full h-full">
       {tabs.map((tab, idx) => (
@@ -114,9 +102,7 @@ export const FadeInDiv = ({
             zIndex: -idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
           }}
-          animate={{
-            y: isActive(tab) ? [0, 40, 0] : 0,
-          }}
+          animate={{ y: isActive(tab) ? [0, 40, 0] : 0 }}
           className={cn("w-full h-full absolute top-0 left-0", className)}
         >
           {tab.content}

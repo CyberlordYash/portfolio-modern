@@ -6,88 +6,98 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Globe, Star } from "lucide-react";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 36 },
   visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
   }),
 };
 
-// Per-project visual identity
+/* ── Per-project visual DNA ── */
 const projectMeta: Record<
   number,
   {
-    gradient: string;
-    line: string;
-    blob: string;
-    chipClass: string;
-    ctaClass: string;
+    cardGrad: string;
+    blob1: string;
+    blob2: string;
+    badge: string;
+    glowShadow: string;
+    borderColor: string;
+    topLine: string;
     category: string;
+    num: string;
     featured?: boolean;
   }
 > = {
   8: {
-    gradient:
-      "from-emerald-500/[0.09] via-teal-500/[0.04] to-transparent dark:from-emerald-500/[0.13] dark:via-teal-500/[0.06] dark:to-transparent",
-    line: "via-emerald-500/60",
-    blob: "bg-emerald-500/10",
-    chipClass:
-      "border-emerald-500/20 bg-emerald-500/[0.07] text-emerald-600 dark:text-emerald-400",
-    ctaClass:
-      "border-emerald-500/30 bg-emerald-500/[0.07] text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/[0.14]",
+    cardGrad: "from-[#021a0e] via-[#062918] to-[#040f1a]",
+    blob1: "bg-emerald-500/35",
+    blob2: "bg-teal-400/25",
+    badge: "from-emerald-400 to-teal-500",
+    glowShadow:
+      "hover:shadow-[0_0_0_1px_rgba(16,185,129,0.25),0_16px_70px_rgba(16,185,129,0.35)]",
+    borderColor: "border-emerald-500/20",
+    topLine: "via-emerald-400/70",
     category: "Security",
+    num: "01",
     featured: true,
   },
   1: {
-    gradient:
-      "from-blue-500/[0.09] via-cyan-500/[0.04] to-transparent dark:from-blue-500/[0.13] dark:via-cyan-500/[0.06] dark:to-transparent",
-    line: "via-blue-500/60",
-    blob: "bg-blue-500/10",
-    chipClass:
-      "border-blue-500/20 bg-blue-500/[0.07] text-blue-600 dark:text-blue-400",
-    ctaClass:
-      "border-blue-500/30 bg-blue-500/[0.07] text-blue-600 dark:text-blue-400 hover:bg-blue-500/[0.14]",
+    cardGrad: "from-[#020d28] via-[#061840] to-[#030c1e]",
+    blob1: "bg-blue-500/30",
+    blob2: "bg-cyan-400/20",
+    badge: "from-blue-400 to-cyan-500",
+    glowShadow:
+      "hover:shadow-[0_0_0_1px_rgba(59,130,246,0.25),0_16px_70px_rgba(59,130,246,0.35)]",
+    borderColor: "border-blue-500/20",
+    topLine: "via-blue-400/70",
     category: "Fullstack",
+    num: "02",
   },
   2: {
-    gradient:
-      "from-violet-500/[0.09] via-purple-500/[0.04] to-transparent dark:from-violet-500/[0.13] dark:via-purple-500/[0.06] dark:to-transparent",
-    line: "via-violet-500/60",
-    blob: "bg-violet-500/10",
-    chipClass:
-      "border-violet-500/20 bg-violet-500/[0.07] text-violet-600 dark:text-violet-400",
-    ctaClass:
-      "border-violet-500/30 bg-violet-500/[0.07] text-violet-600 dark:text-violet-400 hover:bg-violet-500/[0.14]",
+    cardGrad: "from-[#0f0430] via-[#180842] to-[#080318]",
+    blob1: "bg-violet-500/30",
+    blob2: "bg-purple-400/20",
+    badge: "from-violet-400 to-fuchsia-500",
+    glowShadow:
+      "hover:shadow-[0_0_0_1px_rgba(139,92,246,0.25),0_16px_70px_rgba(139,92,246,0.35)]",
+    borderColor: "border-violet-500/20",
+    topLine: "via-violet-400/70",
     category: "Real-time",
+    num: "03",
   },
   3: {
-    gradient:
-      "from-amber-500/[0.09] via-orange-500/[0.04] to-transparent dark:from-amber-500/[0.13] dark:via-orange-500/[0.06] dark:to-transparent",
-    line: "via-amber-500/60",
-    blob: "bg-amber-500/10",
-    chipClass:
-      "border-amber-500/20 bg-amber-500/[0.07] text-amber-600 dark:text-amber-400",
-    ctaClass:
-      "border-amber-500/30 bg-amber-500/[0.07] text-amber-600 dark:text-amber-400 hover:bg-amber-500/[0.14]",
+    cardGrad: "from-[#1e0a00] via-[#2e1200] to-[#140800]",
+    blob1: "bg-amber-500/30",
+    blob2: "bg-orange-400/20",
+    badge: "from-amber-400 to-orange-500",
+    glowShadow:
+      "hover:shadow-[0_0_0_1px_rgba(245,158,11,0.25),0_16px_70px_rgba(245,158,11,0.35)]",
+    borderColor: "border-amber-500/20",
+    topLine: "via-amber-400/70",
     category: "E-commerce",
+    num: "04",
   },
   4: {
-    gradient:
-      "from-indigo-500/[0.09] via-blue-500/[0.04] to-transparent dark:from-indigo-500/[0.13] dark:via-blue-500/[0.06] dark:to-transparent",
-    line: "via-indigo-500/60",
-    blob: "bg-indigo-500/10",
-    chipClass:
-      "border-indigo-500/20 bg-indigo-500/[0.07] text-indigo-600 dark:text-indigo-400",
-    ctaClass:
-      "border-indigo-500/30 bg-indigo-500/[0.07] text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/[0.14]",
+    cardGrad: "from-[#1e0412] via-[#2e0820] to-[#14030e]",
+    blob1: "bg-rose-500/30",
+    blob2: "bg-pink-400/20",
+    badge: "from-rose-400 to-pink-500",
+    glowShadow:
+      "hover:shadow-[0_0_0_1px_rgba(244,63,94,0.25),0_16px_70px_rgba(244,63,94,0.35)]",
+    borderColor: "border-rose-500/20",
+    topLine: "via-rose-400/70",
     category: "AI",
+    num: "05",
   },
 };
 
 const isGithub = (link: string) => link.includes("github.com");
 
-/* ── Featured card — full width horizontal ── */
+/* ─────────────────────────────────────────
+   Featured Card — full-width horizontal
+───────────────────────────────────────── */
 const FeaturedCard = ({
   id,
   title,
@@ -103,94 +113,111 @@ const FeaturedCard = ({
       target="_blank"
       rel="noopener noreferrer"
       variants={fadeUp}
-      custom={0.05}
+      custom={0.1}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
-      whileHover={{ y: -3, transition: { duration: 0.2, ease: "easeOut" } }}
-      className={`group relative flex min-h-[280px] flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br dark:border-white/[0.07] md:flex-row ${m.gradient} transition-all duration-300 hover:border-slate-300/80 hover:shadow-2xl hover:shadow-black/5 dark:hover:border-white/[0.12] dark:hover:shadow-black/40`}
+      whileHover={{ y: -5, transition: { duration: 0.25, ease: "easeOut" } }}
+      className={`group relative flex min-h-[360px] flex-col overflow-hidden rounded-[2.5rem] border ${m.borderColor} bg-gradient-to-br ${m.cardGrad} transition-all duration-500 ${m.glowShadow} md:flex-row`}
     >
-      {/* Top accent */}
+      {/* Top iridescent accent line */}
       <div
-        className={`absolute inset-x-0 top-0 z-10 h-[1px] bg-gradient-to-r from-transparent ${m.line} to-transparent`}
-      />
-      {/* Ambient blobs */}
-      <div
-        className={`pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full blur-[80px] ${m.blob}`}
-      />
-      <div
-        className={`pointer-events-none absolute -bottom-16 right-8 h-40 w-40 rounded-full blur-[60px] ${m.blob}`}
+        className={`absolute inset-x-0 top-0 z-20 h-[2px] bg-gradient-to-r from-transparent ${m.topLine} to-transparent`}
       />
 
-      {/* Image — left half on desktop */}
-      <div className="relative h-56 overflow-hidden md:h-auto md:w-[45%] md:shrink-0">
+      {/* Ambient blobs */}
+      <div
+        className={`pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full blur-[110px] ${m.blob1} transition-all duration-700 group-hover:scale-[1.3]`}
+      />
+      <div
+        className={`pointer-events-none absolute -bottom-16 right-16 h-60 w-60 rounded-full blur-[90px] ${m.blob2} transition-all duration-700 group-hover:scale-[1.2]`}
+      />
+
+      {/* Big translucent project number */}
+      <div className="pointer-events-none absolute bottom-6 right-8 hidden select-none font-black leading-none text-white/[0.04] md:block"
+           style={{ fontSize: "180px" }}>
+        {m.num}
+      </div>
+
+      {/* ── Image panel ── */}
+      <div className="relative h-64 overflow-hidden md:h-auto md:w-[46%] md:shrink-0">
         <img
           src={img}
           alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/20 md:bg-gradient-to-l" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent md:bg-none" />
+        {/* Directional blend into card */}
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent to-black/60 md:block" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:hidden" />
 
         {/* Featured badge */}
-        <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2.5 py-1 backdrop-blur-sm">
-          <Star size={10} className="text-yellow-500 fill-yellow-500" />
-          <span className="font-mono text-[9px] uppercase tracking-widest text-yellow-600 dark:text-yellow-400">
+        <div className="absolute left-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-3 py-1.5 shadow-lg shadow-yellow-500/40">
+          <Star size={10} className="fill-black text-black" />
+          <span className="font-mono text-[8px] font-black uppercase tracking-widest text-black">
             Featured
+          </span>
+        </div>
+
+        {/* Link type */}
+        <div className="absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-2.5 py-1.5 backdrop-blur-md">
+          {isGithub(link) ? (
+            <Github size={10} className="text-white/90" />
+          ) : (
+            <Globe size={10} className="text-white/90" />
+          )}
+          <span className="font-mono text-[8px] text-white/80">
+            {isGithub(link) ? "GitHub" : "Live"}
           </span>
         </div>
       </div>
 
-      {/* Content — right half */}
-      <div className="relative z-10 flex flex-1 flex-col justify-between p-7 md:p-10">
-        {/* Header */}
+      {/* ── Content panel ── */}
+      <div className="relative z-10 flex flex-1 flex-col justify-between p-8 md:p-12">
         <div>
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-full border px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest ${m.chipClass}`}
-            >
-              {m.category}
-            </span>
-            <span className="flex items-center gap-1 rounded-full border border-slate-200/80 bg-white/60 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-400">
-              {isGithub(link) ? (
-                <Github size={9} />
-              ) : (
-                <Globe size={9} />
-              )}
-              {isGithub(link) ? "GitHub" : "Live"}
-            </span>
-          </div>
+          {/* Category chip */}
+          <span
+            className={`mb-5 inline-block rounded-full bg-gradient-to-r ${m.badge} px-3.5 py-1.5 font-mono text-[9px] font-black uppercase tracking-widest text-white shadow-lg`}
+          >
+            {m.category}
+          </span>
 
-          <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">
-            Project_{String(id).padStart(2, "0")}
+          {/* Subtle index */}
+          <p className="mb-1 font-mono text-[8px] uppercase tracking-[0.4em] text-white/20">
+            Project_{m.num}
           </p>
-          <h3 className="mb-3 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white md:text-3xl">
+
+          {/* Title */}
+          <h3 className="mb-4 text-3xl font-black tracking-tight text-white md:text-[2.6rem] md:leading-tight">
             {title}
           </h3>
-          <p className="max-w-md text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
+
+          <p className="max-w-lg text-sm leading-relaxed text-white/55">
             {des}
           </p>
         </div>
 
-        {/* Footer */}
-        <div className="mt-6 flex items-center justify-between">
+        {/* Footer row */}
+        <div className="mt-8 flex items-center justify-between">
+          {/* Tech icon stack */}
           <div className="flex items-center">
             {iconLists.map((icon, idx) => (
               <div
                 key={idx}
                 style={{ zIndex: iconLists.length - idx }}
-                className="-ml-2 flex h-9 w-9 first:ml-0 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-transform duration-300 group-hover:-translate-y-1 dark:border-white/[0.12] dark:bg-black/60"
+                className="-ml-2.5 flex h-10 w-10 first:ml-0 items-center justify-center rounded-full border border-white/10 bg-white/8 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1.5"
               >
                 {icon}
               </div>
             ))}
           </div>
+
+          {/* CTA button */}
           <div
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${m.ctaClass}`}
+            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${m.badge} px-6 py-2.5 font-mono text-[10px] font-black uppercase tracking-wider text-white shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl`}
           >
             View Project
             <ArrowUpRight
-              size={12}
+              size={13}
               className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             />
           </div>
@@ -200,7 +227,9 @@ const FeaturedCard = ({
   );
 };
 
-/* ── Regular project card ── */
+/* ─────────────────────────────────────────
+   Regular Project Card
+───────────────────────────────────────── */
 const ProjectCard = ({
   id,
   title,
@@ -221,68 +250,81 @@ const ProjectCard = ({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
-      whileHover={{ y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
-      className={`group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br dark:border-white/[0.07] ${m.gradient} transition-all duration-300 hover:border-slate-300/80 hover:shadow-xl hover:shadow-black/5 dark:hover:border-white/[0.12] dark:hover:shadow-black/30`}
+      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+      className={`group relative flex flex-col overflow-hidden rounded-[2rem] border ${m.borderColor} bg-gradient-to-br ${m.cardGrad} transition-all duration-500 ${m.glowShadow}`}
     >
-      {/* Accent line */}
+      {/* Top accent line */}
       <div
-        className={`absolute inset-x-0 top-0 z-10 h-[1px] bg-gradient-to-r from-transparent ${m.line} to-transparent`}
-      />
-      <div
-        className={`pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full blur-[50px] ${m.blob}`}
+        className={`absolute inset-x-0 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${m.topLine} to-transparent`}
       />
 
+      {/* Blobs */}
+      <div
+        className={`pointer-events-none absolute -right-14 -top-14 h-52 w-52 rounded-full blur-[80px] ${m.blob1} transition-all duration-700 group-hover:scale-[1.3]`}
+      />
+      <div
+        className={`pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full blur-[60px] ${m.blob2} opacity-70`}
+      />
+
+      {/* Number watermark */}
+      <div className="pointer-events-none absolute bottom-4 right-4 select-none font-black leading-none text-white/[0.04]"
+           style={{ fontSize: "90px" }}>
+        {m.num}
+      </div>
+
       {/* Image */}
-      <div className="relative h-44 overflow-hidden">
+      <div className="relative h-48 overflow-hidden">
         <img
           src={img}
           alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-        {/* Category over image */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
+        {/* Category chip over image */}
         <div className="absolute bottom-3 left-3 z-10">
           <span
-            className={`rounded-full border px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest backdrop-blur-sm ${m.chipClass}`}
+            className={`rounded-full bg-gradient-to-r ${m.badge} px-2.5 py-1 font-mono text-[8px] font-black uppercase tracking-widest text-white shadow-lg`}
           >
             {m.category}
           </span>
         </div>
+
         {/* Link type badge */}
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-white/20 bg-black/30 px-2 py-1 backdrop-blur-sm">
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-2 py-1.5 backdrop-blur-md">
           {isGithub(link) ? (
             <Github size={9} className="text-white/80" />
           ) : (
             <Globe size={9} className="text-white/80" />
           )}
-          <span className="font-mono text-[8px] uppercase tracking-wider text-white/80">
+          <span className="font-mono text-[7px] text-white/80">
             {isGithub(link) ? "GitHub" : "Live"}
           </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-1 flex-col justify-between p-5">
+      <div className="relative z-10 flex flex-1 flex-col justify-between p-6">
         <div>
-          <p className="mb-0.5 font-mono text-[8px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">
-            Project_{String(id).padStart(2, "0")}
+          <p className="mb-1 font-mono text-[7px] uppercase tracking-[0.4em] text-white/20">
+            Project_{m.num}
           </p>
-          <h3 className="mb-2 text-[17px] font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h3 className="mb-2.5 text-[18px] font-bold leading-tight tracking-tight text-white">
             {title}
           </h3>
-          <p className="line-clamp-2 text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+          <p className="line-clamp-2 text-xs leading-relaxed text-white/55">
             {des}
           </p>
         </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          {/* Icon stack */}
+        <div className="mt-5 flex items-center justify-between">
+          {/* Tech stack */}
           <div className="flex items-center">
             {iconLists.map((icon, idx) => (
               <div
                 key={idx}
                 style={{ zIndex: iconLists.length - idx }}
-                className="-ml-1.5 flex h-7 w-7 first:ml-0 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 dark:border-white/[0.12] dark:bg-black/60"
+                className="-ml-1.5 flex h-8 w-8 first:ml-0 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-md backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1"
               >
                 <div className="scale-75">{icon}</div>
               </div>
@@ -291,7 +333,7 @@ const ProjectCard = ({
 
           {/* CTA */}
           <div
-            className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 font-mono text-[9px] font-bold uppercase tracking-wider transition-all duration-200 ${m.ctaClass}`}
+            className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${m.badge} px-4 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl`}
           >
             View
             <ArrowUpRight
@@ -305,64 +347,96 @@ const ProjectCard = ({
   );
 };
 
-/* ── Section ── */
+/* ─────────────────────────────────────────
+   Section
+───────────────────────────────────────── */
 const RecentProjects = () => {
   const [featured, ...rest] = projects;
 
   return (
     <section
       id="projects"
-      className="w-full py-16 md:py-24 bg-white dark:bg-[#020617] transition-colors duration-500"
+      className="relative w-full overflow-hidden py-20 bg-white dark:bg-[#020617] transition-colors duration-500 md:py-32"
     >
-      <div className="mx-auto max-w-[88vw] px-4 2xl:max-w-[1400px]">
+      {/* Atmospheric section-level blobs */}
+      <div className="pointer-events-none absolute -left-40 top-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-violet-600/[0.07] to-transparent blur-[140px] dark:from-violet-600/[0.12]" />
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-gradient-to-tl from-emerald-600/[0.07] to-transparent blur-[140px] dark:from-emerald-600/[0.12]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-fuchsia-600/[0.04] to-cyan-600/[0.04] blur-[160px] dark:from-fuchsia-600/[0.07] dark:to-cyan-600/[0.07]" />
 
-        {/* Header */}
+      <div className="relative mx-auto max-w-[88vw] px-4 2xl:max-w-[1400px]">
+
+        {/* ── Section Header ── */}
         <motion.div
           variants={fadeUp}
           custom={0}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
+          className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <div className="mb-2 flex items-center gap-2">
-              <div className="h-[3px] w-6 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+            {/* Eyebrow */}
+            <div className="mb-3 flex items-center gap-3">
+              <div className="h-[2px] w-10 rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-slate-400 dark:text-slate-500">
                 Selected Work
               </span>
+              <div className="h-[2px] w-5 rounded-full bg-gradient-to-r from-pink-500 to-transparent" />
             </div>
-            <h2 className="bg-gradient-to-br from-slate-900 via-slate-700 to-slate-400 bg-clip-text text-4xl font-bold tracking-tighter text-transparent dark:from-white dark:via-slate-200 dark:to-slate-500 md:text-6xl">
-              Projects
+
+            {/* Big gradient title */}
+            <h2
+              className="font-black tracking-tight leading-none"
+              style={{ fontSize: "clamp(3rem, 8vw, 5.5rem)" }}
+            >
+              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-fuchsia-400 dark:to-pink-400">
+                Projects
+              </span>
             </h2>
+            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+              Things I&apos;ve built that I&apos;m proud of
+            </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 font-mono text-[10px] text-slate-500 dark:border-white/[0.07] dark:bg-white/[0.03] dark:text-slate-400">
-              {projects.length} projects
-            </span>
+            {/* Count badge */}
+            <div className="flex items-center gap-2 rounded-full border border-violet-500/20 bg-gradient-to-r from-violet-500/8 to-fuchsia-500/8 px-4 py-2">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500" />
+              </span>
+              <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                {projects.length} projects
+              </span>
+            </div>
+
+            {/* GitHub link */}
             <a
               href="https://github.com/CyberlordYash"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 font-mono text-[10px] text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700 dark:border-white/[0.07] dark:bg-white/[0.03] dark:text-slate-400 dark:hover:border-white/[0.14] dark:hover:text-slate-200"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 font-mono text-[10px] text-slate-700 shadow-sm transition-all duration-300 hover:border-slate-300 hover:shadow-md dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:border-white/[0.15]"
             >
-              <Github size={11} />
+              <Github size={12} />
               GitHub
-              <ArrowUpRight size={10} />
+              <ArrowUpRight size={11} />
             </a>
           </div>
         </motion.div>
 
         {/* Featured project */}
-        <div className="mb-4">
+        <div className="mb-5">
           <FeaturedCard {...featured} />
         </div>
 
-        {/* Rest — 2×2 grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {/* Grid — 2 columns */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {rest.map((project, i) => (
-            <ProjectCard key={project.id} {...project} delay={0.1 + i * 0.07} />
+            <ProjectCard
+              key={project.id}
+              {...project}
+              delay={0.1 + i * 0.08}
+            />
           ))}
         </div>
 

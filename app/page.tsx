@@ -68,72 +68,83 @@ export default function Home() {
       <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-black">
         {/* RESPONSIVE SIDEBAR */}
         <Sidebar open={open} setOpen={setOpen} animate={true}>
-          <SidebarBody className="justify-between gap-10 border-r border-white/[0.05] bg-white dark:bg-black px-4 md:px-2">
+          <SidebarBody className="justify-between gap-10 bg-slate-50 dark:bg-[#030712] px-3">
+
+            {/* ── Top: Brand + Nav ── */}
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-              <div className="flex items-center justify-start gap-3 h-20 px-2">
-                {/* Animated Brand Gradient Line */}
+
+              {/* Brand */}
+              <div className="flex items-center gap-3 h-20 px-2">
+                <div className="relative flex h-9 w-[5px] min-w-[5px] overflow-hidden rounded-full shrink-0">
+                  <motion.div
+                    animate={{
+                      background: [
+                        "linear-gradient(to bottom, #6366f1, #a855f7)",
+                        "linear-gradient(to bottom, #a855f7, #ec4899)",
+                        "linear-gradient(to bottom, #ec4899, #6366f1)",
+                      ],
+                    }}
+                    transition={{ duration: 3.5, repeat: Infinity }}
+                    className="absolute inset-0"
+                  />
+                </div>
                 <motion.div
-                  animate={{
-                    background: [
-                      "linear-gradient(to bottom, #2563eb, #22d3ee)",
-                      "linear-gradient(to bottom, #22d3ee, #2563eb)",
-                      "linear-gradient(to bottom, #2563eb, #22d3ee)",
-                    ],
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="h-8 w-1 min-w-[4px] rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]"
-                />
-                <span
-                  className={cn(
-                    "font-mono font-bold tracking-tighter text-xl text-white whitespace-nowrap transition-opacity duration-300",
-                    open ? "opacity-100" : "opacity-0 md:hidden",
-                  )}
+                  animate={{ display: open ? "flex" : "none", opacity: open ? 1 : 0 }}
+                  className="flex flex-col"
                 >
-                  SYS_ROOT
-                </span>
+                  <span className="font-mono font-black text-[15px] tracking-tighter text-slate-900 dark:text-white whitespace-nowrap leading-tight">
+                    YS
+                    <span className="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">
+                      .DEV
+                    </span>
+                  </span>
+                  <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
+                    Portfolio
+                  </span>
+                </motion.div>
               </div>
 
-              <div className="mt-4 md:mt-8 flex flex-col gap-4 md:gap-2">
+              {/* Nav links */}
+              <div className="mt-2 flex flex-col gap-0.5">
                 {links.map((link, idx) => (
-                  <SidebarLink
-                    key={idx}
-                    link={link}
-                    className="group flex items-center gap-4 py-3 md:py-2 px-2 rounded-xl hover:bg-white/[0.03] transition-all duration-200"
-                  />
+                  <SidebarLink key={idx} link={link} />
                 ))}
               </div>
             </div>
 
-            <div className="border-t border-white/[0.05] py-6 flex flex-col gap-4">
-              <div className="flex items-center gap-4 px-2">
-                <div className="relative h-2 w-2 shrink-0">
-                  <div className="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-75" />
-                  <div className="relative h-2 w-2 bg-emerald-500 rounded-full" />
-                </div>
-                {open && (
-                  <span className="text-[10px] font-mono text-emerald-500 tracking-widest uppercase">
-                    Server Online
-                  </span>
-                )}
+            {/* ── Bottom: Status + Profile ── */}
+            <div className="flex flex-col gap-3 border-t border-slate-200 dark:border-white/[0.06] pt-4 pb-2">
+
+              {/* Status */}
+              <div className="flex items-center gap-3 px-3 py-1.5">
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <motion.span
+                  animate={{ display: open ? "inline" : "none", opacity: open ? 1 : 0 }}
+                  className="font-mono text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-500 whitespace-nowrap"
+                >
+                  Available for work
+                </motion.span>
               </div>
 
+              {/* Profile */}
               <SidebarLink
                 link={{
                   label: "Yash Sachan",
                   href: "#",
                   icon: (
-                    <div className="relative">
-                      {/* Subtle Glow behind profile icon */}
-                      <div className="absolute inset-0 bg-blue-500/20 blur-sm rounded-full" />
+                    <div className="relative shrink-0">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 to-violet-500/40 blur-sm" />
                       <img
                         src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
-                        className="relative h-8 w-8 rounded-full border border-white/20 object-cover shrink-0"
+                        className="relative h-8 w-8 rounded-full border border-indigo-500/30 object-cover"
                         alt="Avatar"
                       />
                     </div>
                   ),
                 }}
-                className="flex items-center gap-4 px-2"
               />
             </div>
           </SidebarBody>
