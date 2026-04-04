@@ -1,11 +1,20 @@
 "use client";
 import { cn } from "@/utils/cn";
-import React, { useState, createContext, useContext, useEffect, useRef } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
-type MotionDivProps = Omit<React.ComponentProps<typeof motion.div>, "children"> & {
+type MotionDivProps = Omit<
+  React.ComponentProps<typeof motion.div>,
+  "children"
+> & {
   children?: React.ReactNode;
 };
 
@@ -15,7 +24,9 @@ interface SidebarContextProps {
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
+const SidebarContext = createContext<SidebarContextProps | undefined>(
+  undefined,
+);
 
 export const useSidebar = () => {
   const ctx = useContext(SidebarContext);
@@ -54,7 +65,11 @@ export const SidebarBody = (props: MotionDivProps) => (
 /* ─────────────────────────────────────────────────────────────
    DESKTOP SIDEBAR
 ───────────────────────────────────────────────────────────── */
-export const DesktopSidebar = ({ className, children, ...props }: MotionDivProps) => {
+export const DesktopSidebar = ({
+  className,
+  children,
+  ...props
+}: MotionDivProps) => {
   const { open, setOpen, animate } = useSidebar();
 
   return (
@@ -62,7 +77,7 @@ export const DesktopSidebar = ({ className, children, ...props }: MotionDivProps
       className={cn(
         "h-full hidden md:flex md:flex-col shrink-0 relative overflow-visible",
         "bg-slate-50 dark:bg-[#030712]",
-        className
+        className,
       )}
       animate={{ width: animate ? (open ? "260px" : "72px") : "260px" }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
@@ -84,7 +99,12 @@ export const DesktopSidebar = ({ className, children, ...props }: MotionDivProps
           >
             <motion.div
               animate={{ y: ["-100%", "200%"] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                ease: "linear",
+                repeatDelay: 2,
+              }}
               className="absolute inset-x-0 h-16 bg-gradient-to-b from-transparent via-indigo-500/[0.06] to-transparent"
             />
           </motion.div>
@@ -99,11 +119,17 @@ export const DesktopSidebar = ({ className, children, ...props }: MotionDivProps
 /* ─────────────────────────────────────────────────────────────
    MOBILE SIDEBAR
 ───────────────────────────────────────────────────────────── */
-export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
+export const MobileSidebar = ({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -124,72 +150,81 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
       </motion.button>
 
       {/* ── Drawer — portalled to body to escape any containing-block trap ── */}
-      {mounted && createPortal(
-        <AnimatePresence>
-          {open && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={() => setOpen(false)}
-                className="fixed inset-0 z-[800] bg-black/60 backdrop-blur-sm"
-              />
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => setOpen(false)}
+                  className="fixed inset-0 z-[800] bg-black/60 backdrop-blur-sm"
+                />
 
-              {/* Panel */}
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "spring", stiffness: 320, damping: 32 }}
-                className={cn(
-                  "fixed left-0 top-0 h-full w-[78%] max-w-[300px] z-[900]",
-                  "flex flex-col",
-                  "bg-slate-50 dark:bg-[#080c14]",
-                  "border-r border-slate-200/70 dark:border-white/[0.07]",
-                  "shadow-[4px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[4px_0_40px_rgba(0,0,0,0.6)]",
-                  className
-                )}
-              >
-                {/* Top accent bar */}
-                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500" />
+                {/* Panel */}
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "-100%" }}
+                  transition={{ type: "spring", stiffness: 320, damping: 32 }}
+                  className={cn(
+                    "fixed left-0 top-0 h-full w-[78%] max-w-[300px] z-[900]",
+                    "flex flex-col",
+                    "bg-slate-50 dark:bg-[#080c14]",
+                    "border-r border-slate-200/70 dark:border-white/[0.07]",
+                    "shadow-[4px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[4px_0_40px_rgba(0,0,0,0.6)]",
+                    className,
+                  )}
+                >
+                  {/* Top accent bar */}
+                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500" />
 
-                {/* Header */}
-                <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
-                    /// menu
-                  </span>
-                  <motion.button
-                    onClick={() => setOpen(false)}
-                    whileTap={{ scale: 0.88 }}
-                    className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-white/[0.08] dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 transition-colors hover:border-rose-400/50 hover:text-rose-500 dark:hover:text-rose-400"
-                  >
-                    <IconX size={14} />
-                  </motion.button>
-                </div>
-
-                {/* Content */}
-                <div className="flex flex-col flex-1 overflow-y-auto px-3 py-3" onClick={() => setOpen(false)}>
-                  {React.Children.map(children, (child, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + i * 0.07, type: "spring", stiffness: 280, damping: 26 }}
-                      className="flex flex-col"
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
+                      menu
+                    </span>
+                    <motion.button
+                      onClick={() => setOpen(false)}
+                      whileTap={{ scale: 0.88 }}
+                      className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-white/[0.08] dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 transition-colors hover:border-rose-400/50 hover:text-rose-500 dark:hover:text-rose-400"
                     >
-                      {child}
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+                      <IconX size={14} />
+                    </motion.button>
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className="flex flex-col flex-1 overflow-y-auto px-3 py-3"
+                    onClick={() => setOpen(false)}
+                  >
+                    {React.Children.map(children, (child, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: 0.05 + i * 0.07,
+                          type: "spring",
+                          stiffness: 280,
+                          damping: 26,
+                        }}
+                        className="flex flex-col"
+                      >
+                        {child}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </>
   );
 };
@@ -218,7 +253,7 @@ export const SidebarLink = ({
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => setIsActive(entry.isIntersecting),
-      { threshold: 0.3, rootMargin: "-5% 0px -5% 0px" }
+      { threshold: 0.3, rootMargin: "-5% 0px -5% 0px" },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -244,7 +279,7 @@ export const SidebarLink = ({
           isActive
             ? "bg-gradient-to-r from-indigo-500/12 to-transparent dark:from-indigo-500/15 dark:to-transparent text-indigo-600 dark:text-indigo-400"
             : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white",
-          className
+          className,
         )}
       >
         {/* Active left bar */}
@@ -276,7 +311,11 @@ export const SidebarLink = ({
         {/* Label */}
         <motion.span
           animate={{
-            display: animate ? (open ? "inline-block" : "none") : "inline-block",
+            display: animate
+              ? open
+                ? "inline-block"
+                : "none"
+              : "inline-block",
             opacity: animate ? (open ? 1 : 0) : 1,
             x: animate ? (open ? 0 : -4) : 0,
           }}
