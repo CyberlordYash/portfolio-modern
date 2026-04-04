@@ -4,17 +4,28 @@ import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
+/* ── FIX: Safe Motion Props Type ── */
+type MotionDivProps = Omit<
+  React.ComponentProps<typeof motion.div>,
+  "children"
+> & {
+  children?: React.ReactNode;
+};
+
 interface SidebarContextProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
+const SidebarContext = createContext<SidebarContextProps | undefined>(
+  undefined,
+);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
-  if (!context) throw new Error("useSidebar must be used within a SidebarProvider");
+  if (!context)
+    throw new Error("useSidebar must be used within a SidebarProvider");
   return context;
 };
 
@@ -32,6 +43,7 @@ export const Sidebar = ({
   const [openState, setOpenState] = useState(false);
   const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
+
   return (
     <SidebarContext.Provider value={{ open, setOpen, animate }}>
       {children}
@@ -39,7 +51,8 @@ export const Sidebar = ({
   );
 };
 
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => (
+/* ── FIXED SidebarBody ── */
+export const SidebarBody = (props: MotionDivProps) => (
   <>
     <DesktopSidebar {...props} />
     <MobileSidebar {...(props as React.ComponentProps<"div">)} />
@@ -51,20 +64,20 @@ export const DesktopSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: MotionDivProps) => {
   const { open, setOpen, animate } = useSidebar();
+
   return (
     <motion.div
       className={cn(
         "h-full py-4 hidden md:flex md:flex-col shrink-0 relative",
-        className
+        className,
       )}
       animate={{ width: animate ? (open ? "260px" : "72px") : "260px" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       {...props}
     >
-      {/* Gradient right border */}
       <div className="absolute right-0 top-[10%] bottom-[10%] w-[1px] bg-gradient-to-b from-transparent via-indigo-500/25 to-transparent" />
       {children}
     </motion.div>
@@ -78,6 +91,7 @@ export const MobileSidebar = ({
   ...props
 }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
+
   return (
     <div
       className={cn(
@@ -121,7 +135,6 @@ export const MobileSidebar = ({
       <AnimatePresence>
         {open && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -130,7 +143,6 @@ export const MobileSidebar = ({
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[600]"
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -140,17 +152,17 @@ export const MobileSidebar = ({
                 "fixed right-0 top-0 h-full w-[78%] max-w-[320px] flex flex-col z-[700]",
                 "bg-white/95 backdrop-blur-xl border-l border-slate-200/80",
                 "dark:bg-[#030712]/95 dark:border-white/[0.07]",
-                className
+                className,
               )}
             >
-              {/* Gradient top accent */}
               <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-rose-500" />
 
-              {/* Drawer header */}
               <div className="flex items-center justify-between px-6 pt-7 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30">
-                    <span className="font-mono text-[9px] font-black text-white">YS</span>
+                    <span className="font-mono text-[9px] font-black text-white">
+                      YS
+                    </span>
                   </div>
                   <div>
                     <p className="font-mono text-[11px] font-black uppercase tracking-widest text-slate-800 dark:text-white">
@@ -169,12 +181,13 @@ export const MobileSidebar = ({
                 </button>
               </div>
 
-              {/* Nav links */}
-              <div className="flex flex-col gap-1 px-4 pt-4 flex-1" onClick={() => setOpen(false)}>
+              <div
+                className="flex flex-col gap-1 px-4 pt-4 flex-1"
+                onClick={() => setOpen(false)}
+              >
                 {children}
               </div>
 
-              {/* Drawer footer */}
               <div className="px-6 pb-8 pt-5 border-t border-slate-100 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="relative flex h-2 w-2">
@@ -207,6 +220,7 @@ export const SidebarLink = ({
   className?: string;
 }) => {
   const { open, animate } = useSidebar();
+
   return (
     <a
       href={link.href}
@@ -215,7 +229,7 @@ export const SidebarLink = ({
         "border-l-2 border-transparent",
         "hover:border-indigo-500/50 hover:bg-gradient-to-r hover:from-indigo-500/[0.08] hover:to-transparent",
         "dark:hover:from-indigo-500/[0.1] dark:hover:to-transparent",
-        className
+        className,
       )}
       {...props}
     >
