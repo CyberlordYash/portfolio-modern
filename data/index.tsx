@@ -7,6 +7,7 @@ import {
   SiApachemaven,
   SiCss3,
   SiExpress,
+  SiGo,
   SiGradle,
   SiHibernate,
   SiJavascript,
@@ -15,6 +16,7 @@ import {
   SiNodedotjs,
   SiPostman,
   SiReact,
+  SiRedis,
   SiRedux,
   SiSanity,
   SiSass,
@@ -115,6 +117,17 @@ export const gridItems = [
 ];
 
 export const projects = [
+  {
+    id: 9,
+    title: "Order Matching System",
+    des: "A high-performance order matching engine built in Go with Redis for state management, NATS for event streaming, and gRPC for inter-service communication.",
+    img: "/oms.png",
+    iconLists: [
+      <SiGo key="go" className="w-5 h-5 text-cyan-400" />,
+      <SiRedis key="redis" className="w-5 h-5 text-red-500" />,
+    ],
+    link: "",
+  },
   {
     id: 8,
     title: "Secure File Share",
