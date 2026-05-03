@@ -152,7 +152,7 @@ const CertCard = ({
         <div className="flex flex-col gap-3">
           {/* Module label */}
           <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.moduleLabel}`}>
-            CERT_{num} // VERIFIED
+            {`CERT_${num} // VERIFIED`}
           </span>
 
           {/* Verified badge */}

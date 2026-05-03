@@ -201,7 +201,7 @@ const FooterTerminal = () => {
       }
       setInput("");
     },
-    [commandHistory],
+    [],
   );
 
   const getLineClass = (type: string) => {

@@ -77,7 +77,7 @@ export default function SystemLoadBalancer() {
       requestRef.current = requestAnimationFrame(update);
     }
     return () => cancelAnimationFrame(requestRef.current!);
-  }, [isOpen, gameOver, playerPos, latency]);
+  }, [isOpen, gameOver, playerPos, latency]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 3. Controls
   const handleMouseMove = (e: React.MouseEvent) => {
