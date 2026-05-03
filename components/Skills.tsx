@@ -1,189 +1,310 @@
 "use client";
 import React from "react";
+import { motion } from "framer-motion";
+import { FaReact, FaJava, FaNode } from "react-icons/fa";
+import {
+  SiApachekafka, SiGo, SiGooglecloud, SiMongodb,
+  SiNatsdotio, SiNextdotjs, SiPostgresql, SiSpringboot,
+  SiTailwindcss, SiTypescript,
+} from "react-icons/si";
+import { PiFileCppFill } from "react-icons/pi";
 import { InfiniteMovingCards } from "./ui/infiniteMovingCards";
 import { testimonials } from "@/data";
-import { motion } from "framer-motion";
-import {
-  IconCpu,
-  IconDatabase,
-  IconCode,
-  IconNetwork,
-} from "@tabler/icons-react";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (delay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay },
-  }),
+/* ── Tech registry with brand colors ── */
+const techData: Record<string, {
+  icon: React.ElementType;
+  name: string;
+  color: string;
+}> = {
+  go:       { icon: SiGo,          name: "GOLANG",      color: "#00ADD8" },
+  cpp:      { icon: PiFileCppFill, name: "C++",         color: "#659BD3" },
+  node:     { icon: FaNode,        name: "NODE.JS",     color: "#5FA04E" },
+  java:     { icon: FaJava,        name: "JAVA",        color: "#ED8B00" },
+  spring:   { icon: SiSpringboot,  name: "SPRING BOOT", color: "#77BC1F" },
+  gcp:      { icon: SiGooglecloud, name: "GCP",         color: "#4285F4" },
+  kafka:    { icon: SiApachekafka, name: "KAFKA",       color: "#A855F7" },
+  nats:     { icon: SiNatsdotio,   name: "NATS",        color: "#34A0DC" },
+  pg:       { icon: SiPostgresql,  name: "POSTGRESQL",  color: "#4169E1" },
+  mongo:    { icon: SiMongodb,     name: "MONGODB",     color: "#47A248" },
+  next:     { icon: SiNextdotjs,   name: "NEXT.JS",     color: "#999999" },
+  react:    { icon: FaReact,       name: "REACT",       color: "#61DAFB" },
+  ts:       { icon: SiTypescript,  name: "TYPESCRIPT",  color: "#3178C6" },
+  tailwind: { icon: SiTailwindcss, name: "TAILWIND",    color: "#06B6D4" },
 };
 
-const categories = [
+const categoryRows = [
   {
-    icon: <IconCpu size={18} />,
-    iconBg: "bg-blue-500/10 dark:bg-blue-500/10",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    accent: "from-blue-500/20 to-transparent",
-    title: "Backend",
-    subtitle: "Go · C++ · Node.js",
+    index: "01",
+    label: "BACKEND",
+    color: "#3B82F6",
+    techs: ["cpp", "node", "java", "spring"],
   },
   {
-    icon: <IconDatabase size={18} />,
-    iconBg: "bg-emerald-500/10 dark:bg-emerald-500/10",
-    iconColor: "text-emerald-600 dark:text-emerald-400",
-    accent: "from-emerald-500/20 to-transparent",
-    title: "Infrastructure",
-    subtitle: "Docker · AWS · Redis",
+    index: "02",
+    label: "INFRASTRUCTURE",
+    color: "#A855F7",
+    techs: ["gcp", "kafka", "nats", "pg", "mongo"],
   },
   {
-    icon: <IconNetwork size={18} />,
-    iconBg: "bg-purple-500/10 dark:bg-purple-500/10",
-    iconColor: "text-purple-600 dark:text-purple-400",
-    accent: "from-purple-500/20 to-transparent",
-    title: "Low Latency",
-    subtitle: "HFT · WebSockets",
-  },
-  {
-    icon: <IconCode size={18} />,
-    iconBg: "bg-amber-500/10 dark:bg-amber-500/10",
-    iconColor: "text-amber-600 dark:text-amber-400",
-    accent: "from-amber-500/20 to-transparent",
-    title: "Frontend",
-    subtitle: "Next.js · TS · Tailwind",
+    index: "03",
+    label: "FRONTEND",
+    color: "#06B6D4",
+    techs: ["next", "react", "ts", "tailwind"],
   },
 ];
 
-const Skills = () => {
+/* ── Single tech card ── */
+const TechCard = ({ techKey, delay = 0 }: { techKey: string; delay?: number }) => {
+  const tech = techData[techKey];
+  const Icon = tech.icon;
+
   return (
     <motion.div
-      variants={fadeUp}
-      custom={0}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      className="relative w-full overflow-hidden rounded-[2.5rem] border border-neutral-200/80 bg-white/80 p-6 py-10 shadow-sm backdrop-blur-3xl dark:border-white/[0.05] dark:bg-black/40 dark:shadow-none md:p-10"
-      id="skills"
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -3, transition: { duration: 0.15 } }}
+      className="relative group flex flex-col gap-3 p-5 bg-[#ffffff] dark:bg-[#111111] cursor-default overflow-hidden"
+      style={{ borderTop: `2px solid ${tech.color}` }}
     >
-      {/* Background blobs */}
-      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-blue-500/8 blur-[100px] dark:bg-blue-500/10" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-purple-500/8 blur-[100px] dark:bg-purple-500/10" />
+      {/* hover bg glow */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ background: `linear-gradient(135deg, ${tech.color}18, transparent 70%)` }}
+      />
 
-      {/* Section label */}
-      <motion.div
-        variants={fadeUp}
-        custom={0.05}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="mb-8 flex items-center gap-3"
-      >
-        <span className="h-px flex-1 bg-gradient-to-r from-neutral-200 to-transparent dark:from-white/[0.07]" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-400 dark:text-slate-500">
-          Technical Stack
-        </span>
-        <span className="h-px flex-1 bg-gradient-to-l from-neutral-200 to-transparent dark:from-white/[0.07]" />
-      </motion.div>
+      {/* LED corner dot */}
+      <div
+        className="absolute top-3 right-3 w-1.5 h-1.5"
+        style={{ backgroundColor: tech.color, boxShadow: `0 0 6px ${tech.color}` }}
+      />
 
-      {/* Category Cards */}
-      <div className="mb-10 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {categories.map((cat, i) => (
-          <motion.div
-            key={cat.title}
-            variants={fadeUp}
-            custom={0.1 + i * 0.07}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <SkillCategory {...cat} />
-          </motion.div>
-        ))}
+      {/* Icon */}
+      <div className="text-[38px] leading-none relative z-10" style={{ color: tech.color }}>
+        <Icon />
       </div>
 
-      {/* Divider */}
-      <div className="mb-8 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent dark:via-white/[0.07]" />
-
-      {/* Infinite Scroll Strip */}
-      <motion.div
-        variants={fadeUp}
-        custom={0.4}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="w-full antialiased"
-      >
-        <InfiniteMovingCards
-          items={testimonials}
-          direction="right"
-          speed="slow"
-          className="font-mono"
-        />
-      </motion.div>
-
-      {/* Divider */}
-      <div className="mt-8 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent dark:via-white/[0.07]" />
-
-      {/* Footer */}
-      <motion.div
-        variants={fadeUp}
-        custom={0.5}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="mt-5 flex items-center justify-between px-1"
-      >
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400/80">
-            Active
-          </span>
-        </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 dark:text-slate-600">
-          16 technologies
-        </span>
-      </motion.div>
+      {/* Name */}
+      <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-black dark:text-white font-bold relative z-10">
+        {tech.name}
+      </span>
     </motion.div>
   );
 };
 
-const SkillCategory = ({
-  icon,
-  iconBg,
-  iconColor,
-  accent,
-  title,
-  subtitle,
-}: {
-  icon: React.ReactNode;
-  iconBg: string;
-  iconColor: string;
-  accent: string;
-  title: string;
-  subtitle: string;
-}) => (
-  <motion.div
-    whileHover={{ y: -3 }}
-    transition={{ duration: 0.2, ease: "easeOut" }}
-    className="group relative overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-4 transition-all duration-300 hover:border-neutral-300/80 hover:bg-white hover:shadow-sm dark:border-white/[0.05] dark:bg-white/[0.02] dark:hover:border-white/[0.08] dark:hover:bg-white/[0.04]"
+/* ── Main section ── */
+const Skills = () => (
+  <div
+    id="skills"
+    className="relative w-full bg-[#ffffff] dark:bg-[#090909] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden"
   >
-    {/* Subtle top accent gradient */}
-    <div
-      className={`pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${accent}`}
-    />
-
-    <div className="mb-2.5 flex items-center gap-2.5">
-      <div className={`rounded-lg p-2 transition-colors duration-300 ${iconBg}`}>
-        <span className={iconColor}>{icon}</span>
+    {/* HEADER BAR */}
+    <div className="flex items-center justify-between px-5 md:px-7 py-3.5 border-b border-black/10 dark:border-white/10">
+      <div className="flex items-center gap-3 md:gap-5">
+        <span className="font-mono text-[7px] uppercase tracking-[0.45em] text-black/50 dark:text-white/50">SYS.REGISTRY</span>
+        <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
+        <span className="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-black dark:text-white">
+          TECHNICAL_STACK
+        </span>
       </div>
-      <h3 className="text-sm font-bold tracking-tight text-neutral-800 dark:text-slate-200">
-        {title}
-      </h3>
+      <div className="flex items-center gap-2">
+        <div className="hidden sm:flex items-end gap-[2px] h-3">
+          {[0.4, 0.6, 0.8, 1].map((h, i) => (
+            <div key={i} className="w-[3px] bg-black dark:bg-white rounded-sm"
+              style={{ height: `${h * 100}%`, opacity: 0.35 + i * 0.15 }} />
+          ))}
+        </div>
+        <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/50 dark:text-white/50">14 ENTRIES</span>
+      </div>
     </div>
-    <p className="font-mono text-[10px] tracking-tight text-neutral-400 dark:text-slate-500 transition-colors duration-300 group-hover:text-neutral-600 dark:group-hover:text-slate-400">
-      {subtitle}
-    </p>
-  </motion.div>
+
+    {/* FEATURED: GOLANG */}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative overflow-hidden border-b border-black/10 dark:border-white/10"
+      style={{ borderTop: "3px solid #00ADD8" }}
+    >
+      {/* ambient bg */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.08] via-teal-500/[0.04] to-transparent pointer-events-none" />
+      <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-cyan-400/[0.07] blur-3xl pointer-events-none" />
+      <div className="absolute right-1/3 -bottom-20 w-72 h-72 rounded-full bg-teal-400/[0.05] blur-2xl pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10 p-7 md:p-9">
+        {/* icon + name */}
+        <div className="flex items-center gap-5 shrink-0">
+          <motion.div
+            animate={{
+              filter: [
+                "drop-shadow(0 0 8px #00ADD870)",
+                "drop-shadow(0 0 22px #00ADD8B0)",
+                "drop-shadow(0 0 8px #00ADD870)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-[76px] md:text-[96px] leading-none"
+            style={{ color: "#00ADD8" }}
+          >
+            <SiGo />
+          </motion.div>
+          <div>
+            <div className="font-mono text-[7px] uppercase tracking-[0.45em] text-cyan-500/70 dark:text-cyan-400/60 mb-2">
+              PRIMARY RUNTIME
+            </div>
+            <h3
+              className="font-black uppercase leading-none text-black dark:text-white"
+              style={{
+                fontFamily: "var(--font-orbitron)",
+                fontSize: "clamp(1.8rem, 4.5vw, 3.5rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              GOLANG
+            </h3>
+            <p className="font-mono text-[9px] text-black/40 dark:text-white/35 mt-2 uppercase tracking-[0.15em]">
+              High-Throughput · Distributed · HFT Grade
+            </p>
+          </div>
+        </div>
+
+        {/* divider */}
+        <div className="hidden lg:block h-20 w-px bg-black/10 dark:bg-white/10 shrink-0" />
+
+        {/* description */}
+        <p className="font-mono text-[10px] leading-relaxed text-black/55 dark:text-white/45 max-w-sm">
+          My primary tool for production systems — trading engines, real-time data pipelines,
+          and distributed micro-services. Chosen for its goroutine model, zero-cost abstractions,
+          and predictable latency under load.
+        </p>
+
+        {/* stats */}
+        <div className="lg:ml-auto flex items-stretch gap-px bg-black/[0.09] dark:bg-white/[0.09] shrink-0">
+          {[
+            { v: "50K+", l: "MSG/SEC" },
+            { v: "<1ms",  l: "LATENCY" },
+            { v: "HFT",   l: "GRADE"   },
+          ].map(({ v, l }) => (
+            <div key={l} className="flex flex-col items-center justify-center px-5 py-4 bg-[#ffffff] dark:bg-[#111111] min-w-[80px]">
+              <div
+                className="font-black leading-none mb-0.5"
+                style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.2rem", color: "#00ADD8" }}
+              >{v}</div>
+              <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-black/40 dark:text-white/30">{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+
+    {/* CATEGORY ROWS */}
+    <div className="flex flex-col gap-px bg-black/[0.09] dark:bg-white/[0.09]">
+      {categoryRows.map((row, ri) => (
+        <div
+          key={row.index}
+          className="flex flex-col lg:flex-row gap-px bg-black/[0.09] dark:bg-white/[0.09]"
+        >
+          {/* Category label */}
+          <div
+            className="relative overflow-hidden bg-[#ffffff] dark:bg-[#111111] p-5 lg:p-6 flex lg:flex-col justify-between items-start gap-4 lg:gap-0"
+            style={{ minWidth: 170, borderLeft: `3px solid ${row.color}` }}
+          >
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: `linear-gradient(135deg, ${row.color}12, transparent 60%)` }}
+            />
+            <div className="relative z-10">
+              <div
+                className="font-mono text-[7px] uppercase tracking-[0.4em] mb-1.5"
+                style={{ color: row.color }}
+              >
+                {row.index}. CATEGORY
+              </div>
+              <div
+                className="font-black uppercase leading-tight text-black dark:text-white"
+                style={{
+                  fontFamily: "var(--font-orbitron)",
+                  fontSize: "clamp(0.8rem, 1.4vw, 1.05rem)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {row.label}
+              </div>
+            </div>
+            <div className="relative z-10 flex items-center gap-1.5 lg:mt-auto">
+              <div className="w-1.5 h-1.5" style={{ backgroundColor: row.color, boxShadow: `0 0 4px ${row.color}` }} />
+              <span className="font-mono text-[7px] uppercase tracking-[0.25em] text-black/40 dark:text-white/30">
+                {row.techs.length} TOOLS
+              </span>
+            </div>
+          </div>
+
+          {/* Tech cards */}
+          <div
+            className="flex-1 grid gap-px bg-black/[0.09] dark:bg-white/[0.09]"
+            style={{ gridTemplateColumns: `repeat(${row.techs.length}, minmax(0, 1fr))` }}
+          >
+            {row.techs.map((techKey, ti) => (
+              <TechCard key={techKey} techKey={techKey} delay={ri * 0.06 + ti * 0.05} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* ALSO WORKING WITH — horizontal colored pill row */}
+    <div className="border-t border-black/10 dark:border-white/10 px-5 md:px-7 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+      <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/35 dark:text-white/30 shrink-0">
+        ALSO WORKING WITH →
+      </span>
+      {[
+        { label: "DOCKER",     color: "#2496ED" },
+        { label: "KUBERNETES", color: "#326CE5" },
+        { label: "REDIS",      color: "#DC382D" },
+        { label: "GRPC",       color: "#244C5A" },
+        { label: "PROMETHEUS", color: "#E6522C" },
+        { label: "GRAFANA",    color: "#F46800" },
+        { label: "LINUX",      color: "#FCC624" },
+      ].map(({ label, color }) => (
+        <div key={label} className="flex items-center gap-1.5">
+          <div className="w-1 h-1" style={{ backgroundColor: color }} />
+          <span className="font-mono text-[8px] uppercase tracking-[0.15em] text-black/55 dark:text-white/45">{label}</span>
+        </div>
+      ))}
+    </div>
+
+    {/* TICKER */}
+    <div className="relative border-t border-black/10 dark:border-white/10 overflow-hidden">
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-14 z-10 bg-gradient-to-r from-[#ffffff] to-transparent dark:from-[#090909]" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-14 z-10 bg-gradient-to-l from-[#ffffff] to-transparent dark:from-[#090909]" />
+      <InfiniteMovingCards items={testimonials} direction="right" speed="slow" />
+    </div>
+
+    {/* FOOTER BAR */}
+    <div className="flex items-center justify-between px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
+      <div className="flex items-center gap-2.5">
+        <span className="relative flex h-1.5 w-1.5 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping bg-black/40 dark:bg-white/40" />
+          <span className="relative inline-flex h-1.5 w-1.5 bg-black dark:bg-white" />
+        </span>
+        <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/65 dark:text-white/65">RUNTIME ACTIVE</span>
+      </div>
+      <div className="hidden md:flex items-end gap-[2px] h-4">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="w-[3px] bg-black dark:bg-white rounded-sm"
+            animate={{ height: ["3px", `${6 + Math.sin(i) * 5}px`, "3px"] }}
+            transition={{ duration: 1 + (i % 3) * 0.3, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }}
+          />
+        ))}
+      </div>
+      <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/55 dark:text-white/55">14 LOADED</span>
+    </div>
+  </div>
 );
 
 export default Skills;

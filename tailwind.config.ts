@@ -28,8 +28,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        Quicksand: ["Quicksand"],
-        Orbitron: ["Orbitron"],
+        Quicksand: ["var(--font-quicksand)", "sans-serif"],
+        Orbitron: ["var(--font-orbitron)", "sans-serif"],
       },
       colors: {
         black: {

@@ -107,7 +107,7 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 w-max flex-nowrap gap-4 py-3",
+          "flex min-w-full shrink-0 w-max flex-nowrap gap-0 py-2",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]",
         )}
@@ -115,25 +115,25 @@ export const InfiniteMovingCards = ({
         {items.map((item, idx) => (
           <li
             key={`${item.name}-${idx}`}
-            className="group relative flex w-[136px] shrink-0 flex-col items-center gap-3 overflow-hidden rounded-2xl border border-gray-200/70 bg-gray-50/80 p-4 transition-all duration-300 hover:border-gray-300/80 hover:bg-white hover:shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-white/10 dark:hover:bg-white/[0.04]"
+            className="group relative flex shrink-0 items-center gap-2.5 border border-black/10 dark:border-white/10 px-3.5 py-2 transition-colors duration-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] cursor-default"
           >
-            {/* Hover accent glow */}
-            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-            {/* Icon container */}
-            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 group-hover:shadow-md dark:border-white/[0.07] dark:bg-black/50">
+            {/* icon */}
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center">
               {iconMap[item.title]}
             </div>
 
-            {/* Text */}
-            <div className="relative z-10 flex flex-col items-center gap-0.5 text-center">
-              <p className="font-mono text-[11px] font-semibold leading-tight text-gray-800 dark:text-slate-200">
+            {/* text */}
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-black dark:text-white whitespace-nowrap">
                 {item.quote}
-              </p>
-              <p className="font-mono text-[8px] uppercase tracking-wider text-gray-400 dark:text-slate-500 leading-tight">
+              </span>
+              <span className="font-mono text-[7px] uppercase tracking-[0.2em] text-black/55 dark:text-white/55 whitespace-nowrap hidden md:inline">
                 {item.name}
-              </p>
+              </span>
             </div>
+
+            {/* separator */}
+            <div className="absolute -right-px top-1/4 bottom-1/4 w-px bg-black/10 dark:bg-white/10" />
           </li>
         ))}
       </ul>

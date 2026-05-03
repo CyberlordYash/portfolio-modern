@@ -33,27 +33,27 @@ const links = [
   {
     label: "Home",
     href: "#home",
-    icon: <IconSmartHome className="h-6 w-6 shrink-0 text-blue-500 transition-colors group-hover:text-blue-400" />,
+    icon: <IconSmartHome className="h-5 w-5 shrink-0" />,
   },
   {
     label: "About Me",
     href: "#skills",
-    icon: <IconUser className="h-6 w-6 shrink-0 text-purple-500 transition-colors group-hover:text-purple-400" />,
+    icon: <IconUser className="h-5 w-5 shrink-0" />,
   },
   {
     label: "Experience",
     href: "#experience",
-    icon: <IconBriefcase className="h-6 w-6 shrink-0 text-cyan-500 transition-colors group-hover:text-cyan-400" />,
+    icon: <IconBriefcase className="h-5 w-5 shrink-0" />,
   },
   {
     label: "Projects",
     href: "#projects",
-    icon: <IconFolderCode className="h-6 w-6 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-400" />,
+    icon: <IconFolderCode className="h-5 w-5 shrink-0" />,
   },
   {
     label: "Approach",
     href: "#approach",
-    icon: <IconBulb className="h-6 w-6 shrink-0 text-amber-500 transition-colors group-hover:text-amber-400" />,
+    icon: <IconBulb className="h-5 w-5 shrink-0" />,
   },
 ];
 
@@ -65,44 +65,30 @@ export default function Home() {
       <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-black">
         {/* RESPONSIVE SIDEBAR */}
         <Sidebar open={open} setOpen={setOpen} animate={true}>
-          <SidebarBody className="justify-between gap-10 bg-slate-50 dark:bg-[#030712] px-3">
+          <SidebarBody className="justify-between gap-10 bg-[#ffffff] dark:bg-[#090909] px-2">
 
             {/* ── Top: Brand + Nav ── */}
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
               {/* Brand */}
-              <div className="flex items-center gap-3 h-20 px-2">
-                <div className="relative flex h-9 w-[5px] min-w-[5px] overflow-hidden rounded-full shrink-0">
-                  <motion.div
-                    animate={{
-                      background: [
-                        "linear-gradient(to bottom, #6366f1, #a855f7)",
-                        "linear-gradient(to bottom, #a855f7, #ec4899)",
-                        "linear-gradient(to bottom, #ec4899, #6366f1)",
-                      ],
-                    }}
-                    transition={{ duration: 3.5, repeat: Infinity }}
-                    className="absolute inset-0"
-                  />
-                </div>
+              <div className="flex items-center gap-3 h-[64px] px-2 border-b border-black/10 dark:border-white/10">
+                {/* thin vertical bar */}
+                <div className="h-8 w-[2px] bg-black/30 dark:bg-white/30 shrink-0" />
                 <motion.div
                   animate={{ display: open ? "flex" : "none", opacity: open ? 1 : 0 }}
                   className="flex flex-col"
                 >
-                  <span className="font-mono font-black text-[15px] tracking-tighter text-slate-900 dark:text-white whitespace-nowrap leading-tight">
-                    YS
-                    <span className="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">
-                      .DEV
-                    </span>
+                  <span className="font-mono font-black text-[13px] tracking-[0.05em] uppercase text-black dark:text-white whitespace-nowrap leading-tight">
+                    YS.DEV
                   </span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
-                    Portfolio
+                  <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/35 dark:text-white/35">
+                    PORTFOLIO
                   </span>
                 </motion.div>
               </div>
 
               {/* Nav links */}
-              <div className="mt-2 flex flex-col gap-0.5">
+              <div className="mt-3 flex flex-col gap-0">
                 {links.map((link, idx) => (
                   <SidebarLink key={idx} link={link} />
                 ))}
@@ -110,35 +96,30 @@ export default function Home() {
             </div>
 
             {/* ── Bottom: Status + Profile ── */}
-            <div className="flex flex-col gap-3 border-t border-slate-200 dark:border-white/[0.06] pt-4 pb-2">
+            <div className="flex flex-col gap-1 border-t border-black/10 dark:border-white/10 pt-3 pb-2">
 
               {/* Status */}
-              <div className="flex items-center gap-3 px-3 py-1.5">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              <div className="flex items-center gap-3 px-3 py-2">
+                <span className="relative flex h-1.5 w-1.5 shrink-0">
+                  <span className="absolute inline-flex h-full w-full animate-ping bg-black/40 dark:bg-white/40 opacity-60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 bg-black dark:bg-white" />
                 </span>
                 <motion.span
                   animate={{ display: open ? "inline" : "none", opacity: open ? 1 : 0 }}
-                  className="font-mono text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-500 whitespace-nowrap"
+                  className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/50 dark:text-white/50 whitespace-nowrap"
                 >
-                  Available for work
+                  AVAILABLE FOR WORK
                 </motion.span>
               </div>
 
               {/* Profile */}
               <SidebarLink
                 link={{
-                  label: "Yash Sachan",
+                  label: "YASH SACHAN",
                   href: "#",
                   icon: (
-                    <div className="relative shrink-0">
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 to-violet-500/40 blur-sm" />
-                      <img
-                        src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-user-profile-avatar-png-image_10211467.png"
-                        className="relative h-8 w-8 rounded-full border border-indigo-500/30 object-cover"
-                        alt="Avatar"
-                      />
+                    <div className="relative shrink-0 w-6 h-6 border border-black/20 dark:border-white/20 flex items-center justify-center">
+                      <span className="font-mono text-[8px] font-bold text-black/60 dark:text-white/60">YS</span>
                     </div>
                   ),
                 }}
@@ -160,19 +141,40 @@ export default function Home() {
               </section>
 
               <section id="skills" className="relative">
-                <div className="flex flex-col items-center mb-10 md:mb-16">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.02] text-blue-400 text-[10px] md:text-xs font-mono mb-4">
+                {/* ── Section heading ── */}
+                <div className="flex flex-col items-center mb-8 md:mb-10">
+                  {/* label tag */}
+                  <div className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
                     <motion.div
-                      animate={{ opacity: [1, 0.5, 1] }}
+                      animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <IconActivity size={14} />
-                    </motion.div>
-                    SYSTEM_RUNTIME
+                      className="w-1.5 h-1.5 bg-black dark:bg-white"
+                    />
+                    <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
+                      SYSTEM_RUNTIME
+                    </span>
                   </div>
-                  <h2 className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600">
+
+                  {/* main heading */}
+                  <h2
+                    className="font-black uppercase leading-none text-black dark:text-white text-center"
+                    style={{
+                      fontFamily: "var(--font-orbitron)",
+                      fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
+                      letterSpacing: "-0.025em",
+                    }}
+                  >
                     Technical Stack
                   </h2>
+
+                  {/* underline annotation */}
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+                      16 Technologies
+                    </span>
+                    <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                  </div>
                 </div>
                 <Skills />
               </section>
@@ -215,14 +217,6 @@ export default function Home() {
               </section>
 
               <section id="projects">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-12 border-l-4 border-blue-600 pl-4 md:pl-6">
-                  <h2 className="text-2xl md:text-4xl font-bold text-white uppercase tracking-tighter">
-                    Production
-                  </h2>
-                  <p className="text-neutral-500 font-mono text-xs md:text-sm">
-                    Deployment logs & system designs
-                  </p>
-                </div>
                 <RecentProjects />
               </section>
 

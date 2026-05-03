@@ -27,7 +27,19 @@ const fadeUp = {
   }),
 };
 
-/** Generic animated bento cell */
+const Cross = ({ className = "" }: { className?: string }) => (
+  <svg
+    className={`w-3 h-3 ${className}`}
+    viewBox="0 0 12 12"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1"
+  >
+    <line x1="6" y1="0" x2="6" y2="12" />
+    <line x1="0" y1="6" x2="12" y2="6" />
+  </svg>
+);
+
 const Cell = ({
   children,
   className = "",
@@ -42,9 +54,8 @@ const Cell = ({
     custom={delay}
     initial="hidden"
     whileInView="visible"
-    whileHover={{ y: -3, transition: { duration: 0.2, ease: "easeOut" } }}
     viewport={{ once: true, margin: "-40px" }}
-    className={`group relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/[0.07] transition-shadow duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/30 ${className}`}
+    className={`group relative overflow-hidden bg-[#ffffff] dark:bg-[#111111] ${className}`}
   >
     {children}
   </motion.div>
@@ -62,9 +73,10 @@ const Grid = () => {
   return (
     <section
       id="about"
-      className="w-full py-16 md:py-24 bg-white dark:bg-[#020617]"
+      className="w-full py-16 md:py-24 bg-[#ffffff] dark:bg-[#090909] transition-colors duration-500"
     >
       <div className="mx-auto max-w-7xl px-4 md:px-6">
+
         {/* Section header */}
         <motion.div
           variants={fadeUp}
@@ -72,63 +84,88 @@ const Grid = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mb-10"
+          className="flex flex-col items-center mb-12"
         >
-          <div className="mb-2 flex items-center gap-2">
-            <div className="h-[3px] w-6 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-              Who I Am
+          <div className="flex items-center gap-2 border border-black/15 dark:border-white/15
+            bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+            <motion.div
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-1.5 h-1.5 bg-black dark:bg-white"
+            />
+            <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
+              UNIT_YS // BIO_MODULE
             </span>
           </div>
-          <h2 className="bg-gradient-to-br from-slate-900 via-slate-700 to-slate-400 bg-clip-text text-4xl font-bold tracking-tighter text-transparent dark:from-white dark:via-slate-200 dark:to-slate-500 md:text-6xl">
+          <h2
+            className="font-black uppercase leading-none text-black dark:text-white text-center"
+            style={{
+              fontFamily: "var(--font-orbitron)",
+              fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
+              letterSpacing: "-0.025em",
+            }}
+          >
             About Me
           </h2>
+          <div className="flex items-center gap-3 mt-3">
+            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+            <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+              System Profile
+            </span>
+            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+          </div>
         </motion.div>
 
-        {/* Bento grid */}
-        <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-1 gap-4 md:grid-cols-6">
-          {/* ── Card 1: Bio — hero card ── */}
-          <Cell
-            delay={0.05}
-            className="min-h-[320px] bg-gradient-to-br from-indigo-500/10 via-purple-500/[0.06] to-transparent dark:from-indigo-500/[0.13] dark:via-purple-500/[0.07] dark:to-transparent md:col-span-4 md:row-span-2"
-          >
-            {/* Top accent */}
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent" />
-            {/* Ambient glow blobs */}
-            <div className="pointer-events-none absolute -left-10 -top-10 h-48 w-48 rounded-full bg-indigo-500/10 blur-[60px]" />
-            <div className="pointer-events-none absolute -bottom-10 right-0 h-40 w-40 rounded-full bg-violet-500/10 blur-[60px]" />
-            {/* Subtle dot grid */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_1px,transparent_1px)] bg-[length:24px_24px]" />
+        {/* Bento grid — gap-px hairline separators */}
+        <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-1 gap-px md:grid-cols-6 bg-black/[0.09] dark:bg-white/[0.09]">
+
+          {/* ── Card 1: Bio ── */}
+          <Cell delay={0.05} className="min-h-[320px] md:col-span-4 md:row-span-2">
+            {/* Cyan top strip */}
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-400 z-10" />
+            {/* Corner crosses */}
+            <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
+            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
 
             <div className="relative z-10 flex h-full flex-col p-7 md:p-9">
+              {/* Module label */}
+              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-cyan-500 dark:text-cyan-400 mb-4">
+                BIO // CORE_IDENTITY
+              </span>
+
               {/* Status */}
-              <div className="mb-6 flex items-center gap-2 self-start rounded-full border border-emerald-500/25 bg-emerald-500/[0.07] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              <div className="mb-5 flex items-center gap-2 self-start border border-emerald-500/25 bg-emerald-500/[0.07] dark:bg-emerald-500/[0.05] px-3 py-1.5">
+                <span className="h-1.5 w-1.5 animate-pulse bg-emerald-500" />
                 <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
                   Open to senior backend roles
                 </span>
               </div>
 
               {/* Name */}
-              <h3 className="mb-1 text-3xl font-extrabold tracking-tight md:text-4xl">
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400">
-                  Hey, I&apos;m Yash
-                </span>
+              <h3
+                className="mb-1 font-black uppercase leading-none text-black dark:text-white"
+                style={{
+                  fontFamily: "var(--font-orbitron)",
+                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Hey, I&apos;m Yash
               </h3>
-              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-500">
-                Systems Engineer · Backend Architect · HFT Specialist
+              <p className="mb-5 font-mono text-[9px] uppercase tracking-[0.22em] text-black/40 dark:text-white/35">
+                Backend Developer · Distributed Systems · HFT Specialist
               </p>
 
               {/* Bio */}
-              <p className="mb-6 max-w-lg text-[14px] leading-relaxed text-slate-600 dark:text-slate-400 md:text-[15px]">
+              <p className="mb-6 max-w-lg text-[13px] leading-relaxed text-black/60 dark:text-white/50 md:text-[14px]">
                 I build software that handles serious scale — trading engines,
                 distributed pipelines, real-time infrastructure. I care deeply
                 about{" "}
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <span className="font-semibold text-black dark:text-white">
                   performance
                 </span>
                 ,{" "}
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <span className="font-semibold text-black dark:text-white">
                   correctness
                 </span>
                 , and clean architecture. When I&apos;m not profiling Go
@@ -146,7 +183,7 @@ const Grid = () => {
                 ].map(({ icon, label }) => (
                   <span
                     key={label}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-2.5 py-1 font-mono text-[10px] text-slate-600 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-400"
+                    className="inline-flex items-center gap-1.5 border border-black/10 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-2.5 py-1 font-mono text-[10px] text-black/60 dark:text-white/40"
                   >
                     {icon}
                     {label}
@@ -157,14 +194,13 @@ const Grid = () => {
           </Cell>
 
           {/* ── Card 2: Stats ── */}
-          <Cell
-            delay={0.1}
-            className="bg-gradient-to-br from-violet-500/10 via-fuchsia-500/[0.04] to-transparent dark:from-violet-500/[0.11] dark:via-fuchsia-500/[0.05] dark:to-transparent md:col-span-2"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/60 to-transparent" />
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-fuchsia-500/5 to-transparent" />
+          <Cell delay={0.1} className="md:col-span-2">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-violet-400 z-10" />
+            <span className="absolute top-3 left-3 font-mono text-[8px] uppercase tracking-[0.4em] text-violet-500 dark:text-violet-400">
+              METRICS
+            </span>
 
-            <div className="relative z-10 flex h-full items-center justify-around p-6">
+            <div className="relative z-10 flex h-full items-center justify-around p-6 pt-10">
               {[
                 { value: "1+", label: "Yrs Exp" },
                 { value: "50K+", label: "msg/sec" },
@@ -172,15 +208,18 @@ const Grid = () => {
               ].map(({ value, label }, i) => (
                 <React.Fragment key={label}>
                   <div className="flex flex-col items-center gap-1 text-center">
-                    <span className="bg-gradient-to-b from-indigo-500 to-violet-500 bg-clip-text text-2xl font-extrabold tabular-nums text-transparent md:text-3xl">
+                    <span
+                      className="text-2xl font-black tabular-nums text-black dark:text-white md:text-3xl"
+                      style={{ fontFamily: "var(--font-orbitron)" }}
+                    >
                       {value}
                     </span>
-                    <span className="font-mono text-[8px] uppercase tracking-widest text-slate-500 dark:text-slate-500">
+                    <span className="font-mono text-[8px] uppercase tracking-widest text-black/40 dark:text-white/35">
                       {label}
                     </span>
                   </div>
                   {i < 2 && (
-                    <div className="h-8 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent dark:via-white/10" />
+                    <div className="h-8 w-px bg-black/10 dark:bg-white/10" />
                   )}
                 </React.Fragment>
               ))}
@@ -188,25 +227,21 @@ const Grid = () => {
           </Cell>
 
           {/* ── Card 3: Currently Building ── */}
-          <Cell
-            delay={0.15}
-            className="bg-gradient-to-br from-blue-500/8 via-cyan-500/[0.04] to-transparent dark:from-blue-500/[0.1] dark:via-cyan-500/[0.04] dark:to-transparent md:col-span-2"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 right-0 h-20 w-20 rounded-full bg-blue-500/10 blur-[30px]" />
+          <Cell delay={0.15} className="md:col-span-2">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-400 z-10" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
-                <Zap size={13} className="text-blue-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
+                <Zap size={13} className="text-cyan-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-cyan-500/80">
                   Currently Building
                 </span>
               </div>
               <div>
-                <p className="text-[13px] font-semibold leading-snug text-slate-800 dark:text-slate-200">
+                <p className="text-[13px] font-semibold leading-snug text-black dark:text-white">
                   High-performance order execution &amp; trading infrastructure
                 </p>
-                <p className="mt-1 font-mono text-[10px] text-slate-400 dark:text-slate-500">
+                <p className="mt-1 font-mono text-[10px] text-black/40 dark:text-white/30">
                   @ Zanskar Securities
                 </p>
               </div>
@@ -214,25 +249,21 @@ const Grid = () => {
           </Cell>
 
           {/* ── Card 4: Education ── */}
-          <Cell
-            delay={0.2}
-            className="bg-gradient-to-br from-emerald-500/8 via-teal-500/[0.04] to-transparent dark:from-emerald-500/[0.1] dark:via-teal-500/[0.04] dark:to-transparent md:col-span-2"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-20 rounded-full bg-emerald-500/10 blur-[30px]" />
+          <Cell delay={0.2} className="md:col-span-2">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-emerald-400 z-10" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
                 <GraduationCap size={13} className="text-emerald-500" />
                 <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-500/80">
-                  Education
+                  Education // DEGREE
                 </span>
               </div>
               <div>
-                <p className="text-[13px] font-bold text-slate-800 dark:text-slate-200">
+                <p className="text-[13px] font-bold text-black dark:text-white">
                   B.Tech Computer Science and Engineering
                 </p>
-                <p className="mt-0.5 text-[12px] text-slate-600 dark:text-slate-400">
+                <p className="mt-0.5 font-mono text-[11px] text-black/50 dark:text-white/40">
                   IIIT Sonepat, Haryana
                 </p>
               </div>
@@ -240,46 +271,35 @@ const Grid = () => {
           </Cell>
 
           {/* ── Card 5: Philosophy ── */}
-          <Cell
-            delay={0.25}
-            className="bg-gradient-to-br from-amber-500/8 via-orange-500/[0.04] to-transparent dark:from-amber-500/[0.1] dark:via-orange-500/[0.04] dark:to-transparent md:col-span-2"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500/60 to-transparent" />
-            {/* Big quote mark */}
-            <div className="pointer-events-none absolute -bottom-3 right-4 font-serif text-8xl font-bold leading-none text-amber-500/10 select-none"></div>
+          <Cell delay={0.25} className="md:col-span-2">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-amber-400 z-10" />
+            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
                 <Sparkles size={13} className="text-amber-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-amber-600/70 dark:text-amber-400/70">
-                  Philosophy
+                <span className="font-mono text-[9px] uppercase tracking-widest text-amber-500/80">
+                  CORE_PHILOSOPHY
                 </span>
               </div>
-              <p className="text-[13px] font-medium italic leading-relaxed text-slate-700 dark:text-slate-300">
-                {`Performance is a feature, not an afterthought. Great software
-  is invisible; it just works.`}
+              <p className="font-mono text-[11px] leading-relaxed text-black/60 dark:text-white/50 italic">
+                {`"Performance is a feature, not an afterthought. Great software is invisible — it just works."`}
               </p>
             </div>
           </Cell>
 
           {/* ── Card 6: Beyond Code ── */}
-          <Cell
-            delay={0.3}
-            className="bg-gradient-to-br from-red-500/8 via-rose-500/[0.04] to-transparent dark:from-red-500/[0.1] dark:via-rose-500/[0.04] dark:to-transparent md:col-span-2"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
-            <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-red-500/8 blur-[30px]" />
+          <Cell delay={0.3} className="md:col-span-2">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-rose-400 z-10" />
 
             <div className="relative z-10 flex h-full flex-col gap-4 p-6">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[9px] uppercase tracking-widest text-red-500/70">
-                  Beyond Code
-                </span>
-              </div>
+              <span className="font-mono text-[9px] uppercase tracking-widest text-rose-500/70">
+                BEYOND_CODE
+              </span>
               <div className="flex flex-col gap-2.5">
                 {[
                   {
-                    icon: <Dumbbell size={12} className="text-red-400" />,
+                    icon: <Dumbbell size={12} className="text-rose-400" />,
                     label: "Daily gym & nutrition tracking",
                   },
                   {
@@ -287,18 +307,16 @@ const Grid = () => {
                     label: "Competitive programming",
                   },
                   {
-                    icon: (
-                      <BrainCircuit size={12} className="text-violet-400" />
-                    ),
+                    icon: <BrainCircuit size={12} className="text-violet-400" />,
                     label: "Systems design deep dives",
                   },
                 ].map(({ icon, label }) => (
                   <div
                     key={label}
-                    className="flex items-center gap-2.5 text-slate-600 dark:text-slate-400"
+                    className="flex items-center gap-2.5 text-black/60 dark:text-white/50"
                   >
                     {icon}
-                    <span className="text-[12px]">{label}</span>
+                    <span className="font-mono text-[11px]">{label}</span>
                   </div>
                 ))}
               </div>
@@ -306,16 +324,12 @@ const Grid = () => {
           </Cell>
 
           {/* ── Card 7: Contact CTA — full width ── */}
-          <Cell
-            delay={0.35}
-            className="min-h-[140px] bg-gradient-to-br from-indigo-600/10 via-violet-500/8 to-purple-500/10 dark:from-indigo-500/[0.14] dark:via-violet-500/[0.09] dark:to-purple-500/[0.12] md:col-span-6"
-          >
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent" />
-            {/* Glow blobs */}
-            <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-violet-500/10 blur-[70px]" />
-            <div className="pointer-events-none absolute -bottom-8 left-1/3 h-32 w-64 rounded-full bg-indigo-500/8 blur-[60px]" />
-            {/* Dot grid */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_1px,transparent_1px)] bg-[length:20px_20px]" />
+          <Cell delay={0.35} className="min-h-[140px] md:col-span-6">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-cyan-400 via-violet-400 to-amber-400 z-10" />
+            <Cross className="absolute top-3 left-3 text-black/15 dark:text-white/15" />
+            <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
+            <Cross className="absolute bottom-3 left-3 text-black/15 dark:text-white/15" />
+            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
 
             {/* Confetti */}
             {copied && (
@@ -330,24 +344,31 @@ const Grid = () => {
 
             <div className="relative z-10 flex flex-col items-center justify-between gap-6 px-8 py-9 text-center md:flex-row md:text-left">
               <div>
-                <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-indigo-500/70 dark:text-indigo-400/60">
-                  Let&apos;s Collaborate
+                <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-black/35 dark:text-white/30">
+                  COLLAB_REQUEST // OPEN
                 </p>
-                <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white md:text-2xl">
-                  Want to build something{" "}
-                  <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">
-                    impactful
-                  </span>
-                  ?
+                <h3
+                  className="font-black uppercase leading-none text-black dark:text-white mb-2"
+                  style={{
+                    fontFamily: "var(--font-orbitron)",
+                    fontSize: "clamp(1.4rem, 3vw, 2.2rem)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Want to build something impactful?
                 </h3>
-                <p className="mt-1 font-mono text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="font-mono text-[10px] text-black/40 dark:text-white/30">
                   yashsachan321@gmail.com
                 </p>
               </div>
 
               <button
                 onClick={handleCopy}
-                className="inline-flex shrink-0 items-center gap-2.5 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-3.5 font-mono text-[11px] font-bold uppercase tracking-widest text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:scale-[1.03] hover:shadow-indigo-500/40 active:scale-[0.98]"
+                className="inline-flex shrink-0 items-center gap-2.5 border border-black dark:border-white
+                  bg-black dark:bg-white text-white dark:text-black
+                  px-7 py-3.5 font-mono text-[10px] font-bold uppercase tracking-widest
+                  hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white
+                  transition-all duration-200 active:scale-[0.98]"
               >
                 {copied ? <CheckCheck size={14} /> : <Mail size={14} />}
                 {copied ? "Email Copied!" : "Copy Email"}

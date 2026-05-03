@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Quicksand } from "next/font/google";
+import { Inter, Quicksand, Orbitron } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const quicksand = Quicksand({
   subsets: ["latin"],
   variable: "--font-quicksand",
+});
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 // 1. Dynamic Viewport Configuration
@@ -94,7 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${quicksand.variable} font-sans antialiased`}
+        className={`${inter.variable} ${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

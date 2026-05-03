@@ -20,53 +20,35 @@ export default function WorklogPage() {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    const loadAuthState = async () => {
+    const check = async () => {
       try {
-        const response = await fetch("/api/admin/auth", {
-          cache: "no-store",
-        });
-
-        if (!response.ok) {
-          throw new Error("Unable to verify access");
-        }
-
-        const data = (await response.json()) as { authorized?: boolean };
+        const res = await fetch("/api/admin/auth", { cache: "no-store" });
+        if (!res.ok) throw new Error();
+        const data = (await res.json()) as { authorized?: boolean };
         setIsUnlocked(Boolean(data.authorized));
-      } catch (error) {
-        console.error(error);
+      } catch {
         setIsUnlocked(false);
       } finally {
         setIsCheckingAuth(false);
       }
     };
-
-    void loadAuthState();
+    void check();
   }, []);
 
-  const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleUnlock = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       setIsSubmitting(true);
       setHasError(false);
-
-      const response = await fetch("/api/admin/auth", {
+      const res = await fetch("/api/admin/auth", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-
-      if (!response.ok) {
-        setHasError(true);
-        return;
-      }
-
+      if (!res.ok) { setHasError(true); return; }
       setIsUnlocked(true);
       setPassword("");
-    } catch (error) {
-      console.error(error);
+    } catch {
       setHasError(true);
     } finally {
       setIsSubmitting(false);
@@ -74,124 +56,154 @@ export default function WorklogPage() {
   };
 
   const handleLogout = async () => {
-    try {
-      await fetch("/api/admin/auth", { method: "DELETE" });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsUnlocked(false);
-      setPassword("");
-      setHasError(false);
-    }
+    try { await fetch("/api/admin/auth", { method: "DELETE" }); } catch { /* ignored */ }
+    setIsUnlocked(false);
+    setPassword("");
+    setHasError(false);
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-900 transition-colors dark:bg-black dark:text-slate-200 md:px-8 md:py-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
+    <main className="relative min-h-screen overflow-hidden bg-black-100 px-4 py-6 text-white md:px-8 md:py-8">
+      {/* Ambient background */}
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgba(34,211,238,0.07),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgba(99,102,241,0.07),transparent)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 font-mono text-xs uppercase tracking-[0.25em] text-slate-600 transition hover:border-blue-400/40 hover:text-blue-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300 dark:hover:text-blue-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-cyan-500/40 hover:bg-cyan-500/5 hover:text-cyan-300"
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back To Portfolio
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Portfolio
             </Link>
 
             {isUnlocked && (
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 font-mono text-xs uppercase tracking-[0.25em] text-slate-600 transition hover:border-red-400/40 hover:text-red-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300 dark:hover:text-red-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-red-400/40 hover:text-red-300"
               >
-                <LogOut className="h-4 w-4" />
-                Lock Worklog
+                <LogOut className="h-3.5 w-3.5" />
+                Lock
               </button>
             )}
           </div>
 
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-cyan-700 dark:border-cyan-400/20 dark:bg-cyan-400/10 dark:text-cyan-300">
-            <BriefcaseBusiness className="h-3.5 w-3.5" />
+          <div className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400">
+            <BriefcaseBusiness className="h-3 w-3" />
             Worklog
           </div>
         </div>
 
+        {/* Content */}
         {isCheckingAuth ? (
-          <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-cyan-50 px-4 py-10 dark:border-white/[0.06] dark:bg-gradient-to-br dark:from-slate-950 dark:via-black dark:to-slate-950 md:px-8">
-            <div className="relative z-10 mx-auto max-w-2xl rounded-[1.75rem] border border-slate-200/80 bg-white/75 p-6 text-center backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03] md:p-8">
-              <LoaderCircle className="mx-auto h-6 w-6 animate-spin text-cyan-600 dark:text-cyan-300" />
-              <p className="mt-4 font-mono text-xs uppercase tracking-[0.28em] text-slate-500">
-                Verifying access
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <div className="text-center">
+              <LoaderCircle className="mx-auto h-6 w-6 animate-spin text-cyan-500" />
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-slate-600">
+                Verifying session...
               </p>
             </div>
-          </section>
+          </div>
         ) : isUnlocked ? (
           <WorkJournal onUnauthorized={() => setIsUnlocked(false)} />
         ) : (
-          <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-cyan-50 px-4 py-10 dark:border-white/[0.06] dark:bg-gradient-to-br dark:from-slate-950 dark:via-black dark:to-slate-950 md:px-8">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.10),transparent_30%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.12),transparent_30%)]" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.06)_1px,transparent_1px)] bg-[size:26px_26px] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)]" />
+          /* Lock screen */
+          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-white/[0.07] bg-[rgba(10,15,28,0.6)] backdrop-blur-sm">
+            {/* Decorations */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.05),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(99,102,241,0.05),transparent_50%)]" />
+            <div className="pointer-events-none absolute -right-8 top-8 opacity-[0.06]">
+              <LockCircuitSvg className="h-52 w-52 text-cyan-400" />
+            </div>
+            <div className="pointer-events-none absolute -left-6 bottom-8 opacity-[0.05]">
+              <LockCircuitSvg className="h-36 w-36 text-violet-400" />
+            </div>
 
-            <div className="relative z-10 mx-auto max-w-2xl rounded-[1.75rem] border border-slate-200/80 bg-white/75 p-6 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03] md:p-8">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-700 dark:border-cyan-400/20 dark:bg-cyan-400/10 dark:text-cyan-300">
-                  <LockKeyhole className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-[0.32em] text-slate-500">
-                    Access Control
-                  </p>
-                  <h1 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white md:text-3xl">
-                    Worklog
-                  </h1>
-                  <p className="mt-2 max-w-md font-Quicksand text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    I store my work tasks here. You can&apos;t access it.
-                  </p>
+            <div className="relative z-10 w-full max-w-md px-6 py-10">
+              {/* Lock icon */}
+              <div className="mb-8 flex justify-center">
+                <div
+                  className="flex h-20 w-20 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.06]"
+                  style={{ boxShadow: "0 0 40px rgba(34,211,238,0.12), 0 0 80px rgba(34,211,238,0.05)" }}
+                >
+                  <LockKeyhole className="h-8 w-8 text-cyan-400" />
                 </div>
               </div>
 
-              <form onSubmit={handleUnlock} className="mt-6 space-y-4">
-                <label className="block space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-slate-500">
-                    Password
-                  </span>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(event) => {
-                      setPassword(event.target.value);
-                      if (hasError) {
-                        setHasError(false);
-                      }
-                    }}
-                    placeholder="Enter access code"
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 font-mono text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500/50 dark:border-white/10 dark:bg-black/40 dark:text-slate-200 dark:placeholder:text-slate-600"
-                  />
-                </label>
+              <div className="mb-8 text-center space-y-3">
+                <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-slate-600">
+                  Access Control · Private
+                </p>
+                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-white">
+                  Worklog
+                </h1>
+                <p className="font-Quicksand text-sm text-slate-500">
+                  My daily work journal. Restricted access.
+                </p>
+              </div>
+
+              <form onSubmit={handleUnlock} className="space-y-4">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (hasError) setHasError(false);
+                  }}
+                  placeholder="Enter access code"
+                  className="w-full rounded-xl border border-white/[0.08] bg-black/50 px-4 py-3.5 font-mono text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20"
+                />
 
                 {hasError && (
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-red-500 dark:text-red-300">
-                    Invalid password. Try again.
+                  <p className="text-center font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+                    Access denied — invalid code.
                   </p>
                 )}
 
                 <button
                   type="submit"
                   disabled={isSubmitting || !password.trim()}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 font-mono text-xs uppercase tracking-[0.25em] text-cyan-700 transition hover:border-cyan-500/50 hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-40 dark:border-cyan-400/30 dark:bg-cyan-400/10 dark:text-cyan-200 dark:hover:border-cyan-300/50 dark:hover:bg-cyan-400/15"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-cyan-300 transition hover:bg-cyan-500/15 hover:border-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {isSubmitting ? (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
                   ) : (
                     <ShieldCheck className="h-4 w-4" />
                   )}
-                  Unlock Worklog
+                  Authenticate
                 </button>
               </form>
             </div>
-          </section>
+          </div>
         )}
       </div>
     </main>
+  );
+}
+
+function LockCircuitSvg({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true">
+      <rect x="20" y="20" width="160" height="160" rx="6" stroke="currentColor" strokeWidth="1" />
+      <rect x="50" y="50" width="100" height="100" rx="4" stroke="currentColor" strokeWidth="1" />
+      <line x1="20" y1="100" x2="50" y2="100" stroke="currentColor" strokeWidth="1.5" />
+      <line x1="150" y1="100" x2="180" y2="100" stroke="currentColor" strokeWidth="1.5" />
+      <line x1="100" y1="20" x2="100" y2="50" stroke="currentColor" strokeWidth="1.5" />
+      <line x1="100" y1="150" x2="100" y2="180" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="100" cy="100" r="18" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="88" y="98" width="24" height="16" rx="3" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M92 98V93a8 8 0 0116 0v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="20" cy="20" r="4" fill="currentColor" />
+      <circle cx="180" cy="20" r="4" fill="currentColor" />
+      <circle cx="20" cy="180" r="4" fill="currentColor" />
+      <circle cx="180" cy="180" r="4" fill="currentColor" />
+      <line x1="56" y1="56" x2="66" y2="66" stroke="currentColor" strokeWidth="1" />
+      <line x1="144" y1="56" x2="134" y2="66" stroke="currentColor" strokeWidth="1" />
+      <line x1="56" y1="144" x2="66" y2="134" stroke="currentColor" strokeWidth="1" />
+      <line x1="144" y1="144" x2="134" y2="134" stroke="currentColor" strokeWidth="1" />
+    </svg>
   );
 }

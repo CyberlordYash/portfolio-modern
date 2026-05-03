@@ -1,255 +1,196 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // AnimatePresence kept for tooltip
 import { cn } from "@/utils/cn";
 import ToggleDarkModeButton from "../ToggleDarkModeButton";
 
-/* ── Glitch text ─────────────────────────────────────────────── */
-const GlitchText = ({ text }: { text: string }) => (
-  <span className="glitch-text" data-text={text}>
-    {text}
-  </span>
-);
 
-/* ── Ripple on click ─────────────────────────────────────────── */
-const NavItem = ({ item, isActive }: { item: any; isActive: boolean }) => {
-  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+/* ─── single nav item – expands when active ─── */
+const NavPill = ({
+  item,
+  isActive,
+}: {
+  item: { name: string; link: string; icon: React.ReactNode };
+  isActive: boolean;
+}) => {
   const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLAnchorElement>(null);
-
-  const handleClick = (e: React.MouseEvent) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const id = Date.now();
-    setRipples((prev) => [...prev, { id, x, y }]);
-    setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 700);
-  };
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Floating label */}
+    <div className="relative" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      {/* tooltip for inactive items */}
       <AnimatePresence>
-        {hovered && (
+        {hovered && !isActive && (
           <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.85 }}
+            initial={{ opacity: 0, y: 6, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.85 }}
-            transition={{ duration: 0.18 }}
-            className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+            exit={{ opacity: 0, y: 4, scale: 0.92 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute -top-10 left-1/2 -translate-x-1/2 pointer-events-none z-50"
           >
-            <span
-              className="
-                block px-2.5 py-1 rounded-lg text-[9px] font-mono font-bold tracking-widest uppercase
-                bg-black/85 dark:bg-white/10 text-white backdrop-blur-sm
-                border border-white/15 shadow-lg whitespace-nowrap
-              "
-            >
+            <div className="bg-black/80 dark:bg-white/90 text-white dark:text-black rounded-full px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.25em] whitespace-nowrap backdrop-blur-sm">
               {item.name}
-            </span>
-            {/* Caret */}
-            <span className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black/85 dark:bg-white/10 rotate-45 border-r border-b border-white/15" />
+            </div>
+            <div className="mx-auto mt-0.5 w-1 h-1 bg-black/80 dark:bg-white/90 rotate-45 rounded-[1px]" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Active glow that slides via layoutId */}
-      {isActive && (
-        <motion.div
-          layoutId="navGlow"
-          className="absolute inset-0 rounded-xl bg-blue-500/25 dark:bg-cyan-400/20"
-          style={{ filter: "blur(6px)" }}
-          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-        />
-      )}
-
-      <motion.a
-        ref={ref}
-        href={item.link}
-        onClick={handleClick}
-        whileHover={{ scale: 1.22, y: -3 }}
-        whileTap={{ scale: 0.88 }}
-        transition={{ type: "spring", stiffness: 400, damping: 20 }}
-        className={cn(
-          "relative flex items-center justify-center w-9 h-9 rounded-xl overflow-hidden",
-          "transition-colors duration-200 select-none",
-          isActive
-            ? "text-blue-600 dark:text-cyan-400"
-            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-        )}
-      >
-        {item.icon}
-
-        {/* Click ripple */}
-        {ripples.map((r) => (
-          <span
-            key={r.id}
-            className="absolute rounded-full bg-blue-400/40 dark:bg-cyan-400/30 animate-ripple pointer-events-none"
-            style={{ left: r.x, top: r.y, width: 6, height: 6, marginLeft: -3, marginTop: -3 }}
-          />
-        ))}
-      </motion.a>
-
-      {/* Active dot */}
-      {isActive && (
-        <motion.div
-          layoutId="navDot"
-          className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-500 dark:bg-cyan-400"
-          animate={{ opacity: [1, 0.4, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
+      {isActive ? (
+        /* ── active: inner lozenge (slides via layoutId) ── */
+        <motion.a
+          href={item.link}
+          layoutId="oneUiLozenge"
+          className="flex items-center gap-2 rounded-full px-3.5 py-2
+            bg-black/[0.08] dark:bg-white/[0.14]
+            border border-black/[0.06] dark:border-white/[0.1]
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+          transition={{ type: "spring", stiffness: 420, damping: 30 }}
+        >
+          <span className="text-black dark:text-white [&>svg]:w-4 [&>svg]:h-4">
+            {item.icon}
+          </span>
+          <motion.span
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: "auto" }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="font-mono text-[9px] uppercase tracking-[0.22em] text-black dark:text-white whitespace-nowrap overflow-hidden"
+          >
+            {item.name}
+          </motion.span>
+        </motion.a>
+      ) : (
+        /* ── inactive: icon only ── */
+        <motion.a
+          href={item.link}
+          className="flex items-center justify-center w-9 h-9 rounded-full
+            text-black/40 dark:text-white/35
+            hover:text-black/75 dark:hover:text-white/75
+            hover:bg-black/[0.05] dark:hover:bg-white/[0.06]
+            transition-colors duration-150 [&>svg]:w-4 [&>svg]:h-4"
+          whileTap={{ scale: 0.85 }}
+        >
+          {item.icon}
+        </motion.a>
       )}
     </div>
   );
 };
 
-/* ── Main component ──────────────────────────────────────────── */
+/* ═══════════════════════════════════════
+   FLOATING NAV
+═══════════════════════════════════════ */
 export const FloatingNav = ({ navItems, className }: any) => {
-  const [time, setTime] = useState("00:00:00");
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState<string>("");
-  const [beats, setBeats] = useState(false);
+  const [time, setTime]           = useState("00:00:00");
+  const [scrollPct, setScrollPct] = useState(0);
+  const [active, setActive]       = useState("");
+  const [visible, setVisible]     = useState(true);
+  const [lastY, setLastY]         = useState(0);
 
-  const messages = [
-    "SYSTEM_READY",
-    "CODE.DEBUG.REPEAT",
-    "SCALING_DREAMS",
-    "DEBUG_MODE_ON",
-  ];
-
-  /* Clock */
+  /* clock */
   useEffect(() => {
-    const t = setInterval(() => {
-      setTime(new Date().toLocaleTimeString([], { hour12: false }));
-    }, 1000);
-    return () => clearInterval(t);
+    const tick = () =>
+      setTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit", minute: "2-digit", second: "2-digit",
+          hour12: false, timeZone: "Asia/Kolkata",
+        })
+      );
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
 
-  /* Message rotation */
-  useEffect(() => {
-    const t = setInterval(() => {
-      setMessageIndex((p) => (p + 1) % messages.length);
-    }, 4000);
-    return () => clearInterval(t);
-  }, []);
 
-  /* Heartbeat pulse every 2s */
-  useEffect(() => {
-    const t = setInterval(() => {
-      setBeats(true);
-      setTimeout(() => setBeats(false), 300);
-    }, 2000);
-    return () => clearInterval(t);
-  }, []);
-
-  /* Scroll progress */
+  /* scroll: progress + hide-on-scroll-down */
   useEffect(() => {
     const onScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(total > 0 ? window.scrollY / total : 0);
+      setScrollPct(total > 0 ? window.scrollY / total : 0);
+      setVisible(window.scrollY < lastY || window.scrollY < 80);
+      setLastY(window.scrollY);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [lastY]);
 
-  /* Active section via IntersectionObserver */
+  /* active section */
   useEffect(() => {
     if (!navItems?.length) return;
-    const observers: IntersectionObserver[] = [];
+    const obs: IntersectionObserver[] = [];
     navItems.forEach((item: any) => {
-      const id = item.link.replace("#", "");
-      const el = document.getElementById(id);
+      const el = document.getElementById(item.link.replace("#", ""));
       if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { threshold: 0.35, rootMargin: "-10% 0px -10% 0px" }
+      const o = new IntersectionObserver(
+        ([e]) => { if (e.isIntersecting) setActive(item.link.replace("#", "")); },
+        { threshold: 0.3, rootMargin: "-10% 0px -10% 0px" }
       );
-      obs.observe(el);
-      observers.push(obs);
+      o.observe(el);
+      obs.push(o);
     });
-    return () => observers.forEach((o) => o.disconnect());
+    return () => obs.forEach((o) => o.disconnect());
   }, [navItems]);
 
   return (
     <motion.div
       initial={{ y: 120, opacity: 0, x: "-50%" }}
-      animate={{ y: 0, opacity: 1, x: "-50%" }}
-      transition={{ type: "spring", stiffness: 180, damping: 22, delay: 0.6 }}
-      className={cn(
-        "fixed bottom-8 left-1/2 z-[5000]",
-        "flex items-center gap-3 px-4 py-2.5 rounded-2xl",
-        // Glass shell
-        "bg-white/25 dark:bg-black/35 backdrop-blur-2xl",
-        "border border-white/35 dark:border-white/10",
-        "shadow-[0_8px_40px_rgba(31,38,135,0.18),0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.7)]",
-        className
-      )}
+      animate={{ y: visible ? 0 : 100, opacity: visible ? 1 : 0, x: "-50%" }}
+      transition={{ type: "spring", stiffness: 200, damping: 26, delay: visible ? 0 : 0 }}
+      style={{ bottom: "1.75rem", left: "50%" }}
+      className={cn("fixed z-[5000]", className)}
     >
-      {/* ── Scroll progress line ── */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl overflow-hidden">
-        <motion.div
-          className="h-full origin-left bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400"
-          style={{ scaleX: scrollProgress }}
-        />
-      </div>
-
-      {/* ── Top-glass shimmer ── */}
-      <div className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
-      </div>
-
-      {/* ── Status: pulse + clock ── */}
-      <div className="flex items-center gap-2 pr-3 border-r border-black/10 dark:border-white/10 shrink-0">
-        <div className="relative flex h-2.5 w-2.5">
-          <motion.span
-            animate={{ scale: beats ? 2.2 : 1, opacity: beats ? 0 : 0.6 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 rounded-full bg-emerald-400"
-          />
-          <span className="relative flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+      {/* ── Outer pill shell ── */}
+      <div
+        className="relative flex items-center gap-1 px-3 py-2 rounded-full
+          bg-white/[0.55] dark:bg-neutral-900/75
+          backdrop-blur-2xl
+          border border-white/70 dark:border-white/[0.10]
+          shadow-[0_4px_24px_rgba(0,0,0,0.10),0_1px_0_rgba(255,255,255,0.9)_inset,0_-1px_0_rgba(0,0,0,0.04)_inset]
+          dark:shadow-[0_4px_32px_rgba(0,0,0,0.65),0_1px_0_rgba(255,255,255,0.06)_inset]"
+      >
+        {/* inner top-shine */}
+        <div className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
+          <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-white/30 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 dark:from-white/[0.04] to-transparent" />
         </div>
-        <span className="text-[10px] font-mono font-bold text-slate-600 dark:text-slate-300 tabular-nums tracking-tight">
-          {time}
-        </span>
-      </div>
 
-      {/* ── Nav items ── */}
-      <div className="flex items-center gap-0.5">
-        {navItems.map((item: any) => (
-          <NavItem
-            key={item.link}
-            item={item}
-            isActive={activeSection === item.link.replace("#", "")}
-          />
-        ))}
-      </div>
+        {/* ── Status + Clock ── */}
+        <div className="flex items-center gap-2 pl-1 pr-2.5 border-r border-black/[0.07] dark:border-white/[0.08] shrink-0">
+          <span className="relative flex h-1.5 w-1.5 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          </span>
+          <span className="font-mono text-[10px] tabular-nums tracking-tight text-black/60 dark:text-white/60 leading-none">
+            {time}
+          </span>
+        </div>
 
-      {/* ── Message ticker ── */}
-      <div className="px-2.5 border-l border-r border-black/10 dark:border-white/10 min-w-[118px] overflow-hidden shrink-0">
-        <AnimatePresence mode="wait">
+        {/* ── Nav items ── */}
+        <div className="flex items-center gap-0.5 px-1">
+          {navItems.map((item: any) => (
+            <NavPill
+              key={item.link}
+              item={item}
+              isActive={active === item.link.replace("#", "")}
+            />
+          ))}
+        </div>
+
+        {/* ── Scroll arc ── */}
+        <div className="absolute bottom-0 left-8 right-8 h-[1.5px] rounded-full overflow-hidden">
           <motion.div
-            key={messageIndex}
-            initial={{ y: 14, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -14, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="text-[9px] font-mono font-bold tracking-widest"
-          >
-            <GlitchText text={messages[messageIndex]} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+            className="h-full origin-left rounded-full"
+            style={{
+              scaleX: scrollPct,
+              background: "linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.35))",
+            }}
+          />
+        </div>
 
-      {/* ── Theme toggle ── */}
-      <div className="shrink-0">
-        <ToggleDarkModeButton />
+        {/* ── Theme toggle ── */}
+        <div className="shrink-0 pl-1 pr-0.5">
+          <ToggleDarkModeButton />
+        </div>
       </div>
     </motion.div>
   );

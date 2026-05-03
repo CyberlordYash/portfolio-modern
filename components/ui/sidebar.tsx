@@ -76,19 +76,17 @@ export const DesktopSidebar = ({
     <motion.div
       className={cn(
         "h-full hidden md:flex md:flex-col shrink-0 relative overflow-visible",
-        "bg-slate-50 dark:bg-[#030712]",
+        "bg-[#ffffff] dark:bg-[#090909]",
+        "border-r border-black/10 dark:border-white/10",
         className,
       )}
-      animate={{ width: animate ? (open ? "260px" : "72px") : "260px" }}
+      animate={{ width: animate ? (open ? "260px" : "64px") : "260px" }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       {...props}
     >
-      {/* Divider line */}
-      <div className="absolute right-0 top-[8%] bottom-[8%] w-px bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent" />
-
-      {/* Collapsed scan-line shimmer */}
+      {/* Subtle scan shimmer when collapsed */}
       <AnimatePresence>
         {!open && (
           <motion.div
@@ -100,12 +98,12 @@ export const DesktopSidebar = ({
             <motion.div
               animate={{ y: ["-100%", "200%"] }}
               transition={{
-                duration: 3.5,
+                duration: 4,
                 repeat: Infinity,
                 ease: "linear",
-                repeatDelay: 2,
+                repeatDelay: 3,
               }}
-              className="absolute inset-x-0 h-16 bg-gradient-to-b from-transparent via-indigo-500/[0.06] to-transparent"
+              className="absolute inset-x-0 h-20 bg-gradient-to-b from-transparent via-black/[0.03] dark:via-white/[0.03] to-transparent"
             />
           </motion.div>
         )}
@@ -133,23 +131,23 @@ export const MobileSidebar = ({
 
   return (
     <>
-      {/* ── Floating hamburger button (mobile only) ── */}
+      {/* ── Floating hamburger (mobile only) ── */}
       <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.4, type: "spring", stiffness: 260, damping: 20 }}
         onClick={() => setOpen(true)}
-        whileTap={{ scale: 0.88 }}
-        className="md:hidden fixed top-5 left-5 z-[500] flex h-10 w-10 items-center justify-center rounded-2xl
-          bg-white/30 dark:bg-black/30 backdrop-blur-xl
-          border border-white/40 dark:border-white/10
-          shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)]
-          transition-colors hover:border-indigo-400/50 hover:bg-white/50 dark:hover:bg-indigo-500/10"
+        whileTap={{ scale: 0.9 }}
+        className="md:hidden fixed top-4 left-4 z-[500] flex h-9 w-9 items-center justify-center
+          bg-[#ffffff] dark:bg-[#090909]
+          border border-black/20 dark:border-white/20
+          text-black dark:text-white
+          transition-colors hover:bg-black/5 dark:hover:bg-white/5"
       >
-        <IconMenu2 size={18} className="text-slate-700 dark:text-slate-200" />
+        <IconMenu2 size={16} />
       </motion.button>
 
-      {/* ── Drawer — portalled to body to escape any containing-block trap ── */}
+      {/* ── Drawer – portalled to body ── */}
       {mounted &&
         createPortal(
           <AnimatePresence>
@@ -162,7 +160,7 @@ export const MobileSidebar = ({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setOpen(false)}
-                  className="fixed inset-0 z-[800] bg-black/60 backdrop-blur-sm"
+                  className="fixed inset-0 z-[800] bg-black/50 backdrop-blur-sm"
                 />
 
                 {/* Panel */}
@@ -174,27 +172,22 @@ export const MobileSidebar = ({
                   className={cn(
                     "fixed left-0 top-0 h-full w-[78%] max-w-[300px] z-[900]",
                     "flex flex-col",
-                    "bg-slate-50 dark:bg-[#080c14]",
-                    "border-r border-slate-200/70 dark:border-white/[0.07]",
-                    "shadow-[4px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[4px_0_40px_rgba(0,0,0,0.6)]",
+                    "bg-[#ffffff] dark:bg-[#090909]",
+                    "border-r border-black/15 dark:border-white/15",
                     className,
                   )}
                 >
-                  {/* Top accent bar */}
-                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500" />
-
                   {/* Header */}
-                  <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600">
-                      menu
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-black/10 dark:border-white/10">
+                    <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/35 dark:text-white/35">
+                      NAVIGATION
                     </span>
-                    <motion.button
+                    <button
                       onClick={() => setOpen(false)}
-                      whileTap={{ scale: 0.88 }}
-                      className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-white/[0.08] dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 transition-colors hover:border-rose-400/50 hover:text-rose-500 dark:hover:text-rose-400"
+                      className="flex h-7 w-7 items-center justify-center border border-black/15 dark:border-white/15 text-black/50 dark:text-white/50 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white transition-colors"
                     >
-                      <IconX size={14} />
-                    </motion.button>
+                      <IconX size={12} />
+                    </button>
                   </div>
 
                   {/* Content */}
@@ -205,12 +198,12 @@ export const MobileSidebar = ({
                     {React.Children.map(children, (child, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -16 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
-                          delay: 0.05 + i * 0.07,
+                          delay: 0.05 + i * 0.06,
                           type: "spring",
-                          stiffness: 280,
+                          stiffness: 300,
                           damping: 26,
                         }}
                         className="flex flex-col"
@@ -245,7 +238,6 @@ export const SidebarLink = ({
   const [tooltipY, setTooltipY] = useState(0);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  /* Active section tracking */
   useEffect(() => {
     const id = link.href.replace("#", "");
     if (!id) return;
@@ -273,76 +265,59 @@ export const SidebarLink = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setHovered(false)}
         className={cn(
-          "group/link relative flex items-center gap-3 rounded-xl px-3 py-2.5",
-          "transition-all duration-200 overflow-hidden",
-          // Active state
+          "group/link relative flex items-center gap-3 px-3 py-2.5",
+          "transition-all duration-150 overflow-hidden",
           isActive
-            ? "bg-gradient-to-r from-indigo-500/12 to-transparent dark:from-indigo-500/15 dark:to-transparent text-indigo-600 dark:text-indigo-400"
-            : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white",
+            ? "text-black dark:text-white bg-black/[0.04] dark:bg-white/[0.04]"
+            : "text-black/50 dark:text-white/45 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] hover:text-black dark:hover:text-white",
           className,
         )}
       >
         {/* Active left bar */}
         <motion.div
-          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-gradient-to-b from-indigo-500 to-violet-500"
+          className="absolute left-0 top-[20%] bottom-[20%] w-[2px] bg-black dark:bg-white"
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         />
 
-        {/* Active background glow */}
-        {isActive && (
-          <motion.div
-            layoutId="sidebarActiveGlow"
-            className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-transparent rounded-xl"
-            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-          />
-        )}
-
         {/* Icon */}
-        <motion.div
-          className="relative z-10 shrink-0"
-          whileHover={{ scale: 1.15, rotate: -4 }}
-          transition={{ type: "spring", stiffness: 400, damping: 18 }}
-        >
+        <div className="relative z-10 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-black dark:group-hover/link:text-white transition-colors">
           {link.icon}
-        </motion.div>
+        </div>
 
         {/* Label */}
         <motion.span
           animate={{
-            display: animate
-              ? open
-                ? "inline-block"
-                : "none"
-              : "inline-block",
+            display: animate ? (open ? "inline-block" : "none") : "inline-block",
             opacity: animate ? (open ? 1 : 0) : 1,
             x: animate ? (open ? 0 : -4) : 0,
           }}
-          transition={{ duration: 0.18 }}
-          className="relative z-10 text-sm font-medium whitespace-nowrap tracking-tight"
+          transition={{ duration: 0.15 }}
+          className="relative z-10 font-mono text-[9px] uppercase tracking-[0.3em] whitespace-nowrap"
         >
           {link.label}
         </motion.span>
       </a>
 
-      {/* Collapsed tooltip — rendered at fixed position to escape any clip */}
+      {/* Collapsed tooltip */}
       {animate && !open && hovered && (
         <div
-          style={{ top: tooltipY, left: 80 }}
+          style={{ top: tooltipY, left: 76 }}
           className="fixed z-[9999] -translate-y-1/2 pointer-events-none"
         >
           <motion.div
-            initial={{ opacity: 0, x: -6, scale: 0.9 }}
+            initial={{ opacity: 0, x: -8, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono font-semibold whitespace-nowrap
-              bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-sm
-              border border-white/10 shadow-xl"
+            transition={{ duration: 0.12 }}
+            className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.25em] whitespace-nowrap
+              bg-[#ffffff] dark:bg-[#090909] text-black dark:text-white
+              border border-black/15 dark:border-white/15
+              shadow-lg"
           >
             {isActive && (
-              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 shrink-0" />
+              <div className="h-1.5 w-1.5 bg-black dark:bg-white shrink-0" />
             )}
             {link.label}
           </motion.div>

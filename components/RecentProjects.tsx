@@ -1,443 +1,476 @@
 "use client";
-
 import React from "react";
 import { projects } from "@/data";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Github, Globe, Star } from "lucide-react";
+import { ArrowUpRight, Github, Globe } from "lucide-react";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  visible: (delay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
-  }),
-};
+/* ── small "+" cross marker (from Hero) ── */
+const Cross = ({ style }: { style?: React.CSSProperties }) => (
+  <div className="absolute pointer-events-none text-black dark:text-white opacity-15" style={style}>
+    <div className="relative w-5 h-5">
+      <div className="absolute top-1/2 left-0 right-0 h-px bg-current" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-current" />
+    </div>
+  </div>
+);
 
-/* ── Per-project visual DNA ── */
-const projectMeta: Record<
-  number,
-  {
-    cardGrad: string;
-    blob1: string;
-    blob2: string;
-    badge: string;
-    glowShadow: string;
-    borderColor: string;
-    topLine: string;
-    category: string;
-    num: string;
-    featured?: boolean;
-  }
-> = {
+/* ══════════════════════════════════════
+   PER-PROJECT COLOUR DNA
+══════════════════════════════════════ */
+const meta: Record<number, {
+  num: string; category: string;
+  accent: string;        // text color (both modes)
+  border: string;        // border
+  borderDark: string;
+  badgeBg: string;       // category badge bg
+  badgeBgDark: string;
+  headerBg: string;      // image zone bg (light)
+  headerBgDark: string;  // image zone bg (dark)
+  strip: string;         // top strip gradient
+  glow: string;          // hover glow (dark only)
+  ctaFrom: string;
+  ctaTo: string;
+}> = {
+  9: {
+    num: "01", category: "HFT · TRADING",
+    accent: "text-cyan-600 dark:text-cyan-400",
+    border: "border-cyan-200", borderDark: "dark:border-cyan-500/20",
+    badgeBg: "bg-cyan-100 text-cyan-700", badgeBgDark: "dark:bg-cyan-950/80 dark:text-cyan-300",
+    headerBg: "bg-cyan-50", headerBgDark: "dark:bg-cyan-950/40",
+    strip: "from-cyan-500 to-teal-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(6,182,212,0.18)]",
+    ctaFrom: "from-cyan-500", ctaTo: "to-teal-400",
+  },
   8: {
-    cardGrad: "from-[#021a0e] via-[#062918] to-[#040f1a]",
-    blob1: "bg-emerald-500/35",
-    blob2: "bg-teal-400/25",
-    badge: "from-emerald-400 to-teal-500",
-    glowShadow:
-      "hover:shadow-[0_0_0_1px_rgba(16,185,129,0.25),0_16px_70px_rgba(16,185,129,0.35)]",
-    borderColor: "border-emerald-500/20",
-    topLine: "via-emerald-400/70",
-    category: "Security",
-    num: "01",
-    featured: true,
+    num: "02", category: "SECURITY",
+    accent: "text-rose-600 dark:text-rose-400",
+    border: "border-rose-200", borderDark: "dark:border-rose-500/20",
+    badgeBg: "bg-rose-100 text-rose-700", badgeBgDark: "dark:bg-rose-950/80 dark:text-rose-300",
+    headerBg: "bg-rose-50", headerBgDark: "dark:bg-rose-950/40",
+    strip: "from-rose-500 to-pink-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(244,63,94,0.18)]",
+    ctaFrom: "from-rose-500", ctaTo: "to-pink-400",
   },
   1: {
-    cardGrad: "from-[#020d28] via-[#061840] to-[#030c1e]",
-    blob1: "bg-blue-500/30",
-    blob2: "bg-cyan-400/20",
-    badge: "from-blue-400 to-cyan-500",
-    glowShadow:
-      "hover:shadow-[0_0_0_1px_rgba(59,130,246,0.25),0_16px_70px_rgba(59,130,246,0.35)]",
-    borderColor: "border-blue-500/20",
-    topLine: "via-blue-400/70",
-    category: "Fullstack",
-    num: "02",
+    num: "03", category: "FULLSTACK",
+    accent: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
+    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
+    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
+    strip: "from-blue-500 to-indigo-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.18)]",
+    ctaFrom: "from-blue-500", ctaTo: "to-indigo-400",
   },
   2: {
-    cardGrad: "from-[#0f0430] via-[#180842] to-[#080318]",
-    blob1: "bg-violet-500/30",
-    blob2: "bg-purple-400/20",
-    badge: "from-violet-400 to-fuchsia-500",
-    glowShadow:
-      "hover:shadow-[0_0_0_1px_rgba(139,92,246,0.25),0_16px_70px_rgba(139,92,246,0.35)]",
-    borderColor: "border-violet-500/20",
-    topLine: "via-violet-400/70",
-    category: "Real-time",
-    num: "03",
+    num: "04", category: "REAL-TIME",
+    accent: "text-violet-600 dark:text-violet-400",
+    border: "border-violet-200", borderDark: "dark:border-violet-500/20",
+    badgeBg: "bg-violet-100 text-violet-700", badgeBgDark: "dark:bg-violet-950/80 dark:text-violet-300",
+    headerBg: "bg-violet-50", headerBgDark: "dark:bg-violet-950/40",
+    strip: "from-violet-500 to-purple-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(139,92,246,0.18)]",
+    ctaFrom: "from-violet-500", ctaTo: "to-purple-400",
   },
   3: {
-    cardGrad: "from-[#1e0a00] via-[#2e1200] to-[#140800]",
-    blob1: "bg-amber-500/30",
-    blob2: "bg-orange-400/20",
-    badge: "from-amber-400 to-orange-500",
-    glowShadow:
-      "hover:shadow-[0_0_0_1px_rgba(245,158,11,0.25),0_16px_70px_rgba(245,158,11,0.35)]",
-    borderColor: "border-amber-500/20",
-    topLine: "via-amber-400/70",
-    category: "E-commerce",
-    num: "04",
+    num: "05", category: "E-COMMERCE",
+    accent: "text-amber-600 dark:text-amber-400",
+    border: "border-amber-200", borderDark: "dark:border-amber-500/20",
+    badgeBg: "bg-amber-100 text-amber-700", badgeBgDark: "dark:bg-amber-950/80 dark:text-amber-300",
+    headerBg: "bg-amber-50", headerBgDark: "dark:bg-amber-950/40",
+    strip: "from-amber-500 to-orange-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(245,158,11,0.18)]",
+    ctaFrom: "from-amber-500", ctaTo: "to-orange-400",
   },
   4: {
-    cardGrad: "from-[#1e0412] via-[#2e0820] to-[#14030e]",
-    blob1: "bg-rose-500/30",
-    blob2: "bg-pink-400/20",
-    badge: "from-rose-400 to-pink-500",
-    glowShadow:
-      "hover:shadow-[0_0_0_1px_rgba(244,63,94,0.25),0_16px_70px_rgba(244,63,94,0.35)]",
-    borderColor: "border-rose-500/20",
-    topLine: "via-rose-400/70",
-    category: "AI",
-    num: "05",
+    num: "06", category: "AI · NLP",
+    accent: "text-emerald-600 dark:text-emerald-400",
+    border: "border-emerald-200", borderDark: "dark:border-emerald-500/20",
+    badgeBg: "bg-emerald-100 text-emerald-700", badgeBgDark: "dark:bg-emerald-950/80 dark:text-emerald-300",
+    headerBg: "bg-emerald-50", headerBgDark: "dark:bg-emerald-950/40",
+    strip: "from-emerald-500 to-green-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(16,185,129,0.18)]",
+    ctaFrom: "from-emerald-500", ctaTo: "to-green-400",
   },
 };
 
-const isGithub = (link: string) => link.includes("github.com");
+const isGithub = (l: string) => l.includes("github.com");
 
-/* ─────────────────────────────────────────
-   Featured Card — full-width horizontal
-───────────────────────────────────────── */
-const FeaturedCard = ({
-  id,
-  title,
-  des,
-  img,
-  iconLists,
-  link,
-}: (typeof projects)[0]) => {
-  const m = projectMeta[id] ?? projectMeta[4];
+/* ── "IN PROGRESS" or link badge ── */
+const LinkBadge = ({ link }: { link: string }) => {
+  if (!link) return (
+    <span className="flex items-center gap-1.5 border border-black/15 dark:border-white/15 px-2.5 py-1 font-mono text-[7px] uppercase tracking-widest text-black/40 dark:text-white/40">
+      IN PROGRESS
+    </span>
+  );
   return (
-    <motion.a
+    <a
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      variants={fadeUp}
-      custom={0.1}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
-      whileHover={{ y: -5, transition: { duration: 0.25, ease: "easeOut" } }}
-      className={`group relative flex min-h-[360px] flex-col overflow-hidden rounded-[2.5rem] border ${m.borderColor} bg-gradient-to-br ${m.cardGrad} transition-all duration-500 ${m.glowShadow} md:flex-row`}
+      onClick={e => e.stopPropagation()}
+      className="flex items-center gap-1.5 border border-black/15 dark:border-white/15 px-2.5 py-1 font-mono text-[7px] uppercase tracking-widest text-black/55 dark:text-white/55 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white transition-colors"
     >
-      {/* Top iridescent accent line */}
-      <div
-        className={`absolute inset-x-0 top-0 z-20 h-[2px] bg-gradient-to-r from-transparent ${m.topLine} to-transparent`}
-      />
-
-      {/* Ambient blobs */}
-      <div
-        className={`pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full blur-[110px] ${m.blob1} transition-all duration-700 group-hover:scale-[1.3]`}
-      />
-      <div
-        className={`pointer-events-none absolute -bottom-16 right-16 h-60 w-60 rounded-full blur-[90px] ${m.blob2} transition-all duration-700 group-hover:scale-[1.2]`}
-      />
-
-      {/* Big translucent project number */}
-      <div className="pointer-events-none absolute bottom-6 right-8 hidden select-none font-black leading-none text-white/[0.04] md:block"
-           style={{ fontSize: "180px" }}>
-        {m.num}
-      </div>
-
-      {/* ── Image panel ── */}
-      <div className="relative h-64 overflow-hidden md:h-auto md:w-[46%] md:shrink-0">
-        <img
-          src={img}
-          alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        {/* Directional blend into card */}
-        <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent to-black/60 md:block" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:hidden" />
-
-        {/* Featured badge */}
-        <div className="absolute left-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-3 py-1.5 shadow-lg shadow-yellow-500/40">
-          <Star size={10} className="fill-black text-black" />
-          <span className="font-mono text-[8px] font-black uppercase tracking-widest text-black">
-            Featured
-          </span>
-        </div>
-
-        {/* Link type */}
-        <div className="absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-2.5 py-1.5 backdrop-blur-md">
-          {isGithub(link) ? (
-            <Github size={10} className="text-white/90" />
-          ) : (
-            <Globe size={10} className="text-white/90" />
-          )}
-          <span className="font-mono text-[8px] text-white/80">
-            {isGithub(link) ? "GitHub" : "Live"}
-          </span>
-        </div>
-      </div>
-
-      {/* ── Content panel ── */}
-      <div className="relative z-10 flex flex-1 flex-col justify-between p-8 md:p-12">
-        <div>
-          {/* Category chip */}
-          <span
-            className={`mb-5 inline-block rounded-full bg-gradient-to-r ${m.badge} px-3.5 py-1.5 font-mono text-[9px] font-black uppercase tracking-widest text-white shadow-lg`}
-          >
-            {m.category}
-          </span>
-
-          {/* Subtle index */}
-          <p className="mb-1 font-mono text-[8px] uppercase tracking-[0.4em] text-white/20">
-            Project_{m.num}
-          </p>
-
-          {/* Title */}
-          <h3 className="mb-4 text-3xl font-black tracking-tight text-white md:text-[2.6rem] md:leading-tight">
-            {title}
-          </h3>
-
-          <p className="max-w-lg text-sm leading-relaxed text-white/55">
-            {des}
-          </p>
-        </div>
-
-        {/* Footer row */}
-        <div className="mt-8 flex items-center justify-between">
-          {/* Tech icon stack */}
-          <div className="flex items-center">
-            {iconLists.map((icon, idx) => (
-              <div
-                key={idx}
-                style={{ zIndex: iconLists.length - idx }}
-                className="-ml-2.5 flex h-10 w-10 first:ml-0 items-center justify-center rounded-full border border-white/10 bg-white/8 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1.5"
-              >
-                {icon}
-              </div>
-            ))}
-          </div>
-
-          {/* CTA button */}
-          <div
-            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${m.badge} px-6 py-2.5 font-mono text-[10px] font-black uppercase tracking-wider text-white shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl`}
-          >
-            View Project
-            <ArrowUpRight
-              size={13}
-              className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
-          </div>
-        </div>
-      </div>
-    </motion.a>
+      {isGithub(link) ? <Github size={9} /> : <Globe size={9} />}
+      {isGithub(link) ? "GITHUB" : "LIVE"}
+    </a>
   );
 };
 
-/* ─────────────────────────────────────────
-   Regular Project Card
-───────────────────────────────────────── */
-const ProjectCard = ({
-  id,
-  title,
-  des,
-  img,
-  iconLists,
-  link,
-  delay = 0,
-}: (typeof projects)[0] & { delay?: number }) => {
-  const m = projectMeta[id] ?? projectMeta[4];
+/* ── blurry-bg centred image ── */
+const BlurImage = ({ src, alt, className = "" }: { src: string; alt: string; className?: string }) => (
+  <div className={`relative overflow-hidden ${className}`}>
+    <img src={src} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-30 dark:opacity-20" />
+    <img src={src} alt={alt} className="relative z-10 h-full w-full object-contain p-6" />
+  </div>
+);
+
+/* ══════════════════════════════════════
+   FEATURED CARD  (col-span-2)
+══════════════════════════════════════ */
+const FeaturedCard = ({ id, title, des, img, iconLists, link }: (typeof projects)[0]) => {
+  const m = meta[id] ?? meta[4];
+  const href = link || "#";
+
   return (
-    <motion.a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      variants={fadeUp}
-      custom={delay}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
-      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
-      className={`group relative flex flex-col overflow-hidden rounded-[2rem] border ${m.borderColor} bg-gradient-to-br ${m.cardGrad} transition-all duration-500 ${m.glowShadow}`}
+    <motion.div
+      onClick={() => { if (link) window.open(href, "_blank"); }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className={`group relative flex flex-col md:flex-row overflow-hidden border ${m.border} ${m.borderDark}
+        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} min-h-[360px] ${link ? "cursor-pointer" : "cursor-default"}`}
     >
-      {/* Top accent line */}
-      <div
-        className={`absolute inset-x-0 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${m.topLine} to-transparent`}
-      />
+      {/* coloured top strip */}
+      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
 
-      {/* Blobs */}
-      <div
-        className={`pointer-events-none absolute -right-14 -top-14 h-52 w-52 rounded-full blur-[80px] ${m.blob1} transition-all duration-700 group-hover:scale-[1.3]`}
-      />
-      <div
-        className={`pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full blur-[60px] ${m.blob2} opacity-70`}
-      />
+      {/* ── left image zone ── */}
+      <div className={`relative md:w-[45%] shrink-0 h-56 md:h-auto overflow-hidden ${m.headerBg} ${m.headerBgDark}`}>
+        <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-25 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
+        <img src={img} alt={title} className="relative z-10 h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.04]" />
+        {/* right blend to card bg */}
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-transparent to-white dark:to-[#111111]" />
+        <div className="absolute inset-0 md:hidden bg-gradient-to-t from-white dark:from-[#111111] via-transparent to-transparent" />
 
-      {/* Number watermark */}
-      <div className="pointer-events-none absolute bottom-4 right-4 select-none font-black leading-none text-white/[0.04]"
-           style={{ fontSize: "90px" }}>
-        {m.num}
+        {/* number watermark */}
+        <div
+          className="absolute -bottom-4 -left-3 font-black leading-none select-none pointer-events-none text-black/[0.05] dark:text-white/[0.06]"
+          style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "9rem", letterSpacing: "-0.05em" }}
+        >
+          {m.num}
+        </div>
+
+        {/* FEATURED badge */}
+        <div className="absolute top-4 left-4 z-20">
+          <span className={`${m.badgeBg} ${m.badgeBgDark} px-3 py-1 font-mono text-[8px] font-black uppercase tracking-widest`}>
+            ★ FEATURED
+          </span>
+        </div>
       </div>
 
-      {/* Image */}
-      <div className="relative h-48 overflow-hidden">
-        <img
-          src={img}
-          alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+      {/* ── right content zone ── */}
+      <div className="relative z-10 flex flex-1 flex-col justify-between p-7 md:p-10">
+        {/* corner cross */}
+        <Cross style={{ top: 12, right: 12 }} />
 
-        {/* Category chip over image */}
-        <div className="absolute bottom-3 left-3 z-10">
-          <span
-            className={`rounded-full bg-gradient-to-r ${m.badge} px-2.5 py-1 font-mono text-[8px] font-black uppercase tracking-widest text-white shadow-lg`}
+        {/* category + index */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.accent}`}>{m.num}./</span>
+            <span className={`border border-black/12 dark:border-white/12 px-2.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.25em] ${m.accent}`}>{m.category}</span>
+            <div className="ml-auto">
+              <LinkBadge link={link} />
+            </div>
+          </div>
+
+          {/* title */}
+          <h3
+            className="font-bold uppercase leading-tight text-black dark:text-white mb-4"
+            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1rem,2vw,1.4rem)", letterSpacing: "0.01em" }}
           >
+            {title}
+          </h3>
+
+          {/* thin rule */}
+          <div className="h-px bg-black/8 dark:bg-white/8 mb-4" />
+
+          {/* description */}
+          <p className="font-mono text-[11px] leading-relaxed text-black/55 dark:text-white/55 max-w-md mb-6">{des}</p>
+
+          {/* tech icons */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {iconLists.map((icon, i) => (
+              <div key={i} className={`flex h-9 w-9 items-center justify-center border ${m.border} ${m.borderDark} bg-black/[0.03] dark:bg-white/[0.04] transition-transform duration-300 group-hover:-translate-y-1.5`}>
+                <div className="scale-90">{icon}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-8 flex items-center justify-between">
+          <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/20 dark:text-white/20">
+            PROJECT_{m.num}
+          </span>
+          <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${m.strip} px-6 py-2.5 font-mono text-[10px] font-black uppercase tracking-wider text-white shadow-lg transition-all duration-300 group-hover:scale-105`}>
+            View Project
+            <ArrowUpRight size={12} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+/* ══════════════════════════════════════
+   MEDIUM CARD  (col-span-1)
+══════════════════════════════════════ */
+const MediumCard = ({ id, title, des, img, iconLists, link, delay = 0 }: (typeof projects)[0] & { delay?: number }) => {
+  const m = meta[id] ?? meta[4];
+  const href = link || "#";
+
+  return (
+    <motion.div
+      onClick={() => { if (link) window.open(href, "_blank"); }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`group relative flex flex-col overflow-hidden border ${m.border} ${m.borderDark}
+        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
+    >
+      {/* coloured top strip */}
+      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
+
+      {/* ── image zone ── */}
+      <div className={`relative overflow-hidden ${m.headerBg} ${m.headerBgDark}`} style={{ height: 190 }}>
+        {/* large number watermark */}
+        <div
+          className="absolute -bottom-6 -right-3 font-black leading-none select-none pointer-events-none text-black/[0.06] dark:text-white/[0.07]"
+          style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "8rem", letterSpacing: "-0.05em" }}
+        >
+          {m.num}
+        </div>
+
+        {/* left colour rule */}
+        <div className={`absolute top-0 left-0 w-[3px] h-full bg-gradient-to-b ${m.strip}`} />
+
+        {/* blurry bg + centred image */}
+        <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-xl opacity-20 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
+        <img src={img} alt={title} className="relative z-10 h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.06]" />
+
+        {/* badge top-left */}
+        <div className="absolute top-3 left-5 z-20">
+          <span className={`${m.badgeBg} ${m.badgeBgDark} px-2.5 py-1 font-mono text-[8px] font-black uppercase tracking-widest`}>
             {m.category}
           </span>
         </div>
-
-        {/* Link type badge */}
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-2 py-1.5 backdrop-blur-md">
-          {isGithub(link) ? (
-            <Github size={9} className="text-white/80" />
-          ) : (
-            <Globe size={9} className="text-white/80" />
-          )}
-          <span className="font-mono text-[7px] text-white/80">
-            {isGithub(link) ? "GitHub" : "Live"}
-          </span>
+        <div className="absolute top-3 right-4 z-20">
+          <LinkBadge link={link} />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-1 flex-col justify-between p-6">
+      {/* ── content ── */}
+      <div className="relative flex flex-1 flex-col justify-between p-5">
+        <Cross style={{ top: 8, right: 8 }} />
+
         <div>
-          <p className="mb-1 font-mono text-[7px] uppercase tracking-[0.4em] text-white/20">
-            Project_{m.num}
-          </p>
-          <h3 className="mb-2.5 text-[18px] font-bold leading-tight tracking-tight text-white">
+          <span className={`font-mono text-[7px] uppercase tracking-[0.35em] ${m.accent} opacity-80`}>{m.num}. / {m.category}</span>
+          <h3
+            className="mt-2 mb-2 font-semibold uppercase leading-tight text-black dark:text-white"
+            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.8rem,1.4vw,1rem)", letterSpacing: "0.02em" }}
+          >
             {title}
           </h3>
-          <p className="line-clamp-2 text-xs leading-relaxed text-white/55">
-            {des}
-          </p>
+          <div className="h-px bg-black/8 dark:bg-white/8 mb-2.5" />
+          <p className="font-mono text-[10px] leading-relaxed text-black/50 dark:text-white/50 line-clamp-2">{des}</p>
         </div>
 
-        <div className="mt-5 flex items-center justify-between">
-          {/* Tech stack */}
+        <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center">
-            {iconLists.map((icon, idx) => (
-              <div
-                key={idx}
-                style={{ zIndex: iconLists.length - idx }}
-                className="-ml-1.5 flex h-8 w-8 first:ml-0 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-md backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1"
-              >
+            {iconLists.map((icon, i) => (
+              <div key={i} className={`-ml-2 first:ml-0 flex h-7 w-7 items-center justify-center border ${m.border} ${m.borderDark} bg-black/[0.03] dark:bg-white/[0.03] transition-transform duration-200 group-hover:-translate-y-1`} style={{ zIndex: iconLists.length - i }}>
                 <div className="scale-75">{icon}</div>
               </div>
             ))}
           </div>
-
-          {/* CTA */}
-          <div
-            className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${m.badge} px-4 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl`}
-          >
-            View
-            <ArrowUpRight
-              size={10}
-              className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
+          <div className={`flex items-center gap-1.5 bg-gradient-to-r ${m.strip} px-4 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-md transition-all duration-200 group-hover:scale-105`}>
+            View <ArrowUpRight size={10} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   );
 };
 
-/* ─────────────────────────────────────────
-   Section
-───────────────────────────────────────── */
-const RecentProjects = () => {
-  const [featured, ...rest] = projects;
+/* ══════════════════════════════════════
+   WIDE CARD  (col-span-3, last row)
+══════════════════════════════════════ */
+const WideCard = ({ id, title, des, img, iconLists, link }: (typeof projects)[0]) => {
+  const m = meta[id] ?? meta[4];
+  const href = link || "#";
 
   return (
-    <section
-      id="projects"
-      className="relative w-full overflow-hidden py-20 bg-white dark:bg-[#020617] transition-colors duration-500 md:py-32"
+    <motion.div
+      onClick={() => { if (link) window.open(href, "_blank"); }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+      className={`group relative flex flex-col sm:flex-row overflow-hidden border ${m.border} ${m.borderDark}
+        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
     >
-      {/* Atmospheric section-level blobs */}
-      <div className="pointer-events-none absolute -left-40 top-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-violet-600/[0.07] to-transparent blur-[140px] dark:from-violet-600/[0.12]" />
-      <div className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-gradient-to-tl from-emerald-600/[0.07] to-transparent blur-[140px] dark:from-emerald-600/[0.12]" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-fuchsia-600/[0.04] to-cyan-600/[0.04] blur-[160px] dark:from-fuchsia-600/[0.07] dark:to-cyan-600/[0.07]" />
+      {/* top strip */}
+      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
+      {/* left bar on desktop */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b ${m.strip} hidden sm:block`} />
 
-      <div className="relative mx-auto max-w-[88vw] px-4 2xl:max-w-[1400px]">
+      {/* ── image panel ── */}
+      <div className={`relative sm:w-[260px] shrink-0 h-44 sm:h-auto overflow-hidden ${m.headerBg} ${m.headerBgDark}`}>
+        <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover blur-2xl scale-110 opacity-25 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
+        <img src={img} alt={title} className="relative z-10 h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.05]" />
+        <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-transparent to-white dark:to-[#111111]" />
+      </div>
 
-        {/* ── Section Header ── */}
-        <motion.div
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      {/* ── content ── */}
+      <div className="relative z-10 flex flex-1 flex-col justify-center px-7 py-6 sm:pl-8">
+        <Cross style={{ top: 12, right: 12 }} />
+
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <span className={`${m.badgeBg} ${m.badgeBgDark} px-3 py-1 font-mono text-[8px] font-black uppercase tracking-widest`}>{m.category}</span>
+          <LinkBadge link={link} />
+          <span className={`font-mono text-[7px] uppercase tracking-[0.3em] ${m.accent} opacity-70`}>{m.num}.</span>
+        </div>
+
+        <h3
+          className="font-semibold uppercase leading-tight text-black dark:text-white mb-2"
+          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.9rem,1.6vw,1.15rem)", letterSpacing: "0.01em" }}
         >
-          <div>
-            {/* Eyebrow */}
-            <div className="mb-3 flex items-center gap-3">
-              <div className="h-[2px] w-10 rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-slate-400 dark:text-slate-500">
-                Selected Work
+          {title}
+        </h3>
+        <div className="h-px bg-black/8 dark:bg-white/8 mb-3" />
+        <p className="font-mono text-[10px] leading-relaxed text-black/50 dark:text-white/50 max-w-xl mb-4 line-clamp-2">{des}</p>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center">
+            {iconLists.map((icon, i) => (
+              <div key={i} className={`-ml-2 first:ml-0 flex h-7 w-7 items-center justify-center border ${m.border} ${m.borderDark} bg-black/[0.03] dark:bg-white/[0.03]`} style={{ zIndex: iconLists.length - i }}>
+                <div className="scale-75">{icon}</div>
+              </div>
+            ))}
+          </div>
+          <div className={`inline-flex items-center gap-1.5 bg-gradient-to-r ${m.strip} px-5 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-md transition-all duration-200 group-hover:scale-105`}>
+            View Project <ArrowUpRight size={10} />
+          </div>
+        </div>
+      </div>
+
+      {/* number watermark */}
+      <div
+        className="absolute -right-4 bottom-0 top-0 flex items-center font-black leading-none select-none pointer-events-none text-black/[0.04] dark:text-white/[0.04]"
+        style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "7rem", letterSpacing: "-0.05em" }}
+      >
+        {m.num}
+      </div>
+    </motion.div>
+  );
+};
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+const RecentProjects = () => {
+  const [p0, p1, p2, p3, p4, p5] = projects;
+
+  return (
+    <section className="relative w-full overflow-hidden py-16 md:py-24 bg-[#ffffff] dark:bg-[#090909]">
+
+      {/* subtle grid lines matching hero */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px]" />
+
+      {/* corner crosses */}
+      <Cross style={{ top: 24, left: 24 }} />
+      <Cross style={{ top: 24, right: 24 }} />
+      <Cross style={{ bottom: 24, left: 24 }} />
+      <Cross style={{ bottom: 24, right: 24 }} />
+
+      <div className="relative mx-auto max-w-[90vw] 2xl:max-w-[1400px]">
+
+        {/* ── HEADER ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 md:mb-14"
+        >
+          {/* eyebrow tag */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div className="flex items-center gap-3 border border-black/15 dark:border-white/15 px-4 py-1.5">
+              <motion.div
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1.5 h-1.5 bg-black dark:bg-white"
+              />
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
+                SELECTED_WORK
               </span>
-              <div className="h-[2px] w-5 rounded-full bg-gradient-to-r from-pink-500 to-transparent" />
             </div>
 
-            {/* Big gradient title */}
-            <h2
-              className="font-black tracking-tight leading-none"
-              style={{ fontSize: "clamp(3rem, 8vw, 5.5rem)" }}
-            >
-              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-fuchsia-400 dark:to-pink-400">
-                Projects
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/CyberlordYash"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-black/15 dark:border-white/15 px-4 py-1.5 font-mono text-[9px] uppercase tracking-widest text-black/55 dark:text-white/55 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white transition-all"
+              >
+                <Github size={11} /> GitHub <ArrowUpRight size={10} />
+              </a>
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-black/30 dark:text-white/25">
+                {projects.length} PROJECTS
               </span>
-            </h2>
-            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
-              Things I&apos;ve built that I&apos;m proud of
-            </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Count badge */}
-            <div className="flex items-center gap-2 rounded-full border border-violet-500/20 bg-gradient-to-r from-violet-500/8 to-fuchsia-500/8 px-4 py-2">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500" />
-              </span>
-              <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                {projects.length} projects
-              </span>
-            </div>
+          {/* big heading */}
+          <h2
+            className="font-black uppercase leading-none text-black dark:text-white"
+            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3.5rem,11vw,9rem)", letterSpacing: "-0.03em" }}
+          >
+            PROJECTS
+          </h2>
 
-            {/* GitHub link */}
-            <a
-              href="https://github.com/CyberlordYash"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 font-mono text-[10px] text-slate-700 shadow-sm transition-all duration-300 hover:border-slate-300 hover:shadow-md dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:border-white/[0.15]"
-            >
-              <Github size={12} />
-              GitHub
-              <ArrowUpRight size={11} />
-            </a>
+          {/* underline annotation */}
+          <div className="flex items-center gap-3 mt-3">
+            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+            <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/40 dark:text-white/35">
+              Things I&apos;ve shipped
+            </span>
           </div>
         </motion.div>
 
-        {/* Featured project */}
-        <div className="mb-5">
-          <FeaturedCard {...featured} />
-        </div>
+        {/* ── BENTO GRID ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-black/8 dark:bg-white/8">
 
-        {/* Grid — 2 columns */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {rest.map((project, i) => (
-            <ProjectCard
-              key={project.id}
-              {...project}
-              delay={0.1 + i * 0.08}
-            />
+          {/* Row 1: featured (2/3) + medium (1/3) */}
+          <div className="lg:col-span-2 bg-[#ffffff] dark:bg-[#090909] p-px">
+            <FeaturedCard {...p0} />
+          </div>
+          <div className="lg:col-span-1 bg-[#ffffff] dark:bg-[#090909] p-px">
+            <MediumCard {...p1} delay={0.1} />
+          </div>
+
+          {/* Row 2: three equal medium cards */}
+          {[p2, p3, p4].map((p, i) => (
+            <div key={p.id} className="lg:col-span-1 bg-[#ffffff] dark:bg-[#090909] p-px">
+              <MediumCard {...p} delay={0.07 + i * 0.07} />
+            </div>
           ))}
+
+          {/* Row 3: wide card full width */}
+          <div className="lg:col-span-3 bg-[#ffffff] dark:bg-[#090909] p-px">
+            <WideCard {...p5} />
+          </div>
         </div>
 
       </div>
