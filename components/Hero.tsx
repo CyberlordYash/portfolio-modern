@@ -213,56 +213,14 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
           67%  { transform: rotateX(16deg) rotateY(48deg);  }
           100% { transform: rotateX(30deg) rotateY(10deg);  }
         }
-        :root { --ob1: #0369a1; --ob2: #4338ca; --ob3: #1d4ed8; }
-        .dark  { --ob1: #22d3ee; --ob2: #818cf8; --ob3: #38bdf8; }
-      `}</style>
+        /* Orbit rings should be monochrome and theme-aware */
+        :root { --ob1: #000000; --ob2: #000000; --ob3: #000000; }
+        .dark  { --ob1: #ffffff; --ob2: #ffffff; --ob3: #ffffff; }
 
-      {/* ── PLANET ── */}
-      <div className="absolute inset-0">
-        <svg viewBox={vb} className={svgClass} style={{ overflow: "visible" }}>
-          <defs>
-            <radialGradient id={`pg${size}`} cx="34%" cy="28%" r="68%">
-              <stop offset="0%"   stopColor="#1e3f6e" />
-              <stop offset="42%"  stopColor="#0b1d38" />
-              <stop offset="100%" stopColor="#030c1a" />
-            </radialGradient>
-          </defs>
-          {/* atmosphere glow */}
-          <circle cx={half} cy={half} r={r3 + 9}
-            fill="none" stroke="#22d3ee" strokeWidth="14" strokeOpacity="0.045" />
-          {/* planet body */}
-          <circle cx={half} cy={half} r={r3} fill={`url(#pg${size})`} />
-          {/* latitude lines */}
-          {([-0.72, -0.44, -0.14, 0.14, 0.44, 0.72] as number[]).map((f, i) => {
-            const rx = r3 * Math.sqrt(1 - f * f);
-            return (
-              <ellipse key={i}
-                cx={half} cy={half + f * r3}
-                rx={rx} ry={rx * 0.27}
-                fill="none" stroke="#22d3ee"
-                strokeWidth="0.45"
-                strokeOpacity={0.09 + (1 - Math.abs(f)) * 0.07} />
-            );
-          })}
-          {/* longitude lines */}
-          {([0, 36, 72, 108, 144] as number[]).map((angle) => (
-            <ellipse key={angle}
-              cx={half} cy={half}
-              rx={r3 * 0.27} ry={r3}
-              fill="none" stroke="#22d3ee"
-              strokeWidth="0.45" strokeOpacity="0.09"
-              transform={`rotate(${angle},${half},${half})`} />
-          ))}
-          {/* specular highlight */}
-          <ellipse
-            cx={half - r3 * 0.22} cy={half - r3 * 0.27}
-            rx={r3 * 0.27} ry={r3 * 0.17}
-            fill="white" fillOpacity="0.07" />
-          {/* atmosphere rim */}
-          <circle cx={half} cy={half} r={r3 + 1.5}
-            fill="none" stroke="#22d3ee" strokeWidth="1.2" strokeOpacity="0.22" />
-        </svg>
-      </div>
+        /* Planet sphere should be grayscale and theme-aware */
+        :root { --pf: #ffffff; --ps: #000000; }
+        .dark  { --pf: #000000; --ps: #ffffff; }
+      `}</style>
 
       {/* ── ring 0: outer dashed — steep equatorial tilt ── */}
       <div
@@ -280,8 +238,6 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
               transformOrigin: orig,
             }}
           >
-            {/* bloom */}
-            <circle cx={half} cy={half} r={r0} fill="none" stroke="var(--ob3)" strokeWidth="7" strokeDasharray="5 9" strokeOpacity="0.10" />
             {/* neon core */}
             <circle cx={half} cy={half} r={r0} fill="none" stroke="var(--ob3)" strokeWidth="0.8" strokeDasharray="5 9" strokeOpacity="0.85" />
           </g>
@@ -312,8 +268,6 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
               <stop offset="0%" stopColor="#6b3010" /><stop offset="45%" stopColor="#180c04" /><stop offset="100%" stopColor="#080301" />
             </radialGradient>
           </defs>
-          {/* bloom */}
-          <circle cx={half} cy={half} r={r1} fill="none" stroke="var(--ob1)" strokeWidth="8" strokeOpacity="0.10" />
           {/* neon core */}
           <circle cx={half} cy={half} r={r1} fill="none" stroke="var(--ob1)" strokeWidth="0.9" strokeOpacity="0.9" />
           <g
@@ -353,8 +307,6 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
               <stop offset="0%" stopColor="#0d5e30" /><stop offset="45%" stopColor="#041610" /><stop offset="100%" stopColor="#010504" />
             </radialGradient>
           </defs>
-          {/* bloom */}
-          <circle cx={half} cy={half} r={r2} fill="none" stroke="var(--ob2)" strokeWidth="7" strokeOpacity="0.12" />
           {/* neon core */}
           <circle cx={half} cy={half} r={r2} fill="none" stroke="var(--ob2)" strokeWidth="0.9" strokeOpacity="0.9" />
           <g
@@ -380,8 +332,6 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
         }}
       >
         <svg viewBox={vb} className={svgClass}>
-          {/* bloom */}
-          <circle cx={half} cy={half} r={r3} fill="none" stroke="var(--ob3)" strokeWidth="6" strokeOpacity="0.10" />
           {/* neon core */}
           <circle cx={half} cy={half} r={r3} fill="none" stroke="var(--ob3)" strokeWidth="0.6" strokeOpacity="0.7" />
           <line x1={half} y1={half - r3} x2={half} y2={half + r3} stroke="var(--ob3)" strokeWidth="0.3" strokeOpacity="0.3" />
@@ -395,7 +345,7 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
           BE_DEV
         </div>
         <div
-          className="font-black text-white leading-none"
+          className="font-black text-black dark:text-white leading-none"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: `${Math.round(size * 0.15)}px`,

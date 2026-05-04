@@ -1,225 +1,268 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import {
-  IconTerminal2,
-  IconClock,
-  IconCpu,
-  IconMaximize,
-  IconMinimize,
-  IconShieldCheck,
-  IconTrophy,
-  IconChevronRight,
-} from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
 
-// --- SYSTEM DATA (Cleaned of problematic syntax) ---
-const SYSTEM_CONFIG = {
-  user: "yash",
-  hostname: "nodes",
-  version: "8.3.0-stable",
-  kernel: "LINUX-AARCH64-CSE",
-};
+const USR = "yash";
+const HOST = "nodes";
 
-const FILES = {
+const FILES: Record<string, string> = {
   "education.md":
-    "INSTITUTION: IIIT Sonepat\nDEGREE: B.Tech in CSE\nCGPA: 8.3/10",
-  "experience.json": JSON.stringify(
-    {
-      current: "Analyst Software Engineer @ Zanskar Securities",
-      previous: [
-        "Software Engineering Intern @ Onefinnet",
-        "Software Engineering Intern @ Modulus Technologies",
-      ],
-    },
-    null,
-    2,
-  ),
+    "INSTITUTION : IIIT Sonepat\nDEGREE      : B.Tech in CSE\nCGPA        : 8.3 / 10\nGRAD        : 2025",
+  "experience.json":
+    '{\n  "current": "Analyst SE @ Zanskar Securities",\n  "previous": [\n    "SWE Intern @ Onefinnet",\n    "SWE Intern @ Modulus Technologies"\n  ]\n}',
   "achievements.log":
-    "• LeetCode: Guardian (2200+ Rating)\n• CodeChef: 4-Star (1800+ Rating)\n• NDA: AIR 193 & Recommended by Indian Army",
+    "[★] LeetCode  : Guardian — 2200+ Rating\n[★] CodeChef  : 4-Star  — 1800+ Rating\n[★] NDA Exam  : AIR 193 — Recommended by Indian Army",
   "matching_engine.go":
-    "// High-performance Price-Time Priority Matching\nfunc (ob *OrderBook) Process(order *Order) {\n  // Logic: Mutex Lock -> Match -> Sort -> Unlock\n  // Optimized for low-latency HFT workloads",
+    "// Price-Time Priority Matching Engine\nfunc (ob *OrderBook) Process(o *Order) {\n  ob.mu.Lock()\n  defer ob.mu.Unlock()\n  ob.match(o) // O(log n)\n  ob.sort()\n}",
   "stack.sh":
-    "export LANGUAGES='Golang, C++, TS, Java'\nexport TOOLS='NATS, Elasticsearch, Prometheus, Docker'",
+    '#!/bin/bash\nLANGUAGES="Golang  C++  TypeScript  Java"\nINFRA="NATS  Elasticsearch  Prometheus  Docker"\nFOCUS="Low-latency HFT Systems"',
 };
 
-const BOOT_SEQUENCE = [
-  { delay: 100, text: "YASH_OS v5.0.0-PROD INITIALIZING...", type: "system" },
-  { delay: 400, text: "AUTHENTICATING: Yash Sachan", type: "info" },
-  { delay: 700, text: "SECURE_BOOT: AIR-193 NDA Verified", type: "success" },
-  {
-    delay: 1000,
-    text: "LOADING: Golang Concurrency Patterns... [OK]",
-    type: "system",
-  },
-  {
-    delay: 1300,
-    text: "LOADING: NATS JetStream & WebSockets... [OK]",
-    type: "system",
-  },
-  {
-    delay: 1600,
-    text: "SYNC: LeetCode Guardian Data (2200+)",
-    type: "success",
-  },
-  {
-    delay: 2000,
-    text: "------------------------------------------------",
-    type: "system",
-  },
-  { delay: 2400, text: "STATUS: Analyst SE @ Zanskar", type: "info" },
-  { delay: 3000, text: "SYSTEM READY. Type 'ls' to start.", type: "success" },
+const BOOT: { d: number; t: string; c: string }[] = [
+  { d: 60,   t: "YASH_OS v5.0.0-PROD  ·  Secure Boot Initializing", c: "dim" },
+  { d: 250,  t: "[ OK ] BIOS integrity check passed", c: "dim" },
+  { d: 440,  t: "[ OK ] Kernel LINUX-AARCH64-CSE loaded", c: "dim" },
+  { d: 630,  t: "[ OK ] Identity: Yash Sachan — AIR-193 NDA Verified", c: "ok" },
+  { d: 820,  t: "[ OK ] Module: Golang Concurrency & Channels", c: "dim" },
+  { d: 1010, t: "[ OK ] Module: NATS JetStream & WebSockets", c: "dim" },
+  { d: 1200, t: "[SYNC] LeetCode Guardian · Rating 2200+", c: "info" },
+  { d: 1390, t: "[LIVE] Zanskar Securities · HFT Matching Engine", c: "info" },
+  { d: 1580, t: "────────────────────────────────────────────────────", c: "sep" },
+  { d: 1770, t: "System ready. Type 'help' to see available commands.", c: "ready" },
 ];
 
+const NEOFETCH = [
+  "  ██╗   ██╗ █████╗ ███████╗██╗  ██╗",
+  "  ╚██╗ ██╔╝██╔══██╗██╔════╝██║  ██║",
+  "   ╚████╔╝ ███████║███████╗███████║ ",
+  "    ╚██╔╝  ██╔══██║╚════██║██╔══██║ ",
+  "     ██║   ██║  ██║███████║██║  ██║ ",
+  "     ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝",
+  "",
+  `${USR}@${HOST}`,
+  "─────────────────────────────────────",
+  "OS     : LINUX-AARCH64-CSE",
+  "Role   : Analyst SE @ Zanskar Securities",
+  "Edu    : B.Tech CSE · IIIT Sonepat · CGPA 8.3",
+  "Rank   : LeetCode Guardian · 2200+  |  CodeChef 4★",
+  "Stack  : Golang · C++ · TypeScript · Java",
+  "Infra  : NATS · Docker · Prometheus · GCP",
+];
+
+const COMPLETIONS = [
+  "help", "ls", "cat ", "whoami", "neofetch",
+  "skills", "contact", "resume", "date", "clear",
+  ...Object.keys(FILES).map(f => `cat ${f}`),
+];
+
+type Line = { text: string; c: string; id: number };
+let lid = 0;
+
 const FooterTerminal = () => {
-  const [history, setHistory] = useState<{ text: string; type: string }[]>([]);
+  const [history, setHistory] = useState<Line[]>([]);
   const [input, setInput] = useState("");
   const [time, setTime] = useState("");
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [commandHistory, setCommandHistory] = useState<string[]>([]);
-  const [isBooted, setIsBooted] = useState(false);
+  const [booted, setBooted] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [full, setFull] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const cmdHistRef = useRef<string[]>([]);
+  const cmdIdxRef = useRef(-1);
 
   useEffect(() => {
-    const tick = () =>
-      setTime(new Date().toLocaleTimeString([], { hour12: false }));
+    const tick = () => setTime(new Date().toLocaleTimeString([], { hour12: false }));
     tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && isAutoPlaying) {
-          BOOT_SEQUENCE.forEach((line, index) => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && autoPlay) {
+          setAutoPlay(false);
+          BOOT.forEach((b, i) =>
             setTimeout(() => {
-              setHistory((prev) => [
-                ...prev,
-                { text: line.text, type: line.type },
-              ]);
-              if (index === BOOT_SEQUENCE.length - 1) setIsBooted(true);
-            }, line.delay);
-          });
-          setIsAutoPlaying(false);
+              setHistory(prev => [...prev, { text: b.t, c: b.c, id: ++lid }]);
+              if (i === BOOT.length - 1) setBooted(true);
+            }, b.d),
+          );
         }
       },
       { threshold: 0.1 },
     );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [isAutoPlaying]);
+    if (containerRef.current) obs.observe(containerRef.current);
+    return () => obs.disconnect();
+  }, [autoPlay]);
 
   useEffect(() => {
     if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [history]);
 
-  const executeCommand = useCallback(
-    (rawCmd: string) => {
-      const trimmed = rawCmd.trim();
-      if (!trimmed) return;
+  const push = useCallback((...lines: { text: string; c: string }[]) => {
+    setHistory(prev => [...prev, ...lines.map(l => ({ ...l, id: ++lid }))]);
+  }, []);
 
-      setCommandHistory((prev) => [...prev, trimmed]);
-      setHistory((prev) => [
-        ...prev,
-        {
-          text: `${SYSTEM_CONFIG.user}@${SYSTEM_CONFIG.hostname}:~$ ${trimmed}`,
-          type: "command",
-        },
-      ]);
+  const run = useCallback(
+    (raw: string) => {
+      const cmd = raw.trim();
+      if (!cmd) return;
 
-      const [cmd, ...args] = trimmed.toLowerCase().split(" ");
+      cmdHistRef.current = [cmd, ...cmdHistRef.current];
+      cmdIdxRef.current = -1;
+      push({ text: `${USR}@${HOST} ~ $ ${cmd}`, c: "cmd" });
 
-      switch (cmd) {
+      const [name, ...args] = cmd.split(/\s+/);
+
+      switch (name.toLowerCase()) {
         case "help":
-          setHistory((prev) => [
-            ...prev,
-            {
-              text: "ls, cat <file>, clear, whoami, neofetch, resume",
-              type: "system",
-            },
-          ]);
+          push(
+            { text: "┌── Commands ─────────────────────────────────────┐", c: "box" },
+            { text: "│  help        Show this message                  │", c: "box" },
+            { text: "│  ls          List directory contents            │", c: "box" },
+            { text: "│  cat <file>  Print file contents                │", c: "box" },
+            { text: "│  whoami      Display user profile               │", c: "box" },
+            { text: "│  neofetch    System info with ASCII art         │", c: "box" },
+            { text: "│  skills      Print full tech stack              │", c: "box" },
+            { text: "│  contact     Show contact info                  │", c: "box" },
+            { text: "│  resume      Open portfolio site                │", c: "box" },
+            { text: "│  date        Current datetime                   │", c: "box" },
+            { text: "│  clear       Clear terminal                     │", c: "box" },
+            { text: "└─────────────────────────────────────────────────┘", c: "box" },
+          );
           break;
+
         case "ls":
-          setHistory((prev) => [
-            ...prev,
-            { text: Object.keys(FILES).join("  "), type: "info" },
-          ]);
+          push(
+            { text: "total 5", c: "dim" },
+            ...Object.keys(FILES).map(f => ({
+              text: `-rw-r--r--  1  yash  nodes  ${f}`,
+              c: "ls",
+            })),
+          );
           break;
-        case "cat":
-          const file = args[0];
-          if (file && FILES[file as keyof typeof FILES]) {
-            setHistory((prev) => [
-              ...prev,
-              { text: FILES[file as keyof typeof FILES], type: "data" },
-            ]);
-          } else {
-            setHistory((prev) => [
-              ...prev,
-              { text: `Error: ${file || "NULL"} not found.`, type: "error" },
-            ]);
+
+        case "cat": {
+          const f = args[0];
+          if (!f) {
+            push({ text: "cat: missing operand. Usage: cat <filename>", c: "err" });
+            break;
           }
+          const content = FILES[f];
+          if (!content) {
+            push({ text: `cat: ${f}: No such file or directory`, c: "err" });
+            break;
+          }
+          push(...content.split("\n").map(t => ({ text: t, c: "data" })));
           break;
+        }
+
         case "whoami":
-          setHistory((prev) => [
-            ...prev,
-            {
-              text: "Yash Sachan | Analyst Software Engineer @ Zanskar",
-              type: "info",
-            },
-          ]);
+          push(
+            { text: "╔═══════════════════════════════════════════════╗", c: "box-hi" },
+            { text: "║     Yash Sachan  —  yash@nodes                ║", c: "box-title" },
+            { text: "╠═══════════════════════════════════════════════╣", c: "box-hi" },
+            { text: "║  Company   :  Zanskar Securities               ║", c: "box-hi" },
+            { text: "║  Role      :  Analyst Software Engineer        ║", c: "box-hi" },
+            { text: "║  Rank      :  LeetCode Guardian · 2200+        ║", c: "box-hi" },
+            { text: "║  NDA       :  AIR 193 · Recommended by Army    ║", c: "box-hi" },
+            { text: "╚═══════════════════════════════════════════════╝", c: "box-hi" },
+          );
           break;
+
         case "neofetch":
-          setHistory((prev) => [
-            ...prev,
-            {
-              text: `OS: ${SYSTEM_CONFIG.kernel}\nUPTIME: High Performance\nRAM: 8.3/10 CGPA\nRANK: LeetCode Guardian`,
-              type: "data",
-            },
-          ]);
+          push(
+            ...NEOFETCH.map((t, i) => ({
+              text: t,
+              c: i === 7 ? "nf-title" : i === 8 ? "dim" : i < 6 ? "nf-art" : "nf",
+            })),
+          );
           break;
+
+        case "skills":
+          push(
+            { text: "Languages  :  Golang · C++ · TypeScript · Java · Python", c: "info" },
+            { text: "Backend    :  Fiber · Express · Next.js · gRPC · REST", c: "info" },
+            { text: "Infra      :  NATS JetStream · Docker · Kubernetes · GCP", c: "info" },
+            { text: "Data       :  Elasticsearch · PostgreSQL · Redis · Kafka", c: "info" },
+            { text: "Observ     :  Prometheus · Grafana · OpenTelemetry", c: "info" },
+          );
+          break;
+
+        case "contact":
+          push(
+            { text: "Email   :  yashsachan321@gmail.com", c: "ok" },
+            { text: "GitHub  :  github.com/cyberlordyash", c: "ok" },
+            { text: "Web     :  yashsachan.in", c: "ok" },
+          );
+          break;
+
+        case "resume":
+          push({ text: "Navigating to yashsachan.in …", c: "dim" });
+          window.open("https://yashsachan.in/", "_blank");
+          break;
+
+        case "date":
+          push({ text: new Date().toLocaleString(), c: "info" });
+          break;
+
         case "clear":
           setHistory([]);
           break;
-        case "resume":
-          setHistory((prev) => [
-            ...prev,
-            { text: "Opening yashsachan.in...", type: "system" },
-          ]);
-          window.open("https://yashsachan.in/", "_blank");
-          break;
+
         default:
-          setHistory((prev) => [
-            ...prev,
-            { text: `Unknown command: ${cmd}`, type: "error" },
-          ]);
+          push(
+            { text: `bash: ${name}: command not found`, c: "err" },
+            { text: "Type 'help' for a list of commands.", c: "dim" },
+          );
       }
+
       setInput("");
     },
-    [],
+    [push],
   );
 
-  const getLineClass = (type: string) => {
-    switch (type) {
-      case "command":
-        return "text-cyan-400 font-bold break-all";
-      case "system":
-        return "text-neutral-600 italic break-words";
-      case "success":
-        return "text-emerald-500 font-medium break-words";
-      case "info":
-        return "text-blue-500 font-semibold break-words";
-      case "data":
-        return "text-neutral-300 leading-relaxed whitespace-pre-wrap break-all";
-      case "error":
-        return "text-red-500 break-words";
-      default:
-        return "text-neutral-400";
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = Math.min(cmdIdxRef.current + 1, cmdHistRef.current.length - 1);
+      cmdIdxRef.current = next;
+      setInput(cmdHistRef.current[next] ?? "");
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = cmdIdxRef.current - 1;
+      cmdIdxRef.current = next;
+      setInput(next < 0 ? "" : cmdHistRef.current[next] ?? "");
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      const match = COMPLETIONS.find(c => c.startsWith(input) && c !== input);
+      if (match) setInput(match);
+    }
+  };
+
+  const cls = (c: string) => {
+    switch (c) {
+      case "cmd":       return "text-blue-400 font-semibold";
+      case "ok":        return "text-emerald-400";
+      case "err":       return "text-red-400";
+      case "info":      return "text-sky-300";
+      case "data":      return "text-neutral-300";
+      case "dim":       return "text-neutral-600";
+      case "sep":       return "text-neutral-700";
+      case "ready":     return "text-blue-400 font-semibold";
+      case "box":       return "text-blue-300/40";
+      case "box-hi":    return "text-blue-300/60";
+      case "box-title": return "text-blue-200 font-bold";
+      case "ls":        return "text-neutral-300";
+      case "nf-art":    return "text-blue-500/70";
+      case "nf-title":  return "text-cyan-300 font-bold";
+      case "nf":        return "text-neutral-400";
+      default:          return "text-neutral-400";
     }
   };
 
@@ -229,87 +272,107 @@ const FooterTerminal = () => {
       ref={containerRef}
       className={cn(
         "w-full mx-auto font-mono",
-        isFullscreen
-          ? "fixed inset-0 z-[999]"
-          : "max-w-5xl mt-10 md:mt-20 px-2 md:px-4",
+        full ? "fixed inset-0 z-[999]" : "max-w-5xl mt-10 md:mt-20 px-2 md:px-4",
       )}
     >
       <div
         className={cn(
-          "bg-[#020202] border border-white/10 flex flex-col relative overflow-hidden transition-all",
-          isFullscreen
-            ? "h-screen rounded-none"
-            : "min-h-[400px] h-[60vh] md:h-[600px] rounded-xl shadow-2xl",
+          "relative flex flex-col overflow-hidden border transition-all duration-300",
+          "bg-[#05080f] border-blue-500/20",
+          "shadow-[0_0_80px_-20px_rgba(59,130,246,0.2),0_0_20px_-5px_rgba(59,130,246,0.05)]",
+          full ? "h-screen rounded-none" : "h-[460px] md:h-[580px] rounded-xl",
         )}
       >
+        {/* Scanlines */}
+        <div
+          className="pointer-events-none absolute inset-0 z-30 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(0deg,transparent,transparent 2px,#000 2px,#000 4px)",
+          }}
+        />
+
+        {/* Blue edge glow */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+
         {/* Header */}
-        <div className="bg-[#0a0a0a] px-4 py-3 border-b border-white/5 flex items-center justify-between shrink-0">
+        <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-blue-500/10 bg-[#030710] px-4 py-2.5">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+              <span className="block h-3 w-3 rounded-full bg-[#ff5f56]" />
+              <span className="block h-3 w-3 rounded-full bg-[#ffbd2e]" />
+              <span className="block h-3 w-3 rounded-full bg-[#27c93f]" />
             </div>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold hidden sm:inline">
-              Terminal — {SYSTEM_CONFIG.user}@{SYSTEM_CONFIG.hostname}
-            </span>
+            <div className="hidden sm:flex items-center gap-2 text-[10px]">
+              <span className="text-blue-400/60 uppercase tracking-[0.2em]">
+                {USR}@{HOST}
+              </span>
+              <span className="text-neutral-700">—</span>
+              <span className="text-neutral-700 tracking-widest">bash</span>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <span className="tabular-nums text-[10px] text-neutral-700">{time}</span>
             <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="text-neutral-500 hover:text-white transition-colors"
+              onClick={() => setFull(f => !f)}
+              className="text-neutral-700 transition-colors hover:text-blue-400"
+              aria-label="Toggle fullscreen"
             >
-              {isFullscreen ? (
-                <IconMinimize size={18} />
+              {full ? (
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                  <path d="M5.5 0H0v5.5h1.5V1.5H5.5V0zm5 0v1.5h4V5.5H16V0h-5.5zm5 10.5H16V16h-5.5v-1.5H14v-4zM1.5 14v-4H0V16h5.5v-1.5H1.5z" />
+                </svg>
               ) : (
-                <IconMaximize size={18} />
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                  <path d="M1.5 1.5H6V0H0v6h1.5V1.5zm9 0V0H16v6h-1.5V1.5H11zM6 16H0v-6h1.5v4.5H6V16zm8.5-6V16H9v-1.5h4.5V10H16z" />
+                </svg>
               )}
             </button>
-            <span className="text-neutral-500 text-[10px] tabular-nums">
-              {time}
-            </span>
           </div>
         </div>
 
-        {/* Terminal Body */}
+        {/* Body */}
         <div
           ref={scrollRef}
           onClick={() => inputRef.current?.focus()}
-          className="flex-1 overflow-y-auto p-4 md:p-8 space-y-2 bg-[#020202] relative custom-scrollbar"
+          className="relative z-10 flex-1 cursor-text overflow-y-auto p-4 md:p-6"
         >
-          <AnimatePresence mode="popLayout">
-            {history.map((line, i) => (
-              <motion.div
-                initial={{ opacity: 0, x: -5 }}
-                animate={{ opacity: 1, x: 0 }}
-                key={i}
-                className={cn(
-                  "text-[11px] md:text-sm relative z-20",
-                  getLineClass(line.type),
-                )}
-              >
-                {line.text}
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          <div className="space-y-0.5">
+            <AnimatePresence initial={false}>
+              {history.map(line => (
+                <motion.div
+                  key={line.id}
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.1, ease: "easeOut" }}
+                  className={cn(
+                    "whitespace-pre-wrap break-all text-[11px] leading-[1.7] md:text-[13px]",
+                    cls(line.c),
+                  )}
+                >
+                  {line.text}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
 
-          {isBooted && (
+          {booted && (
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                executeCommand(input);
-              }}
-              className="flex items-center gap-2 pt-2 relative z-20"
+              onSubmit={e => { e.preventDefault(); run(input); }}
+              className="mt-1.5 flex items-center"
             >
-              <span className="text-emerald-500 font-bold shrink-0 text-[11px] md:text-sm">
-                ➜
+              <span className="shrink-0 text-[11px] font-semibold text-blue-500 md:text-[13px]">
+                {USR}@{HOST}
               </span>
+              <span className="mx-1 shrink-0 text-[11px] text-neutral-600 md:text-[13px]">~</span>
+              <span className="mr-2 shrink-0 text-[11px] text-neutral-500 md:text-[13px]">$</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="bg-transparent border-none outline-none flex-1 text-white caret-cyan-500 font-mono text-[11px] md:text-sm"
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1 bg-transparent font-mono text-[11px] text-white caret-blue-400 outline-none md:text-[13px]"
                 spellCheck={false}
                 autoComplete="off"
                 autoFocus
@@ -318,19 +381,19 @@ const FooterTerminal = () => {
           )}
         </div>
 
-        {/* Footer Bar */}
-        <div className="bg-[#080808] px-4 py-2 border-t border-white/5 flex items-center justify-between text-[9px] text-neutral-600 shrink-0">
-          <div className="flex gap-4">
-            <span className="flex items-center gap-1">
-              <IconTrophy size={12} /> GUARDIAN
+        {/* Status bar */}
+        <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-blue-500/10 bg-[#030710] px-4 py-1.5 text-[9px] text-neutral-700">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              SESSION ACTIVE
             </span>
-            <span className="flex items-center gap-1">
-              <IconShieldCheck size={12} /> SECURE
-            </span>
+            <span>GUARDIAN · 2200+</span>
           </div>
-          <span className="text-emerald-500/50 hidden xs:inline">
-            ● SESSION_ACTIVE
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="uppercase tracking-widest text-blue-500/30">bash</span>
+            <span>{history.length} ln</span>
+          </div>
         </div>
       </div>
     </motion.div>
