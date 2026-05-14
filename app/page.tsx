@@ -17,6 +17,7 @@ import { navItems } from "@/data";
 
 // UI & Icons
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 import {
   IconActivity,
   IconBrandGolang,
@@ -144,16 +145,18 @@ export default function Home() {
                 {/* ── Section heading ── */}
                 <div className="flex flex-col items-center mb-8 md:mb-10">
                   {/* label tag */}
-                  <div className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+                  <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
                     <motion.div
                       animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                       className="w-1.5 h-1.5 bg-black dark:bg-white"
                     />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
-                      SYSTEM_RUNTIME
-                    </span>
-                  </div>
+                    <RevealChars
+                      text="SYSTEM_RUNTIME"
+                      className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
+                      delay={0.1}
+                    />
+                  </FadeReveal>
 
                   {/* main heading */}
                   <h2
@@ -164,16 +167,18 @@ export default function Home() {
                       letterSpacing: "-0.025em",
                     }}
                   >
-                    Technical Stack
+                    <RevealText text="Technical Stack" delay={0.18} />
                   </h2>
 
                   {/* underline annotation */}
                   <div className="flex items-center gap-3 mt-3">
-                    <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
-                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                      16 Technologies
-                    </span>
-                    <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                    <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                    <FadeReveal delay={0.6}>
+                      <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+                        16 Technologies
+                      </span>
+                    </FadeReveal>
+                    <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
                   </div>
                 </div>
                 <Skills />

@@ -3,6 +3,7 @@ import React from "react";
 import { projects } from "@/data";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Globe } from "lucide-react";
+import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 
 /* ── small "+" cross marker (from Hero) ── */
 const Cross = ({ style }: { style?: React.CSSProperties }) => (
@@ -397,27 +398,23 @@ const RecentProjects = () => {
       <div className="relative mx-auto max-w-[90vw] 2xl:max-w-[1400px]">
 
         {/* ── HEADER ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-10 md:mb-14"
-        >
+        <div className="mb-10 md:mb-14">
           {/* eyebrow tag */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3 border border-black/15 dark:border-white/15 px-4 py-1.5">
+            <FadeReveal delay={0} className="flex items-center gap-3 border border-black/15 dark:border-white/15 px-4 py-1.5">
               <motion.div
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="w-1.5 h-1.5 bg-black dark:bg-white"
               />
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
-                SELECTED_WORK
-              </span>
-            </div>
+              <RevealChars
+                text="SELECTED_WORK"
+                className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
+                delay={0.1}
+              />
+            </FadeReveal>
 
-            <div className="flex items-center gap-3">
+            <FadeReveal delay={0.15} className="flex items-center gap-3">
               <a
                 href="https://github.com/CyberlordYash"
                 target="_blank"
@@ -429,7 +426,7 @@ const RecentProjects = () => {
               <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-black/30 dark:text-white/25">
                 {projects.length} PROJECTS
               </span>
-            </div>
+            </FadeReveal>
           </div>
 
           {/* big heading */}
@@ -437,17 +434,19 @@ const RecentProjects = () => {
             className="font-black uppercase leading-none text-black dark:text-white"
             style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3.5rem,11vw,9rem)", letterSpacing: "-0.03em" }}
           >
-            PROJECTS
+            <RevealText text="PROJECTS" delay={0.1} stagger={0.06} />
           </h2>
 
           {/* underline annotation */}
           <div className="flex items-center gap-3 mt-3">
-            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
-            <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/40 dark:text-white/35">
-              Things I&apos;ve shipped
-            </span>
+            <DrawLine delay={0.45} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+            <FadeReveal delay={0.5}>
+              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/40 dark:text-white/35">
+                Things I&apos;ve shipped
+              </span>
+            </FadeReveal>
           </div>
-        </motion.div>
+        </div>
 
         {/* ── BENTO GRID ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-black/8 dark:bg-white/8">

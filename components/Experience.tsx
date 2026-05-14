@@ -3,6 +3,7 @@ import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { motion } from "framer-motion";
 import { IconExternalLink } from "@tabler/icons-react";
+import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 
 /* ─── colour config per company ─── */
 type Accent = "indigo" | "cyan" | "emerald" | "amber";
@@ -400,23 +401,26 @@ const Experience = () => (
         {/* ── section heading ── */}
         <div className="px-5 md:px-10 pt-10 pb-2">
           <div className="flex items-center gap-3 mb-3">
-            <div className="h-px w-8 bg-amber-500/60" />
-            <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/45 dark:text-white/45">
-              WORK HISTORY
-            </span>
+            <DrawLine delay={0} className="h-px w-8 bg-amber-500/60" />
+            <RevealChars
+              text="WORK HISTORY"
+              className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/45 dark:text-white/45"
+              delay={0.15}
+            />
           </div>
           <div
             className="font-black uppercase leading-none text-black dark:text-white"
             style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3rem,10vw,8rem)", letterSpacing: "-0.03em" }}
           >
-            EXPERIENCE
+            <RevealText text="EXPERIENCE" delay={0.1} stagger={0.045} />
           </div>
-          {/* cross markers */}
           <div className="flex items-center gap-8 mt-4">
             {["BACKEND", "INFRA", "FULL-STACK"].map((tag, i) => (
-              <span key={tag} className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/35 dark:text-white/35">
-                {String(i + 1).padStart(2, "0")}. {tag}
-              </span>
+              <FadeReveal key={tag} delay={0.5 + i * 0.07}>
+                <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/35 dark:text-white/35">
+                  {String(i + 1).padStart(2, "0")}. {tag}
+                </span>
+              </FadeReveal>
             ))}
           </div>
         </div>

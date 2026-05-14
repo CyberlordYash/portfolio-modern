@@ -7,7 +7,7 @@ import { ArrowUpRight, Mail, Copy, Check } from "lucide-react";
 const EMAIL = "yashsachan321@gmail.com";
 
 /* ══════════════════════════════════════════
-   ROBOT SVG
+   FLYING ROBOT
 ══════════════════════════════════════════ */
 const Robot = () => (
   <motion.div
@@ -16,297 +16,156 @@ const Robot = () => (
     className="relative"
   >
     <style>{`
-      @keyframes scanV    { 0%{transform:translateY(0)}   100%{transform:translateY(46px)} }
-      @keyframes antPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.6)} }
-      @keyframes chestUp  { 0%{transform:translateY(0)}   100%{transform:translateY(-96px)} }
-      @keyframes eyePulse { 0%,100%{opacity:0.92} 50%{opacity:0.55} }
-      @keyframes reactSpin{ from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-      @keyframes reactSpinR{ from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
-      @keyframes ledBlink { 0%,100%{opacity:1} 40%,60%{opacity:0.15} }
+      :root {
+        --rb-shell: #dbeafe;
+        --rb-mid:   #bfdbfe;
+        --rb-recess:#1e3a8a;
+      }
+      .dark {
+        --rb-shell: #1e3a5f;
+        --rb-mid:   #0f2744;
+        --rb-recess:#060d1a;
+      }
+      @keyframes propSpin   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+      @keyframes eyeGlow    { 0%,100%{opacity:0.95} 50%{opacity:0.4} }
+      @keyframes blink      { 0%,86%,100%{transform:scaleY(1)} 89%,95%{transform:scaleY(0.07)} }
+      @keyframes chestPulse { 0%,100%{opacity:0.78} 50%{opacity:1} }
+      @keyframes flame      { 0%,100%{transform:scaleY(1);opacity:0.85}   50%{transform:scaleY(0.42);opacity:0.42} }
+      @keyframes flameCore  { 0%,100%{transform:scaleY(0.48);opacity:0.5} 50%{transform:scaleY(1);opacity:0.95} }
     `}</style>
 
-    <svg
-      viewBox="0 0 240 410"
-      fill="none"
-      className="text-black dark:text-white"
-      style={{ width: 230, height: 394 }}
-    >
+    <svg viewBox="0 0 200 262" fill="none" style={{ width: 190, height: 249 }}>
       <defs>
-        {/* metallic body gradient */}
-        <linearGradient id="gHead" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stopColor="currentColor" stopOpacity="0.13" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.04" />
-        </linearGradient>
-        <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stopColor="currentColor" stopOpacity="0.11" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.03" />
-        </linearGradient>
-        <linearGradient id="gArm" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stopColor="currentColor" stopOpacity="0.10" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.03" />
-        </linearGradient>
-        <linearGradient id="gVisor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stopColor="currentColor" stopOpacity="0.45" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.28" />
-        </linearGradient>
-        {/* eye glow filter */}
-        <filter id="eyeGlow" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation="5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <radialGradient id="rChest" cx="38%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#60a5fa"/>
+          <stop offset="100%" stopColor="#1d4ed8"/>
+        </radialGradient>
+        <filter id="fEye" x="-90%" y="-90%" width="280%" height="280%">
+          <feGaussianBlur stdDeviation="3.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="fChest" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <filter id="antGlow" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="6" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <clipPath id="sc"><rect x="88" y="158" width="64" height="50" rx="2"/></clipPath>
       </defs>
 
-      {/* ════ ANTENNA ════ */}
-      <rect x="118" y="10" width="4" height="24" fill="url(#gHead)" stroke="currentColor" strokeWidth="1"/>
-      <rect x="103" y="28" width="34" height="4" fill="url(#gHead)" stroke="currentColor" strokeWidth="0.8"/>
-      <rect x="103" y="14" width="4" height="18" fill="url(#gHead)" stroke="currentColor" strokeWidth="0.8"/>
-      <rect x="133" y="14" width="4" height="18" fill="url(#gHead)" stroke="currentColor" strokeWidth="0.8"/>
-      {/* antenna glow halo */}
-      <circle cx="120" cy="10" r="14" fill="rgb(52,211,153)" fillOpacity="0.10" filter="url(#antGlow)" style={{ animation: "antPulse 1.6s ease-in-out infinite", transformOrigin: "120px 10px" }}/>
-      {/* antenna tips */}
-      <circle cx="120" cy="10" r="6"  fill="rgb(52,211,153)" fillOpacity="0.95" filter="url(#softGlow)" style={{ animation: "antPulse 1.6s ease-in-out infinite", transformOrigin: "120px 10px" }}/>
-      <circle cx="120" cy="10" r="3"  fill="white" fillOpacity="0.9"/>
-      <circle cx="105" cy="14" r="4"  fill="rgb(52,211,153)" fillOpacity="0.65" filter="url(#softGlow)"/>
-      <circle cx="105" cy="14" r="2"  fill="white" fillOpacity="0.7"/>
-      <circle cx="135" cy="14" r="4"  fill="rgb(52,211,153)" fillOpacity="0.65" filter="url(#softGlow)"/>
-      <circle cx="135" cy="14" r="2"  fill="white" fillOpacity="0.7"/>
+      {/* ━━ PROPELLER ━━ */}
+      <g style={{ transformOrigin:"100px 23px", animation:"propSpin 0.65s linear infinite" }}>
+        <rect x="48" y="20" width="104" height="6" rx="3" fill="#3b82f6" fillOpacity="0.78"/>
+      </g>
+      <circle cx="100" cy="23" r="6" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1.3" strokeOpacity="0.9"/>
+      <circle cx="100" cy="23" r="2.5" fill="white" fillOpacity="0.88"/>
 
-      {/* ════ HEAD ════ */}
-      <rect x="78" y="32" width="84" height="68" rx="6" fill="url(#gHead)" stroke="currentColor" strokeWidth="1.5"/>
-      {/* top highlight strip */}
-      <rect x="84" y="34" width="72" height="8" rx="3" fill="currentColor" fillOpacity="0.09"/>
-      {/* head panel lines */}
-      <line x1="78"  y1="72"  x2="162" y2="72"  stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.18"/>
-      <line x1="78"  y1="88"  x2="162" y2="88"  stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.12"/>
-      {/* side ear plates */}
-      <rect x="68"  y="50" width="12" height="30" rx="3" fill="url(#gHead)" stroke="currentColor" strokeWidth="1"/>
-      <rect x="160" y="50" width="12" height="30" rx="3" fill="url(#gHead)" stroke="currentColor" strokeWidth="1"/>
-      {/* ear highlight */}
-      <rect x="70"  y="52" width="8" height="5" rx="1" fill="currentColor" fillOpacity="0.1"/>
-      <rect x="162" y="52" width="8" height="5" rx="1" fill="currentColor" fillOpacity="0.1"/>
-      {/* ear bolts */}
-      <circle cx="74"  cy="57" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="74"  cy="67" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="166" cy="57" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="166" cy="67" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="0.8"/>
+      {/* ━━ HEAD ━━ */}
+      <rect x="62" y="27" width="76" height="68" rx="14"
+        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1.2" strokeOpacity="0.6"/>
+      {/* forehead bar */}
+      <rect x="70" y="31" width="60" height="7" rx="3.5" fill="#3b82f6" fillOpacity="0.13"/>
+      {/* visor */}
+      <rect x="66" y="48" width="68" height="22" rx="5"
+        style={{ fill:"var(--rb-recess)" }} fillOpacity="0.75" stroke="#3b82f6" strokeWidth="0.9" strokeOpacity="0.5"/>
+      {/* corner ticks on visor */}
+      <line x1="68" y1="50" x2="74" y2="50" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
+      <line x1="126" y1="50" x2="132" y2="50" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
+      <line x1="68" y1="68" x2="74" y2="68" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
+      <line x1="126" y1="68" x2="132" y2="68" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
 
-      {/* ════ VISOR ════ */}
-      <rect x="78" y="50" width="84" height="30" rx="3" fill="url(#gVisor)"/>
-      {/* visor inner shine */}
-      <rect x="80" y="52" width="80" height="7" rx="2" fill="currentColor" fillOpacity="0.07"/>
-      {/* visor bottom edge */}
-      <line x1="80" y1="79" x2="160" y2="79" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.3"/>
-
-      {/* ════ EYES (5-layer glowing) ════ */}
-      {/* left */}
-      <circle cx="103" cy="65" r="15" fill="rgb(52,211,153)" fillOpacity="0.10" filter="url(#eyeGlow)" style={{ animation: "eyePulse 2.5s ease-in-out infinite" }}/>
-      <circle cx="103" cy="65" r="10" fill="rgb(52,211,153)" fillOpacity="0.88" style={{ animation: "eyePulse 2.5s ease-in-out infinite" }}/>
-      <circle cx="103" cy="65" r="6"  fill="rgb(16,185,129)"/>
-      <circle cx="103" cy="65" r="3"  fill="#000" fillOpacity="0.55"/>
-      <circle cx="103" cy="65" r="1.8" fill="white" fillOpacity="0.95"/>
-      <circle cx="99"  cy="61" r="1.5" fill="white" fillOpacity="0.55"/>
-
-      {/* right */}
-      <circle cx="137" cy="65" r="15" fill="rgb(52,211,153)" fillOpacity="0.10" filter="url(#eyeGlow)" style={{ animation: "eyePulse 2.5s ease-in-out infinite", animationDelay: "0.35s" }}/>
-      <circle cx="137" cy="65" r="10" fill="rgb(52,211,153)" fillOpacity="0.88" style={{ animation: "eyePulse 2.5s ease-in-out infinite", animationDelay: "0.35s" }}/>
-      <circle cx="137" cy="65" r="6"  fill="rgb(16,185,129)"/>
-      <circle cx="137" cy="65" r="3"  fill="#000" fillOpacity="0.55"/>
-      <circle cx="137" cy="65" r="1.8" fill="white" fillOpacity="0.95"/>
-      <circle cx="133" cy="61" r="1.5" fill="white" fillOpacity="0.55"/>
-
-      {/* ════ NOSE ════ */}
-      <rect x="118" y="81" width="4" height="4" rx="1" fill="currentColor" fillOpacity="0.22"/>
-
-      {/* ════ MOUTH / STATUS BAR ════ */}
-      <rect x="90" y="89" width="60" height="5" rx="2" fill="rgb(52,211,153)" fillOpacity="0.55"/>
-      {[0,1,2,3,4,5,6].map(i => (
-        <rect key={i} x={93+i*8} y={89} width="5" height="5" rx="1"
-          fill="rgb(52,211,153)" fillOpacity={0.25 + i * 0.08}
-          style={{ animation: "ledBlink 1.8s ease-in-out infinite", animationDelay: `${i*0.12}s` }}/>
-      ))}
-
-      {/* ════ NECK ════ */}
-      <rect x="103" y="100" width="34" height="16" rx="3" fill="url(#gHead)" stroke="currentColor" strokeWidth="1"/>
-      {[0,1,2,3].map(i => (
-        <line key={i} x1={108+i*7} y1={103} x2={108+i*7} y2={113} stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.25"/>
-      ))}
-
-      {/* ════ SHOULDERS ════ */}
-      {/* left */}
-      <rect x="34"  y="110" width="54" height="40" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="38"  y="112" width="46" height="9"  rx="2" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="38" y1="128" x2="84"  y2="128" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.18"/>
-      <line x1="38" y1="138" x2="84"  y2="138" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.12"/>
-      <circle cx="44"  cy="120" r="3.5" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="78"  cy="120" r="3.5" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.8"/>
-      {/* right */}
-      <rect x="152" y="110" width="54" height="40" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="156" y="112" width="46" height="9"  rx="2" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="156" y1="128" x2="202" y2="128" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.18"/>
-      <line x1="156" y1="138" x2="202" y2="138" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.12"/>
-      <circle cx="162" cy="120" r="3.5" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="196" cy="120" r="3.5" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.8"/>
-
-      {/* ════ TORSO ════ */}
-      <rect x="77"  y="116" width="86" height="104" rx="5" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.5"/>
-      <rect x="81"  y="118" width="78" height="11"  rx="3" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="77" y1="152" x2="163" y2="152" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.18"/>
-      <line x1="77" y1="196" x2="163" y2="196" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.15"/>
-      {/* corner bolts */}
-      {([[81,120],[155,120],[81,212],[155,212]] as const).map(([x,y],i)=>(
-        <circle key={i} cx={x} cy={y} r="2.8" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.8"/>
-      ))}
-      {/* side vents */}
-      {[0,1,2,3].map(i=>(
-        <line key={i} x1={79} y1={162+i*10} x2={86} y2={162+i*10} stroke="currentColor" strokeWidth="1" strokeOpacity="0.2"/>
-      ))}
-      {[0,1,2,3].map(i=>(
-        <line key={i} x1={154} y1={162+i*10} x2={161} y2={162+i*10} stroke="currentColor" strokeWidth="1" strokeOpacity="0.2"/>
-      ))}
-
-      {/* ── ARC REACTOR ── */}
-      <circle cx="120" cy="137" r="12" fill="currentColor" fillOpacity="0.07" stroke="currentColor" strokeWidth="1"/>
-      <circle cx="120" cy="137" r="9"  fill="currentColor" fillOpacity="0.05" stroke="rgb(52,211,153)" strokeWidth="0.8" strokeOpacity="0.5"/>
-      {/* spinning outer ring */}
-      <circle cx="120" cy="137" r="12" fill="none" stroke="rgb(52,211,153)" strokeWidth="0.7" strokeOpacity="0.35"
-        strokeDasharray="5 5" style={{ animation: "reactSpin 6s linear infinite", transformOrigin: "120px 137px" }}/>
-      {/* spinning inner ring (reverse) */}
-      <circle cx="120" cy="137" r="7" fill="none" stroke="rgb(52,211,153)" strokeWidth="0.5" strokeOpacity="0.25"
-        strokeDasharray="3 4" style={{ animation: "reactSpinR 4s linear infinite", transformOrigin: "120px 137px" }}/>
-      <circle cx="120" cy="137" r="4.5" fill="rgb(52,211,153)" fillOpacity="0.8" filter="url(#softGlow)"/>
-      <circle cx="120" cy="137" r="2.5" fill="white" fillOpacity="0.9"/>
-      <circle cx="118" cy="135" r="1.2" fill="white" fillOpacity="0.6"/>
-
-      {/* ── CHEST SCREEN ── */}
-      <rect x="88" y="158" width="64" height="50" rx="3" fill="#050505" stroke="currentColor" strokeWidth="1"/>
-      <rect x="88" y="158" width="64" height="50" rx="3" fill="none" stroke="rgb(52,211,153)" strokeWidth="0.6" strokeOpacity="0.45"/>
-      {/* scan line */}
-      <rect x="88" y="158" width="64" height="3" fill="rgb(52,211,153)" fillOpacity="0.12"
-        style={{ animation: "scanV 2s ease-in-out infinite alternate" }}/>
-      {/* screen corners */}
-      <circle cx="91"  cy="161" r="1.5" fill="rgb(52,211,153)" fillOpacity="0.7"/>
-      <circle cx="149" cy="161" r="1.5" fill="rgb(52,211,153)" fillOpacity="0.7"/>
-      <circle cx="91"  cy="205" r="1.5" fill="rgb(52,211,153)" fillOpacity="0.4"/>
-      <circle cx="149" cy="205" r="1.5" fill="rgb(52,211,153)" fillOpacity="0.4"/>
-      {/* scrolling text */}
-      <g clipPath="url(#sc)">
-        <g style={{ animation: "chestUp 5s linear infinite" }}>
-          {["> INIT_CONTACT.EXE","> STATUS: ONLINE","> SYS: READY","> LATENCY: 2MS","> UPTIME: 99.9%","> PING SENT...","> AWAIT INPUT","> INIT_CONTACT.EXE","> STATUS: ONLINE"].map((t,i)=>(
-            <text key={i} x="92" y={170+i*12} fill="rgb(52,211,153)" fillOpacity="0.78" fontSize="6.2" fontFamily="monospace">{t}</text>
-          ))}
-        </g>
+      {/* LEFT EYE — glow */}
+      <circle cx="88" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.55" filter="url(#fEye)"
+        style={{ animation:"eyeGlow 2.4s ease-in-out infinite" }}/>
+      {/* LEFT EYE — blinking face */}
+      <g style={{ transformBox:"fill-box", transformOrigin:"center", animation:"blink 5s ease-in-out infinite" }}>
+        <circle cx="88" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.92"/>
+        <circle cx="88" cy="59" r="4.2" fill="white" fillOpacity="0.95"/>
+        <circle cx="85.5" cy="56.5" r="1.8" fill="white" fillOpacity="0.6"/>
       </g>
 
-      {/* ════ WAIST ════ */}
-      <rect x="87"  y="220" width="66" height="22" rx="3" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="91"  y="222" width="58" height="6"  rx="1" fill="currentColor" fillOpacity="0.1"/>
-      {[96,108,120,132,144].map(x=>(
-        <rect key={x} x={x-2} y={227} width="4" height="4" rx="0.5" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="0.6"/>
-      ))}
+      {/* RIGHT EYE — glow */}
+      <circle cx="112" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.55" filter="url(#fEye)"
+        style={{ animation:"eyeGlow 2.4s ease-in-out infinite 0.7s" }}/>
+      {/* RIGHT EYE — blinking face */}
+      <g style={{ transformBox:"fill-box", transformOrigin:"center", animation:"blink 5s ease-in-out infinite 0.7s" }}>
+        <circle cx="112" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.92"/>
+        <circle cx="112" cy="59" r="4.2" fill="white" fillOpacity="0.95"/>
+        <circle cx="109.5" cy="56.5" r="1.8" fill="white" fillOpacity="0.6"/>
+      </g>
 
-      {/* ════ HIPS ════ */}
-      <rect x="83"  y="242" width="33" height="28" rx="3" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="124" y="242" width="33" height="28" rx="3" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="87"  y="244" width="25" height="6" rx="1" fill="currentColor" fillOpacity="0.09"/>
-      <rect x="128" y="244" width="25" height="6" rx="1" fill="currentColor" fillOpacity="0.09"/>
+      {/* smile arc */}
+      <path d="M90,75 Q100,83 110,75" stroke="#3b82f6" strokeWidth="1.8" strokeOpacity="0.6" strokeLinecap="round" fill="none"/>
+      {/* chin bar */}
+      <rect x="84" y="80" width="32" height="6" rx="3"
+        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.6" strokeOpacity="0.35"/>
 
-      {/* ════ UPPER ARMS ════ */}
-      {/* left */}
-      <rect x="31"  y="148" width="32" height="72" rx="5" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="35"  y="150" width="24" height="9"  rx="2" fill="currentColor" fillOpacity="0.10"/>
-      <line x1="33" y1="174" x2="61"  y2="174" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-      <line x1="33" y1="190" x2="61"  y2="190" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.15"/>
-      {/* forearm indicator led */}
-      <rect x="40"  y="163" width="12" height="4" rx="1" fill="rgb(52,211,153)" fillOpacity="0.5"/>
-      {/* elbow */}
-      <rect x="28"  y="218" width="38" height="14" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1"/>
-      <circle cx="47" cy="225" r="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="0.8"/>
+      {/* ━━ NECK ━━ */}
+      <rect x="89" y="95" width="22" height="13" rx="3"
+        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.9" strokeOpacity="0.45"/>
+      <circle cx="93.5" cy="101.5" r="1.6" fill="#3b82f6" fillOpacity="0.5"/>
+      <circle cx="106.5" cy="101.5" r="1.6" fill="#3b82f6" fillOpacity="0.5"/>
+
+      {/* ━━ BODY ━━ */}
+      <rect x="54" y="108" width="92" height="66" rx="10"
+        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1.2" strokeOpacity="0.6"/>
+      {/* top stripe */}
+      <rect x="58" y="108" width="84" height="4" rx="2" fill="#3b82f6" fillOpacity="0.16"/>
+      {/* shoulder bolts */}
+      <circle cx="63" cy="117" r="2.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.55"/>
+      <circle cx="137" cy="117" r="2.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.55"/>
+      {/* left vents */}
+      <rect x="58" y="124" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.42"/>
+      <rect x="58" y="136" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.28"/>
+      <rect x="58" y="148" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.16"/>
+      {/* right vents */}
+      <rect x="138" y="124" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.42"/>
+      <rect x="138" y="136" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.28"/>
+      <rect x="138" y="148" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.16"/>
+      {/* chest reactor */}
+      <circle cx="100" cy="138" r="22" fill="#3b82f6" fillOpacity="0.07"/>
+      <circle cx="100" cy="138" r="16" fill="url(#rChest)" stroke="#60a5fa" strokeWidth="1.2" strokeOpacity="0.85"
+        filter="url(#fChest)" style={{ animation:"chestPulse 2.5s ease-in-out infinite" }}/>
+      <circle cx="100" cy="138" r="9" style={{ fill:"var(--rb-recess)" }} stroke="#93c5fd" strokeWidth="0.9" strokeOpacity="0.75"/>
+      <circle cx="100" cy="138" r="4.5" fill="white" fillOpacity="0.92"/>
+      {/* bottom stripe */}
+      <rect x="58" y="170" width="84" height="4" rx="2" fill="#3b82f6" fillOpacity="0.14"/>
+
+      {/* ━━ ARMS ━━ */}
+      {/* left — blue outline, shell fill, blue edge line */}
+      <path d="M54,118 Q32,110 14,116" stroke="#3b82f6" strokeWidth="9" strokeLinecap="round" strokeOpacity="0.65" fill="none"/>
+      <path d="M54,118 Q32,110 14,116" style={{ stroke:"var(--rb-shell)" }} strokeWidth="6" strokeLinecap="round" fill="none"/>
+      <path d="M54,118 Q32,110 14,116" stroke="#3b82f6" strokeWidth="0.8" strokeLinecap="round" strokeOpacity="0.4" fill="none"/>
+      <circle cx="14" cy="116" r="6.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.58"/>
+      <circle cx="14" cy="116" r="2.4" fill="#3b82f6" fillOpacity="0.55"/>
       {/* right */}
-      <rect x="177" y="148" width="32" height="72" rx="5" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="181" y="150" width="24" height="9"  rx="2" fill="currentColor" fillOpacity="0.10"/>
-      <line x1="179" y1="174" x2="207" y2="174" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-      <line x1="179" y1="190" x2="207" y2="190" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.15"/>
-      <rect x="188"  y="163" width="12" height="4" rx="1" fill="rgb(52,211,153)" fillOpacity="0.5"/>
-      <rect x="174" y="218" width="38" height="14" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1"/>
-      <circle cx="193" cy="225" r="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="0.8"/>
+      <path d="M146,118 Q168,110 186,116" stroke="#3b82f6" strokeWidth="9" strokeLinecap="round" strokeOpacity="0.65" fill="none"/>
+      <path d="M146,118 Q168,110 186,116" style={{ stroke:"var(--rb-shell)" }} strokeWidth="6" strokeLinecap="round" fill="none"/>
+      <path d="M146,118 Q168,110 186,116" stroke="#3b82f6" strokeWidth="0.8" strokeLinecap="round" strokeOpacity="0.4" fill="none"/>
+      <circle cx="186" cy="116" r="6.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.58"/>
+      <circle cx="186" cy="116" r="2.4" fill="#3b82f6" fillOpacity="0.55"/>
 
-      {/* ════ FOREARMS ════ */}
-      {/* left */}
-      <rect x="32"  y="232" width="30" height="60" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="36"  y="234" width="22" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="34" y1="258" x2="60"  y2="258" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-      {/* right */}
-      <rect x="178" y="232" width="30" height="60" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="182" y="234" width="22" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="180" y1="258" x2="206" y2="258" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
+      {/* ━━ THRUSTER CONNECTOR ━━ */}
+      <rect x="74" y="174" width="52" height="10" rx="3"
+        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.4"/>
 
-      {/* ════ HANDS ════ */}
-      {/* left palm */}
-      <rect x="27"  y="290" width="38" height="26" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="31"  y="292" width="30" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      {/* left fingers */}
-      {[0,1,2,3].map(i=>(
-        <rect key={i} x={29+i*8} y={312} width="6" height="14" rx="2.5" fill="url(#gArm)" stroke="currentColor" strokeWidth="0.9"/>
-      ))}
-      {/* left thumb */}
-      <rect x="17"  y="294" width="11" height="18" rx="3" fill="url(#gArm)" stroke="currentColor" strokeWidth="0.9"/>
-      {/* right palm */}
-      <rect x="175" y="290" width="38" height="26" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="179" y="292" width="30" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      {/* right fingers */}
-      {[0,1,2,3].map(i=>(
-        <rect key={i} x={177+i*8} y={312} width="6" height="14" rx="2.5" fill="url(#gArm)" stroke="currentColor" strokeWidth="0.9"/>
-      ))}
-      {/* right thumb */}
-      <rect x="212" y="294" width="11" height="18" rx="3" fill="url(#gArm)" stroke="currentColor" strokeWidth="0.9"/>
+      {/* ━━ THRUSTER PODS ━━ */}
+      <rect x="64" y="182" width="32" height="22" rx="6"
+        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6"/>
+      <rect x="104" y="182" width="32" height="22" rx="6"
+        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6"/>
+      <line x1="70" y1="190" x2="90" y2="190" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.28"/>
+      <line x1="110" y1="190" x2="130" y2="190" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.28"/>
+      {/* nozzles */}
+      <rect x="68" y="200" width="24" height="4" rx="2" fill="#3b82f6" fillOpacity="0.42"/>
+      <rect x="108" y="200" width="24" height="4" rx="2" fill="#3b82f6" fillOpacity="0.42"/>
 
-      {/* ════ THIGHS ════ */}
-      {/* left */}
-      <rect x="82"  y="270" width="38" height="58" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="86"  y="272" width="30" height="8"  rx="2" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="84" y1="300" x2="118" y2="300" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-      {/* right */}
-      <rect x="120" y="270" width="38" height="58" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="124" y="272" width="30" height="8"  rx="2" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="122" y1="300" x2="156" y2="300" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-
-      {/* ════ KNEE CAPS ════ */}
-      <rect x="78"  y="325" width="46" height="15" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.1"/>
-      <circle cx="101" cy="332" r="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="101" cy="332" r="2" fill="currentColor" fillOpacity="0.2"/>
-      <rect x="116" y="325" width="46" height="15" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.1"/>
-      <circle cx="139" cy="332" r="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="0.8"/>
-      <circle cx="139" cy="332" r="2" fill="currentColor" fillOpacity="0.2"/>
-
-      {/* ════ LOWER LEGS ════ */}
-      {/* left */}
-      <rect x="83"  y="340" width="36" height="52" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="87"  y="342" width="28" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="85" y1="366" x2="117" y2="366" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-      {/* right */}
-      <rect x="121" y="340" width="36" height="52" rx="4" fill="url(#gArm)" stroke="currentColor" strokeWidth="1.1"/>
-      <rect x="125" y="342" width="28" height="7"  rx="1" fill="currentColor" fillOpacity="0.09"/>
-      <line x1="123" y1="366" x2="155" y2="366" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18"/>
-
-      {/* ════ FEET ════ */}
-      <rect x="70"  y="386" width="56" height="17" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="74"  y="388" width="48" height="5"  rx="1" fill="currentColor" fillOpacity="0.10"/>
-      <rect x="70"  y="398" width="14" height="5"  rx="2" fill="currentColor" fillOpacity="0.14"/>
-      <rect x="114" y="386" width="56" height="17" rx="4" fill="url(#gBody)" stroke="currentColor" strokeWidth="1.2"/>
-      <rect x="118" y="388" width="48" height="5"  rx="1" fill="currentColor" fillOpacity="0.10"/>
-      <rect x="156" y="398" width="14" height="5"  rx="2" fill="currentColor" fillOpacity="0.14"/>
-
-      {/* ════ GROUND SHADOW ════ */}
-      <ellipse cx="120" cy="406" rx="82" ry="6" fill="currentColor" fillOpacity="0.05"/>
+      {/* ━━ FLAMES ━━ */}
+      <path d="M69,204 Q80,240 91,204" fill="#f97316" fillOpacity="0.82"
+        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flame 0.4s ease-in-out infinite" }}/>
+      <path d="M73,204 Q80,226 87,204" fill="#fef08a" fillOpacity="0.72"
+        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flameCore 0.4s ease-in-out infinite" }}/>
+      <path d="M109,204 Q120,240 131,204" fill="#f97316" fillOpacity="0.82"
+        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flame 0.4s ease-in-out infinite 0.2s" }}/>
+      <path d="M113,204 Q120,226 127,204" fill="#fef08a" fillOpacity="0.72"
+        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flameCore 0.4s ease-in-out infinite 0.2s" }}/>
     </svg>
   </motion.div>
 );
@@ -343,9 +202,12 @@ const Footer = () => {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-center gap-5 shrink-0"
           >
-            <div className="flex items-center gap-2 border border-black/15 dark:border-white/15 px-3 py-1.5">
-              <div className="w-1.5 h-1.5 bg-emerald-500" style={{ animation: "antPulse 1.6s ease-in-out infinite", transformOrigin: "center" }} />
-              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/55 dark:text-white/55">
+            <div className="flex items-center gap-2 border border-blue-500/25 bg-blue-500/[0.04] px-3 py-1.5">
+              <span className="relative flex h-1.5 w-1.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping bg-blue-400 opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 bg-blue-500" />
+              </span>
+              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-blue-500/80 dark:text-blue-400/80">
                 UNIT_YS · CONTACT MODULE
               </span>
             </div>

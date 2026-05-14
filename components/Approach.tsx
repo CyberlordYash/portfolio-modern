@@ -2,6 +2,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CanvasRevealEffect } from "@/components/ui/CanvanRevealEffect";
+import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 
 type PhaseColor = "cyan" | "emerald" | "violet" | "amber";
 
@@ -151,17 +152,18 @@ const Approach = () => {
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
           {/* label tag */}
-          <div className="flex items-center gap-2 border border-black/15 dark:border-white/15
-            bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
               className="w-1.5 h-1.5 bg-black dark:bg-white"
             />
-            <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
-              EXECUTION_PIPELINE
-            </span>
-          </div>
+            <RevealChars
+              text="EXECUTION_PIPELINE"
+              className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
+              delay={0.1}
+            />
+          </FadeReveal>
 
           <h2
             className="font-black uppercase leading-none text-black dark:text-white text-center"
@@ -171,15 +173,17 @@ const Approach = () => {
               letterSpacing: "-0.025em",
             }}
           >
-            Approach
+            <RevealText text="Approach" delay={0.18} />
           </h2>
 
           <div className="flex items-center gap-3 mt-3">
-            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
-            <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-              4 Phase Protocol
-            </span>
-            <div className="h-px w-12 bg-black/20 dark:bg-white/20" />
+            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+            <FadeReveal delay={0.6}>
+              <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+                4 Phase Protocol
+              </span>
+            </FadeReveal>
+            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
           </div>
         </div>
 
