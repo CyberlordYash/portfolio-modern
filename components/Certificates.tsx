@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 import { Tabs } from "./ui/Tab";
 import { IconExternalLink, IconCheck } from "@tabler/icons-react";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 import Certificate1 from "../public/web.jpg";
 import Certificate2 from "../public/dsa.jpg";
@@ -102,6 +103,8 @@ const CertCard = ({
   num: string;
 }) => {
   const m = certMeta[metaKey];
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => { setMounted(true); }, []);
   return (
     <div
       className={`group w-full h-full overflow-hidden relative rounded-none bg-gradient-to-br ${m.cardGrad} border ${m.border} transition-all duration-500 ${m.glow} flex flex-col`}
@@ -152,9 +155,18 @@ const CertCard = ({
       <div className="relative z-10 flex items-start justify-between p-7 md:p-10 pb-0">
         <div className="flex flex-col gap-3">
           {/* Module label */}
-          <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.moduleLabel}`}>
-            {`CERT_${num} // VERIFIED`}
-          </span>
+          {mounted ? (
+            <EncryptedText
+              text={`SIG.${num} // AUTHENTICATED`}
+              className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.moduleLabel}`}
+              revealDelayMs={60}
+              charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_/[]!@#"
+            />
+          ) : (
+            <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.moduleLabel}`}>
+              {`SIG.${num} // AUTHENTICATED`}
+            </span>
+          )}
 
           {/* Verified badge */}
           <div className="inline-flex items-center gap-2 border border-white/10 bg-white/[0.06] px-3 py-1.5 backdrop-blur-sm w-fit">

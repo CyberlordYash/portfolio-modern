@@ -156,11 +156,15 @@ const Skills = () => (
               PRIMARY RUNTIME
             </div>
             <h3
-              className="font-black uppercase leading-none text-black dark:text-white"
+              className="font-black uppercase leading-none"
               style={{
                 fontFamily: "var(--font-orbitron)",
                 fontSize: "clamp(1.8rem, 4.5vw, 3.5rem)",
                 letterSpacing: "-0.02em",
+                background: "linear-gradient(135deg, #00ADD8, #34d399)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               GOLANG
@@ -287,8 +291,8 @@ const Skills = () => (
     <div className="flex items-center justify-between px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
       <div className="flex items-center gap-2.5">
         <span className="relative flex h-1.5 w-1.5 shrink-0">
-          <span className="absolute inline-flex h-full w-full animate-ping bg-black/40 dark:bg-white/40" />
-          <span className="relative inline-flex h-1.5 w-1.5 bg-black dark:bg-white" />
+          <span className="absolute inline-flex h-full w-full animate-ping bg-black/40 dark:bg-cyan-400/60" />
+          <span className="relative inline-flex h-1.5 w-1.5 bg-black dark:bg-cyan-400" />
         </span>
         <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/65 dark:text-white/65">RUNTIME ACTIVE</span>
       </div>
@@ -296,7 +300,7 @@ const Skills = () => (
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="w-[3px] bg-black dark:bg-white rounded-sm"
+            className="w-[3px] bg-black dark:bg-cyan-400/70 rounded-sm"
             animate={{ height: ["3px", `${6 + Math.sin(i) * 5}px`, "3px"] }}
             transition={{ duration: 1 + (i % 3) * 0.3, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }}
           />

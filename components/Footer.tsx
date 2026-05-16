@@ -260,7 +260,7 @@ const Footer = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-black uppercase leading-none text-black dark:text-white mb-5"
+              className="font-black uppercase leading-none mb-5 text-black heading-gradient-blue"
               style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3rem,9vw,7rem)", letterSpacing: "-0.03em" }}
             >
               GET IN<br />TOUCH.

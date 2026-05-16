@@ -2,7 +2,8 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CanvasRevealEffect } from "@/components/ui/CanvanRevealEffect";
-import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { RevealText, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 type PhaseColor = "cyan" | "emerald" | "violet" | "amber";
 
@@ -102,7 +103,14 @@ const PhaseCard = ({
             {moduleId}
           </span>
           {/* LED indicator */}
-          <span className={`inline-block w-1.5 h-1.5 ${c.led} ${hovered ? c.ledGlow : ""} transition-shadow duration-300`} />
+          <span
+            className={`inline-block w-1.5 h-1.5 ${c.led}`}
+            style={{
+              animation: hovered
+                ? "led-active 0.8s ease-in-out infinite"
+                : "led-idle 2.5s ease-in-out infinite",
+            }}
+          />
         </div>
 
         {/* Phase label */}
@@ -143,6 +151,8 @@ const PhaseCard = ({
 };
 
 const Approach = () => {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => { setMounted(true); }, []);
   return (
     <section
       className="w-full bg-[#ffffff] dark:bg-[#090909] transition-colors duration-500 py-16"
@@ -158,15 +168,22 @@ const Approach = () => {
               transition={{ duration: 2, repeat: Infinity }}
               className="w-1.5 h-1.5 bg-black dark:bg-white"
             />
-            <RevealChars
-              text="EXECUTION_PIPELINE"
-              className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
-              delay={0.1}
-            />
+            {mounted ? (
+              <EncryptedText
+                text="EXECUTION_PIPELINE"
+                className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
+                revealDelayMs={40}
+                charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./[]"
+              />
+            ) : (
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
+                EXECUTION_PIPELINE
+              </span>
+            )}
           </FadeReveal>
 
           <h2
-            className="font-black uppercase leading-none text-black dark:text-white text-center"
+            className="font-black uppercase leading-none text-center text-black heading-gradient-multicolor"
             style={{
               fontFamily: "var(--font-orbitron)",
               fontSize: "clamp(2.4rem, 7vw, 5.5rem)",

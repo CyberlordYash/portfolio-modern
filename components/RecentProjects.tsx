@@ -4,6 +4,7 @@ import { projects } from "@/data";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Globe } from "lucide-react";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { Spotlight } from "@/components/ui/Spotlight";
 
 /* ── small "+" cross marker (from Hero) ── */
 const Cross = ({ style }: { style?: React.CSSProperties }) => (
@@ -385,6 +386,12 @@ const RecentProjects = () => {
 
   return (
     <section className="relative w-full overflow-hidden py-16 md:py-24 bg-[#ffffff] dark:bg-[#090909]">
+
+      {/* spotlight — dark mode accent */}
+      <Spotlight
+        className="-top-20 left-0 md:-left-10 md:-top-10 opacity-30 dark:opacity-50"
+        fill="cyan"
+      />
 
       {/* subtle grid lines matching hero */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px]" />

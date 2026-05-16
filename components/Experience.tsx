@@ -1,9 +1,26 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { motion } from "framer-motion";
 import { IconExternalLink } from "@tabler/icons-react";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { EncryptedText } from "@/components/ui/encrypted-text";
+import { Spotlight } from "@/components/ui/Spotlight";
+
+function useCountUp(target: number, duration = 1200, trigger: boolean) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!trigger) return;
+    const start = performance.now();
+    const raf = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      setValue(Math.floor(t * target));
+      if (t < 1) requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+  }, [trigger, target, duration]);
+  return value;
+}
 
 /* ─── colour config per company ─── */
 type Accent = "indigo" | "cyan" | "emerald" | "amber";
@@ -72,19 +89,59 @@ const TechTag = ({ label, accent }: { label: string; accent: Accent }) => (
   </span>
 );
 
-const Stat = ({ value, label }: { value: string; label: string }) => (
-  <div className="border border-black/10 dark:border-white/10 px-3 py-2 text-center">
+const Stat = ({ value, label }: { value: string; label: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [triggered, setTriggered] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setTriggered(true); obs.disconnect(); } },
+      { threshold: 0.5 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Parse numeric prefix + suffix (e.g. "50K+" → 50, "K+")
+  const match = value.match(/^(\d+)(.*)$/);
+  const isNumeric = !!match;
+  const numTarget = isNumeric ? parseInt(match![1]) : 0;
+  const suffix = isNumeric ? match![2] : "";
+  const count = useCountUp(numTarget, 1200, triggered);
+
+  return (
     <div
-      className="font-bold leading-none text-black dark:text-white mb-0.5"
-      style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
+      ref={ref}
+      className="border border-black/10 dark:border-white/[0.08] px-3 py-2 text-center
+        bg-white dark:bg-white/[0.03] dark:backdrop-blur-sm
+        dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
     >
-      {value}
+      <div
+        className="font-bold leading-none text-black dark:text-white mb-0.5"
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
+      >
+        {isNumeric ? (
+          triggered ? `${count}${suffix}` : `0${suffix}`
+        ) : mounted ? (
+          <EncryptedText
+            text={value}
+            revealDelayMs={80}
+            charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>"
+            className="font-bold"
+          />
+        ) : value}
+      </div>
+      <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40">
+        {label}
+      </div>
     </div>
-    <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40">
-      {label}
-    </div>
-  </div>
-);
+  );
+};
 
 /* ─── role card shell ─── */
 const RoleCard = ({
@@ -378,8 +435,12 @@ const data = [
    EXPERIENCE
 ═══════════════════════════════════════ */
 const Experience = () => (
-  <section id="experience" className="w-full py-8 md:py-16">
-    <div className="mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
+  <section id="experience" className="relative w-full py-8 md:py-16 overflow-hidden">
+    <Spotlight
+      className="-top-40 left-1/2 -translate-x-1/2 opacity-20 dark:opacity-40 scale-150"
+      fill="#818cf8"
+    />
+    <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
       <div className="bg-[#ffffff] dark:bg-[#090909] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
 
         {/* ── header bar ── */}

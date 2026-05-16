@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Lottie from "react-lottie";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 import animationData from "@/data/confetti.json";
 import {
   MapPin,
@@ -27,6 +28,21 @@ const fadeUp = {
     transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
   }),
 };
+
+function useCountUp(target: number, duration = 1400, trigger: boolean) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!trigger) return;
+    const start = performance.now();
+    const raf = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      setValue(Math.floor(t * target));
+      if (t < 1) requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+  }, [trigger, target, duration]);
+  return value;
+}
 
 const Cross = ({ className = "" }: { className?: string }) => (
   <svg
@@ -60,6 +76,54 @@ const Cell = ({
   >
     {children}
   </motion.div>
+);
+
+const StatItem = ({ target, suffix, label }: { target: number; suffix: string; label: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [triggered, setTriggered] = useState(false);
+  const count = useCountUp(target, 1400, triggered);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setTriggered(true); obs.disconnect(); } }, { threshold: 0.5 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="flex flex-col items-center gap-1 text-center"
+      whileHover={{ scale: 1.08 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      <span
+        className="text-2xl font-black tabular-nums md:text-3xl"
+        style={{ fontFamily: "var(--font-orbitron)", color: "#a78bfa" }}
+      >
+        {triggered ? `${count}${suffix}` : `0${suffix}`}
+      </span>
+      <span className="font-mono text-[8px] uppercase tracking-widest text-black/40 dark:text-white/35">
+        {label}
+      </span>
+    </motion.div>
+  );
+};
+
+const StatsCard = () => (
+  <div className="relative z-10 flex h-full items-center justify-around p-6 pt-10">
+    {[
+      { target: 1, suffix: "+", label: "Yrs Exp" },
+      { target: 50, suffix: "K+", label: "msg/sec" },
+      { target: 800, suffix: "+", label: "Problems" },
+    ].map(({ target, suffix, label }, i) => (
+      <React.Fragment key={label}>
+        <StatItem target={target} suffix={suffix} label={label} />
+        {i < 2 && <div className="h-8 w-px bg-black/10 dark:bg-white/10" />}
+      </React.Fragment>
+    ))}
+  </div>
 );
 
 const Grid = () => {
@@ -123,6 +187,7 @@ const Grid = () => {
             {/* Corner crosses */}
             <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
             <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
+            <GlowingEffect spread={40} proximity={80} disabled={false} borderWidth={1} />
 
             <div className="relative z-10 flex h-full flex-col p-7 md:p-9">
               {/* Module label */}
@@ -196,31 +261,9 @@ const Grid = () => {
             <span className="absolute top-3 left-3 font-mono text-[8px] uppercase tracking-[0.4em] text-violet-500 dark:text-violet-400">
               METRICS
             </span>
+            <GlowingEffect spread={30} proximity={60} disabled={false} borderWidth={1} />
 
-            <div className="relative z-10 flex h-full items-center justify-around p-6 pt-10">
-              {[
-                { value: "1+", label: "Yrs Exp" },
-                { value: "50K+", label: "msg/sec" },
-                { value: "800+", label: "Problems" },
-              ].map(({ value, label }, i) => (
-                <React.Fragment key={label}>
-                  <div className="flex flex-col items-center gap-1 text-center">
-                    <span
-                      className="text-2xl font-black tabular-nums text-black dark:text-white md:text-3xl"
-                      style={{ fontFamily: "var(--font-orbitron)" }}
-                    >
-                      {value}
-                    </span>
-                    <span className="font-mono text-[8px] uppercase tracking-widest text-black/40 dark:text-white/35">
-                      {label}
-                    </span>
-                  </div>
-                  {i < 2 && (
-                    <div className="h-8 w-px bg-black/10 dark:bg-white/10" />
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
+            <StatsCard />
           </Cell>
 
           {/* ── Card 3: Currently Building ── */}

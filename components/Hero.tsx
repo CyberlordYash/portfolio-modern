@@ -213,9 +213,9 @@ const TechOrb = ({ size = 340 }: { size?: number }) => {
           67%  { transform: rotateX(16deg) rotateY(48deg);  }
           100% { transform: rotateX(30deg) rotateY(10deg);  }
         }
-        /* Orbit rings should be monochrome and theme-aware */
+        /* Orbit rings — tinted in dark mode for depth */
         :root { --ob1: #000000; --ob2: #000000; --ob3: #000000; }
-        .dark  { --ob1: #ffffff; --ob2: #ffffff; --ob3: #ffffff; }
+        .dark  { --ob1: #67e8f9; --ob2: #c4b5fd; --ob3: rgba(255,255,255,0.6); }
 
         /* Planet sphere should be grayscale and theme-aware */
         :root { --pf: #ffffff; --ps: #000000; }
@@ -491,7 +491,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full font-black uppercase leading-[1.05] text-center mb-8"
+          className="w-full font-black uppercase leading-[1.05] text-center mb-8 text-black heading-gradient-dark"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(2rem, 11vw, 5rem)",
@@ -583,7 +583,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-[80px] left-8 z-20 font-black uppercase leading-[1.05]"
+          className="absolute top-[80px] left-8 z-20 font-black uppercase leading-[1.05] text-black heading-gradient-dark"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(2.8rem, 6vw, 6.5rem)",
