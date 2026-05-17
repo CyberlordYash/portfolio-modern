@@ -123,7 +123,7 @@ const Stat = ({ value, label }: { value: string; label: string }) => {
     >
       <div
         className="font-bold leading-none text-black dark:text-white mb-0.5"
-        style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.8rem, 3vw, 1.1rem)", letterSpacing: "-0.02em" }}
       >
         {isNumeric ? (
           triggered ? `${count}${suffix}` : `0${suffix}`
@@ -174,7 +174,7 @@ const RoleCard = ({
         {company.split(" ")[0].slice(0, 3).toUpperCase()}
       </div>
 
-      <div className="relative z-10 p-5 md:p-7">
+      <div className="relative z-10 p-5 md:p-8 lg:p-10">
         {/* header row */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
           <div className="flex items-center gap-2.5">
@@ -197,7 +197,7 @@ const RoleCard = ({
         {/* role title */}
         <div
           className="font-bold uppercase leading-tight text-black dark:text-white mb-2"
-          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.85rem,1.8vw,1.2rem)", letterSpacing: "0.02em" }}
+          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.95rem,2.5vw,1.4rem)", letterSpacing: "0.02em" }}
         >
           {role}
         </div>
@@ -209,9 +209,13 @@ const RoleCard = ({
 
         {/* stats row */}
         {stats && (
-          <div className={`grid gap-px mb-5 bg-black/[0.06] dark:bg-white/[0.06]`}
-            style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0,1fr))` }}
-          >
+          <div className={`grid gap-px mb-5 bg-black/[0.06] dark:bg-white/[0.06] ${
+            stats.length === 4
+              ? "grid-cols-2 md:grid-cols-4"
+              : stats.length === 3
+              ? "grid-cols-3"
+              : "grid-cols-2"
+          }`}>
             {stats.map((s) => (
               <Stat key={s.label} {...s} />
             ))}
@@ -444,23 +448,23 @@ const Experience = () => (
       <div className="bg-[#ffffff] dark:bg-[#090909] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
 
         {/* ── header bar ── */}
-        <div className="flex items-center justify-between px-5 md:px-8 py-3.5 border-b border-black/10 dark:border-white/10">
-          <div className="flex items-center gap-3 md:gap-5">
-            <span className="font-mono text-[7px] uppercase tracking-[0.45em] text-black/50 dark:text-white/50">
+        <div className="flex items-center justify-between px-4 md:px-8 py-3 md:py-3.5 border-b border-black/10 dark:border-white/10">
+          <div className="flex items-center gap-2 md:gap-5">
+            <span className="hidden sm:inline font-mono text-[7px] uppercase tracking-[0.45em] text-black/50 dark:text-white/50">
               SYS.HISTORY
             </span>
-            <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
-            <span className="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-black dark:text-white">
+            <div className="hidden sm:block h-3 w-px bg-black/15 dark:bg-white/15" />
+            <span className="font-mono text-[9px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-black dark:text-white">
               WORK EXPERIENCE
             </span>
           </div>
-          <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/50 dark:text-white/50">
+          <span className="font-mono text-[7px] md:text-[8px] uppercase tracking-[0.25em] md:tracking-[0.3em] text-black/50 dark:text-white/50 whitespace-nowrap">
             3 ROLES · 4 ENTRIES
           </span>
         </div>
 
         {/* ── section heading ── */}
-        <div className="px-5 md:px-10 pt-10 pb-2">
+        <div className="px-4 md:px-10 pt-8 md:pt-10 pb-2">
           <div className="flex items-center gap-3 mb-3">
             <DrawLine delay={0} className="h-px w-8 bg-amber-500/60" />
             <RevealChars
@@ -471,11 +475,11 @@ const Experience = () => (
           </div>
           <div
             className="font-black uppercase leading-none text-black dark:text-white"
-            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3rem,10vw,8rem)", letterSpacing: "-0.03em" }}
+            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(2.2rem,10vw,8rem)", letterSpacing: "-0.03em" }}
           >
             <RevealText text="EXPERIENCE" delay={0.1} stagger={0.045} />
           </div>
-          <div className="flex items-center gap-8 mt-4">
+          <div className="flex items-center gap-5 md:gap-8 mt-3 md:mt-4">
             {["BACKEND", "INFRA", "FULL-STACK"].map((tag, i) => (
               <FadeReveal key={tag} delay={0.5 + i * 0.07}>
                 <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/35 dark:text-white/35">
@@ -487,7 +491,7 @@ const Experience = () => (
         </div>
 
         {/* ── timeline ── */}
-        <div className="px-2 md:px-6">
+        <div className="px-3 md:px-8">
           <Timeline data={data} />
         </div>
       </div>

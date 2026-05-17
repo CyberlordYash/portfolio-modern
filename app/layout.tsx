@@ -3,6 +3,7 @@ import { Inter, Quicksand, Orbitron } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
+import PageLoader from "@/components/PageLoader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const quicksand = Quicksand({
@@ -107,6 +108,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <PageLoader />
           <main className="relative z-10">{children}</main>
 
           {/* Structured Data: Professional Person Schema */}

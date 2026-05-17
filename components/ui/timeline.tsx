@@ -26,18 +26,18 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
   return (
     <div className="w-full font-mono" ref={containerRef}>
-      <div ref={ref} className="relative mx-auto max-w-7xl pb-20">
+      <div ref={ref} className="relative pb-20">
         {data.map((item, index) => (
-          <div key={index} className="flex justify-start pt-10 md:gap-10 md:pt-28">
+          <div key={index} className="flex justify-start gap-0 md:gap-10 pt-8 md:pt-24">
 
             {/* ── Sticky date + square dot ── */}
-            <div className="sticky top-36 z-40 flex max-w-xs self-start items-center md:w-full md:flex-row lg:max-w-sm">
+            <div className="sticky top-36 z-40 flex w-14 md:w-[220px] shrink-0 self-start items-center md:flex-row">
               {/* square dot */}
               <div className="absolute left-3 flex h-10 w-10 items-center justify-center bg-[#ffffff] dark:bg-[#090909]">
                 <div className="h-2.5 w-2.5 bg-black dark:bg-white border border-black/30 dark:border-white/30" />
               </div>
 
-              {/* date tag */}
+              {/* date tag — desktop only */}
               <div className="hidden md:flex pl-20">
                 <span className="border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.35em] text-black/60 dark:text-white/60 whitespace-nowrap">
                   {item.title}
@@ -46,7 +46,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
             </div>
 
             {/* ── Content ── */}
-            <div className="relative w-full pl-20 pr-2 md:pl-4">
+            <div className="relative w-full min-w-0 pr-2 md:pl-0">
               {/* mobile date */}
               <span className="mb-4 inline-block border border-black/15 dark:border-white/15 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.3em] text-black/60 dark:text-white/60 md:hidden">
                 {item.title}
