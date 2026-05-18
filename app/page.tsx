@@ -12,8 +12,7 @@ import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
-import { FloatingNav } from "@/components/ui/FloatingNav";
-import { navItems } from "@/data";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // UI & Icons
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
@@ -185,7 +184,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
           <div className="relative z-10 w-full">
-            <FloatingNav navItems={navItems} />
+            <ThemeToggle />
 
             <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
               <section id="home" className="pt-4">

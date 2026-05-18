@@ -159,10 +159,10 @@ const innerIcons: IconFn[] = [
 /* ─── animated SVG orb (3-D multi-ring) ─── */
 const TechOrb = ({ size = 280 }: { size?: number }) => {
   const half = size / 2;
-  const r0 = Math.round(half * 0.976); // outer dashed
-  const r1 = Math.round(half * 0.776); // middle — outer icons
-  const r2 = Math.round(half * 0.553); // inner  — inner icons
-  const r3 = Math.round(half * 0.318); // planet radius
+  const r0 = Math.round(half * 0.86);  // outer dashed
+  const r1 = Math.round(half * 0.68);  // middle — outer icons
+  const r2 = Math.round(half * 0.49);  // inner  — inner icons
+  const r3 = Math.round(half * 0.30);  // planet radius
 
   const compassPts = (r: number) =>
     [0, 90, 180, 270].map((deg) => {
