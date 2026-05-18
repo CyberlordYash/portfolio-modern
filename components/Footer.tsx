@@ -7,165 +7,123 @@ import { ArrowUpRight, Mail, Copy, Check } from "lucide-react";
 const EMAIL = "yashsachan321@gmail.com";
 
 /* ══════════════════════════════════════════
-   FLYING ROBOT
+   GLOWING ENVELOPE
 ══════════════════════════════════════════ */
-const Robot = () => (
+const ContactEnvelope = () => (
   <motion.div
-    animate={{ y: [0, -12, 0] }}
+    animate={{ y: [0, -10, 0] }}
     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
     className="relative"
   >
     <style>{`
-      :root {
-        --rb-shell: #dbeafe;
-        --rb-mid:   #bfdbfe;
-        --rb-recess:#1e3a8a;
+      @keyframes envRingOut {
+        0%   { transform: scale(0.75); opacity: 0.55; }
+        100% { transform: scale(1.7);  opacity: 0; }
       }
-      .dark {
-        --rb-shell: #1e3a5f;
-        --rb-mid:   #0f2744;
-        --rb-recess:#060d1a;
+      @keyframes envAtBlink {
+        0%,100% { opacity: 0.9; }
+        45%,55% { opacity: 0.2; }
       }
-      @keyframes propSpin   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-      @keyframes eyeGlow    { 0%,100%{opacity:0.95} 50%{opacity:0.4} }
-      @keyframes blink      { 0%,86%,100%{transform:scaleY(1)} 89%,95%{transform:scaleY(0.07)} }
-      @keyframes chestPulse { 0%,100%{opacity:0.78} 50%{opacity:1} }
-      @keyframes flame      { 0%,100%{transform:scaleY(1);opacity:0.85}   50%{transform:scaleY(0.42);opacity:0.42} }
-      @keyframes flameCore  { 0%,100%{transform:scaleY(0.48);opacity:0.5} 50%{transform:scaleY(1);opacity:0.95} }
+      @keyframes envTxDot {
+        0%,60%,100% { opacity: 0.15; }
+        30% { opacity: 1; }
+      }
+      @keyframes envScanLine {
+        0%   { transform: translateY(-52px); opacity: 0; }
+        10%  { opacity: 0.25; }
+        90%  { opacity: 0.25; }
+        100% { transform: translateY(52px);  opacity: 0; }
+      }
     `}</style>
 
-    <svg viewBox="0 0 200 262" fill="none" style={{ width: 190, height: 249 }}>
+    <svg viewBox="0 0 200 220" width="190" height="209" style={{ display: "block" }}>
       <defs>
-        <radialGradient id="rChest" cx="38%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#60a5fa"/>
-          <stop offset="100%" stopColor="#1d4ed8"/>
-        </radialGradient>
-        <filter id="fEye" x="-90%" y="-90%" width="280%" height="280%">
-          <feGaussianBlur stdDeviation="3.5" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <linearGradient id="envBodyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#112040" />
+          <stop offset="100%" stopColor="#070e1d" />
+        </linearGradient>
+        <linearGradient id="envFlapGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a3158" />
+          <stop offset="100%" stopColor="#0d1e38" />
+        </linearGradient>
+        <filter id="envAtGlow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="5" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
-        <filter id="fChest" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="6" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="envHaloGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
+        <clipPath id="envBodyClip">
+          <rect x="18" y="68" width="164" height="110" rx="8" />
+        </clipPath>
       </defs>
 
-      {/* ━━ PROPELLER ━━ */}
-      <g style={{ transformOrigin:"100px 23px", animation:"propSpin 0.65s linear infinite" }}>
-        <rect x="48" y="20" width="104" height="6" rx="3" fill="#3b82f6" fillOpacity="0.78"/>
-      </g>
-      <circle cx="100" cy="23" r="6" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1.3" strokeOpacity="0.9"/>
-      <circle cx="100" cy="23" r="2.5" fill="white" fillOpacity="0.88"/>
+      {/* Pulse rings */}
+      {([0, 1, 2] as const).map((i) => (
+        <circle key={i} cx="100" cy="123" r="72" fill="none" stroke="#3b82f6" strokeWidth="1"
+          style={{
+            transformBox: "fill-box",
+            transformOrigin: "center",
+            animation: `envRingOut 3s ease-out ${i}s infinite`,
+          }}
+        />
+      ))}
 
-      {/* ━━ HEAD ━━ */}
-      <rect x="62" y="27" width="76" height="68" rx="14"
-        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1.2" strokeOpacity="0.6"/>
-      {/* forehead bar */}
-      <rect x="70" y="31" width="60" height="7" rx="3.5" fill="#3b82f6" fillOpacity="0.13"/>
-      {/* visor */}
-      <rect x="66" y="48" width="68" height="22" rx="5"
-        style={{ fill:"var(--rb-recess)" }} fillOpacity="0.75" stroke="#3b82f6" strokeWidth="0.9" strokeOpacity="0.5"/>
-      {/* corner ticks on visor */}
-      <line x1="68" y1="50" x2="74" y2="50" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
-      <line x1="126" y1="50" x2="132" y2="50" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
-      <line x1="68" y1="68" x2="74" y2="68" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
-      <line x1="126" y1="68" x2="132" y2="68" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.45"/>
+      {/* Soft halo behind envelope */}
+      <ellipse cx="100" cy="123" rx="68" ry="48"
+        fill="#3b82f6" fillOpacity="0.07" filter="url(#envHaloGlow)" />
 
-      {/* LEFT EYE — glow */}
-      <circle cx="88" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.55" filter="url(#fEye)"
-        style={{ animation:"eyeGlow 2.4s ease-in-out infinite" }}/>
-      {/* LEFT EYE — blinking face */}
-      <g style={{ transformBox:"fill-box", transformOrigin:"center", animation:"blink 5s ease-in-out infinite" }}>
-        <circle cx="88" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.92"/>
-        <circle cx="88" cy="59" r="4.2" fill="white" fillOpacity="0.95"/>
-        <circle cx="85.5" cy="56.5" r="1.8" fill="white" fillOpacity="0.6"/>
-      </g>
+      {/* Envelope body */}
+      <rect x="18" y="68" width="164" height="110" rx="8"
+        fill="url(#envBodyGrad)" stroke="#3b82f6" strokeWidth="1.5" strokeOpacity="0.7" />
 
-      {/* RIGHT EYE — glow */}
-      <circle cx="112" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.55" filter="url(#fEye)"
-        style={{ animation:"eyeGlow 2.4s ease-in-out infinite 0.7s" }}/>
-      {/* RIGHT EYE — blinking face */}
-      <g style={{ transformBox:"fill-box", transformOrigin:"center", animation:"blink 5s ease-in-out infinite 0.7s" }}>
-        <circle cx="112" cy="59" r="8.5" fill="#60a5fa" fillOpacity="0.92"/>
-        <circle cx="112" cy="59" r="4.2" fill="white" fillOpacity="0.95"/>
-        <circle cx="109.5" cy="56.5" r="1.8" fill="white" fillOpacity="0.6"/>
-      </g>
+      {/* Body fold lines (bottom-left and bottom-right to the flap apex) */}
+      <line x1="18"  y1="178" x2="100" y2="128" stroke="#3b82f6" strokeWidth="0.6" strokeOpacity="0.22" />
+      <line x1="182" y1="178" x2="100" y2="128" stroke="#3b82f6" strokeWidth="0.6" strokeOpacity="0.22" />
 
-      {/* smile arc */}
-      <path d="M90,75 Q100,83 110,75" stroke="#3b82f6" strokeWidth="1.8" strokeOpacity="0.6" strokeLinecap="round" fill="none"/>
-      {/* chin bar */}
-      <rect x="84" y="80" width="32" height="6" rx="3"
-        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.6" strokeOpacity="0.35"/>
+      {/* Scan line overlay (clipped to body) */}
+      <line x1="18" y1="123" x2="182" y2="123" stroke="#93c5fd" strokeWidth="1"
+        clipPath="url(#envBodyClip)"
+        style={{ animation: "envScanLine 3s ease-in-out infinite" }} />
 
-      {/* ━━ NECK ━━ */}
-      <rect x="89" y="95" width="22" height="13" rx="3"
-        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.9" strokeOpacity="0.45"/>
-      <circle cx="93.5" cy="101.5" r="1.6" fill="#3b82f6" fillOpacity="0.5"/>
-      <circle cx="106.5" cy="101.5" r="1.6" fill="#3b82f6" fillOpacity="0.5"/>
+      {/* Flap V-shape */}
+      <path d="M18,68 L100,126 L182,68"
+        fill="url(#envFlapGrad)" stroke="#3b82f6" strokeWidth="1.4" strokeOpacity="0.7" />
+      <line x1="18" y1="68" x2="182" y2="68" stroke="#3b82f6" strokeWidth="1.2" strokeOpacity="0.5" />
 
-      {/* ━━ BODY ━━ */}
-      <rect x="54" y="108" width="92" height="66" rx="10"
-        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1.2" strokeOpacity="0.6"/>
-      {/* top stripe */}
-      <rect x="58" y="108" width="84" height="4" rx="2" fill="#3b82f6" fillOpacity="0.16"/>
-      {/* shoulder bolts */}
-      <circle cx="63" cy="117" r="2.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.55"/>
-      <circle cx="137" cy="117" r="2.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.55"/>
-      {/* left vents */}
-      <rect x="58" y="124" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.42"/>
-      <rect x="58" y="136" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.28"/>
-      <rect x="58" y="148" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.16"/>
-      {/* right vents */}
-      <rect x="138" y="124" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.42"/>
-      <rect x="138" y="136" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.28"/>
-      <rect x="138" y="148" width="4" height="8" rx="1.5" fill="#3b82f6" fillOpacity="0.16"/>
-      {/* chest reactor */}
-      <circle cx="100" cy="138" r="22" fill="#3b82f6" fillOpacity="0.07"/>
-      <circle cx="100" cy="138" r="16" fill="url(#rChest)" stroke="#60a5fa" strokeWidth="1.2" strokeOpacity="0.85"
-        filter="url(#fChest)" style={{ animation:"chestPulse 2.5s ease-in-out infinite" }}/>
-      <circle cx="100" cy="138" r="9" style={{ fill:"var(--rb-recess)" }} stroke="#93c5fd" strokeWidth="0.9" strokeOpacity="0.75"/>
-      <circle cx="100" cy="138" r="4.5" fill="white" fillOpacity="0.92"/>
-      {/* bottom stripe */}
-      <rect x="58" y="170" width="84" height="4" rx="2" fill="#3b82f6" fillOpacity="0.14"/>
+      {/* Corner bracket accents — top-left */}
+      <line x1="18" y1="68" x2="30" y2="68" stroke="#60a5fa" strokeWidth="1.8" strokeOpacity="0.85" />
+      <line x1="18" y1="68" x2="18" y2="80" stroke="#60a5fa" strokeWidth="1.8" strokeOpacity="0.85" />
+      {/* top-right */}
+      <line x1="182" y1="68" x2="170" y2="68" stroke="#60a5fa" strokeWidth="1.8" strokeOpacity="0.85" />
+      <line x1="182" y1="68" x2="182" y2="80" stroke="#60a5fa" strokeWidth="1.8" strokeOpacity="0.85" />
+      {/* bottom-left */}
+      <line x1="18"  y1="178" x2="30"  y2="178" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.4" />
+      <line x1="18"  y1="178" x2="18"  y2="166" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.4" />
+      {/* bottom-right */}
+      <line x1="182" y1="178" x2="170" y2="178" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.4" />
+      <line x1="182" y1="178" x2="182" y2="166" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.4" />
 
-      {/* ━━ ARMS ━━ */}
-      {/* left — blue outline, shell fill, blue edge line */}
-      <path d="M54,118 Q32,110 14,116" stroke="#3b82f6" strokeWidth="9" strokeLinecap="round" strokeOpacity="0.65" fill="none"/>
-      <path d="M54,118 Q32,110 14,116" style={{ stroke:"var(--rb-shell)" }} strokeWidth="6" strokeLinecap="round" fill="none"/>
-      <path d="M54,118 Q32,110 14,116" stroke="#3b82f6" strokeWidth="0.8" strokeLinecap="round" strokeOpacity="0.4" fill="none"/>
-      <circle cx="14" cy="116" r="6.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.58"/>
-      <circle cx="14" cy="116" r="2.4" fill="#3b82f6" fillOpacity="0.55"/>
-      {/* right */}
-      <path d="M146,118 Q168,110 186,116" stroke="#3b82f6" strokeWidth="9" strokeLinecap="round" strokeOpacity="0.65" fill="none"/>
-      <path d="M146,118 Q168,110 186,116" style={{ stroke:"var(--rb-shell)" }} strokeWidth="6" strokeLinecap="round" fill="none"/>
-      <path d="M146,118 Q168,110 186,116" stroke="#3b82f6" strokeWidth="0.8" strokeLinecap="round" strokeOpacity="0.4" fill="none"/>
-      <circle cx="186" cy="116" r="6.5" style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.58"/>
-      <circle cx="186" cy="116" r="2.4" fill="#3b82f6" fillOpacity="0.55"/>
+      {/* @ symbol */}
+      <text x="100" y="155" textAnchor="middle" dominantBaseline="middle"
+        fill="#60a5fa" fontSize="36" fontFamily="monospace" fontWeight="bold"
+        filter="url(#envAtGlow)"
+        style={{ animation: "envAtBlink 2.8s ease-in-out infinite" }}>
+        @
+      </text>
 
-      {/* ━━ THRUSTER CONNECTOR ━━ */}
-      <rect x="74" y="174" width="52" height="10" rx="3"
-        style={{ fill:"var(--rb-mid)" }} stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.4"/>
+      {/* Transmission dots */}
+      {([-14, 0, 14] as const).map((dx, i) => (
+        <circle key={i} cx={100 + dx} cy="173" r="2.5" fill="#3b82f6"
+          style={{ animation: `envTxDot 1.5s ease-in-out ${i * 0.5}s infinite` }} />
+      ))}
 
-      {/* ━━ THRUSTER PODS ━━ */}
-      <rect x="64" y="182" width="32" height="22" rx="6"
-        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6"/>
-      <rect x="104" y="182" width="32" height="22" rx="6"
-        style={{ fill:"var(--rb-shell)" }} stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6"/>
-      <line x1="70" y1="190" x2="90" y2="190" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.28"/>
-      <line x1="110" y1="190" x2="130" y2="190" stroke="#3b82f6" strokeWidth="0.8" strokeOpacity="0.28"/>
-      {/* nozzles */}
-      <rect x="68" y="200" width="24" height="4" rx="2" fill="#3b82f6" fillOpacity="0.42"/>
-      <rect x="108" y="200" width="24" height="4" rx="2" fill="#3b82f6" fillOpacity="0.42"/>
-
-      {/* ━━ FLAMES ━━ */}
-      <path d="M69,204 Q80,240 91,204" fill="#f97316" fillOpacity="0.82"
-        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flame 0.4s ease-in-out infinite" }}/>
-      <path d="M73,204 Q80,226 87,204" fill="#fef08a" fillOpacity="0.72"
-        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flameCore 0.4s ease-in-out infinite" }}/>
-      <path d="M109,204 Q120,240 131,204" fill="#f97316" fillOpacity="0.82"
-        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flame 0.4s ease-in-out infinite 0.2s" }}/>
-      <path d="M113,204 Q120,226 127,204" fill="#fef08a" fillOpacity="0.72"
-        style={{ transformBox:"fill-box", transformOrigin:"50% 0%", animation:"flameCore 0.4s ease-in-out infinite 0.2s" }}/>
+      {/* TRANSMITTING label */}
+      <text x="100" y="205" textAnchor="middle"
+        fill="#3b82f6" fillOpacity="0.4" fontSize="7.5" fontFamily="monospace" letterSpacing="3">
+        TRANSMITTING
+      </text>
     </svg>
   </motion.div>
 );
@@ -212,7 +170,7 @@ const Footer = () => {
               </span>
             </div>
 
-            <Robot />
+            <ContactEnvelope />
 
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-3 border border-black/10 dark:border-white/10 px-4 py-2">

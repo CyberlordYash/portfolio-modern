@@ -71,6 +71,18 @@ export const DesktopSidebar = ({
   ...props
 }: MotionDivProps) => {
   const { open, setOpen, animate } = useSidebar();
+  const [scrollPct, setScrollPct] = useState(0);
+
+  useEffect(() => {
+    const el = document.getElementById("main-scroll");
+    if (!el) return;
+    const onScroll = () => {
+      const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
+      setScrollPct(isFinite(pct) ? Math.min(1, Math.max(0, pct)) : 0);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <motion.div
@@ -108,6 +120,15 @@ export const DesktopSidebar = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Scroll progress bar on right edge */}
+      <div className="absolute right-0 top-0 bottom-0 w-[2px] bg-black/5 dark:bg-white/5 pointer-events-none z-10">
+        <motion.div
+          className="absolute top-0 left-0 right-0 bg-blue-500"
+          animate={{ height: `${scrollPct * 100}%` }}
+          transition={{ type: "spring", stiffness: 180, damping: 28 }}
+        />
+      </div>
 
       {children}
     </motion.div>
@@ -268,21 +289,26 @@ export const SidebarLink = ({
           "group/link relative flex items-center gap-3 px-3 py-2.5",
           "transition-all duration-150 overflow-hidden",
           isActive
-            ? "text-black dark:text-white bg-black/[0.04] dark:bg-white/[0.04]"
-            : "text-black/50 dark:text-white/45 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] hover:text-black dark:hover:text-white",
+            ? "text-blue-500 dark:text-blue-400 bg-blue-500/[0.08]"
+            : "text-black/50 dark:text-white/45 hover:bg-blue-500/[0.04] hover:text-black dark:hover:text-white",
           className,
         )}
       >
         {/* Active left bar */}
         <motion.div
-          className="absolute left-0 top-[20%] bottom-[20%] w-[2px] bg-black dark:bg-white"
+          className="absolute left-0 top-[20%] bottom-[20%] w-[2px] bg-blue-500"
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         />
 
         {/* Icon */}
-        <div className="relative z-10 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-black dark:group-hover/link:text-white transition-colors">
+        <div className={cn(
+          "relative z-10 shrink-0 transition-colors",
+          isActive
+            ? "text-blue-500 dark:text-blue-400"
+            : "text-black/60 dark:text-white/60 group-hover/link:text-black dark:group-hover/link:text-white"
+        )}>
           {link.icon}
         </div>
 
@@ -317,7 +343,7 @@ export const SidebarLink = ({
               shadow-lg"
           >
             {isActive && (
-              <div className="h-1.5 w-1.5 bg-black dark:bg-white shrink-0" />
+              <div className="h-1.5 w-1.5 bg-blue-500 shrink-0" />
             )}
             {link.label}
           </motion.div>

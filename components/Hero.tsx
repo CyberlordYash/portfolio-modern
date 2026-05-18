@@ -157,7 +157,7 @@ const innerIcons: IconFn[] = [
 ];
 
 /* ─── animated SVG orb (3-D multi-ring) ─── */
-const TechOrb = ({ size = 340 }: { size?: number }) => {
+const TechOrb = ({ size = 280 }: { size?: number }) => {
   const half = size / 2;
   const r0 = Math.round(half * 0.976); // outer dashed
   const r1 = Math.round(half * 0.776); // middle — outer icons
@@ -375,12 +375,12 @@ const GlitchOverlay = () => (
 ══════════════════════════════════════════ */
 const Hero = () => {
   const [time, setTime] = useState("--:--");
-  const [mobileOrbSize, setMobileOrbSize] = useState(240);
+  const [mobileOrbSize, setMobileOrbSize] = useState(200);
 
   useEffect(() => {
     const updateOrbSize = () => {
       const vw = window.innerWidth;
-      setMobileOrbSize(Math.min(300, Math.max(200, Math.round(vw * 0.78))));
+      setMobileOrbSize(Math.min(240, Math.max(160, Math.round(vw * 0.62))));
     };
     updateOrbSize();
     window.addEventListener("resize", updateOrbSize);

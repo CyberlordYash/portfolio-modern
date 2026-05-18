@@ -26,9 +26,13 @@ import {
   IconBriefcase,
   IconFolderCode,
   IconBulb,
+  IconBrandGithub,
+  IconBrandLinkedin,
 } from "@tabler/icons-react";
 import TerminalSnake from "./TerminalSnake";
-import FooterTerminal from "./FooterTerminal";
+import dynamic from "next/dynamic";
+
+const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
 
 const links = [
   {
@@ -74,7 +78,7 @@ export default function Home() {
               {/* Brand */}
               <div className="flex items-center gap-3 h-[64px] px-2 border-b border-black/10 dark:border-white/10">
                 {/* thin vertical bar */}
-                <div className="h-8 w-[2px] bg-black/30 dark:bg-white/30 shrink-0" />
+                <div className="h-8 w-[2px] bg-blue-500/60 shrink-0" />
                 <motion.div
                   animate={{ display: open ? "flex" : "none", opacity: open ? 1 : 0 }}
                   className="flex flex-col"
@@ -94,6 +98,27 @@ export default function Home() {
                   <SidebarLink key={idx} link={link} />
                 ))}
               </div>
+
+              {/* Skills section — only visible when expanded */}
+              <motion.div
+                animate={{ opacity: open ? 1 : 0, height: open ? "auto" : 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="mx-3 mt-5 mb-1 flex flex-col gap-2.5">
+                  <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/30 dark:text-white/30">
+                    STACK
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Golang","TypeScript","React","Node.js","Docker","PostgreSQL","Kafka","GCP"].map(skill => (
+                      <span key={skill}
+                        className="font-mono text-[7.5px] px-2 py-0.5 border border-blue-500/25 text-blue-500/75 dark:text-blue-400/75 bg-blue-500/[0.05] whitespace-nowrap">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </div>
 
             {/* ── Bottom: Status + Profile ── */}
@@ -102,8 +127,8 @@ export default function Home() {
               {/* Status */}
               <div className="flex items-center gap-3 px-3 py-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping bg-black/40 dark:bg-white/40 opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 bg-black dark:bg-white" />
+                  <span className="absolute inline-flex h-full w-full animate-ping bg-blue-400 opacity-60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 bg-blue-500" />
                 </span>
                 <motion.span
                   animate={{ display: open ? "inline" : "none", opacity: open ? 1 : 0 }}
@@ -113,14 +138,40 @@ export default function Home() {
                 </motion.span>
               </div>
 
+              {/* Social links — same style as nav links */}
+              <a href="https://github.com/CyberlordYash" target="_blank" rel="noopener noreferrer"
+                className="group/link relative flex items-center gap-3 px-3 py-2.5 transition-all duration-150
+                  text-black/50 dark:text-white/45 hover:bg-blue-500/[0.04] hover:text-black dark:hover:text-white">
+                <IconBrandGithub className="h-5 w-5 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-blue-500 transition-colors" />
+                <motion.span
+                  animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="font-mono text-[9px] uppercase tracking-[0.3em] whitespace-nowrap"
+                >
+                  GitHub
+                </motion.span>
+              </a>
+              <a href="https://www.linkedin.com/in/yash-sachan-187405209/" target="_blank" rel="noopener noreferrer"
+                className="group/link relative flex items-center gap-3 px-3 py-2.5 transition-all duration-150
+                  text-black/50 dark:text-white/45 hover:bg-blue-500/[0.04] hover:text-black dark:hover:text-white">
+                <IconBrandLinkedin className="h-5 w-5 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-blue-500 transition-colors" />
+                <motion.span
+                  animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="font-mono text-[9px] uppercase tracking-[0.3em] whitespace-nowrap"
+                >
+                  LinkedIn
+                </motion.span>
+              </a>
+
               {/* Profile */}
               <SidebarLink
                 link={{
                   label: "YASH SACHAN",
                   href: "#",
                   icon: (
-                    <div className="relative shrink-0 w-6 h-6 border border-black/20 dark:border-white/20 flex items-center justify-center">
-                      <span className="font-mono text-[8px] font-bold text-black/60 dark:text-white/60">YS</span>
+                    <div className="relative shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                      <span className="font-mono text-[8px] font-bold text-white">YS</span>
                     </div>
                   ),
                 }}
@@ -130,7 +181,7 @@ export default function Home() {
         </Sidebar>
 
         {/* MAIN CONTENT AREA */}
-        <div className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-black">
+        <div id="main-scroll" className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-black">
           <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
           <div className="relative z-10 w-full">
@@ -233,8 +284,8 @@ export default function Home() {
                 <Approach />
               </section>
 
-              <section id="terminal-console" className="px-4 md:px-0 py-10">
-                <FooterTerminal />
+              <section id="skills-graph" className="px-4 md:px-0 py-10">
+                <SkillsGraph />
               </section>
 
               <Footer />
