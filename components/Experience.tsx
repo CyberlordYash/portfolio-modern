@@ -164,7 +164,7 @@ const RoleCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative bg-[#ffffff] dark:bg-[#090909] border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} overflow-hidden`}
+      className={`relative bg-[#ffffff] dark:bg-[#060d1a] border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} overflow-hidden`}
     >
       {/* watermark */}
       <div
@@ -277,7 +277,7 @@ const AchievementBlock = ({
 }) => {
   const a = accentMap[accent];
   return (
-    <div className={`border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} bg-[#ffffff] dark:bg-[#090909] p-5`}>
+    <div className={`border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} bg-[#ffffff] dark:bg-[#060d1a] p-5`}>
       <div className="flex items-center gap-3 mb-4">
         {badge && (
           <span className={`font-mono text-[8px] uppercase tracking-[0.3em] border px-2 py-0.5 ${a.badge}`}>
@@ -445,7 +445,7 @@ const Experience = () => (
       fill="#818cf8"
     />
     <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
-      <div className="bg-[#ffffff] dark:bg-[#090909] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
+      <div className="bg-[#ffffff] dark:bg-[#060d1a] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
 
         {/* ── header bar ── */}
         <div className="flex items-center justify-between px-4 md:px-8 py-3 md:py-3.5 border-b border-black/10 dark:border-white/10">

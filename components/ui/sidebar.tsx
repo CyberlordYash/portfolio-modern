@@ -88,7 +88,7 @@ export const DesktopSidebar = ({
     <motion.div
       className={cn(
         "h-full hidden md:flex md:flex-col shrink-0 relative overflow-visible",
-        "bg-[#ffffff] dark:bg-[#090909]",
+        "bg-[#ffffff] dark:bg-[#060d1a]",
         "border-r border-black/10 dark:border-white/10",
         className,
       )}
@@ -160,7 +160,7 @@ export const MobileSidebar = ({
         onClick={() => setOpen(true)}
         whileTap={{ scale: 0.9 }}
         className="md:hidden fixed top-4 left-4 z-[500] flex h-9 w-9 items-center justify-center
-          bg-[#ffffff] dark:bg-[#090909]
+          bg-[#ffffff] dark:bg-[#060d1a]
           border border-black/20 dark:border-white/20
           text-black dark:text-white
           transition-colors hover:bg-black/5 dark:hover:bg-white/5"
@@ -193,7 +193,7 @@ export const MobileSidebar = ({
                   className={cn(
                     "fixed left-0 top-0 h-full w-[78%] max-w-[300px] z-[900]",
                     "flex flex-col",
-                    "bg-[#ffffff] dark:bg-[#090909]",
+                    "bg-[#ffffff] dark:bg-[#060d1a]",
                     "border-r border-black/15 dark:border-white/15",
                     className,
                   )}
@@ -338,7 +338,7 @@ export const SidebarLink = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.12 }}
             className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.25em] whitespace-nowrap
-              bg-[#ffffff] dark:bg-[#090909] text-black dark:text-white
+              bg-[#ffffff] dark:bg-[#060d1a] text-black dark:text-white
               border border-black/15 dark:border-white/15
               shadow-lg"
           >

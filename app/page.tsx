@@ -65,11 +65,11 @@ export default function Home() {
   const [open, setOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
-      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-black">
+    <main className="relative min-h-screen bg-black xbox-bg text-slate-200 font-Quicksand selection:bg-blue-500/30">
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-transparent">
         {/* RESPONSIVE SIDEBAR */}
         <Sidebar open={open} setOpen={setOpen} animate={true}>
-          <SidebarBody className="justify-between gap-10 bg-[#ffffff] dark:bg-[#090909] px-2">
+          <SidebarBody className="justify-between gap-10 bg-[#ffffff] dark:bg-[#060d1a]/90 px-2">
 
             {/* ── Top: Brand + Nav ── */}
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -180,7 +180,7 @@ export default function Home() {
         </Sidebar>
 
         {/* MAIN CONTENT AREA */}
-        <div id="main-scroll" className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-black">
+        <div id="main-scroll" className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-transparent">
           <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
           <div className="relative z-10 w-full">
@@ -195,7 +195,7 @@ export default function Home() {
                 {/* ── Section heading ── */}
                 <div className="flex flex-col items-center mb-8 md:mb-10">
                   {/* label tag */}
-                  <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+                  <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
                     <motion.div
                       animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}

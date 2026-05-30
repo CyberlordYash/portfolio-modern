@@ -33,13 +33,13 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
             {/* ── Sticky date + square dot ── */}
             <div className="sticky top-36 z-40 flex w-14 md:w-[220px] shrink-0 self-start items-center md:flex-row">
               {/* square dot */}
-              <div className="absolute left-3 flex h-10 w-10 items-center justify-center bg-[#ffffff] dark:bg-[#090909]">
+              <div className="absolute left-3 flex h-10 w-10 items-center justify-center bg-[#ffffff] dark:bg-[#060d1a]">
                 <div className="h-2.5 w-2.5 bg-black dark:bg-white border border-black/30 dark:border-white/30" />
               </div>
 
               {/* date tag — desktop only */}
               <div className="hidden md:flex pl-20">
-                <span className="border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.35em] text-black/60 dark:text-white/60 whitespace-nowrap">
+                <span className="border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.35em] text-black/60 dark:text-white/60 whitespace-nowrap">
                   {item.title}
                 </span>
               </div>

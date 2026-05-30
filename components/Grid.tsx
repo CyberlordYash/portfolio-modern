@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import Lottie from "react-lottie";
+import dynamic from "next/dynamic";
+const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import animationData from "@/data/confetti.json";
@@ -138,13 +139,13 @@ const Grid = () => {
   return (
     <section
       id="about"
-      className="w-full py-16 md:py-24 bg-[#ffffff] dark:bg-[#090909] transition-colors duration-500"
+      className="w-full py-16 md:py-24 bg-[#ffffff] dark:bg-[#060d1a] transition-colors duration-500"
     >
       <div className="mx-auto max-w-7xl px-4 md:px-6">
 
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}

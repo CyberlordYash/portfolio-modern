@@ -98,7 +98,7 @@ const TechCard = ({ techKey, delay = 0 }: { techKey: string; delay?: number }) =
 const Skills = () => (
   <div
     id="skills"
-    className="relative w-full bg-[#ffffff] dark:bg-[#090909] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden"
+    className="relative w-full bg-[#ffffff] dark:bg-[#060d1a] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden"
   >
     {/* HEADER BAR */}
     <div className="flex items-center justify-between px-5 md:px-7 py-3.5 border-b border-black/10 dark:border-white/10">

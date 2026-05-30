@@ -291,13 +291,13 @@ const Certificates = () => {
   return (
     <section
       id="certificates"
-      className="relative w-full overflow-hidden py-16 bg-[#ffffff] dark:bg-[#090909] transition-colors duration-500 md:py-24"
+      className="relative w-full overflow-hidden py-16 bg-[#ffffff] dark:bg-[#060d1a] transition-colors duration-500 md:py-24"
     >
       <div className="relative mx-auto max-w-[90vw] px-4 2xl:max-w-[1400px]">
 
         {/* Section Header */}
         <div className="mb-12 flex flex-col items-center">
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#090909] px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}

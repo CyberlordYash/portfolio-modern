@@ -16,351 +16,75 @@ const Cross = ({ style }: { style?: React.CSSProperties }) => (
   </div>
 );
 
-/* ─── tech icons for orb compass points ─── */
-type IconFn = (cx: number, cy: number) => React.ReactElement;
+/* ─── Gemini-style animated gradient YS monogram ─── */
+const GeminiYS = ({ size = 280 }: { size?: number }) => (
+  <div
+    className="relative flex items-center justify-center"
+    style={{ width: size, height: size }}
+  >
+    <style>{`
+      @keyframes gm-text {
+        0%,100% { background-position:0% 50%;   }
+        50%     { background-position:100% 50%; }
+      }
+      @keyframes gm-glow {
+        0%,100% { filter:drop-shadow(0 0 18px rgba(30,64,175,0.8)); }
+        50%     { filter:drop-shadow(0 0 26px rgba(37,99,235,0.7)); }
+      }
+    `}</style>
 
-const outerIcons: IconFn[] = [
-  // candlestick — cyan
-  (cx, cy) => (
-    <g transform={`translate(${cx - 7},${cy - 7})`}>
-      <g className="moon-f moon-o">
-        <circle cx="7" cy="7" r="10.5" fill="url(#ms1)" />
-        <g fill="none" stroke="#22d3ee" strokeWidth="1.3" strokeLinecap="round">
-          <line x1="3.5" y1="1.5" x2="3.5" y2="12.5" />
-          <rect x="2" y="3.5" width="3" height="5" />
-          <line x1="10.5" y1="1.5" x2="10.5" y2="12.5" />
-          <rect x="9" y="5.5" width="3" height="3.5" />
-        </g>
-        <circle cx="7" cy="7" r="10.5" fill="none" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.5" />
-        <ellipse cx="3.5" cy="3.0" rx="3.2" ry="2.0" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // database — violet
-  (cx, cy) => (
-    <g transform={`translate(${cx - 7},${cy - 7})`}>
-      <g className="moon-f moon-o">
-        <circle cx="7" cy="7" r="10.5" fill="url(#ms2)" />
-        <g fill="none" stroke="#a78bfa" strokeWidth="1.3" strokeLinecap="round">
-          <ellipse cx="7" cy="3.8" rx="4.5" ry="1.6" />
-          <line x1="2.5" y1="3.8" x2="2.5" y2="10.2" />
-          <line x1="11.5" y1="3.8" x2="11.5" y2="10.2" />
-          <ellipse cx="7" cy="10.2" rx="4.5" ry="1.6" />
-        </g>
-        <circle cx="7" cy="7" r="10.5" fill="none" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.5" />
-        <ellipse cx="3.5" cy="3.0" rx="3.2" ry="2.0" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // network — emerald
-  (cx, cy) => (
-    <g transform={`translate(${cx - 7},${cy - 7})`}>
-      <g className="moon-f moon-o">
-        <circle cx="7" cy="7" r="10.5" fill="url(#ms3)" />
-        <g fill="none" stroke="#34d399" strokeWidth="1.3" strokeLinecap="round">
-          <circle cx="7" cy="2.8" r="1.7" />
-          <circle cx="2.8" cy="11" r="1.7" />
-          <circle cx="11.2" cy="11" r="1.7" />
-          <line x1="7" y1="4.5" x2="4" y2="9.4" />
-          <line x1="7" y1="4.5" x2="10" y2="9.4" />
-          <line x1="4.5" y1="11" x2="9.5" y2="11" />
-        </g>
-        <circle cx="7" cy="7" r="10.5" fill="none" stroke="#34d399" strokeWidth="1" strokeOpacity="0.5" />
-        <ellipse cx="3.5" cy="3.0" rx="3.2" ry="2.0" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // server rack — orange
-  (cx, cy) => (
-    <g transform={`translate(${cx - 7},${cy - 7})`}>
-      <g className="moon-f moon-o">
-        <circle cx="7" cy="7" r="10.5" fill="url(#ms4)" />
-        <g fill="none" stroke="#fb923c" strokeWidth="1.3" strokeLinecap="round">
-          <rect x="1.5" y="2" width="11" height="4" />
-          <rect x="1.5" y="8" width="11" height="4" />
-          <circle cx="3.5" cy="4" r="0.9" fill="#fb923c" fillOpacity="0.7" />
-          <circle cx="3.5" cy="10" r="0.9" fill="#fb923c" fillOpacity="0.7" />
-          <line x1="6" y1="3.2" x2="11" y2="3.2" />
-          <line x1="6" y1="9.2" x2="11" y2="9.2" />
-        </g>
-        <circle cx="7" cy="7" r="10.5" fill="none" stroke="#fb923c" strokeWidth="1" strokeOpacity="0.5" />
-        <ellipse cx="3.5" cy="3.0" rx="3.2" ry="2.0" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-];
-
-const innerIcons: IconFn[] = [
-  // message queue — blue
-  (cx, cy) => (
-    <g transform={`translate(${cx - 6},${cy - 6})`}>
-      <g className="moon-f moon-i">
-        <circle cx="6" cy="6" r="9" fill="url(#ms5)" />
-        <g fill="none" stroke="#60a5fa" strokeWidth="1.2" strokeLinecap="round">
-          <line x1="1.5" y1="3.5" x2="10.5" y2="3.5" />
-          <line x1="1.5" y1="6" x2="10.5" y2="6" />
-          <line x1="1.5" y1="8.5" x2="10.5" y2="8.5" />
-          <polyline points="8,4.8 10.5,6 8,7.2" />
-        </g>
-        <circle cx="6" cy="6" r="9" fill="none" stroke="#60a5fa" strokeWidth="0.9" strokeOpacity="0.5" />
-        <ellipse cx="2.8" cy="2.6" rx="2.5" ry="1.6" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // load balancer — pink
-  (cx, cy) => (
-    <g transform={`translate(${cx - 6},${cy - 6})`}>
-      <g className="moon-f moon-i">
-        <circle cx="6" cy="6" r="9" fill="url(#ms6)" />
-        <g fill="none" stroke="#f472b6" strokeWidth="1.2" strokeLinecap="round">
-          <line x1="6" y1="1.5" x2="6" y2="4.5" />
-          <line x1="6" y1="4.5" x2="2" y2="9.5" />
-          <line x1="6" y1="4.5" x2="10" y2="9.5" />
-          <line x1="1" y1="9.5" x2="3" y2="9.5" />
-          <line x1="9" y1="9.5" x2="11" y2="9.5" />
-        </g>
-        <circle cx="6" cy="6" r="9" fill="none" stroke="#f472b6" strokeWidth="0.9" strokeOpacity="0.5" />
-        <ellipse cx="2.8" cy="2.6" rx="2.5" ry="1.6" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // order flow — amber
-  (cx, cy) => (
-    <g transform={`translate(${cx - 6},${cy - 6})`}>
-      <g className="moon-f moon-i">
-        <circle cx="6" cy="6" r="9" fill="url(#ms7)" />
-        <g fill="none" stroke="#fbbf24" strokeWidth="1.2" strokeLinecap="round">
-          <line x1="1.5" y1="4" x2="10.5" y2="4" />
-          <polyline points="8,2.2 10.5,4 8,5.8" />
-          <line x1="10.5" y1="8" x2="1.5" y2="8" />
-          <polyline points="4,6.2 1.5,8 4,9.8" />
-        </g>
-        <circle cx="6" cy="6" r="9" fill="none" stroke="#fbbf24" strokeWidth="0.9" strokeOpacity="0.5" />
-        <ellipse cx="2.8" cy="2.6" rx="2.5" ry="1.6" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-  // signal wave — green
-  (cx, cy) => (
-    <g transform={`translate(${cx - 6},${cy - 6})`}>
-      <g className="moon-f moon-i">
-        <circle cx="6" cy="6" r="9" fill="url(#ms8)" />
-        <g fill="none" stroke="#86efac" strokeWidth="1.2" strokeLinecap="round">
-          <path d="M1.5,6 Q3,2 6,6 Q9,10 10.5,6" />
-          <line x1="1.5" y1="10.5" x2="10.5" y2="10.5" strokeOpacity="0.3" />
-        </g>
-        <circle cx="6" cy="6" r="9" fill="none" stroke="#86efac" strokeWidth="0.9" strokeOpacity="0.5" />
-        <ellipse cx="2.8" cy="2.6" rx="2.5" ry="1.6" fill="white" fillOpacity="0.2" />
-      </g>
-    </g>
-  ),
-];
-
-/* ─── animated SVG orb (3-D multi-ring) ─── */
-const TechOrb = ({ size = 280 }: { size?: number }) => {
-  const half = size / 2;
-  const r0 = Math.round(half * 0.86);  // outer dashed
-  const r1 = Math.round(half * 0.68);  // middle — outer icons
-  const r2 = Math.round(half * 0.49);  // inner  — inner icons
-  const r3 = Math.round(half * 0.30);  // planet radius
-
-  const compassPts = (r: number) =>
-    [0, 90, 180, 270].map((deg) => {
-      const rad = (deg * Math.PI) / 180;
-      return { x: half + r * Math.sin(rad), y: half - r * Math.cos(rad) };
-    });
-
-  const svgClass = "absolute inset-0 w-full h-full text-black dark:text-white";
-  const vb = `0 0 ${size} ${size}`;
-  const orig = `${half}px ${half}px`;
-
-  return (
-    <div
-      className="relative"
-      style={{ width: size, height: size, perspective: `${size * 2.8}px` }}
-    >
-      <style>{`
-        @keyframes spin-ccw { to { transform: rotate(-360deg); } }
-        @keyframes spin-cw  { to { transform: rotate( 360deg); } }
-        .moon-f { transform-box: fill-box; transform-origin: 50% 50%; }
-        .moon-o { animation: spin-ccw 22s linear infinite; }
-        .moon-i { animation: spin-cw  35s linear infinite; }
-        @keyframes precess-0 {
-          0%   { transform: rotateX(66deg) rotateY(0deg);   }
-          18%  { transform: rotateX(50deg) rotateY(44deg);  }
-          42%  { transform: rotateX(74deg) rotateY(-28deg); }
-          65%  { transform: rotateX(56deg) rotateY(60deg);  }
-          84%  { transform: rotateX(44deg) rotateY(-14deg); }
-          100% { transform: rotateX(66deg) rotateY(0deg);   }
-        }
-        @keyframes precess-1 {
-          0%   { transform: rotateX(42deg) rotateY(18deg);  }
-          28%  { transform: rotateX(18deg) rotateY(-40deg); }
-          52%  { transform: rotateX(62deg) rotateY(54deg);  }
-          78%  { transform: rotateX(30deg) rotateY(-18deg); }
-          100% { transform: rotateX(42deg) rotateY(18deg);  }
-        }
-        @keyframes precess-2 {
-          0%   { transform: rotateX(14deg) rotateY(-24deg); }
-          24%  { transform: rotateX(50deg) rotateY(16deg);  }
-          50%  { transform: rotateX(8deg)  rotateY(54deg);  }
-          76%  { transform: rotateX(40deg) rotateY(-44deg); }
-          100% { transform: rotateX(14deg) rotateY(-24deg); }
-        }
-        @keyframes precess-3 {
-          0%   { transform: rotateX(30deg) rotateY(10deg);  }
-          34%  { transform: rotateX(60deg) rotateY(-34deg); }
-          67%  { transform: rotateX(16deg) rotateY(48deg);  }
-          100% { transform: rotateX(30deg) rotateY(10deg);  }
-        }
-        /* Orbit rings — tinted in dark mode for depth */
-        :root { --ob1: #000000; --ob2: #000000; --ob3: #000000; }
-        .dark  { --ob1: #67e8f9; --ob2: #c4b5fd; --ob3: rgba(255,255,255,0.6); }
-
-        /* Planet sphere should be grayscale and theme-aware */
-        :root { --pf: #ffffff; --ps: #000000; }
-        .dark  { --pf: #000000; --ps: #ffffff; }
-      `}</style>
-
-      {/* ── ring 0: outer dashed — steep equatorial tilt ── */}
-      <div
-        className="absolute inset-0"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: "rotateX(66deg) rotateY(0deg)",
-          animation: "precess-0 25s ease-in-out infinite",
-        }}
-      >
-        <svg viewBox={vb} className={svgClass}>
-          <g
-            style={{
-              animation: "spin-ccw 70s linear infinite",
-              transformOrigin: orig,
-            }}
-          >
-            {/* neon core */}
-            <circle cx={half} cy={half} r={r0} fill="none" stroke="var(--ob3)" strokeWidth="0.8" strokeDasharray="5 9" strokeOpacity="0.85" />
-          </g>
-        </svg>
+    {/* monogram */}
+    <div className="relative z-10 flex flex-col items-center justify-center">
+      <div className="font-mono text-[7px] uppercase tracking-[0.5em] text-black/40 dark:text-white/40 mb-1">
+        BE_DEV
       </div>
 
-      {/* ── ring 1: middle + outer icons — inclined orbit ── */}
+      {/* light mode */}
       <div
-        className="absolute inset-0"
+        className="dark:hidden"
         style={{
-          transformStyle: "preserve-3d",
-          transform: "rotateX(42deg) rotateY(18deg)",
-          animation: "precess-1 33s ease-in-out infinite",
+          fontFamily: "var(--font-orbitron)",
+          fontSize: `${Math.round(size * 0.18)}px`,
+          letterSpacing: "-0.04em",
+          fontWeight: 900,
+          lineHeight: 1,
+          background: "linear-gradient(135deg, #1e40af 0%, #1d4ed8 50%, #1e40af 100%)",
+          backgroundSize: "300% 300%",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          animation: "gm-text 8s ease-in-out infinite",
         }}
       >
-        <svg viewBox={vb} className={svgClass}>
-          <defs>
-            <radialGradient id="ms1" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#0d5a6e" /><stop offset="45%" stopColor="#041418" /><stop offset="100%" stopColor="#010508" />
-            </radialGradient>
-            <radialGradient id="ms2" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#3d2a70" /><stop offset="45%" stopColor="#0d0618" /><stop offset="100%" stopColor="#040208" />
-            </radialGradient>
-            <radialGradient id="ms3" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#0d5e3d" /><stop offset="45%" stopColor="#041610" /><stop offset="100%" stopColor="#010504" />
-            </radialGradient>
-            <radialGradient id="ms4" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#6b3010" /><stop offset="45%" stopColor="#180c04" /><stop offset="100%" stopColor="#080301" />
-            </radialGradient>
-          </defs>
-          {/* neon core */}
-          <circle cx={half} cy={half} r={r1} fill="none" stroke="var(--ob1)" strokeWidth="0.9" strokeOpacity="0.9" />
-          <g
-            style={{
-              animation: "spin-cw 22s linear infinite",
-              transformOrigin: orig,
-            }}
-          >
-            {compassPts(r1).map((p, i) => (
-              <React.Fragment key={i}>{outerIcons[i](p.x, p.y)}</React.Fragment>
-            ))}
-          </g>
-        </svg>
+        YS
       </div>
 
-      {/* ── ring 2: inner + inner icons — steep counter-inclined orbit ── */}
+      {/* dark mode */}
       <div
-        className="absolute inset-0"
+        className="hidden dark:block"
         style={{
-          transformStyle: "preserve-3d",
-          transform: "rotateX(14deg) rotateY(-24deg)",
-          animation: "precess-2 19s ease-in-out infinite",
+          fontFamily: "var(--font-orbitron)",
+          fontSize: `${Math.round(size * 0.18)}px`,
+          letterSpacing: "-0.04em",
+          fontWeight: 900,
+          lineHeight: 1,
+          background: "linear-gradient(135deg, #ffffff 0%, #bfdbfe 30%, #93c5fd 55%, #bfdbfe 80%, #ffffff 100%)",
+          backgroundSize: "300% 300%",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          animation: "gm-text 8s ease-in-out infinite, gm-glow 8s ease-in-out infinite",
         }}
       >
-        <svg viewBox={vb} className={svgClass}>
-          <defs>
-            <radialGradient id="ms5" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#0d3060" /><stop offset="45%" stopColor="#040c18" /><stop offset="100%" stopColor="#010408" />
-            </radialGradient>
-            <radialGradient id="ms6" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#6b0a35" /><stop offset="45%" stopColor="#18040e" /><stop offset="100%" stopColor="#080203" />
-            </radialGradient>
-            <radialGradient id="ms7" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#6b4a08" /><stop offset="45%" stopColor="#181002" /><stop offset="100%" stopColor="#080501" />
-            </radialGradient>
-            <radialGradient id="ms8" cx="34%" cy="28%" r="68%">
-              <stop offset="0%" stopColor="#0d5e30" /><stop offset="45%" stopColor="#041610" /><stop offset="100%" stopColor="#010504" />
-            </radialGradient>
-          </defs>
-          {/* neon core */}
-          <circle cx={half} cy={half} r={r2} fill="none" stroke="var(--ob2)" strokeWidth="0.9" strokeOpacity="0.9" />
-          <g
-            style={{
-              animation: "spin-ccw 35s linear infinite",
-              transformOrigin: orig,
-            }}
-          >
-            {compassPts(r2).map((p, i) => (
-              <React.Fragment key={i}>{innerIcons[i](p.x, p.y)}</React.Fragment>
-            ))}
-          </g>
-        </svg>
+        YS
       </div>
 
-      {/* ── ring 3: innermost crosshair — mid tilt ── */}
-      <div
-        className="absolute inset-0"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: "rotateX(30deg) rotateY(10deg)",
-          animation: "precess-3 27s ease-in-out infinite",
-        }}
-      >
-        <svg viewBox={vb} className={svgClass}>
-          {/* neon core */}
-          <circle cx={half} cy={half} r={r3} fill="none" stroke="var(--ob3)" strokeWidth="0.6" strokeOpacity="0.7" />
-          <line x1={half} y1={half - r3} x2={half} y2={half + r3} stroke="var(--ob3)" strokeWidth="0.3" strokeOpacity="0.3" />
-          <line x1={half - r3} y1={half} x2={half + r3} y2={half} stroke="var(--ob3)" strokeWidth="0.3" strokeOpacity="0.3" />
-        </svg>
-      </div>
-
-      {/* ── centre monogram — always faces viewer ── */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-        <div className="font-mono text-[7px] uppercase tracking-[0.5em] text-white/40 mb-1">
-          BE_DEV
-        </div>
-        <div
-          className="font-black text-black dark:text-white leading-none"
-          style={{
-            fontFamily: "var(--font-orbitron)",
-            fontSize: `${Math.round(size * 0.15)}px`,
-            letterSpacing: "-0.04em",
-          }}
-        >
-          YS
-        </div>
-        <div className="font-mono text-[7px] uppercase tracking-[0.4em] text-white/40 mt-1.5">
-          IST · 2026
-        </div>
+      <div className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/40 dark:text-white/40 mt-1.5">
+        IST · 2026
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 /* ─── Glitch overlay slices ─── */
 const GlitchOverlay = () => (
@@ -405,7 +129,7 @@ const Hero = () => {
   return (
     <div
       id="home"
-      className="relative w-full min-h-screen bg-[#ffffff] dark:bg-[#090909] text-black dark:text-white overflow-hidden"
+      className="relative w-full min-h-screen bg-[#ffffff] dark:bg-transparent text-black dark:text-white overflow-hidden"
     >
       <style>{`
         @keyframes glitch-jitter {
@@ -508,7 +232,7 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <TechOrb size={mobileOrbSize} />
+          <GeminiYS size={mobileOrbSize} />
         </motion.div>
 
         {/* Core threads (mobile) */}
@@ -607,7 +331,7 @@ const Hero = () => {
               delay: 0.15,
             }}
           >
-            <TechOrb />
+            <GeminiYS />
           </motion.div>
         </div>
 
@@ -627,7 +351,7 @@ const Hero = () => {
               className="w-px bg-black/20 dark:bg-white/20"
               style={{ height: 40 }}
             />
-            <div className="w-2 h-2 border border-black/35 dark:border-white/35 bg-[#ffffff] dark:bg-[#090909]" />
+            <div className="w-2 h-2 border border-black/35 dark:border-white/35 bg-[#ffffff] dark:bg-[#060d1a]" />
           </div>
         </div>
 
@@ -657,7 +381,7 @@ const Hero = () => {
         {/* ── ANNOTATION: bottom of orb ── */}
         <div className="absolute z-20" style={{ bottom: "23%", left: "56%" }}>
           <div className="flex flex-col items-center mb-2">
-            <div className="w-2 h-2 border border-black/30 dark:border-white/30 bg-[#ffffff] dark:bg-[#090909]" />
+            <div className="w-2 h-2 border border-black/30 dark:border-white/30 bg-[#ffffff] dark:bg-[#060d1a]" />
             <div
               className="w-px bg-black/18 dark:bg-white/18"
               style={{ height: 36 }}
