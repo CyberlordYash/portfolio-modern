@@ -92,7 +92,7 @@ export const DesktopSidebar = ({
         "border-r border-black/10 dark:border-white/10",
         className,
       )}
-      animate={{ width: animate ? (open ? "260px" : "64px") : "260px" }}
+      animate={{ width: animate ? (open ? "240px" : "40px") : "240px" }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -286,7 +286,7 @@ export const SidebarLink = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setHovered(false)}
         className={cn(
-          "group/link relative flex items-center gap-3 px-3 py-2.5",
+          "group/link relative flex items-center gap-3 px-2 py-2",
           "transition-all duration-150 overflow-hidden",
           isActive
             ? "text-blue-500 dark:text-blue-400 bg-blue-500/[0.08]"
@@ -329,7 +329,7 @@ export const SidebarLink = ({
       {/* Collapsed tooltip */}
       {animate && !open && hovered && (
         <div
-          style={{ top: tooltipY, left: 76 }}
+          style={{ top: tooltipY, left: 48 }}
           className="fixed z-[9999] -translate-y-1/2 pointer-events-none"
         >
           <motion.div

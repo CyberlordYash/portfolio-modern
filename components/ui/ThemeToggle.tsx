@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiSun, HiMoon } from "react-icons/hi";
 
-export function ThemeToggle() {
+export function ThemeToggle({ inline = false }: { inline?: boolean }) {
   const [isDark, setIsDark] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -34,55 +34,128 @@ export function ThemeToggle() {
 
   if (!mounted) return null;
 
+  /* ── Inline (nav pill) — compact sliding toggle ── */
+  if (inline) {
+    const fs = 15; // base font-size px
+    const pillStyle: CSSProperties = {
+      fontSize: `${fs}px`,
+      position: "relative",
+      display: "inline-flex",
+      alignItems: "center",
+      width: "3.5em",
+      height: "1.7em",
+      borderRadius: "3em",
+      flexShrink: 0,
+      cursor: "pointer",
+      border: "none",
+      outline: "none",
+      backgroundColor: isDark ? "#374151" : "#9ca3af",
+      boxShadow: isDark
+        ? "rgba(55,65,81,0.45) 0.25em 0.25em, rgba(55,65,81,0.25) 0.5em 0.5em"
+        : "rgba(156,163,175,0.45) -0.25em 0.25em, rgba(156,163,175,0.25) -0.5em 0.5em",
+      transition: "background-color 0.45s cubic-bezier(0.68,-0.55,0.265,1.55), box-shadow 0.45s",
+    };
+
+    return (
+      <motion.button
+        onClick={toggle}
+        whileTap={{ scale: 0.94 }}
+        style={pillStyle}
+        aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        <motion.div
+          animate={{ x: isDark ? "2em" : "0.2em" }}
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+          style={{
+            position: "absolute",
+            width: "1.3em",
+            height: "1.3em",
+            backgroundColor: "white",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.28)",
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={isDark ? "moon" : "sun"}
+              initial={{ scale: 0.3, opacity: 0, rotate: -60 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              exit={{ scale: 0.3, opacity: 0, rotate: 60 }}
+              transition={{ duration: 0.15 }}
+              style={{ color: isDark ? "#d1d5db" : "#6b7280", lineHeight: 0, fontSize: "9px" }}
+            >
+              {isDark ? <HiMoon /> : <HiSun />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+      </motion.button>
+    );
+  }
+
+  /* ── Floating (other pages) — full-size sliding toggle ── */
+  const fs = 17;
+  const pillStyle: CSSProperties = {
+    fontSize: `${fs}px`,
+    position: "fixed",
+    bottom: "1.25rem",
+    right: "1.25rem",
+    zIndex: 5000,
+    display: "inline-flex",
+    alignItems: "center",
+    width: "7.65em",
+    height: "3.53em",
+    borderRadius: "3em",
+    cursor: "pointer",
+    border: "none",
+    outline: "none",
+    backgroundColor: isDark ? "#374151" : "#9ca3af",
+    boxShadow: isDark
+      ? "rgba(55,65,81,0.4) 0.3em 0.3em, rgba(55,65,81,0.3) 0.6em 0.6em, rgba(55,65,81,0.2) 0.9em 0.9em, rgba(55,65,81,0.1) 1.2em 1.2em"
+      : "rgba(156,163,175,0.4) -0.3em 0.3em, rgba(156,163,175,0.3) -0.6em 0.6em, rgba(156,163,175,0.2) -0.9em 0.9em, rgba(156,163,175,0.1) -1.2em 1.2em",
+    transition: "background-color 0.5s cubic-bezier(0.68,-0.55,0.265,1.55), box-shadow 0.5s cubic-bezier(0.68,-0.55,0.265,1.55)",
+  };
+
   return (
     <motion.button
       onClick={toggle}
-      whileTap={{ scale: 0.9 }}
-      className={`fixed bottom-5 right-5 z-[5000] w-14 h-14 rounded-full flex items-center justify-center focus:outline-none transition-colors duration-500 backdrop-blur-xl overflow-hidden ${
-        isDark
-          ? "bg-neutral-900/85 border-2 border-sky-400"
-          : "bg-white/90 border-2 border-yellow-500"
-      }`}
+      whileTap={{ scale: 0.96 }}
+      style={pillStyle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {/* Ambient radial glow */}
-      <div
-        className="absolute inset-0 rounded-full pointer-events-none transition-all duration-500"
-        style={{
-          background: isDark
-            ? "radial-gradient(circle at 40% 35%, rgba(56,189,248,0.18) 0%, transparent 70%)"
-            : "radial-gradient(circle at 40% 35%, rgba(234,179,8,0.22) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Shimmer sweep — repeats every ~2s */}
       <motion.div
-        className="absolute inset-0 pointer-events-none"
+        animate={{ x: isDark ? "4.41em" : "0.3em" }}
+        transition={{ type: "spring", stiffness: 280, damping: 26 }}
         style={{
-          background:
-            "linear-gradient(108deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)",
-          borderRadius: "9999px",
+          position: "absolute",
+          width: "2.94em",
+          height: "2.94em",
+          backgroundColor: "white",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
         }}
-        animate={{ x: ["-80px", "80px"] }}
-        transition={{ duration: 0.9, repeat: Infinity, repeatDelay: 1.2, ease: "easeInOut" }}
-      />
-
-      {/* Icon */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={isDark ? "moon" : "sun"}
-          className="relative z-10"
-          initial={{ scale: 0.4, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.4, opacity: 0 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-        >
-          {isDark
-            ? <HiMoon className="w-[20px] h-[20px] text-sky-400" />
-            : <HiSun className="w-[20px] h-[20px] text-yellow-500" />
-          }
-        </motion.div>
-      </AnimatePresence>
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isDark ? "moon" : "sun"}
+            initial={{ scale: 0.3, opacity: 0, rotate: -90 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.3, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ color: isDark ? "#d1d5db" : "#6b7280", lineHeight: 0 }}
+          >
+            {isDark
+              ? <HiMoon style={{ width: "1.2em", height: "1.2em" }} />
+              : <HiSun style={{ width: "1.2em", height: "1.2em" }} />
+            }
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
     </motion.button>
   );
 }

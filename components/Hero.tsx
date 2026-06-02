@@ -176,35 +176,11 @@ const Hero = () => {
       `}</style>
       {/* ── TOP BAR ── */}
       <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-white/10">
-        <span className="font-mono text-[10px] md:text-[11px] font-bold tracking-[0.35em] uppercase">
+        <span className="font-sans text-[13px] md:text-[15px] font-semibold tracking-[0.25em] uppercase">
           YASH SACHAN
         </span>
 
-        <div className="border border-black/20 dark:border-white/20 px-3 py-1.5 flex items-center gap-1.5">
-          <svg
-            viewBox="0 0 16 16"
-            className="w-3 h-3 opacity-40"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          >
-            <circle cx="8" cy="8" r="6.5" />
-            <ellipse cx="8" cy="8" rx="3.5" ry="6.5" />
-            <line x1="1.5" y1="8" x2="14.5" y2="8" />
-          </svg>
-          <span className="font-mono text-[9px] md:text-[10px] tracking-[0.28em] uppercase">
-            BACKEND DEVELOPER
-          </span>
-        </div>
 
-        <div className="text-right">
-          <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
-            LOCAL TIME
-          </div>
-          <div className="font-mono text-[10px] md:text-[11px] tracking-[0.18em]">
-            IST {time}
-          </div>
-        </div>
       </header>
 
       {/* ══════════════════════
@@ -570,17 +546,17 @@ const quickLinks = [
   {
     label: "WORKLOG",
     href: "/worklog",
-    cls: "border-cyan-500/35 text-cyan-700 dark:text-cyan-400 bg-cyan-500/[0.05] hover:bg-cyan-500/[0.12] hover:border-cyan-500/60",
+    cls: "border-black/20 dark:border-white/20 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-white/40 hover:text-black dark:hover:text-white",
   },
   {
     label: "BLOGS",
     href: "/blogs",
-    cls: "border-amber-500/35 text-amber-700 dark:text-amber-400 bg-amber-500/[0.05] hover:bg-amber-500/[0.12] hover:border-amber-500/60",
+    cls: "border-black/20 dark:border-white/20 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-white/40 hover:text-black dark:hover:text-white",
   },
   {
     label: "GYM",
     href: "/gym",
-    cls: "border-red-500/35 text-red-600 dark:text-red-400 bg-red-500/[0.05] hover:bg-red-500/[0.12] hover:border-red-500/60",
+    cls: "border-black/20 dark:border-white/20 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-white/40 hover:text-black dark:hover:text-white",
   },
 ];
 

@@ -301,7 +301,7 @@ export default function GymPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-cyan-500/40 hover:bg-cyan-500/5 hover:text-cyan-300"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-700/50 bg-black/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 transition hover:border-blue-600/50 hover:bg-blue-950/40 hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -311,7 +311,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-red-400/40 hover:text-red-300"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-700/40 bg-black/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-red-500/40 hover:text-red-300"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Exit Admin
@@ -320,7 +320,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={() => setShowAdminLogin((c) => !c)}
-                className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-400 transition hover:border-cyan-400/50 hover:bg-cyan-500/10"
+                className="inline-flex items-center gap-2 rounded-xl border border-blue-700/40 bg-blue-950/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-blue-200 transition hover:border-blue-500/60 hover:bg-blue-900/50 hover:text-white"
               >
                 <LockKeyhole className="h-3.5 w-3.5" />
                 Admin
@@ -439,7 +439,7 @@ export default function GymPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting || !password.trim()}
-                    className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-cyan-300 transition hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center gap-2 rounded-xl border border-blue-600/50 bg-blue-950 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_20px_rgba(37,99,235,0.15)] transition hover:bg-blue-900 hover:border-blue-500/70 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isSubmitting ? (
                       <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -557,7 +557,7 @@ export default function GymPage() {
                         type="button"
                         onClick={handleSave}
                         disabled={isSubmitting}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-cyan-300 transition hover:border-cyan-400/50 hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-600/50 bg-blue-950 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_20px_rgba(37,99,235,0.15)] transition hover:bg-blue-900 hover:border-blue-500/70 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {isSubmitting ? (
                           <LoaderCircle className="h-4 w-4 animate-spin" />

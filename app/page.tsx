@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 
@@ -13,282 +13,322 @@ import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-
-// UI & Icons
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
-import {
-  IconActivity,
-  IconBrandGolang,
-  IconSmartHome,
-  IconUser,
-  IconBriefcase,
-  IconFolderCode,
-  IconBulb,
-  IconBrandGithub,
-  IconBrandLinkedin,
-} from "@tabler/icons-react";
 import TerminalSnake from "./TerminalSnake";
 import dynamic from "next/dynamic";
 
 const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
 
 const links = [
-  {
-    label: "Home",
-    href: "#home",
-    icon: <IconSmartHome className="h-5 w-5 shrink-0" />,
-  },
-  {
-    label: "About Me",
-    href: "#skills",
-    icon: <IconUser className="h-5 w-5 shrink-0" />,
-  },
-  {
-    label: "Experience",
-    href: "#experience",
-    icon: <IconBriefcase className="h-5 w-5 shrink-0" />,
-  },
-  {
-    label: "Projects",
-    href: "#projects",
-    icon: <IconFolderCode className="h-5 w-5 shrink-0" />,
-  },
-  {
-    label: "Approach",
-    href: "#approach",
-    icon: <IconBulb className="h-5 w-5 shrink-0" />,
-  },
+  { label: "Home",       href: "#home",       desktopOnly: false },
+  { label: "About",      href: "#skills",     desktopOnly: false },
+  { label: "Experience", href: "#experience", desktopOnly: true  },
+  { label: "Projects",   href: "#projects",   desktopOnly: false },
 ];
 
-export default function Home() {
-  const [open, setOpen] = useState(false);
+function TopNav() {
+  const [active, setActive] = useState("home");
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const updateTheme = () => setIsDark(document.documentElement.classList.contains("dark"));
+    updateTheme();
+    const mo = new MutationObserver(updateTheme);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    const root = document.getElementById("main-scroll");
+    if (!root) return () => mo.disconnect();
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); });
+      },
+      { root, threshold: 0.3, rootMargin: "-10% 0px -10% 0px" },
+    );
+    links.forEach((l) => {
+      const el = document.getElementById(l.href.replace("#", ""));
+      if (el) obs.observe(el);
+    });
+
+    return () => { mo.disconnect(); obs.disconnect(); };
+  }, []);
 
   return (
-    <main className="relative min-h-screen bg-black xbox-bg text-slate-200 font-Quicksand selection:bg-blue-500/30">
-      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-transparent">
-        {/* RESPONSIVE SIDEBAR */}
-        <Sidebar open={open} setOpen={setOpen} animate={true}>
-          <SidebarBody className="justify-between gap-10 bg-[#ffffff] dark:bg-[#060d1a]/90 px-2">
-
-            {/* ── Top: Brand + Nav ── */}
-            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-
-              {/* Brand */}
-              <div className="flex items-center gap-3 h-[64px] px-2 border-b border-black/10 dark:border-white/10">
-                {/* thin vertical bar */}
-                <div className="h-8 w-[2px] bg-blue-500/60 shrink-0" />
-                <motion.div
-                  animate={{ display: open ? "flex" : "none", opacity: open ? 1 : 0 }}
-                  className="flex flex-col"
-                >
-                  <span className="font-mono font-black text-[13px] tracking-[0.05em] uppercase text-black dark:text-white whitespace-nowrap leading-tight">
-                    YS.DEV
-                  </span>
-                  <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/35 dark:text-white/35">
-                    PORTFOLIO
-                  </span>
-                </motion.div>
-              </div>
-
-              {/* Nav links */}
-              <div className="mt-3 flex flex-col gap-0">
-                {links.map((link, idx) => (
-                  <SidebarLink key={idx} link={link} />
-                ))}
-              </div>
-
-              {/* Skills section — only visible when expanded */}
-              <motion.div
-                animate={{ opacity: open ? 1 : 0, height: open ? "auto" : 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <div className="mx-3 mt-5 mb-1 flex flex-col gap-2.5">
-                  <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/30 dark:text-white/30">
-                    STACK
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Golang","TypeScript","React","Node.js","Docker","PostgreSQL","Kafka","GCP"].map(skill => (
-                      <span key={skill}
-                        className="font-mono text-[7.5px] px-2 py-0.5 border border-blue-500/25 text-blue-500/75 dark:text-blue-400/75 bg-blue-500/[0.05] whitespace-nowrap">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* ── Bottom: Status + Profile ── */}
-            <div className="flex flex-col gap-1 border-t border-black/10 dark:border-white/10 pt-3 pb-2">
-
-              {/* Status */}
-              <div className="flex items-center gap-3 px-3 py-2">
-                <span className="relative flex h-1.5 w-1.5 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping bg-blue-400 opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 bg-blue-500" />
-                </span>
+    <nav className="fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
+      <div
+        id="nav-pill-box"
+        className="relative flex items-center gap-0.5 rounded-full p-1 backdrop-blur-md"
+        style={{
+          backgroundColor: isDark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.6)",
+        }}
+      >
+        {links.map((link) => {
+          const id = link.href.replace("#", "");
+          const isActive = active === id;
+          return (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className={cn(
+                "relative px-3 lg:px-4 py-1.5 rounded-full font-medium text-[11px] lg:text-[12px] transition-colors duration-300 z-10 whitespace-nowrap",
+                link.desktopOnly && "hidden md:block",
+                isActive
+                  ? "text-black dark:text-black"
+                  : "text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white",
+              )}
+            >
+              {isActive && (
                 <motion.span
-                  animate={{ display: open ? "inline" : "none", opacity: open ? 1 : 0 }}
-                  className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/50 dark:text-white/50 whitespace-nowrap"
+                  layoutId="nav-pill"
+                  className="absolute inset-0 -z-10 rounded-full bg-white"
+                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                />
+              )}
+              {link.label}
+            </a>
+          );
+        })}
+
+        <ThemeToggle inline />
+      </div>
+    </nav>
+  );
+}
+
+/* Parametric border frame — computed in real pixels so corners stay perfectly
+   round (no aspect distortion). Notch on the top-right (near nav) and bottom-left. */
+function buildFramePath(
+  w: number,
+  h: number,
+  pill: { left: number; bottom: number } | null,
+) {
+  const m = 12;          // margin from edges
+  const r = 22;          // corner radius
+  const nW = 48;         // notch diagonal horizontal span
+  const left = m;
+  const right = w - m;
+  const topShallow = m;        // top edge y on the shallow (left) side
+  // Deep top-right region wraps the measured nav pill (so the notch tucks just left of it)
+  const topDeep = pill ? Math.min(pill.bottom + 12, h * 0.3) : m + 50;
+  const topNotch = pill
+    ? Math.max(left + r, pill.left - nW - 16)
+    : Math.max(left + r, right - 560);
+  const botShallow = h - m;    // bottom edge y on the shallow (right) side
+  const botDeep = h - m - 34;  // bottom edge y on the deep (left) side
+  const botNotch = w * 0.34;   // bottom slope rises toward the left
+
+  return [
+    `M ${left + r},${topShallow}`,                       // after top-left corner (left = shallow)
+    `L ${topNotch},${topShallow}`,                       // top shallow segment
+    `L ${topNotch + nW},${topDeep}`,                     // slope down to the deep right region
+    `L ${right - r},${topDeep}`,                         // top deep segment (right, holds the pill)
+    `Q ${right},${topDeep} ${right},${topDeep + r}`,     // top-right corner
+    `L ${right},${botShallow - r}`,                      // right edge
+    `Q ${right},${botShallow} ${right - r},${botShallow}`, // bottom-right corner
+    `L ${botNotch + nW},${botShallow}`,                  // bottom shallow segment (right)
+    `L ${botNotch},${botDeep}`,                          // slope up to the deep left region
+    `L ${left + r},${botDeep}`,                          // bottom deep segment (left)
+    `Q ${left},${botDeep} ${left},${botDeep - r}`,       // bottom-left corner
+    `L ${left},${topShallow + r}`,                       // left edge
+    `Q ${left},${topShallow} ${left + r},${topShallow}`, // top-left corner
+    "Z",
+  ].join(" ");
+}
+
+function LocalTime() {
+  const [time, setTime] = useState("--:--");
+  useEffect(() => {
+    const tick = () =>
+      setTime(new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata",
+      }));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="fixed bottom-3 left-5 z-50 pointer-events-none select-none">
+      <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
+        LOCAL TIME
+      </div>
+      <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
+        IST {time}
+      </div>
+    </div>
+  );
+}
+
+function HudFrame() {
+  const [isDark, setIsDark] = useState(false);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [pill, setPill] = useState<{ left: number; bottom: number } | null>(null);
+
+  useEffect(() => {
+    const update = () => setIsDark(document.documentElement.classList.contains("dark"));
+    update();
+    const mo = new MutationObserver(update);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    const measure = () => {
+      setSize({ w: window.innerWidth, h: window.innerHeight });
+      const el = document.getElementById("nav-pill-box");
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        setPill({ left: rect.left, bottom: rect.bottom });
+      }
+    };
+    measure();
+    // Re-measure once after layout settles (fonts/pill width) and on resize
+    const t = setTimeout(measure, 150);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      mo.disconnect();
+      clearTimeout(t);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  if (!size.w || !size.h) return null;
+
+  const frame = buildFramePath(size.w, size.h, pill);
+  const maskColor = isDark ? "#060d1a" : "#ffffff";
+  const strokeColor = isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)";
+
+  return (
+    <svg
+      className="fixed inset-0 z-40 w-full h-full pointer-events-none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={size.w}
+      height={size.h}
+      viewBox={`0 0 ${size.w} ${size.h}`}
+    >
+      {/* Opaque mask — fills the margin OUTSIDE the frame so content can't bleed past it */}
+      <path
+        d={`M 0,0 H ${size.w} V ${size.h} H 0 Z ${frame}`}
+        fill={maskColor}
+        fillRule="evenodd"
+      />
+      {/* Frame stroke */}
+      <path
+        d={frame}
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+export default function Home() {
+  return (
+    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
+
+      <TopNav />
+
+      <HudFrame />
+
+      <LocalTime />
+
+      {/* Scrollable content */}
+      <div
+        id="main-scroll"
+        className="h-screen overflow-y-auto scroll-smooth bg-white dark:bg-transparent"
+      >
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
+
+        <div className="relative z-10 w-full">
+          <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
+
+            <section id="home" className="pt-4">
+              <Hero />
+            </section>
+
+            <section id="skills" className="relative">
+              <div className="flex flex-col items-center mb-8 md:mb-10">
+                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
+                  <motion.div
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-1.5 h-1.5 bg-black dark:bg-white"
+                  />
+                  <RevealChars
+                    text="SYSTEM_RUNTIME"
+                    className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
+                    delay={0.1}
+                  />
+                </FadeReveal>
+                <h2
+                  className="font-black uppercase leading-none text-black dark:text-white text-center"
+                  style={{
+                    fontFamily: "var(--font-orbitron)",
+                    fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
+                    letterSpacing: "-0.025em",
+                  }}
                 >
-                  AVAILABLE FOR WORK
-                </motion.span>
-              </div>
-
-              {/* Social links — same style as nav links */}
-              <a href="https://github.com/CyberlordYash" target="_blank" rel="noopener noreferrer"
-                className="group/link relative flex items-center gap-3 px-3 py-2.5 transition-all duration-150
-                  text-black/50 dark:text-white/45 hover:bg-blue-500/[0.04] hover:text-black dark:hover:text-white">
-                <IconBrandGithub className="h-5 w-5 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-blue-500 transition-colors" />
-                <motion.span
-                  animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="font-mono text-[9px] uppercase tracking-[0.3em] whitespace-nowrap"
-                >
-                  GitHub
-                </motion.span>
-              </a>
-              <a href="https://www.linkedin.com/in/yash-sachan-187405209/" target="_blank" rel="noopener noreferrer"
-                className="group/link relative flex items-center gap-3 px-3 py-2.5 transition-all duration-150
-                  text-black/50 dark:text-white/45 hover:bg-blue-500/[0.04] hover:text-black dark:hover:text-white">
-                <IconBrandLinkedin className="h-5 w-5 shrink-0 text-black/60 dark:text-white/60 group-hover/link:text-blue-500 transition-colors" />
-                <motion.span
-                  animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="font-mono text-[9px] uppercase tracking-[0.3em] whitespace-nowrap"
-                >
-                  LinkedIn
-                </motion.span>
-              </a>
-
-              {/* Profile */}
-              <SidebarLink
-                link={{
-                  label: "YASH SACHAN",
-                  href: "#",
-                  icon: (
-                    <div className="relative shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                      <span className="font-mono text-[8px] font-bold text-white">YS</span>
-                    </div>
-                  ),
-                }}
-              />
-            </div>
-          </SidebarBody>
-        </Sidebar>
-
-        {/* MAIN CONTENT AREA */}
-        <div id="main-scroll" className="flex-1 relative h-full overflow-y-auto scroll-smooth bg-white dark:bg-transparent">
-          <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
-
-          <div className="relative z-10 w-full">
-            <ThemeToggle />
-
-            <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
-              <section id="home" className="pt-4">
-                <Hero />
-              </section>
-
-              <section id="skills" className="relative">
-                {/* ── Section heading ── */}
-                <div className="flex flex-col items-center mb-8 md:mb-10">
-                  {/* label tag */}
-                  <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
-                    <motion.div
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-1.5 h-1.5 bg-black dark:bg-white"
-                    />
-                    <RevealChars
-                      text="SYSTEM_RUNTIME"
-                      className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
-                      delay={0.1}
-                    />
+                  <RevealText text="Technical Stack" delay={0.18} />
+                </h2>
+                <div className="flex items-center gap-3 mt-3">
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                  <FadeReveal delay={0.6}>
+                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+                      16 Technologies
+                    </span>
                   </FadeReveal>
-
-                  {/* main heading */}
-                  <h2
-                    className="font-black uppercase leading-none text-black dark:text-white text-center"
-                    style={{
-                      fontFamily: "var(--font-orbitron)",
-                      fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
-                      letterSpacing: "-0.025em",
-                    }}
-                  >
-                    <RevealText text="Technical Stack" delay={0.18} />
-                  </h2>
-
-                  {/* underline annotation */}
-                  <div className="flex items-center gap-3 mt-3">
-                    <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-                    <FadeReveal delay={0.6}>
-                      <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                        16 Technologies
-                      </span>
-                    </FadeReveal>
-                    <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-                  </div>
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
                 </div>
-                <Skills />
-              </section>
+              </div>
+              <Skills />
+            </section>
 
-              <section id="game" className="px-2 md:px-0">
-                <TerminalSnake />
-              </section>
+            <section id="game" className="px-2 md:px-0">
+              <TerminalSnake />
+            </section>
 
-              <section id="experience" className="px-2 md:px-0">
-                <Experience />
-              </section>
+            <section id="experience" className="px-2 md:px-0">
+              <Experience />
+            </section>
 
-              <section
-                id="architecture"
-                className="overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+            <section
+              id="architecture"
+              className="overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+            >
+              <Grid />
+            </section>
+
+            <section className="flex justify-center pb-10">
+              <button
+                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
+                className="group relative px-4 py-2 font-mono text-[10px] text-red-500/50 hover:text-red-500 transition-colors"
               >
-                <Grid />
-              </section>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">[!] sudo rm -rf /</span>
+                <span className="mx-2 underline decoration-dotted">Access Restricted Archive</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">[!]</span>
+              </button>
+            </section>
 
-              <section className="flex justify-center pb-10">
-                <button
-                  onClick={() =>
-                    window.open(
-                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                      "_blank",
-                    )
-                  }
-                  className="group relative px-4 py-2 font-mono text-[10px] text-red-500/50 hover:text-red-500 transition-colors"
-                >
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    [!] sudo rm -rf /
-                  </span>
-                  <span className="mx-2 underline decoration-dotted">
-                    Access Restricted Archive
-                  </span>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    [!]
-                  </span>
-                </button>
-              </section>
+            <section id="projects">
+              <RecentProjects />
+            </section>
 
-              <section id="projects">
-                <RecentProjects />
-              </section>
+            <section id="certificates">
+              <Certificates />
+            </section>
 
-              <section id="certificates">
-                <Certificates />
-              </section>
+            <section id="approach" className="pb-20">
+              <Approach />
+            </section>
 
-              <section id="approach" className="pb-20">
-                <Approach />
-              </section>
+            <section id="skills-graph" className="px-4 md:px-0 py-10">
+              <SkillsGraph />
+            </section>
 
-              <section id="skills-graph" className="px-4 md:px-0 py-10">
-                <SkillsGraph />
-              </section>
-
-              <Footer />
-            </div>
+            <Footer />
           </div>
         </div>
       </div>
