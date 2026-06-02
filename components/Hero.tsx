@@ -177,7 +177,7 @@ const Hero = () => {
       {/* ── TOP BAR ── */}
       <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-white/10">
         <span className="font-sans text-[13px] md:text-[15px] font-semibold tracking-[0.25em] uppercase">
-          YASH SACHAN
+          YASH<span className="hidden md:inline"> SACHAN</span>
         </span>
 
 
@@ -260,12 +260,12 @@ const Hero = () => {
         </div>
 
         {/* Quick links (mobile) */}
-        <div className="w-full mt-6 flex flex-wrap gap-2">
+        <div className="w-full mt-6 flex flex-wrap gap-1.5">
           {quickLinks.map((l) => (
             <Link
               key={l.label}
               href={l.href}
-              className={`glitch-box border px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.25em] transition-colors ${l.cls}`}
+              className={`glitch-box border px-2 py-1 font-mono text-[7px] uppercase tracking-[0.18em] transition-colors ${l.cls}`}
             >
               <GlitchOverlay />
               {l.label}

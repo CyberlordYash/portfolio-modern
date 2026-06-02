@@ -106,9 +106,10 @@ function buildFramePath(
   h: number,
   pill: { left: number; bottom: number } | null,
 ) {
-  const m = 12;          // margin from edges
-  const r = 22;          // corner radius
-  const nW = 48;         // notch diagonal horizontal span
+  const isMobile = w < 768;
+  const m = isMobile ? 4 : 12;   // margin from edges
+  const r = isMobile ? 10 : 22;  // corner radius
+  const nW = isMobile ? 30 : 48; // notch diagonal horizontal span
   const left = m;
   const right = w - m;
   const topShallow = m;        // top edge y on the shallow (left) side
