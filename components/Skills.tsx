@@ -17,39 +17,39 @@ const techData: Record<string, {
   name: string;
   color: string;
 }> = {
-  go:       { icon: SiGo,          name: "GOLANG",      color: "#00ADD8" },
-  cpp:      { icon: PiFileCppFill, name: "C++",         color: "#659BD3" },
-  node:     { icon: FaNode,        name: "NODE.JS",     color: "#5FA04E" },
-  java:     { icon: FaJava,        name: "JAVA",        color: "#ED8B00" },
-  spring:   { icon: SiSpringboot,  name: "SPRING BOOT", color: "#77BC1F" },
-  gcp:      { icon: SiGooglecloud, name: "GCP",         color: "#4285F4" },
-  kafka:    { icon: SiApachekafka, name: "KAFKA",       color: "#A855F7" },
-  nats:     { icon: SiNatsdotio,   name: "NATS",        color: "#34A0DC" },
-  pg:       { icon: SiPostgresql,  name: "POSTGRESQL",  color: "#4169E1" },
-  mongo:    { icon: SiMongodb,     name: "MONGODB",     color: "#47A248" },
-  next:     { icon: SiNextdotjs,   name: "NEXT.JS",     color: "#999999" },
-  react:    { icon: FaReact,       name: "REACT",       color: "#61DAFB" },
-  ts:       { icon: SiTypescript,  name: "TYPESCRIPT",  color: "#3178C6" },
-  tailwind: { icon: SiTailwindcss, name: "TAILWIND",    color: "#06B6D4" },
+  go:       { icon: SiGo,          name: "GOLANG",      color: "#0082A2" },
+  cpp:      { icon: PiFileCppFill, name: "C++",         color: "#4C749E" },
+  node:     { icon: FaNode,        name: "NODE.JS",     color: "#47783B" },
+  java:     { icon: FaJava,        name: "JAVA",        color: "#B26800" },
+  spring:   { icon: SiSpringboot,  name: "SPRING BOOT", color: "#598D17" },
+  gcp:      { icon: SiGooglecloud, name: "GCP",         color: "#3264B7" },
+  kafka:    { icon: SiApachekafka, name: "KAFKA",       color: "#7E40B9" },
+  nats:     { icon: SiNatsdotio,   name: "NATS",        color: "#2778A5" },
+  pg:       { icon: SiPostgresql,  name: "POSTGRESQL",  color: "#314FA9" },
+  mongo:    { icon: SiMongodb,     name: "MONGODB",     color: "#357A36" },
+  next:     { icon: SiNextdotjs,   name: "NEXT.JS",     color: "#737373" },
+  react:    { icon: FaReact,       name: "REACT",       color: "#49A4BC" },
+  ts:       { icon: SiTypescript,  name: "TYPESCRIPT",  color: "#255A95" },
+  tailwind: { icon: SiTailwindcss, name: "TAILWIND",    color: "#05899F" },
 };
 
 const categoryRows = [
   {
     index: "01",
     label: "BACKEND",
-    color: "#3B82F6",
+    color: "#2C62B9",
     techs: ["cpp", "node", "java", "spring"],
   },
   {
     index: "02",
     label: "INFRASTRUCTURE",
-    color: "#A855F7",
+    color: "#7E40B9",
     techs: ["gcp", "kafka", "nats", "pg", "mongo"],
   },
   {
     index: "03",
     label: "FRONTEND",
-    color: "#06B6D4",
+    color: "#05899F",
     techs: ["next", "react", "ts", "tailwind"],
   },
 ];
@@ -127,12 +127,12 @@ const Skills = () => (
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="relative overflow-hidden border-b border-black/10 dark:border-white/10"
-      style={{ borderTop: "3px solid #00ADD8" }}
+      style={{ borderTop: "3px solid #0082A2" }}
     >
       {/* ambient bg */}
-      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.08] via-teal-500/[0.04] to-transparent pointer-events-none" />
-      <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-cyan-400/[0.07] blur-3xl pointer-events-none" />
-      <div className="absolute right-1/3 -bottom-20 w-72 h-72 rounded-full bg-teal-400/[0.05] blur-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-700/[0.08] via-teal-700/[0.04] to-transparent pointer-events-none" />
+      <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-cyan-700/[0.07] blur-3xl pointer-events-none" />
+      <div className="absolute right-1/3 -bottom-20 w-72 h-72 rounded-full bg-teal-700/[0.05] blur-2xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10 p-7 md:p-9">
         {/* icon + name */}
@@ -140,19 +140,19 @@ const Skills = () => (
           <motion.div
             animate={{
               filter: [
-                "drop-shadow(0 0 8px #00ADD870)",
-                "drop-shadow(0 0 22px #00ADD8B0)",
-                "drop-shadow(0 0 8px #00ADD870)",
+                "drop-shadow(0 0 8px #0082A270)",
+                "drop-shadow(0 0 22px #0082A2B0)",
+                "drop-shadow(0 0 8px #0082A270)",
               ],
             }}
             transition={{ duration: 3, repeat: Infinity }}
             className="text-[76px] md:text-[96px] leading-none"
-            style={{ color: "#00ADD8" }}
+            style={{ color: "#0082A2" }}
           >
             <SiGo />
           </motion.div>
           <div>
-            <div className="font-mono text-[7px] uppercase tracking-[0.45em] text-cyan-500/70 dark:text-cyan-400/60 mb-2">
+            <div className="font-mono text-[7px] uppercase tracking-[0.45em] text-cyan-700/70 dark:text-cyan-600/60 mb-2">
               PRIMARY RUNTIME
             </div>
             <h3
@@ -161,7 +161,7 @@ const Skills = () => (
                 fontFamily: "var(--font-orbitron)",
                 fontSize: "clamp(1.8rem, 4.5vw, 3.5rem)",
                 letterSpacing: "-0.02em",
-                background: "linear-gradient(135deg, #00ADD8, #34d399)",
+                background: "linear-gradient(135deg, #0082A2, #1A8A62)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -195,7 +195,7 @@ const Skills = () => (
             <div key={l} className="flex flex-col items-center justify-center px-5 py-4 bg-[#ffffff] dark:bg-[#111111] min-w-[80px]">
               <div
                 className="font-black leading-none mb-0.5"
-                style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.2rem", color: "#00ADD8" }}
+                style={{ fontFamily: "var(--font-orbitron)", fontSize: "1.2rem", color: "#0082A2" }}
               >{v}</div>
               <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-black/40 dark:text-white/30">{l}</div>
             </div>
