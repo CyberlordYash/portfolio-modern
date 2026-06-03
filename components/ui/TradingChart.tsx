@@ -202,7 +202,7 @@ const TradingChart = () => {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-45 dark:opacity-40"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-30 dark:opacity-25"
     />
   );
 };
