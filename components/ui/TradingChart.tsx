@@ -11,8 +11,8 @@ import React, { useEffect, useRef } from "react";
 
 type Candle = { o: number; h: number; l: number; c: number };
 
-const UP = "0,120,108"; // dark teal-green
-const DOWN = "185,45,45"; // dark red
+const UP = "0,90,78"; // darker teal-green
+const DOWN = "150,28,28"; // darker red
 
 const TradingChart = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
