@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Quicksand, Orbitron } from "next/font/google";
+import { Quicksand, Orbitron } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 import PageLoader from "@/components/PageLoader";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const quicksand = Quicksand({
   subsets: ["latin"],
   variable: "--font-quicksand",
@@ -100,7 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
+        className={`${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

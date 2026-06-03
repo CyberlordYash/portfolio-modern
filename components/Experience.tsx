@@ -66,7 +66,7 @@ const Point = ({
     <span className="font-mono text-[10px] text-black/30 dark:text-white/30 mt-[3px] shrink-0 group-hover/pt:text-black/60 dark:group-hover/pt:text-white/60 transition-colors">
       →
     </span>
-    <p className="font-mono text-[11px] md:text-[12px] leading-relaxed text-black/65 dark:text-white/65 group-hover/pt:text-black/80 dark:group-hover/pt:text-white/80 transition-colors">
+    <p className="font-mono text-[13px] md:text-[14px] font-semibold leading-relaxed text-black/65 dark:text-white/65 group-hover/pt:text-black/80 dark:group-hover/pt:text-white/80 transition-colors">
       {text}
       {link && (
         <a

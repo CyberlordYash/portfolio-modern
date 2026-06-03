@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import TradingChart from "./ui/TradingChart";
 
 /* ─── small "+" grid cross ─── */
 const Cross = ({ style }: { style?: React.CSSProperties }) => (
@@ -174,6 +175,11 @@ const Hero = () => {
         .glitch-box:hover .glitch-slice-1 { animation:glitch-slice-1-kf 1.1s steps(1) infinite; }
         .glitch-box:hover .glitch-slice-2 { animation:glitch-slice-2-kf 1.1s steps(1) infinite .07s; }
       `}</style>
+      {/* ── ANIMATED TRADING CHART BACKDROP ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <TradingChart />
+      </div>
+
       {/* ── TOP BAR ── */}
       <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-white/10">
         <span className="font-sans text-[13px] md:text-[15px] font-semibold tracking-[0.25em] uppercase">
@@ -186,7 +192,7 @@ const Hero = () => {
       {/* ══════════════════════
           MOBILE LAYOUT
       ══════════════════════ */}
-      <div className="lg:hidden flex flex-col items-center pt-24 px-5 pb-12 min-h-screen">
+      <div className="lg:hidden relative z-10 flex flex-col items-center pt-24 px-5 pb-12 min-h-screen">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -387,22 +393,22 @@ const Hero = () => {
         >
           <div className="glitch-box border border-black/15 dark:border-white/15 p-4 xl:p-5">
             <GlitchOverlay />
-            <div className="font-mono text-[7px] tracking-[0.4em] uppercase text-black/35 dark:text-white/35 mb-3">
+            <div className="font-mono text-[9px] tracking-[0.4em] uppercase text-black/35 dark:text-white/35 mb-3">
               SPECIALIZATION
             </div>
             <div className="space-y-0.5 mb-4">
-              <div className="font-mono text-[11px] font-bold tracking-[0.08em] uppercase">
+              <div className="font-mono text-[13px] font-bold tracking-[0.08em] uppercase">
                 DISTRIBUTED
               </div>
-              <div className="font-mono text-[11px] font-bold tracking-[0.08em] uppercase">
+              <div className="font-mono text-[13px] font-bold tracking-[0.08em] uppercase">
                 + SYSTEMS
               </div>
-              <div className="font-mono text-[11px] font-bold tracking-[0.08em] uppercase">
+              <div className="font-mono text-[13px] font-bold tracking-[0.08em] uppercase">
                 + PERFORMANCE
               </div>
             </div>
             <div className="h-px bg-black/10 dark:bg-white/10 mb-3" />
-            <div className="font-mono text-[8px] tracking-[0.14em] leading-relaxed text-black/55 dark:text-white/55">
+            <div className="font-mono text-[11px] tracking-[0.14em] leading-relaxed text-black/55 dark:text-white/55">
               → HIGH-THROUGHPUT
               <br />→ INFRA ENGINEERING
             </div>
@@ -444,7 +450,7 @@ const Hero = () => {
           <div className="glitch-box border border-black/15 dark:border-white/15 p-4">
             <GlitchOverlay />
             <div className="flex items-center justify-between mb-2">
-              <span className="font-mono text-[7px] uppercase tracking-[0.3em] font-bold">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">
                 NOT A STUDIO — JUST ME
               </span>
               <div className="w-3.5 h-3.5 border border-black/25 dark:border-white/25 flex items-center justify-center font-mono text-[9px] text-black/35 dark:text-white/35">
@@ -452,7 +458,7 @@ const Hero = () => {
               </div>
             </div>
             <div className="h-px bg-black/10 dark:bg-white/10 mb-3" />
-            <p className="font-mono text-[8px] leading-relaxed text-black/62 dark:text-white/62 mb-3">
+            <p className="font-mono text-[11px] leading-relaxed text-black/62 dark:text-white/62 mb-3">
               I&apos;m Yash Sachan — backend developer at Zanskar. I build
               high-throughput distributed infrastructure and mentor aspiring
               engineers on the side.
@@ -464,7 +470,7 @@ const Hero = () => {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group flex items-center gap-1.5 border px-2 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] transition-all duration-150 ${s.color} ${s.border} ${s.bg}`}
+                  className={`group flex items-center gap-1.5 border px-2 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] transition-all duration-150 ${s.color} ${s.border} ${s.bg}`}
                 >
                   <span className={`w-1 h-1 shrink-0 ${s.dot}`} />
                   <span className="flex-1 truncate">{s.label}</span>
