@@ -26,6 +26,14 @@ const links = [
   { label: "Projects",   href: "#projects",   desktopOnly: false },
 ];
 
+// Shared entrance animation for all non-hero sections
+const cardEnter = {
+  initial: { opacity: 0, y: 36, scale: 0.97 },
+  whileInView: { opacity: 1, y: 0, scale: 1 },
+  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  viewport: { once: false, amount: 0.05 },
+};
+
 function TopNav() {
   const [active, setActive] = useState("home");
   const [isDark, setIsDark] = useState(false);
@@ -231,27 +239,34 @@ export default function Home() {
     <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
 
       <TopNav />
-
       <HudFrame />
-
       <LocalTime />
 
-      {/* Scrollable content */}
+      {/* Snap-scroll card container */}
       <div
         id="main-scroll"
-        className="h-screen overflow-y-auto scroll-smooth bg-white dark:bg-transparent"
+        className="h-screen overflow-y-auto snap-y snap-mandatory bg-white dark:bg-transparent"
       >
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
         <div className="relative z-10 w-full">
-          <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2 space-y-4 md:space-y-6">
+          <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2">
 
-            <section id="home" className="pt-4">
+            {/* ── Card 1: Hero ── no entrance fade (landing view) */}
+            <section
+              id="home"
+              className="snap-start snap-always min-h-screen pt-4"
+            >
               <Hero />
             </section>
 
-            <section id="skills" className="relative">
-              <div className="flex flex-col items-center mb-8 md:mb-10">
+            {/* ── Card 2: Skills ── */}
+            <motion.section
+              id="skills"
+              className="snap-start snap-always min-h-screen relative"
+              {...cardEnter}
+            >
+              <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
                 <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
@@ -285,51 +300,68 @@ export default function Home() {
                 </div>
               </div>
               <Skills />
-            </section>
+              <div className="px-2 md:px-0 mt-4">
+                <TerminalSnake />
+              </div>
+            </motion.section>
 
-            <section id="game" className="px-2 md:px-0">
-              <TerminalSnake />
-            </section>
-
-            <section id="experience" className="px-2 md:px-0">
+            {/* ── Card 3: Experience ── */}
+            <motion.section
+              id="experience"
+              className="snap-start snap-always min-h-screen flex flex-col justify-center px-2 md:px-0"
+              {...cardEnter}
+            >
               <Experience />
-            </section>
+            </motion.section>
 
-            <section
+            {/* ── Card 5: Architecture / Grid ── */}
+            <motion.section
               id="architecture"
-              className="overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+              className="snap-start snap-always min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+              {...cardEnter}
             >
               <Grid />
-            </section>
+            </motion.section>
 
-            <section className="flex justify-center pb-10">
-              <button
-                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
-                className="group relative px-4 py-2 font-mono text-[10px] text-red-500/50 hover:text-red-500 transition-colors"
-              >
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">[!] sudo rm -rf /</span>
-                <span className="mx-2 underline decoration-dotted">Access Restricted Archive</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">[!]</span>
-              </button>
-            </section>
-
-            <section id="projects">
+            {/* ── Card 6: Projects ── */}
+            <motion.section
+              id="projects"
+              className="snap-start snap-always min-h-screen"
+              {...cardEnter}
+            >
               <RecentProjects />
-            </section>
+            </motion.section>
 
-            <section id="certificates">
+            {/* ── Card 7: Certificates ── */}
+            <motion.section
+              id="certificates"
+              className="snap-start snap-always min-h-screen flex flex-col justify-center"
+              {...cardEnter}
+            >
               <Certificates />
-            </section>
+            </motion.section>
 
-            <section id="approach" className="pb-20">
+            {/* ── Card 8: Approach ── */}
+            <motion.section
+              id="approach"
+              className="snap-start snap-always min-h-screen flex flex-col justify-center pb-10"
+              {...cardEnter}
+            >
               <Approach />
-            </section>
+            </motion.section>
 
-            <section id="skills-graph" className="px-4 md:px-0 py-10">
+            {/* ── Card 9: Skills Graph ── */}
+            <motion.section
+              id="skills-graph"
+              className="snap-start snap-always min-h-screen flex flex-col justify-center px-4 md:px-0"
+              {...cardEnter}
+            >
               <SkillsGraph />
-            </section>
+            </motion.section>
 
+            {/* ── Footer (no snap) ── */}
             <Footer />
+
           </div>
         </div>
       </div>
