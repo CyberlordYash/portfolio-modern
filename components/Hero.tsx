@@ -17,75 +17,68 @@ const Cross = ({ style }: { style?: React.CSSProperties }) => (
   </div>
 );
 
-/* ─── Gemini-style animated gradient YS monogram ─── */
-const GeminiYS = ({ size = 280 }: { size?: number }) => (
-  <div
-    className="relative flex items-center justify-center"
-    style={{ width: size, height: size }}
-  >
-    <style>{`
-      @keyframes gm-text {
-        0%,100% { background-position:0% 50%;   }
-        50%     { background-position:100% 50%; }
-      }
-      @keyframes gm-glow {
-        0%,100% { filter:drop-shadow(0 0 18px rgba(30,64,175,0.8)); }
-        50%     { filter:drop-shadow(0 0 26px rgba(37,99,235,0.7)); }
-      }
-    `}</style>
+/* ─── YS monogram → unfolds into "YASH SACHAN" on hover ─── */
+const GeminiYS = ({ size = 280 }: { size?: number }) => {
+  const fontPx = Math.round(size * 0.17);
+  const baseType: React.CSSProperties = {
+    fontFamily: "var(--font-orbitron)", fontSize: `${fontPx}px`, fontWeight: 900,
+    lineHeight: 1, letterSpacing: "-0.03em", display: "inline-block",
+  };
 
-    {/* monogram */}
-    <div className="relative z-10 flex flex-col items-center justify-center">
-      <div className="font-mono text-[7px] uppercase tracking-[0.5em] text-black/40 dark:text-white/40 mb-1">
-        BE_DEV
-      </div>
+  // Y[ASH]  ·  S[ACHAN]  — capitals are anchors, brackets unfold on hover
+  const seq: { c: string; anchor?: boolean; space?: boolean }[] = [
+    { c: "Y", anchor: true }, { c: "A" }, { c: "S" }, { c: "H" },
+    { c: " ", space: true },
+    { c: "S", anchor: true }, { c: "A" }, { c: "C" }, { c: "H" }, { c: "A" }, { c: "N" },
+  ];
 
-      {/* light mode */}
-      <div
-        className="dark:hidden"
-        style={{
-          fontFamily: "var(--font-orbitron)",
-          fontSize: `${Math.round(size * 0.18)}px`,
-          letterSpacing: "-0.04em",
-          fontWeight: 900,
-          lineHeight: 1,
-          background: "linear-gradient(135deg, #1e40af 0%, #1d4ed8 50%, #1e40af 100%)",
-          backgroundSize: "300% 300%",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          animation: "gm-text 8s ease-in-out infinite",
-        }}
-      >
-        YS
-      </div>
+  const wrap = {
+    closed: { transition: { staggerChildren: 0.025, staggerDirection: -1 } },
+    open: { transition: { staggerChildren: 0.045, delayChildren: 0.05 } },
+  };
+  const reveal = {
+    closed: { maxWidth: 0, opacity: 0, filter: "blur(6px)", y: 8 },
+    open: { maxWidth: "1.1em", opacity: 1, filter: "blur(0px)", y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+  };
+  const spaceReveal = { closed: { maxWidth: 0 }, open: { maxWidth: "0.45em", transition: { duration: 0.4 } } };
 
-      {/* dark mode */}
-      <div
-        className="hidden dark:block"
-        style={{
-          fontFamily: "var(--font-orbitron)",
-          fontSize: `${Math.round(size * 0.18)}px`,
-          letterSpacing: "-0.04em",
-          fontWeight: 900,
-          lineHeight: 1,
-          background: "linear-gradient(135deg, #ffffff 0%, #bfdbfe 30%, #93c5fd 55%, #bfdbfe 80%, #ffffff 100%)",
-          backgroundSize: "300% 300%",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          animation: "gm-text 8s ease-in-out infinite, gm-glow 8s ease-in-out infinite",
-        }}
-      >
-        YS
-      </div>
+  return (
+    <motion.div
+      initial="closed" animate="closed" whileHover="open"
+      className="relative flex items-center justify-center text-black dark:text-white cursor-pointer select-none"
+      style={{ width: size, height: size }}
+    >
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        <motion.div
+          variants={{ closed: { letterSpacing: "0.55em", opacity: 0.4 }, open: { letterSpacing: "0.75em", opacity: 0.7 } }}
+          className="font-mono text-[8px] uppercase text-black dark:text-white mb-2"
+        >
+          BE_DEV
+        </motion.div>
 
-      <div className="font-mono text-[7px] uppercase tracking-[0.4em] text-black/40 dark:text-white/40 mt-1.5">
-        IST · 2026
+        {/* the name */}
+        <motion.div variants={wrap} className="flex items-baseline overflow-hidden whitespace-nowrap px-1">
+          {seq.map((l, i) => (
+            <motion.span
+              key={i}
+              variants={l.anchor ? undefined : l.space ? spaceReveal : reveal}
+              style={{ ...baseType, overflow: "hidden" }}
+            >
+              {l.space ? " " : l.c}
+            </motion.span>
+          ))}
+        </motion.div>
+
+        <motion.div
+          variants={{ closed: { letterSpacing: "0.45em", opacity: 0.4 }, open: { letterSpacing: "0.6em", opacity: 0.7 } }}
+          className="font-mono text-[8px] uppercase text-black dark:text-white mt-2"
+        >
+          IST · 2026
+        </motion.div>
       </div>
-    </div>
-  </div>
-);
+    </motion.div>
+  );
+};
 
 /* ─── Glitch overlay slices ─── */
 const GlitchOverlay = () => (

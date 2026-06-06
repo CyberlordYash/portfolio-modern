@@ -301,7 +301,7 @@ export default function Home() {
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
                   <FadeReveal delay={0.6}>
                     <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                      16 Technologies
+                      20 Technologies
                     </span>
                   </FadeReveal>
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />

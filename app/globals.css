@@ -164,6 +164,14 @@ body {
     background: linear-gradient(90deg, #161a31 0%, #06091f 100%);
   }
 
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
 }
 
 /* ── Gradient heading utilities — light mode: plain text; dark mode: gradient ── */
