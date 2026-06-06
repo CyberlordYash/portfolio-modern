@@ -155,14 +155,14 @@ const Approach = () => {
   React.useEffect(() => { setMounted(true); }, []);
   return (
     <section
-      className="w-full bg-[#ffffff] dark:bg-[#060d1a] transition-colors duration-500 py-16"
+      className="w-full bg-[#ffffff] dark:bg-[#000000] transition-colors duration-500 py-16"
       id="approach"
     >
       <div className="max-w-[90vw] 2xl:max-w-[1400px] mx-auto px-4">
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
           {/* label tag */}
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#000000] px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}

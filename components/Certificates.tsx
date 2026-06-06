@@ -91,7 +91,7 @@ export default function Certificates() {
   return (
     <section
       id="certificates"
-      className="relative w-full overflow-hidden py-16 bg-[#ffffff] dark:bg-[#060d1a] transition-colors duration-500 md:py-24"
+      className="relative w-full overflow-hidden py-16 bg-[#ffffff] dark:bg-[#000000] transition-colors duration-500 md:py-24"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -99,7 +99,7 @@ export default function Certificates() {
 
         {/* ── Section Header ─────────────────────────────────── */}
         <div className="mb-10 flex flex-col items-center">
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#000000] px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -155,7 +155,7 @@ export default function Certificates() {
               {extended.map((cert, i) => (
                 <div key={i} style={{ width: cardW, flexShrink: 0 }}>
                   <div
-                    className="relative overflow-hidden rounded-lg border bg-white dark:bg-[#080f1e] transition-shadow duration-300"
+                    className="relative overflow-hidden rounded-lg border bg-white dark:bg-[#000000] transition-shadow duration-300"
                     style={{
                       borderColor: `rgba(${cert.accentRgb},0.28)`,
                       boxShadow: `0 0 28px rgba(${cert.accentRgb},0.08)`,

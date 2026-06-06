@@ -191,7 +191,7 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: i * 0.07 }}
-      className="relative overflow-hidden bg-white dark:bg-[#080f1e] border border-black/[0.07] dark:border-white/[0.06]"
+      className="relative overflow-hidden bg-white dark:bg-[#000000] border border-black/[0.07] dark:border-white/[0.06]"
       style={{
         borderTop: `2px solid ${job.color}`,
         boxShadow: `0 0 60px rgba(${job.colorRgb},0.06)`,
@@ -371,7 +371,7 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-40px" }}
     transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
-    className="relative overflow-hidden flex flex-col bg-white dark:bg-[#080f1e]"
+    className="relative overflow-hidden flex flex-col bg-white dark:bg-[#000000]"
     style={{
       borderTop: `2px solid ${a.color}`,
       boxShadow: `0 0 40px rgba(${a.colorRgb},0.06)`,
@@ -556,11 +556,11 @@ export default function Experience() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative w-full py-8 md:py-16 bg-white dark:bg-[#060d1a] transition-colors duration-500">
+    <section className="relative w-full py-8 md:py-16 bg-white dark:bg-[#000000] transition-colors duration-500">
       <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
         <div
           ref={containerRef}
-          className="relative bg-neutral-50 dark:bg-[#060d1a] border border-black/[0.10] dark:border-white/[0.07]"
+          className="relative bg-neutral-50 dark:bg-[#000000] border border-black/[0.10] dark:border-white/[0.07]"
         >
           <Rail containerRef={containerRef as React.RefObject<HTMLDivElement>} />
 
@@ -584,7 +584,7 @@ export default function Experience() {
             {/* Achievements = one final pinning slide (kept side-by-side, opaque
                 so it cleanly covers the job card beneath it) */}
             <StickyStack i={JOBS.length} total={DECK_TOTAL}>
-              <div className="relative bg-neutral-50 dark:bg-[#060d1a] border-t border-black/[0.08] dark:border-white/[0.06]">
+              <div className="relative bg-neutral-50 dark:bg-[#000000] border-t border-black/[0.08] dark:border-white/[0.06]">
                 {/* separator */}
                 <div className="px-5 md:px-10 py-4 flex items-center gap-4">
                   <div className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />

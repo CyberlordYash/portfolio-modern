@@ -205,7 +205,7 @@ function HudFrame() {
   if (!size.w || !size.h) return null;
 
   const frame = buildFramePath(size.w, size.h, pill);
-  const maskColor = isDark ? "#060d1a" : "#ffffff";
+  const maskColor = isDark ? "#000000" : "#ffffff";
   const strokeColor = isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)";
 
   return (
@@ -267,7 +267,7 @@ export default function Home() {
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#060d1a] px-4 py-1.5 mb-5">
+                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#000000] px-4 py-1.5 mb-5">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}

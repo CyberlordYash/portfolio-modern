@@ -22,25 +22,34 @@ const GeminiYS = ({ size = 280 }: { size?: number }) => {
   const fontPx = Math.round(size * 0.17);
   const baseType: React.CSSProperties = {
     fontFamily: "var(--font-orbitron)", fontSize: `${fontPx}px`, fontWeight: 900,
-    lineHeight: 1, letterSpacing: "-0.03em", display: "inline-block",
+    lineHeight: 1, letterSpacing: "-0.02em", display: "inline-block",
   };
 
-  // Y[ASH]  ·  S[ACHAN]  — capitals are anchors, brackets unfold on hover
+  // Y[ash]  ·  S[achan]  — capitals are anchors, lowercase tails unfold on hover
   const seq: { c: string; anchor?: boolean; space?: boolean }[] = [
-    { c: "Y", anchor: true }, { c: "A" }, { c: "S" }, { c: "H" },
+    { c: "Y", anchor: true }, { c: "a" }, { c: "s" }, { c: "h" },
     { c: " ", space: true },
-    { c: "S", anchor: true }, { c: "A" }, { c: "C" }, { c: "H" }, { c: "A" }, { c: "N" },
+    { c: "S", anchor: true }, { c: "a" }, { c: "c" }, { c: "h" }, { c: "a" }, { c: "n" },
   ];
 
   const wrap = {
-    closed: { transition: { staggerChildren: 0.025, staggerDirection: -1 } },
-    open: { transition: { staggerChildren: 0.045, delayChildren: 0.05 } },
+    closed: { transition: { staggerChildren: 0.018, staggerDirection: -1 } },
+    open: { transition: { staggerChildren: 0.03, delayChildren: 0.03 } },
   };
+  // futuristic: spring-snap width with a glitch skew + terminal boot flicker
   const reveal = {
-    closed: { maxWidth: 0, opacity: 0, filter: "blur(6px)", y: 8 },
-    open: { maxWidth: "1.1em", opacity: 1, filter: "blur(0px)", y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+    closed: { width: 0, opacity: 0, x: -10, skewX: 16 },
+    open: {
+      width: "auto", opacity: [0, 1, 0.45, 1], x: 0, skewX: 0,
+      transition: {
+        width: { type: "spring", stiffness: 520, damping: 32 },
+        x: { type: "spring", stiffness: 520, damping: 26 },
+        skewX: { duration: 0.22, ease: "easeOut" },
+        opacity: { duration: 0.32, times: [0, 0.35, 0.55, 1] },
+      },
+    },
   };
-  const spaceReveal = { closed: { maxWidth: 0 }, open: { maxWidth: "0.45em", transition: { duration: 0.4 } } };
+  const spaceReveal = { closed: { width: 0 }, open: { width: "0.34em", transition: { type: "spring", stiffness: 520, damping: 34 } } };
 
   return (
     <motion.div
@@ -348,7 +357,7 @@ const Hero = () => {
               className="w-px bg-black/20 dark:bg-white/20"
               style={{ height: 40 }}
             />
-            <div className="w-2 h-2 border border-black/35 dark:border-white/35 bg-[#ffffff] dark:bg-[#060d1a]" />
+            <div className="w-2 h-2 border border-black/35 dark:border-white/35 bg-[#ffffff] dark:bg-[#000000]" />
           </div>
         </div>
 
@@ -378,7 +387,7 @@ const Hero = () => {
         {/* ── ANNOTATION: bottom of orb ── */}
         <div className="absolute z-20" style={{ bottom: "23%", left: "56%" }}>
           <div className="flex flex-col items-center mb-2">
-            <div className="w-2 h-2 border border-black/30 dark:border-white/30 bg-[#ffffff] dark:bg-[#060d1a]" />
+            <div className="w-2 h-2 border border-black/30 dark:border-white/30 bg-[#ffffff] dark:bg-[#000000]" />
             <div
               className="w-px bg-black/18 dark:bg-white/18"
               style={{ height: 36 }}
