@@ -1,502 +1,608 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Timeline } from "@/components/ui/timeline";
-import { motion } from "framer-motion";
-import { IconExternalLink } from "@tabler/icons-react";
-import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { IconExternalLink, IconBolt } from "@tabler/icons-react";
+import { RevealText, RevealChars, FadeReveal } from "@/components/ui/ScrollReveal";
 import { EncryptedText } from "@/components/ui/encrypted-text";
-import { Spotlight } from "@/components/ui/Spotlight";
 
-function useCountUp(target: number, duration = 1200, trigger: boolean) {
+/* ─────────────────────────────────────────────────
+   Count-up hook
+───────────────────────────────────────────────── */
+function useCountUp(target: number, duration = 1400, trigger: boolean) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!trigger) return;
     const start = performance.now();
-    const raf = (now: number) => {
+    const tick = (now: number) => {
       const t = Math.min((now - start) / duration, 1);
-      setValue(Math.floor(t * target));
-      if (t < 1) requestAnimationFrame(raf);
+      const ease = 1 - Math.pow(1 - t, 3);
+      setValue(Math.floor(ease * target));
+      if (t < 1) requestAnimationFrame(tick);
     };
-    requestAnimationFrame(raf);
+    requestAnimationFrame(tick);
   }, [trigger, target, duration]);
   return value;
 }
 
-/* ─── colour config per company ─── */
-type Accent = "indigo" | "cyan" | "emerald" | "amber";
-
-const accentMap: Record<Accent, {
-  border: string; text: string; tag: string; dot: string; badge: string;
-}> = {
-  indigo:  {
-    border: "border-l-indigo-500",
-    text:   "text-indigo-500",
-    tag:    "border-indigo-500/30 bg-indigo-500/[0.06] text-indigo-600 dark:text-indigo-400",
-    dot:    "bg-indigo-500",
-    badge:  "border-indigo-500/30 text-indigo-600 dark:text-indigo-400",
-  },
-  cyan: {
-    border: "border-l-cyan-500",
-    text:   "text-cyan-500",
-    tag:    "border-cyan-500/30 bg-cyan-500/[0.06] text-cyan-600 dark:text-cyan-400",
-    dot:    "bg-cyan-500",
-    badge:  "border-cyan-500/30 text-cyan-600 dark:text-cyan-400",
-  },
-  emerald: {
-    border: "border-l-emerald-500",
-    text:   "text-emerald-500",
-    tag:    "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-600 dark:text-emerald-400",
-    dot:    "bg-emerald-500",
-    badge:  "border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
-  },
-  amber: {
-    border: "border-l-amber-500",
-    text:   "text-amber-500",
-    tag:    "border-amber-500/30 bg-amber-500/[0.06] text-amber-600 dark:text-amber-400",
-    dot:    "bg-amber-500",
-    badge:  "border-amber-500/30 text-amber-600 dark:text-amber-400",
-  },
-};
-
-/* ─── shared sub-components ─── */
-const Point = ({
-  text, link,
-}: { text: string; link?: { label: string; href: string } }) => (
-  <div className="flex items-start gap-2.5 group/pt">
-    <span className="font-mono text-[10px] text-black/30 dark:text-white/30 mt-[3px] shrink-0 group-hover/pt:text-black/60 dark:group-hover/pt:text-white/60 transition-colors">
-      →
-    </span>
-    <p className="font-mono text-[13px] md:text-[14px] font-semibold leading-relaxed text-black/65 dark:text-white/65 group-hover/pt:text-black/80 dark:group-hover/pt:text-white/80 transition-colors">
-      {text}
-      {link && (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-1 inline-flex items-center gap-0.5 font-bold underline underline-offset-2 decoration-dotted text-black dark:text-white hover:opacity-60 transition-opacity"
-        >
-          {link.label}
-          <IconExternalLink size={10} />
-        </a>
-      )}
-    </p>
-  </div>
-);
-
-const TechTag = ({ label, accent }: { label: string; accent: Accent }) => (
-  <span className={`border px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.18em] ${accentMap[accent].tag}`}>
-    {label}
-  </span>
-);
-
-const Stat = ({ value, label }: { value: string; label: string }) => {
+/* ─────────────────────────────────────────────────
+   Animated Metric
+───────────────────────────────────────────────── */
+const Metric = ({ value, label, color }: { value: string; label: string; color: string }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [triggered, setTriggered] = useState(false);
+  const [fired, setFired] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setTriggered(true); obs.disconnect(); } },
-      { threshold: 0.5 }
+      ([e]) => { if (e.isIntersecting) { setFired(true); obs.disconnect(); } },
+      { threshold: 0.6 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  useEffect(() => { setMounted(true); }, []);
-
-  // Parse numeric prefix + suffix (e.g. "50K+" → 50, "K+")
-  const match = value.match(/^(\d+)(.*)$/);
-  const isNumeric = !!match;
-  const numTarget = isNumeric ? parseInt(match![1]) : 0;
-  const suffix = isNumeric ? match![2] : "";
-  const count = useCountUp(numTarget, 1200, triggered);
+  const match = value.match(/^(\d+)(.*)/);
+  const num = match ? parseInt(match[1]) : 0;
+  const suffix = match ? match[2] : "";
+  const isNum = !!match;
+  const counted = useCountUp(num, 1400, fired);
 
   return (
-    <div
-      ref={ref}
-      className="border border-black/10 dark:border-white/[0.08] px-3 py-2 text-center
-        bg-white dark:bg-white/[0.03] dark:backdrop-blur-sm
-        dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
-    >
+    <div ref={ref} className="flex flex-col gap-0.5">
       <div
-        className="font-bold leading-none text-black dark:text-white mb-0.5"
-        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.8rem, 3vw, 1.1rem)", letterSpacing: "-0.02em" }}
+        className="font-black leading-none tabular-nums"
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.1rem,2.2vw,1.7rem)", color }}
       >
-        {isNumeric ? (
-          triggered ? `${count}${suffix}` : `0${suffix}`
-        ) : mounted ? (
-          <EncryptedText
-            text={value}
-            revealDelayMs={80}
-            charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>"
-            className="font-bold"
-          />
-        ) : value}
+        {isNum
+          ? `${counted}${suffix}`
+          : mounted
+          ? <EncryptedText text={value} revealDelayMs={60} charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" className="font-black" />
+          : value}
       </div>
-      <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40">
-        {label}
-      </div>
+      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/35">{label}</div>
     </div>
   );
 };
 
-/* ─── role card shell ─── */
-const RoleCard = ({
-  accent, status, role, company, period, stats, points, tech, image,
-}: {
-  accent: Accent;
-  status: "ACTIVE" | "COMPLETED";
-  role: string;
-  company: string;
-  period: string;
-  stats?: { value: string; label: string }[];
-  points: { text: string; link?: { label: string; href: string } }[];
-  tech: string[];
-  image?: { src: string; alt: string };
-}) => {
-  const a = accentMap[accent];
+/* ─────────────────────────────────────────────────
+   Data
+───────────────────────────────────────────────── */
+const JOBS = [
+  {
+    idx: "01",
+    company: "ZANSKAR SECURITIES",
+    role: ["ANALYST", "SOFTWARE", "ENGINEER"],
+    period: "JUL 2025 — PRESENT",
+    status: "ACTIVE" as const,
+    color: "#818cf8",
+    colorRgb: "129,140,248",
+    image: "/nubra.webp",
+    imageAlt: "Nubra Platform",
+    metrics: [
+      { value: "50K+", label: "MSG/SEC" },
+      { value: "35%",  label: "P99 DROP" },
+      { value: "40%",  label: "GC SAVED" },
+      { value: "<1MS", label: "LATENCY"  },
+    ],
+    bullets: [
+      "Building sub-millisecond order execution pipelines in Go for high-frequency trading",
+      "Event-driven microservices on NATS JetStream processing 50K+ messages/sec with guaranteed delivery",
+      "Distributed order book using custom ring-buffer data structures, cutting GC pressure by ~40%",
+      "Real-time risk middleware — circuit breakers, rate limiting, distributed tracing with OpenTelemetry",
+      "Profiled hot paths with Go pprof, reducing P99 latency by 35% on order routing",
+      "Multi-leg options strategies execution engine with deterministic, lock-free routing",
+    ],
+    link: { label: "Nubra", href: "https://nubra.io" },
+    tech: ["Golang", "NATS JetStream", "Kafka", "PostgreSQL", "Redis", "Docker", "OpenTelemetry", "HFT"],
+  },
+  {
+    idx: "02",
+    company: "ONEFINNET",
+    role: ["SOFTWARE", "DEVELOPER", "INTERN"],
+    period: "JAN 2025 — JUN 2025",
+    status: "COMPLETED" as const,
+    color: "#22d3ee",
+    colorRgb: "34,211,238",
+    image: "/onefinnet.png",
+    imageAlt: "Onefinnet",
+    metrics: [
+      { value: "10K+", label: "CONC. CONN" },
+      { value: "45%",  label: "API FASTER" },
+      { value: "1K+",  label: "USERS LIVE" },
+    ],
+    bullets: [
+      "Built REST and WebSocket APIs in Go handling 10,000+ concurrent connections under production load",
+      "Redis-based caching layer reducing average API response time by 45%",
+      "Real-time chat infrastructure using Go and NATS JetStream for 1,000+ simultaneous users",
+      "Containerised microservices with Docker, zero-downtime deployments on GCP Cloud Run",
+      "Led backend architecture for Spot Chat and Meeting Platform — schema, auth, pub/sub routing",
+      "Load tests with k6, identifying throughput bottlenecks before production release",
+    ],
+    link: { label: "OneFinnet Talent", href: "https://onefinnet.com/talent" },
+    tech: ["Golang", "WebSocket", "Redis", "NATS", "Docker", "GCP Cloud Run", "k6"],
+  },
+  {
+    idx: "03",
+    company: "MODULUS TECHNOLOGIES",
+    role: ["SOFTWARE", "DEVELOPER", "INTERN"],
+    period: "JUL 2024 — OCT 2024",
+    status: "COMPLETED" as const,
+    color: "#34d399",
+    colorRgb: "52,211,153",
+    image: "/ambill.jpg",
+    imageAlt: "Ambill",
+    metrics: [
+      { value: "30%",  label: "LOAD FASTER"  },
+      { value: "SSR",  label: "NEXT.JS"       },
+      { value: "RBAC", label: "MULTI-TENANT" },
+    ],
+    bullets: [
+      "Built full-stack SaaS billing platform using Next.js, FeatherJS, and PostgreSQL",
+      "Migrated React → Next.js with SSR and route-level code splitting, 30% faster load times",
+      "Integrated Stripe APIs with automated invoice generation, PDF export, and webhook handling",
+      "Multi-tenant DB schema with row-level security and RBAC for billing workflows",
+      "Audit log system tracking financial mutations with immutable event sourcing",
+    ],
+    link: { label: "Ambill", href: "https://www.ambill.ai/about-us" },
+    tech: ["Next.js", "TypeScript", "FeatherJS", "PostgreSQL", "Stripe", "Tailwind CSS"],
+  },
+];
+
+const ACHIEVEMENTS = [
+  {
+    idx: "CP",
+    color: "#fbbf24",
+    colorRgb: "251,191,36",
+    badge: "GUARDIAN",
+    title: ["COMPETITIVE", "PROGRAMMING"],
+    points: [
+      "LeetCode Guardian — Rating 2200+",
+      "CodeChef 4★ — Rating 1850+",
+      "800+ algorithmic problems solved across platforms",
+    ],
+  },
+  {
+    idx: "NDA",
+    color: "#818cf8",
+    colorRgb: "129,140,248",
+    badge: "AIR 193",
+    title: ["NDA SSB", "RECOMMENDED"],
+    points: [
+      "Cleared NDA SSB — All India Rank 193",
+      "Leadership under high-pressure scenarios",
+      "Strategic thinking in officer-selection assessments",
+    ],
+  },
+];
+
+/* ─────────────────────────────────────────────────
+   Job Card
+───────────────────────────────────────────────── */
+const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 44 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative bg-[#ffffff] dark:bg-[#060d1a] border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} overflow-hidden`}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: i * 0.07 }}
+      className="relative overflow-hidden"
+      style={{
+        background: "#080f1e",
+        borderTop: `2px solid ${job.color}`,
+        boxShadow: `0 0 60px rgba(${job.colorRgb},0.06)`,
+      }}
     >
-      {/* watermark */}
+      {/* Ambient gradient */}
       <div
-        className="absolute -bottom-4 -right-3 font-black leading-none select-none pointer-events-none text-black/[0.04] dark:text-white/[0.04]"
-        style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "7rem", letterSpacing: "-0.05em" }}
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(ellipse 55% 45% at 100% 0%, rgba(${job.colorRgb},0.08) 0%, transparent 65%)` }}
+      />
+
+      {/* Index watermark */}
+      <div
+        className="pointer-events-none absolute -bottom-6 -right-1 select-none font-black leading-none text-white/[0.028]"
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(8rem,18vw,14rem)", letterSpacing: "-0.05em" }}
       >
-        {company.split(" ")[0].slice(0, 3).toUpperCase()}
+        {job.idx}
       </div>
 
-      <div className="relative z-10 p-5 md:p-8 lg:p-10">
-        {/* header row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-          <div className="flex items-center gap-2.5">
-            {/* status dot */}
-            <span className="relative flex h-1.5 w-1.5 shrink-0">
-              {status === "ACTIVE" && (
-                <span className={`absolute inline-flex h-full w-full animate-ping ${a.dot} opacity-60`} />
-              )}
-              <span className={`relative inline-flex h-1.5 w-1.5 ${a.dot}`} />
+      {/* ── HEADER BAR ── */}
+      <div
+        className="relative z-10 flex flex-wrap items-center justify-between gap-3 px-5 md:px-10 py-4"
+        style={{ borderBottom: `1px solid rgba(${job.colorRgb},0.14)` }}
+      >
+        <div className="flex items-center gap-3 md:gap-4">
+          <span className="relative flex h-1.5 w-1.5 shrink-0">
+            {job.status === "ACTIVE" && (
+              <span className="absolute inline-flex h-full w-full animate-ping opacity-70" style={{ background: job.color }} />
+            )}
+            <span className="relative inline-flex h-1.5 w-1.5" style={{ background: job.color }} />
+          </span>
+
+          {mounted ? (
+            <EncryptedText
+              text={job.company}
+              revealDelayMs={38}
+              charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
+              className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-white"
+            />
+          ) : (
+            <span className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-white">
+              {job.company}
             </span>
-            <span className={`font-mono text-[8px] uppercase tracking-[0.35em] border px-2 py-0.5 ${a.badge}`}>
-              {status}
-            </span>
-          </div>
-          <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-black/40 dark:text-white/40">
-            {period}
+          )}
+
+          <span
+            className="font-mono text-[8px] uppercase tracking-[0.28em] border px-2 py-0.5"
+            style={{ color: job.color, borderColor: `rgba(${job.colorRgb},0.32)`, background: `rgba(${job.colorRgb},0.07)` }}
+          >
+            {job.status}
           </span>
         </div>
 
-        {/* role title */}
+        <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/30">
+          {job.period}
+        </span>
+      </div>
+
+      {/* ── BODY: two columns ── */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[5fr_7fr]">
+
+        {/* LEFT — image + metrics */}
         <div
-          className="font-bold uppercase leading-tight text-black dark:text-white mb-2"
-          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.95rem,2.5vw,1.4rem)", letterSpacing: "0.02em" }}
+          className="flex flex-col gap-6 p-5 md:p-8"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
         >
-          {role}
-        </div>
-
-        {/* company */}
-        <div className={`font-mono text-[10px] md:text-[11px] uppercase tracking-[0.2em] mb-5 ${a.text}`}>
-          @ {company}
-        </div>
-
-        {/* stats row */}
-        {stats && (
-          <div className={`grid gap-px mb-5 bg-black/[0.06] dark:bg-white/[0.06] ${
-            stats.length === 4
-              ? "grid-cols-2 md:grid-cols-4"
-              : stats.length === 3
-              ? "grid-cols-3"
-              : "grid-cols-2"
-          }`}>
-            {stats.map((s) => (
-              <Stat key={s.label} {...s} />
-            ))}
-          </div>
-        )}
-
-        {/* divider */}
-        <div className="h-px bg-black/[0.07] dark:bg-white/[0.07] mb-5" />
-
-        {/* points */}
-        <div className="space-y-2.5 mb-5">
-          {points.map((p, i) => <Point key={i} {...p} />)}
-        </div>
-
-        {/* divider */}
-        <div className="h-px bg-black/[0.07] dark:bg-white/[0.07] mb-4" />
-
-        {/* tech tags */}
-        <div className="flex flex-wrap gap-1.5 mb-5">
-          {tech.map((t) => <TechTag key={t} label={t} accent={accent} />)}
-        </div>
-
-        {/* image */}
-        {image && (
-          <div className="relative w-full h-36 md:h-52 border border-black/10 dark:border-white/10 overflow-hidden group bg-black/[0.03] dark:bg-white/[0.03]">
-            {/* blurry background copy */}
+          {/* Image */}
+          <div
+            className="relative overflow-hidden flex items-center justify-center"
+            style={{
+              minHeight: 160,
+              background: `rgba(${job.colorRgb},0.04)`,
+              border: `1px solid rgba(${job.colorRgb},0.18)`,
+            }}
+          >
             <img
-              src={image.src}
-              alt=""
-              aria-hidden
-              className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-40 dark:opacity-25 transition-transform duration-700 group-hover:scale-125"
+              src={job.image} alt="" aria-hidden
+              className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-15"
             />
-            {/* centered foreground */}
             <img
-              src={image.src}
-              alt={image.alt}
-              className="relative z-10 h-full w-full object-contain p-6 md:p-8 transition-transform duration-500 group-hover:scale-[1.04]"
+              src={job.image} alt={job.imageAlt}
+              className="relative z-10 max-h-40 w-full object-contain p-5 transition-transform duration-500 hover:scale-[1.04]"
             />
-            {/* corner label */}
-            <div className="absolute bottom-2.5 left-3 z-20 font-mono text-[7px] uppercase tracking-[0.3em] text-white/60 border border-white/15 bg-black/20 px-2 py-0.5">
-              {image.alt}
+            <div
+              className="absolute bottom-2 left-2.5 font-mono text-[7px] uppercase tracking-[0.3em] px-2 py-0.5"
+              style={{ color: job.color, background: `rgba(${job.colorRgb},0.12)`, border: `1px solid rgba(${job.colorRgb},0.2)` }}
+            >
+              {job.imageAlt}
             </div>
           </div>
-        )}
+
+          {/* Metrics */}
+          <div className={`grid gap-x-6 gap-y-4 ${job.metrics.length === 4 ? "grid-cols-2" : "grid-cols-3"}`}>
+            {job.metrics.map((m) => (
+              <Metric key={m.label} {...m} color={job.color} />
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT — role + log entries */}
+        <div
+          className="flex flex-col gap-5 p-5 md:p-8"
+          style={{ borderLeft: "1px solid rgba(255,255,255,0.04)" }}
+        >
+          {/* Role title */}
+          <div>
+            <div className="font-mono text-[8px] uppercase tracking-[0.32em] mb-2.5" style={{ color: `rgba(${job.colorRgb},0.7)` }}>
+              {"// ROLE"}
+            </div>
+            <h3
+              className="font-black uppercase leading-[1.0] text-white"
+              style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.6rem, 3.5vw, 2.7rem)", letterSpacing: "-0.025em" }}
+            >
+              {job.role.map((line, li) => <span key={li} className="block">{line}</span>)}
+            </h3>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px" style={{ background: `linear-gradient(to right, rgba(${job.colorRgb},0.4), transparent)` }} />
+
+          {/* Bullet log entries */}
+          <div className="flex flex-col gap-2.5 flex-1">
+            {job.bullets.map((b, bi) => (
+              <div key={bi} className="flex items-start gap-3 group">
+                <span
+                  className="font-mono text-[9px] mt-[3px] shrink-0 tabular-nums"
+                  style={{ color: `rgba(${job.colorRgb},0.45)` }}
+                >
+                  {String(bi + 1).padStart(2, "0")}
+                </span>
+                <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-white/50 group-hover:text-white/75 transition-colors duration-200">
+                  {b}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Link */}
+          {job.link && (
+            <a
+              href={job.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.22em] transition-opacity hover:opacity-60 w-fit mt-1"
+              style={{ color: job.color }}
+            >
+              <IconExternalLink size={11} />
+              {job.link.label}
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* ── TECH FOOTER ── */}
+      <div
+        className="relative z-10 flex flex-wrap gap-2 px-5 md:px-10 py-4"
+        style={{ borderTop: `1px solid rgba(${job.colorRgb},0.1)` }}
+      >
+        {job.tech.map((t) => (
+          <span
+            key={t}
+            className="font-mono text-[8px] uppercase tracking-[0.18em] px-2.5 py-1 transition-colors duration-200"
+            style={{
+              color: job.color,
+              background: `rgba(${job.colorRgb},0.07)`,
+              border: `1px solid rgba(${job.colorRgb},0.2)`,
+            }}
+          >
+            {t}
+          </span>
+        ))}
       </div>
     </motion.div>
   );
 };
 
-/* ─── achievement card ─── */
-const AchievementBlock = ({
-  accent, title, badge, points, images,
-}: {
-  accent: Accent;
-  title: string;
-  badge?: string;
-  points: string[];
-  images?: { src: string; alt: string; className?: string }[];
-}) => {
-  const a = accentMap[accent];
-  return (
-    <div className={`border border-black/10 dark:border-white/10 border-l-[3px] ${a.border} bg-[#ffffff] dark:bg-[#060d1a] p-5`}>
-      <div className="flex items-center gap-3 mb-4">
-        {badge && (
-          <span className={`font-mono text-[8px] uppercase tracking-[0.3em] border px-2 py-0.5 ${a.badge}`}>
-            {badge}
-          </span>
-        )}
+/* ─────────────────────────────────────────────────
+   Achievement Card
+───────────────────────────────────────────────── */
+const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 32 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-40px" }}
+    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
+    className="relative overflow-hidden flex flex-col"
+    style={{
+      background: "#080f1e",
+      borderTop: `2px solid ${a.color}`,
+      boxShadow: `0 0 40px rgba(${a.colorRgb},0.06)`,
+    }}
+  >
+    <div
+      className="pointer-events-none absolute inset-0"
+      style={{ background: `radial-gradient(ellipse 80% 70% at 50% -10%, rgba(${a.colorRgb},0.1) 0%, transparent 60%)` }}
+    />
+    <div
+      className="pointer-events-none absolute bottom-0 right-3 select-none font-black leading-none text-white/[0.035]"
+      style={{ fontFamily: "var(--font-orbitron)", fontSize: "8rem", letterSpacing: "-0.05em" }}
+    >
+      {a.idx}
+    </div>
+
+    <div className="relative z-10 p-6 md:p-8 flex flex-col gap-5 flex-1">
+      <div className="flex items-center gap-3">
         <span
-          className="font-semibold uppercase leading-none text-black dark:text-white"
-          style={{ fontFamily: "var(--font-orbitron)", fontSize: "0.85rem", letterSpacing: "0.03em" }}
+          className="font-mono text-[8px] uppercase tracking-[0.3em] border px-2.5 py-1 font-bold"
+          style={{ color: a.color, borderColor: `rgba(${a.colorRgb},0.35)`, background: `rgba(${a.colorRgb},0.08)` }}
         >
-          {title}
+          {a.badge}
         </span>
+        <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-white/25">ACHIEVEMENT</span>
       </div>
-      <div className="space-y-2 mb-4">
-        {points.map((p, i) => <Point key={i} text={p} />)}
+
+      <h3
+        className="font-black uppercase leading-[1.0] text-white"
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.3rem, 2.8vw, 2rem)", letterSpacing: "-0.02em" }}
+      >
+        {a.title.map((l, li) => <span key={li} className="block">{l}</span>)}
+      </h3>
+
+      <div className="h-px" style={{ background: `linear-gradient(to right, rgba(${a.colorRgb},0.4), transparent)` }} />
+
+      <div className="flex flex-col gap-2.5 flex-1">
+        {a.points.map((p, pi) => (
+          <div key={pi} className="flex items-start gap-2.5">
+            <IconBolt size={11} className="shrink-0 mt-[3px]" style={{ color: a.color }} />
+            <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-white/50">{p}</p>
+          </div>
+        ))}
       </div>
-      {images && (
-        <div className="grid grid-cols-2 gap-2">
-          {images.map((img) => (
-            <div key={img.alt} className="relative border border-black/10 dark:border-white/10 overflow-hidden h-28 md:h-36 group bg-black/[0.03] dark:bg-white/[0.03]">
-              {/* blurry bg */}
-              <img src={img.src} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-35 dark:opacity-20 transition-transform duration-700 group-hover:scale-125" />
-              {/* centered */}
-              <img src={img.src} alt={img.alt} className={`relative z-10 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 ${img.className ?? ""}`} />
-            </div>
-          ))}
-        </div>
-      )}
+    </div>
+  </motion.div>
+);
+
+/* ─────────────────────────────────────────────────
+   Scroll-driven left rail
+───────────────────────────────────────────────── */
+const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> }) => {
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start 15%", "end 85%"] });
+  const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <div className="absolute left-0 top-0 bottom-0 w-[2px] hidden lg:block pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-white/[0.04]" />
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-full origin-top"
+        style={{
+          scaleY,
+          background: "linear-gradient(to bottom, #818cf8 0%, #22d3ee 40%, #34d399 80%, #fbbf24 100%)",
+          filter: "blur(1px)",
+        }}
+      />
     </div>
   );
 };
 
-/* ─── timeline data ─── */
-const data = [
-  {
-    title: "JUL 2025 — PRESENT",
-    content: (
-      <RoleCard
-        accent="indigo"
-        status="ACTIVE"
-        role="ANALYST SOFTWARE ENGINEER"
-        company="ZANSKAR SECURITIES"
-        period="JUL 2025 – PRESENT"
-        stats={[
-          { value: "50K+", label: "MSG/SEC" },
-          { value: "35%", label: "P99 DROP" },
-          { value: "40%", label: "GC SAVED" },
-          { value: "<1MS", label: "LATENCY" },
-        ]}
-        points={[
-          { text: "Building sub-millisecond order execution pipelines in Go for high-frequency trading" },
-          { text: "Designed event-driven microservices on NATS JetStream processing 50K+ messages/sec with guaranteed delivery" },
-          { text: "Architected distributed order book using custom ring-buffer data structures, cutting GC pressure by ~40%" },
-          { text: "Implemented real-time risk management middleware — circuit breakers, rate limiting, distributed tracing with OpenTelemetry" },
-          { text: "Profiled hot paths with Go pprof, reducing P99 latency by 35% on order routing" },
-          { text: "Engineered multi-leg options strategies execution engine with deterministic, lock-free order routing" },
-          { text: "Building trading platform", link: { label: "Nubra", href: "https://nubra.io" } },
-        ]}
-        tech={["Golang", "NATS JetStream", "Kafka", "PostgreSQL", "Redis", "Docker", "OpenTelemetry", "HFT"]}
-        image={{ src: "/nubra.webp", alt: "Nubra Platform" }}
-      />
-    ),
-  },
-  {
-    title: "JAN 2025 — JUN 2025",
-    content: (
-      <RoleCard
-        accent="cyan"
-        status="COMPLETED"
-        role="SOFTWARE DEVELOPER INTERN"
-        company="ONEFINNET"
-        period="JAN 2025 – JUN 2025"
-        stats={[
-          { value: "10K+", label: "CONC. CONN" },
-          { value: "45%", label: "API FASTER" },
-          { value: "1K+", label: "USERS LIVE" },
-        ]}
-        points={[
-          { text: "Built REST and WebSocket APIs in Go handling 10,000+ concurrent connections under production load" },
-          { text: "Implemented Redis-based caching layer, reducing average API response time by 45%" },
-          { text: "Built real-time chat infrastructure using Go and NATS JetStream for 1,000+ simultaneous users" },
-          { text: "Containerised microservices with Docker, orchestrated zero-downtime deployments on GCP Cloud Run" },
-          { text: "Led backend architecture for Spot Chat and Meeting Platform — schema, auth flow, pub/sub routing" },
-          { text: "Wrote load tests with k6, identifying throughput bottlenecks before production release" },
-          { text: "Built hiring platform", link: { label: "OneFinnet Talent", href: "https://onefinnet.com/talent" } },
-        ]}
-        tech={["Golang", "WebSocket", "Redis", "NATS", "Docker", "GCP Cloud Run", "k6"]}
-        image={{ src: "/onefinnet.png", alt: "Onefinnet" }}
-      />
-    ),
-  },
-  {
-    title: "JUL 2024 — OCT 2024",
-    content: (
-      <RoleCard
-        accent="emerald"
-        status="COMPLETED"
-        role="SOFTWARE DEVELOPER INTERN"
-        company="MODULUS TECHNOLOGIES"
-        period="JUL 2024 – OCT 2024"
-        stats={[
-          { value: "30%", label: "LOAD FASTER" },
-          { value: "SSR", label: "NEXT.JS" },
-          { value: "RBAC", label: "MULTI-TENANT" },
-        ]}
-        points={[
-          { text: "Built full-stack SaaS billing platform using Next.js, FeatherJS, and PostgreSQL" },
-          { text: "Migrated React → Next.js with SSR and route-level code splitting, achieving 30% faster load times" },
-          { text: "Integrated Stripe APIs with automated invoice generation, PDF export, and webhook handling" },
-          { text: "Designed multi-tenant DB schema with row-level security and RBAC for billing workflows" },
-          { text: "Built audit log system tracking financial mutations with immutable event sourcing" },
-          { text: "Built invoice automation system", link: { label: "Ambill", href: "https://www.ambill.ai/about-us" } },
-        ]}
-        tech={["Next.js", "TypeScript", "FeatherJS", "PostgreSQL", "Stripe", "Tailwind CSS"]}
-        image={{ src: "/ambill.jpg", alt: "Ambill" }}
-      />
-    ),
-  },
-  {
-    title: "ACHIEVEMENTS",
-    content: (
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="space-y-3"
-      >
-        <AchievementBlock
-          accent="amber"
-          title="COMPETITIVE PROGRAMMING"
-          badge="GUARDIAN"
-          points={[
-            "LeetCode Guardian — Rating 2200+",
-            "CodeChef 4★ — Rating 1850+",
-            "Solved 800+ algorithmic problems across platforms",
-          ]}
-          images={[
-            { src: "/guardian.gif", alt: "LeetCode Guardian" },
-            { src: "/codechef.svg", alt: "CodeChef 4★" },
-          ]}
-        />
-        <AchievementBlock
-          accent="indigo"
-          title="NDA SSB RECOMMENDED"
-          badge="AIR 193"
-          points={[
-            "Cleared NDA SSB Interview — All India Rank 193",
-            "Demonstrated leadership under high-pressure scenarios across psychological and group testing",
-            "Showcased strategic thinking in officer-selection assessments",
-          ]}
-        />
-      </motion.div>
-    ),
-  },
-];
-
-/* ═══════════════════════════════════════
-   EXPERIENCE
-═══════════════════════════════════════ */
-const Experience = () => (
-  <section id="experience" className="relative w-full py-8 md:py-16 overflow-hidden">
-    <Spotlight
-      className="-top-40 left-1/2 -translate-x-1/2 opacity-20 dark:opacity-40 scale-150"
-      fill="#818cf8"
+/* ─────────────────────────────────────────────────
+   Section header
+───────────────────────────────────────────────── */
+const Header = () => (
+  <div className="relative px-5 md:px-10 pt-10 pb-8 md:pt-14 md:pb-10 overflow-hidden">
+    {/* faint grid bg */}
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.018]"
+      style={{
+        backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)",
+        backgroundSize: "40px 40px",
+      }}
     />
-    <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
-      <div className="bg-[#ffffff] dark:bg-[#060d1a] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
 
-        {/* ── header bar ── */}
-        <div className="flex items-center justify-between px-4 md:px-8 py-3 md:py-3.5 border-b border-black/10 dark:border-white/10">
-          <div className="flex items-center gap-2 md:gap-5">
-            <span className="hidden sm:inline font-mono text-[7px] uppercase tracking-[0.45em] text-black/50 dark:text-white/50">
-              SYS.HISTORY
-            </span>
-            <div className="hidden sm:block h-3 w-px bg-black/15 dark:bg-white/15" />
-            <span className="font-mono text-[9px] md:text-[11px] font-bold uppercase tracking-[0.15em] text-black dark:text-white">
-              WORK EXPERIENCE
-            </span>
-          </div>
-          <span className="font-mono text-[7px] md:text-[8px] uppercase tracking-[0.25em] md:tracking-[0.3em] text-black/50 dark:text-white/50 whitespace-nowrap">
-            3 ROLES · 4 ENTRIES
-          </span>
-        </div>
+    <FadeReveal delay={0} className="flex items-center gap-3 mb-5">
+      <div className="w-1.5 h-1.5 bg-indigo-400 animate-pulse" />
+      <RevealChars
+        text="SYS.CAREER_LOG"
+        className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/35"
+        delay={0.1}
+      />
+      <div className="h-px w-16 bg-gradient-to-r from-indigo-400/50 to-transparent" />
+    </FadeReveal>
 
-        {/* ── section heading ── */}
-        <div className="px-4 md:px-10 pt-8 md:pt-10 pb-2">
-          <div className="flex items-center gap-3 mb-3">
-            <DrawLine delay={0} className="h-px w-8 bg-amber-500/60" />
-            <RevealChars
-              text="WORK HISTORY"
-              className="font-mono text-[8px] uppercase tracking-[0.4em] text-black/45 dark:text-white/45"
-              delay={0.15}
-            />
-          </div>
-          <div
-            className="font-black uppercase leading-none text-black dark:text-white"
-            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(2.2rem,10vw,8rem)", letterSpacing: "-0.03em" }}
-          >
-            <RevealText text="EXPERIENCE" delay={0.1} stagger={0.045} />
-          </div>
-          <div className="flex items-center gap-5 md:gap-8 mt-3 md:mt-4">
-            {["BACKEND", "INFRA", "FULL-STACK"].map((tag, i) => (
-              <FadeReveal key={tag} delay={0.5 + i * 0.07}>
-                <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/35 dark:text-white/35">
-                  {String(i + 1).padStart(2, "0")}. {tag}
-                </span>
-              </FadeReveal>
-            ))}
-          </div>
-        </div>
+    {/* WORK / HISTORY — editorial stacked titles */}
+    <div className="flex flex-col md:flex-row md:items-end md:gap-8">
+      <div>
+        <h2
+          className="font-black uppercase leading-none text-white block"
+          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(3rem, 10vw, 8rem)", letterSpacing: "-0.035em" }}
+        >
+          <RevealText text="WORK" delay={0.1} stagger={0.05} />
+        </h2>
+        <h2
+          className="font-black uppercase leading-none block"
+          style={{
+            fontFamily: "var(--font-orbitron)",
+            fontSize: "clamp(3rem, 10vw, 8rem)",
+            letterSpacing: "-0.035em",
+            WebkitTextStroke: "1.5px rgba(255,255,255,0.2)",
+            color: "transparent",
+          }}
+        >
+          <RevealText text="HISTORY" delay={0.18} stagger={0.045} />
+        </h2>
+      </div>
 
-        {/* ── timeline ── */}
-        <div className="px-3 md:px-8">
-          <Timeline data={data} />
-        </div>
+      <div className="flex flex-row md:flex-col gap-4 md:gap-1.5 mb-1 mt-5 md:mt-0">
+        {["01 · BACKEND", "02 · INFRA", "03 · FULL-STACK"].map((t, i) => (
+          <FadeReveal key={t} delay={0.5 + i * 0.07}>
+            <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/28 whitespace-nowrap">{t}</span>
+          </FadeReveal>
+        ))}
       </div>
     </div>
-  </section>
+
+    {/* quick-stats strip */}
+    <div className="flex flex-wrap items-center gap-6 md:gap-10 mt-6 pt-5 border-t border-white/[0.07]">
+      {[
+        { n: "3",    lbl: "ROLES"     },
+        { n: "1.5+", lbl: "YRS EXP"  },
+        { n: "50K+", lbl: "MSG/SEC"  },
+        { n: "<1MS", lbl: "LATENCY"  },
+      ].map((s) => (
+        <div key={s.lbl} className="flex flex-col gap-0.5">
+          <span
+            className="font-bold text-white leading-none"
+            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.9rem,2vw,1.15rem)" }}
+          >
+            {s.n}
+          </span>
+          <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-white/28">{s.lbl}</span>
+        </div>
+      ))}
+    </div>
+  </div>
 );
 
-export default Experience;
+/* ─────────────────────────────────────────────────
+   Sticky stacking wrapper — each card pins, the next
+   slides up and rests on top. Works on every screen
+   size (top-pinned, not viewport-locked, so tall
+   mobile cards are never clipped).
+───────────────────────────────────────────────── */
+// jobs (each its own card) + the achievements slide (1)
+const DECK_TOTAL = JOBS.length + 1;
+
+const StickyStack = ({ children, i, total }: { children: React.ReactNode; i: number; total: number }) => {
+  // earlier cards sit slightly smaller behind newer ones → layered deck depth
+  const scale = 1 - (total - 1 - i) * 0.025;
+  return (
+    <div className="sticky" style={{ top: `${14 + i * 12}px` }}>
+      <div className="origin-top will-change-transform" style={{ transform: `scale(${scale})` }}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────────
+   EXPERIENCE — main export
+───────────────────────────────────────────────── */
+export default function Experience() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <section className="relative w-full py-8 md:py-16 bg-white dark:bg-[#060d1a] transition-colors duration-500">
+      <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
+        <div
+          ref={containerRef}
+          className="relative"
+          style={{ border: "1px solid rgba(255,255,255,0.07)", background: "#060d1a" }}
+        >
+          <Rail containerRef={containerRef as React.RefObject<HTMLDivElement>} />
+
+          <Header />
+
+          {/* gradient separator */}
+          <div
+            className="h-px mx-5 md:mx-10"
+            style={{ background: "linear-gradient(to right, #818cf8, #22d3ee, #34d399, transparent)" }}
+          />
+
+          {/* Unified sticky stacking deck: jobs first, then the achievements
+              slide pins on top last — every card participates in the stack. */}
+          <div className="relative mt-px">
+            {JOBS.map((job, i) => (
+              <StickyStack key={job.idx} i={i} total={DECK_TOTAL}>
+                <JobCard job={job} i={i} />
+              </StickyStack>
+            ))}
+
+            {/* Achievements = one final pinning slide (kept side-by-side, opaque
+                so it cleanly covers the job card beneath it) */}
+            <StickyStack i={JOBS.length} total={DECK_TOTAL}>
+              <div className="relative" style={{ background: "#060d1a", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                {/* separator */}
+                <div className="px-5 md:px-10 py-4 flex items-center gap-4">
+                  <div className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />
+                  <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/35">ACHIEVEMENTS</span>
+                  <div className="flex-1 h-px bg-white/[0.05]" />
+                </div>
+                {/* achievement cards (2-up) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "rgba(255,255,255,0.03)" }}>
+                  {ACHIEVEMENTS.map((a, i) => (
+                    <AchCard key={a.idx} a={a} i={i} />
+                  ))}
+                </div>
+              </div>
+            </StickyStack>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -305,14 +305,10 @@ export default function Home() {
               </div>
             </motion.section>
 
-            {/* ── Card 3: Experience ── */}
-            <motion.section
-              id="experience"
-              className="md:min-h-screen flex flex-col justify-center px-2 md:px-0"
-              {...cardEnter}
-            >
+            {/* ── Card 3: Experience ── (no scale transform: would break sticky stacking) */}
+            <section id="experience" className="px-2 md:px-0">
               <Experience />
-            </motion.section>
+            </section>
 
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
