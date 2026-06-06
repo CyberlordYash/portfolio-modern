@@ -438,10 +438,18 @@ const RecentProjects = () => {
 
           {/* big heading */}
           <h2
-            className="font-black uppercase leading-none text-black dark:text-white"
-            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(3.5rem,11vw,9rem)", letterSpacing: "-0.03em" }}
+            className="font-black uppercase leading-none whitespace-nowrap"
+            style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(2rem,9vw,8rem)", letterSpacing: "-0.03em" }}
           >
-            <RevealText text="PROJECTS" delay={0.1} stagger={0.06} />
+            <span className="text-black dark:text-white">
+              <RevealText text="RECENT" delay={0.1} stagger={0.06} />
+            </span>{" "}
+            <span
+              className="text-black/25 dark:text-white/25"
+              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+            >
+              <RevealText text="PROJECTS" delay={0.22} stagger={0.06} />
+            </span>
           </h2>
 
           {/* underline annotation */}

@@ -197,16 +197,27 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full font-black uppercase leading-[1.05] text-center mb-8 text-black heading-gradient-dark"
+          className="w-full font-black uppercase leading-[1.05] text-center mb-8"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(2rem, 11vw, 5rem)",
             letterSpacing: "-0.02em",
           }}
         >
-          SYSTEMS,
+          <span
+            className="text-black/25 dark:text-white/25"
+            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+          >
+            SYSTEMS,
+          </span>
           <br />
-          BY DESIGN.
+          <span
+            className="text-black/25 dark:text-white/25"
+            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+          >
+            BY&nbsp;
+          </span>
+          <span className="text-black dark:text-white">DESIGN.</span>
         </motion.h1>
 
         <motion.div
@@ -289,7 +300,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-[80px] left-8 z-20 font-black uppercase leading-[1.05] text-black heading-gradient-dark"
+          className="absolute top-[80px] left-8 z-20 font-black uppercase leading-[1.05]"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(2.8rem, 6vw, 6.5rem)",
@@ -297,9 +308,20 @@ const Hero = () => {
             maxWidth: "45vw",
           }}
         >
-          SYSTEMS,
+          <span
+            className="text-black/25 dark:text-white/25"
+            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+          >
+            SYSTEMS,
+          </span>
           <br />
-          BY DESIGN.
+          <span
+            className="text-black/25 dark:text-white/25"
+            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+          >
+            BY&nbsp;
+          </span>
+          <span className="text-black dark:text-white">DESIGN.</span>
         </motion.h1>
 
         {/* ── CENTER ORB ── */}

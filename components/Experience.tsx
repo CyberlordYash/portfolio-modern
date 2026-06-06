@@ -62,7 +62,7 @@ const Metric = ({ value, label, color }: { value: string; label: string; color: 
           ? <EncryptedText text={value} revealDelayMs={60} charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" className="font-black" />
           : value}
       </div>
-      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/35">{label}</div>
+      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/45 dark:text-white/35">{label}</div>
     </div>
   );
 };
@@ -191,9 +191,8 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: i * 0.07 }}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden bg-white dark:bg-[#080f1e] border border-black/[0.07] dark:border-white/[0.06]"
       style={{
-        background: "#080f1e",
         borderTop: `2px solid ${job.color}`,
         boxShadow: `0 0 60px rgba(${job.colorRgb},0.06)`,
       }}
@@ -206,7 +205,7 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
 
       {/* Index watermark */}
       <div
-        className="pointer-events-none absolute -bottom-6 -right-1 select-none font-black leading-none text-white/[0.028]"
+        className="pointer-events-none absolute -bottom-6 -right-1 select-none font-black leading-none text-black/[0.045] dark:text-white/[0.028]"
         style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(8rem,18vw,14rem)", letterSpacing: "-0.05em" }}
       >
         {job.idx}
@@ -230,10 +229,10 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
               text={job.company}
               revealDelayMs={38}
               charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
-              className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-white"
+              className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-black dark:text-white"
             />
           ) : (
-            <span className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-white">
+            <span className="font-mono text-[11px] md:text-[13px] font-bold uppercase tracking-[0.22em] text-black dark:text-white">
               {job.company}
             </span>
           )}
@@ -246,7 +245,7 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
           </span>
         </div>
 
-        <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/30">
+        <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/40 dark:text-white/30">
           {job.period}
         </span>
       </div>
@@ -255,10 +254,7 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[5fr_7fr]">
 
         {/* LEFT — image + metrics */}
-        <div
-          className="flex flex-col gap-6 p-5 md:p-8"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-        >
+        <div className="flex flex-col gap-6 p-5 md:p-8 border-b border-black/[0.06] dark:border-white/[0.04]">
           {/* Image */}
           <div
             className="relative overflow-hidden flex items-center justify-center"
@@ -293,17 +289,14 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
         </div>
 
         {/* RIGHT — role + log entries */}
-        <div
-          className="flex flex-col gap-5 p-5 md:p-8"
-          style={{ borderLeft: "1px solid rgba(255,255,255,0.04)" }}
-        >
+        <div className="flex flex-col gap-5 p-5 md:p-8 border-t lg:border-t-0 lg:border-l border-black/[0.06] dark:border-white/[0.04]">
           {/* Role title */}
           <div>
             <div className="font-mono text-[8px] uppercase tracking-[0.32em] mb-2.5" style={{ color: `rgba(${job.colorRgb},0.7)` }}>
               {"// ROLE"}
             </div>
             <h3
-              className="font-black uppercase leading-[1.0] text-white"
+              className="font-black uppercase leading-[1.0] text-black dark:text-white"
               style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.6rem, 3.5vw, 2.7rem)", letterSpacing: "-0.025em" }}
             >
               {job.role.map((line, li) => <span key={li} className="block">{line}</span>)}
@@ -323,7 +316,7 @@ const JobCard = ({ job, i }: { job: typeof JOBS[0]; i: number }) => {
                 >
                   {String(bi + 1).padStart(2, "0")}
                 </span>
-                <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-white/50 group-hover:text-white/75 transition-colors duration-200">
+                <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-black/55 dark:text-white/50 group-hover:text-black/80 dark:group-hover:text-white/75 transition-colors duration-200">
                   {b}
                 </p>
               </div>
@@ -378,9 +371,8 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-40px" }}
     transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
-    className="relative overflow-hidden flex flex-col"
+    className="relative overflow-hidden flex flex-col bg-white dark:bg-[#080f1e]"
     style={{
-      background: "#080f1e",
       borderTop: `2px solid ${a.color}`,
       boxShadow: `0 0 40px rgba(${a.colorRgb},0.06)`,
     }}
@@ -390,7 +382,7 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
       style={{ background: `radial-gradient(ellipse 80% 70% at 50% -10%, rgba(${a.colorRgb},0.1) 0%, transparent 60%)` }}
     />
     <div
-      className="pointer-events-none absolute bottom-0 right-3 select-none font-black leading-none text-white/[0.035]"
+      className="pointer-events-none absolute bottom-0 right-3 select-none font-black leading-none text-black/[0.05] dark:text-white/[0.035]"
       style={{ fontFamily: "var(--font-orbitron)", fontSize: "8rem", letterSpacing: "-0.05em" }}
     >
       {a.idx}
@@ -404,7 +396,7 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
         >
           {a.badge}
         </span>
-        <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-white/25">ACHIEVEMENT</span>
+        <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-black/35 dark:text-white/25">ACHIEVEMENT</span>
       </div>
 
       <h3
@@ -420,7 +412,7 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
         {a.points.map((p, pi) => (
           <div key={pi} className="flex items-start gap-2.5">
             <IconBolt size={11} className="shrink-0 mt-[3px]" style={{ color: a.color }} />
-            <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-white/50">{p}</p>
+            <p className="font-mono text-[12px] md:text-[13px] leading-relaxed text-black/55 dark:text-white/50">{p}</p>
           </div>
         ))}
       </div>
@@ -437,7 +429,7 @@ const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> 
 
   return (
     <div className="absolute left-0 top-0 bottom-0 w-[2px] hidden lg:block pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-white/[0.04]" />
+      <div className="absolute inset-0 bg-black/[0.06] dark:bg-white/[0.04]" />
       <motion.div
         className="absolute top-0 left-0 right-0 h-full origin-top"
         style={{
@@ -457,7 +449,14 @@ const Header = () => (
   <div className="relative px-5 md:px-10 pt-10 pb-8 md:pt-14 md:pb-10 overflow-hidden">
     {/* faint grid bg */}
     <div
-      className="absolute inset-0 pointer-events-none opacity-[0.018]"
+      className="absolute inset-0 pointer-events-none opacity-[0.05] dark:hidden"
+      style={{
+        backgroundImage: "linear-gradient(rgba(0,0,0,1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,1) 1px,transparent 1px)",
+        backgroundSize: "40px 40px",
+      }}
+    />
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.018] hidden dark:block"
       style={{
         backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)",
         backgroundSize: "40px 40px",
@@ -468,7 +467,7 @@ const Header = () => (
       <div className="w-1.5 h-1.5 bg-indigo-400 animate-pulse" />
       <RevealChars
         text="SYS.CAREER_LOG"
-        className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/35"
+        className="font-mono text-[9px] uppercase tracking-[0.45em] text-black/45 dark:text-white/35"
         delay={0.1}
       />
       <div className="h-px w-16 bg-gradient-to-r from-indigo-400/50 to-transparent" />
@@ -478,19 +477,20 @@ const Header = () => (
     <div className="flex flex-col md:flex-row md:items-end md:gap-8">
       <div>
         <h2
-          className="font-black uppercase leading-none text-white block"
+          className="font-black uppercase leading-none text-black dark:text-white block"
           style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(3rem, 10vw, 8rem)", letterSpacing: "-0.035em" }}
         >
           <RevealText text="WORK" delay={0.1} stagger={0.05} />
         </h2>
         <h2
-          className="font-black uppercase leading-none block"
+          className="font-black uppercase leading-none block text-black/25 dark:text-white/20"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(3rem, 10vw, 8rem)",
             letterSpacing: "-0.035em",
-            WebkitTextStroke: "1.5px rgba(255,255,255,0.2)",
-            color: "transparent",
+            WebkitTextStrokeWidth: "1.5px",
+            WebkitTextStrokeColor: "currentColor",
+            WebkitTextFillColor: "transparent",
           }}
         >
           <RevealText text="HISTORY" delay={0.18} stagger={0.045} />
@@ -500,14 +500,14 @@ const Header = () => (
       <div className="flex flex-row md:flex-col gap-4 md:gap-1.5 mb-1 mt-5 md:mt-0">
         {["01 · BACKEND", "02 · INFRA", "03 · FULL-STACK"].map((t, i) => (
           <FadeReveal key={t} delay={0.5 + i * 0.07}>
-            <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/28 whitespace-nowrap">{t}</span>
+            <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/40 dark:text-white/28 whitespace-nowrap">{t}</span>
           </FadeReveal>
         ))}
       </div>
     </div>
 
     {/* quick-stats strip */}
-    <div className="flex flex-wrap items-center gap-6 md:gap-10 mt-6 pt-5 border-t border-white/[0.07]">
+    <div className="flex flex-wrap items-center gap-6 md:gap-10 mt-6 pt-5 border-t border-black/[0.10] dark:border-white/[0.07]">
       {[
         { n: "3",    lbl: "ROLES"     },
         { n: "1.5+", lbl: "YRS EXP"  },
@@ -516,12 +516,12 @@ const Header = () => (
       ].map((s) => (
         <div key={s.lbl} className="flex flex-col gap-0.5">
           <span
-            className="font-bold text-white leading-none"
+            className="font-bold text-black dark:text-white leading-none"
             style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.9rem,2vw,1.15rem)" }}
           >
             {s.n}
           </span>
-          <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-white/28">{s.lbl}</span>
+          <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-black/40 dark:text-white/28">{s.lbl}</span>
         </div>
       ))}
     </div>
@@ -560,8 +560,7 @@ export default function Experience() {
       <div className="relative mx-auto max-w-[96vw] 2xl:max-w-[1600px]">
         <div
           ref={containerRef}
-          className="relative"
-          style={{ border: "1px solid rgba(255,255,255,0.07)", background: "#060d1a" }}
+          className="relative bg-neutral-50 dark:bg-[#060d1a] border border-black/[0.10] dark:border-white/[0.07]"
         >
           <Rail containerRef={containerRef as React.RefObject<HTMLDivElement>} />
 
@@ -585,15 +584,15 @@ export default function Experience() {
             {/* Achievements = one final pinning slide (kept side-by-side, opaque
                 so it cleanly covers the job card beneath it) */}
             <StickyStack i={JOBS.length} total={DECK_TOTAL}>
-              <div className="relative" style={{ background: "#060d1a", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="relative bg-neutral-50 dark:bg-[#060d1a] border-t border-black/[0.08] dark:border-white/[0.06]">
                 {/* separator */}
                 <div className="px-5 md:px-10 py-4 flex items-center gap-4">
                   <div className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/35">ACHIEVEMENTS</span>
-                  <div className="flex-1 h-px bg-white/[0.05]" />
+                  <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black/45 dark:text-white/35">ACHIEVEMENTS</span>
+                  <div className="flex-1 h-px bg-black/[0.10] dark:bg-white/[0.05]" />
                 </div>
                 {/* achievement cards (2-up) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "rgba(255,255,255,0.03)" }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/[0.06] dark:bg-white/[0.03]">
                   {ACHIEVEMENTS.map((a, i) => (
                     <AchCard key={a.idx} a={a} i={i} />
                   ))}

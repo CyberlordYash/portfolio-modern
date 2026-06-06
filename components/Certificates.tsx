@@ -113,10 +113,18 @@ export default function Certificates() {
           </FadeReveal>
 
           <h2
-            className="font-black uppercase leading-none text-black dark:text-white text-center"
-            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(2.4rem, 7vw, 5.5rem)", letterSpacing: "-0.025em" }}
+            className="font-black uppercase leading-none text-center whitespace-nowrap"
+            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.3rem, 5vw, 5rem)", letterSpacing: "-0.025em" }}
           >
-            <RevealText text="Certificates" delay={0.18} />
+            <span className="text-black dark:text-white">
+              <RevealText text="VERIFIED" delay={0.18} />
+            </span>{" "}
+            <span
+              className="text-black/25 dark:text-white/25"
+              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+            >
+              <RevealText text="CERTIFICATES" delay={0.3} />
+            </span>
           </h2>
 
           <div className="flex items-center gap-3 mt-3">

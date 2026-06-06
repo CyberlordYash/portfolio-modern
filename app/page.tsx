@@ -280,14 +280,22 @@ export default function Home() {
                   />
                 </FadeReveal>
                 <h2
-                  className="font-black uppercase leading-none text-black dark:text-white text-center"
+                  className="font-black uppercase leading-none text-center whitespace-nowrap"
                   style={{
                     fontFamily: "var(--font-orbitron)",
-                    fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
+                    fontSize: "clamp(1.6rem, 6.5vw, 5.5rem)",
                     letterSpacing: "-0.025em",
                   }}
                 >
-                  <RevealText text="Technical Stack" delay={0.18} />
+                  <span className="text-black dark:text-white">
+                    <RevealText text="TECHNICAL" delay={0.18} />
+                  </span>{" "}
+                  <span
+                    className="text-black/25 dark:text-white/25"
+                    style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+                  >
+                    <RevealText text="STACK" delay={0.3} />
+                  </span>
                 </h2>
                 <div className="flex items-center gap-3 mt-3">
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />

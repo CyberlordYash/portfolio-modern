@@ -158,14 +158,22 @@ const Grid = () => {
             />
           </FadeReveal>
           <h2
-            className="font-black uppercase leading-none text-black dark:text-white text-center"
+            className="font-black uppercase leading-none text-center whitespace-nowrap"
             style={{
               fontFamily: "var(--font-orbitron)",
-              fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
+              fontSize: "clamp(2.2rem, 9vw, 5.5rem)",
               letterSpacing: "-0.025em",
             }}
           >
-            <RevealText text="About Me" delay={0.2} />
+            <span className="text-black dark:text-white">
+              <RevealText text="ABOUT" delay={0.2} />
+            </span>{" "}
+            <span
+              className="text-black/25 dark:text-white/25"
+              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+            >
+              <RevealText text="ME" delay={0.32} />
+            </span>
           </h2>
           <div className="flex items-center gap-3 mt-3">
             <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
