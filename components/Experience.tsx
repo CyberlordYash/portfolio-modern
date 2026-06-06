@@ -400,7 +400,7 @@ const AchCard = ({ a, i }: { a: typeof ACHIEVEMENTS[0]; i: number }) => (
       </div>
 
       <h3
-        className="font-black uppercase leading-[1.0] text-white"
+        className="font-black uppercase leading-[1.0] text-black dark:text-white"
         style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.3rem, 2.8vw, 2rem)", letterSpacing: "-0.02em" }}
       >
         {a.title.map((l, li) => <span key={li} className="block">{l}</span>)}
