@@ -50,9 +50,10 @@ export const metadata: Metadata = {
     "Zanskar Research",
     "Java Spring Boot",
   ],
-  authors: [{ name: "Yash Sachan", url: "https://yashsachan.in" }],
+  authors: [{ name: "Yash Sachan", url: "https://yashsachan.com" }],
   creator: "Yash Sachan",
-  metadataBase: new URL("https://yashsachan.in"),
+  metadataBase: new URL("https://yashsachan.com"),
+
   alternates: {
     canonical: "/",
   },
@@ -61,14 +62,6 @@ export const metadata: Metadata = {
     description: "Specializing in Golang, HFT, and Low-Latency Infrastructure.",
     url: "https://yashsachan.com",
     siteName: "Yash Sachan Portfolio",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Yash Sachan - Systems Engineer Portfolio",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -76,7 +69,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Yash Sachan | Software Engineer",
     description: "Backend Developer specializing in Golang and HFT Systems.",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -119,7 +111,7 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "Person",
                 name: "Yash Sachan",
-                url: "https://yashsachan.in",
+                url: "https://yashsachan.com",
                 jobTitle: "Software Engineer",
                 worksFor: {
                   "@type": "Organization",
