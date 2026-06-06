@@ -33,7 +33,7 @@ const TradingChart = () => {
 
     const CW = 13; // px slot per candle
     const BODY = 8; // body width
-    const SPEED = 0.28; // px per frame → smooth scroll + tick cadence
+    const SPEED = 0.12; // px per frame → smooth scroll + tick cadence
     let price = 100;
     let candles: Candle[] = []; // last element = live/forming candle
     let offset = 0;
@@ -82,7 +82,7 @@ const TradingChart = () => {
 
       // ── tick the live candle in real time ──
       const live = candles[candles.length - 1];
-      live.c = clamp(live.c + (Math.random() - 0.5) * 1.0);
+      live.c = clamp(live.c + (Math.random() - 0.5) * 0.4);
       if (live.c > live.h) live.h = live.c;
       if (live.c < live.l) live.l = live.c;
       price = live.c;

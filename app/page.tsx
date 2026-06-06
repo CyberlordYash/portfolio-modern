@@ -242,10 +242,10 @@ export default function Home() {
       <HudFrame />
       <LocalTime />
 
-      {/* Snap-scroll card container */}
+      {/* Main scroll container */}
       <div
         id="main-scroll"
-        className="h-screen overflow-y-auto md:snap-y md:snap-mandatory bg-white dark:bg-transparent"
+        className="h-screen overflow-y-auto scroll-smooth bg-white dark:bg-transparent"
       >
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
@@ -255,7 +255,7 @@ export default function Home() {
             {/* ── Card 1: Hero ── no entrance fade (landing view) */}
             <section
               id="home"
-              className="md:snap-start md:snap-always md:min-h-screen pt-4"
+              className="md:min-h-screen pt-4"
             >
               <Hero />
             </section>
@@ -263,7 +263,7 @@ export default function Home() {
             {/* ── Card 2: Skills ── */}
             <motion.section
               id="skills"
-              className="md:snap-start md:snap-always md:min-h-screen relative"
+              className="md:min-h-screen relative"
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
@@ -308,7 +308,7 @@ export default function Home() {
             {/* ── Card 3: Experience ── */}
             <motion.section
               id="experience"
-              className="md:snap-start md:snap-always md:min-h-screen flex flex-col justify-center px-2 md:px-0"
+              className="md:min-h-screen flex flex-col justify-center px-2 md:px-0"
               {...cardEnter}
             >
               <Experience />
@@ -317,7 +317,7 @@ export default function Home() {
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="md:snap-start md:snap-always md:min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+              className="md:min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
               {...cardEnter}
             >
               <Grid />
@@ -326,7 +326,7 @@ export default function Home() {
             {/* ── Card 6: Projects ── */}
             <motion.section
               id="projects"
-              className="md:snap-start md:snap-always md:min-h-screen"
+              className="md:min-h-screen"
               {...cardEnter}
             >
               <RecentProjects />
@@ -335,7 +335,7 @@ export default function Home() {
             {/* ── Card 7: Certificates ── */}
             <motion.section
               id="certificates"
-              className="md:snap-start md:snap-always md:min-h-screen flex flex-col justify-center"
+              className="md:min-h-screen flex flex-col justify-center"
               {...cardEnter}
             >
               <Certificates />
@@ -344,7 +344,7 @@ export default function Home() {
             {/* ── Card 8: Approach ── */}
             <motion.section
               id="approach"
-              className="md:snap-start md:snap-always md:min-h-screen flex flex-col justify-center pb-10"
+              className="md:min-h-screen flex flex-col justify-center pb-10"
               {...cardEnter}
             >
               <Approach />
@@ -353,7 +353,7 @@ export default function Home() {
             {/* ── Card 9: Skills Graph ── */}
             <motion.section
               id="skills-graph"
-              className="md:snap-start md:snap-always md:min-h-screen flex flex-col justify-center px-4 md:px-0"
+              className="md:min-h-screen flex flex-col justify-center px-4 md:px-0"
               {...cardEnter}
             >
               <SkillsGraph />
