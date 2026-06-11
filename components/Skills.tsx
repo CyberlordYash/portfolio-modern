@@ -86,7 +86,7 @@ const HexNode = ({ tech, index, dimmed }: { tech: Tech; index: number; dimmed: b
 
         {/* inner face */}
         <div
-          className="absolute inset-[1.5px] flex flex-col items-center justify-center gap-1 bg-[#f7f9fc] dark:bg-[#000000] overflow-hidden"
+          className="absolute inset-[1.5px] flex flex-col items-center justify-center gap-1 bg-[#f7f9fc] dark:bg-black/60 overflow-hidden"
           style={{ clipPath: HEX }}
         >
           {/* glow wash */}
@@ -244,7 +244,7 @@ const FeaturedHalf = ({ f }: { f: Feature }) => {
             <TierRing tier={f.tier} color={f.color} size={104} />
             <div className="flex flex-col gap-px bg-black/[0.09] dark:bg-white/[0.09]">
               {f.stats.map(({ v, l }) => (
-                <div key={l} className="flex items-baseline justify-between gap-4 px-3.5 py-2 bg-[#ffffff] dark:bg-[#000000] min-w-[118px]">
+                <div key={l} className="flex items-baseline justify-between gap-4 px-3.5 py-2 bg-[#ffffff] dark:bg-black/60 min-w-[118px]">
                   <span className="font-black leading-none" style={{ fontFamily: "var(--font-orbitron)", fontSize: "0.92rem", color: f.color }}>{v}</span>
                   <span className="font-mono text-[7px] uppercase tracking-[0.28em] text-black/40 dark:text-white/30">{l}</span>
                 </div>
@@ -260,7 +260,7 @@ const FeaturedHalf = ({ f }: { f: Feature }) => {
 
 const FeaturedPanel = ({ dimmed }: { dimmed: boolean }) => (
   <motion.div animate={{ opacity: dimmed ? 0.25 : 1 }} transition={{ duration: 0.35 }}
-    className="relative overflow-hidden bg-[#ffffff] dark:bg-[#000000]">
+    className="relative overflow-hidden bg-[#ffffff] dark:bg-transparent">
     <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-black/10 dark:divide-white/10">
       {FEATURES.map((f) => <FeaturedHalf key={f.name} f={f} />)}
     </div>
@@ -291,7 +291,7 @@ const Skills = () => {
   const avg = useMemo(() => Math.round(TECHS.reduce((s, t) => s + t.level, 0) / TECHS.length), []);
 
   return (
-    <div className="relative w-full bg-[#ffffff] dark:bg-[#000000] border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
+    <div className="relative w-full bg-[#ffffff] dark:bg-black/30 border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
       {/* HEADER */}
       <div className="flex items-center justify-between px-5 md:px-7 py-3.5 border-b border-black/10 dark:border-white/10">
         <div className="flex items-center gap-3 md:gap-5">

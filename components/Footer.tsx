@@ -147,7 +147,7 @@ const Footer = () => {
   return (
     <footer
       id="contact"
-      className="relative w-full overflow-hidden bg-[#ffffff] dark:bg-[#000000] border-t border-black/10 dark:border-white/10"
+      className="relative w-full overflow-hidden bg-[#ffffff] dark:bg-transparent border-t border-black/10 dark:border-white/10"
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px]" />
 
@@ -200,14 +200,14 @@ const Footer = () => {
               key={poke ?? "type"}
               initial={{ opacity: 0, y: 8, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: "spring", stiffness: 380, damping: 22 }}
-              className="relative mb-3 max-w-[260px] min-h-[52px] flex items-center border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#0a0a0a] px-4 py-3"
+              className="relative mb-3 max-w-[260px] min-h-[52px] flex items-center border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#0a0a0a]/80 px-4 py-3"
             >
               <p className="font-mono text-[11px] leading-snug text-black/70 dark:text-white/75">
                 {poke ?? txt}
                 {!poke && <span className="inline-block w-[6px] h-[12px] -mb-[1px] ml-[1px] bg-emerald-500 dark:bg-emerald-400 animate-pulse" />}
               </p>
               {/* tail */}
-              <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-r border-b border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#0a0a0a]" />
+              <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-r border-b border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#0a0a0a]/80" />
             </motion.div>
 
             <RobotMascot onPoke={pokeRobot} />
@@ -224,7 +224,7 @@ const Footer = () => {
             className="w-full lg:w-[360px] shrink-0 flex flex-col gap-6"
           >
             {/* funny status panel */}
-            <div className="border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#070707]">
+            <div className="border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-[#070707]/80">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/10 dark:border-white/10">
                 <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/50 dark:text-white/50">ROBOT_STATUS</span>
                 <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">● HEALTHY-ISH</span>

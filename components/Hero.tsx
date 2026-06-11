@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import TradingChart from "./ui/TradingChart";
 
 /* ─── small "+" grid cross ─── */
 const Cross = ({ style }: { style?: React.CSSProperties }) => (
@@ -17,7 +16,7 @@ const Cross = ({ style }: { style?: React.CSSProperties }) => (
   </div>
 );
 
-/* ─── YS monogram → unfolds into "YASH SACHAN" on hover ─── */
+/* ─── YS monogram ─── */
 const GeminiYS = ({ size = 280 }: { size?: number }) => {
   const fontPx = Math.round(size * 0.17);
   const baseType: React.CSSProperties = {
@@ -25,67 +24,32 @@ const GeminiYS = ({ size = 280 }: { size?: number }) => {
     lineHeight: 1, letterSpacing: "-0.02em", display: "inline-block",
   };
 
-  // Y[ash]  ·  S[achan]  — capitals are anchors, lowercase tails unfold on hover
-  const seq: { c: string; anchor?: boolean; space?: boolean }[] = [
-    { c: "Y", anchor: true }, { c: "a" }, { c: "s" }, { c: "h" },
-    { c: " ", space: true },
-    { c: "S", anchor: true }, { c: "a" }, { c: "c" }, { c: "h" }, { c: "a" }, { c: "n" },
-  ];
-
-  const wrap = {
-    closed: { transition: { staggerChildren: 0.018, staggerDirection: -1 } },
-    open: { transition: { staggerChildren: 0.03, delayChildren: 0.03 } },
-  };
-  // futuristic: spring-snap width with a glitch skew + terminal boot flicker
-  const reveal = {
-    closed: { width: 0, opacity: 0, x: -10, skewX: 16 },
-    open: {
-      width: "auto", opacity: [0, 1, 0.45, 1], x: 0, skewX: 0,
-      transition: {
-        width: { type: "spring", stiffness: 520, damping: 32 },
-        x: { type: "spring", stiffness: 520, damping: 26 },
-        skewX: { duration: 0.22, ease: "easeOut" },
-        opacity: { duration: 0.32, times: [0, 0.35, 0.55, 1] },
-      },
-    },
-  };
-  const spaceReveal = { closed: { width: 0 }, open: { width: "0.34em", transition: { type: "spring", stiffness: 520, damping: 34 } } };
-
   return (
-    <motion.div
-      initial="closed" animate="closed" whileHover="open"
-      className="relative flex items-center justify-center text-black dark:text-white cursor-pointer select-none"
+    <div
+      className="relative flex items-center justify-center text-black dark:text-white select-none"
       style={{ width: size, height: size }}
     >
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <motion.div
-          variants={{ closed: { letterSpacing: "0.55em", opacity: 0.4 }, open: { letterSpacing: "0.75em", opacity: 0.7 } }}
-          className="font-mono text-[8px] uppercase text-black dark:text-white mb-2"
+        <div
+          className="font-mono text-[8px] uppercase text-black dark:text-white mb-2 opacity-40"
+          style={{ letterSpacing: "0.55em" }}
         >
           BE_DEV
-        </motion.div>
+        </div>
 
         {/* the name */}
-        <motion.div variants={wrap} className="flex items-baseline overflow-hidden whitespace-nowrap px-1">
-          {seq.map((l, i) => (
-            <motion.span
-              key={i}
-              variants={l.anchor ? undefined : l.space ? spaceReveal : reveal}
-              style={{ ...baseType, overflow: "hidden" }}
-            >
-              {l.space ? " " : l.c}
-            </motion.span>
-          ))}
-        </motion.div>
+        <div className="whitespace-nowrap px-1" style={baseType}>
+          YS
+        </div>
 
-        <motion.div
-          variants={{ closed: { letterSpacing: "0.45em", opacity: 0.4 }, open: { letterSpacing: "0.6em", opacity: 0.7 } }}
-          className="font-mono text-[8px] uppercase text-black dark:text-white mt-2"
+        <div
+          className="font-mono text-[8px] uppercase text-black dark:text-white mt-2 opacity-40"
+          style={{ letterSpacing: "0.45em" }}
         >
           IST · 2026
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -177,11 +141,6 @@ const Hero = () => {
         .glitch-box:hover .glitch-slice-1 { animation:glitch-slice-1-kf 1.1s steps(1) infinite; }
         .glitch-box:hover .glitch-slice-2 { animation:glitch-slice-2-kf 1.1s steps(1) infinite .07s; }
       `}</style>
-      {/* ── ANIMATED TRADING CHART BACKDROP ── */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <TradingChart />
-      </div>
-
       {/* ── TOP BAR ── */}
       <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-white/10">
         <span className="font-sans text-[13px] md:text-[15px] font-semibold tracking-[0.25em] uppercase">

@@ -12,12 +12,12 @@ import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
 import TerminalSnake from "./TerminalSnake";
 import dynamic from "next/dynamic";
 
 const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
+const MarketWorld = dynamic(() => import("@/components/three/MarketWorld"), { ssr: false });
 
 const links = [
   { label: "Home",       href: "#home",       desktopOnly: false },
@@ -26,26 +26,22 @@ const links = [
   { label: "Projects",   href: "#projects",   desktopOnly: false },
 ];
 
-// Shared entrance animation for all non-hero sections
+// Shared entrance animation for all non-hero sections.
+// once:true + opacity-only — re-triggering transforms on full-screen
+// sections caused scroll jank over the WebGL background.
 const cardEnter = {
-  initial: { opacity: 0, y: 36, scale: 0.97 },
-  whileInView: { opacity: 1, y: 0, scale: 1 },
-  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  viewport: { once: false, amount: 0.05 },
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  transition: { duration: 0.5, ease: "easeOut" },
+  viewport: { once: true, amount: 0.05 },
 };
 
 function TopNav() {
   const [active, setActive] = useState("home");
-  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const updateTheme = () => setIsDark(document.documentElement.classList.contains("dark"));
-    updateTheme();
-    const mo = new MutationObserver(updateTheme);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
     const root = document.getElementById("main-scroll");
-    if (!root) return () => mo.disconnect();
+    if (!root) return;
 
     const obs = new IntersectionObserver(
       (entries) => {
@@ -58,7 +54,7 @@ function TopNav() {
       if (el) obs.observe(el);
     });
 
-    return () => { mo.disconnect(); obs.disconnect(); };
+    return () => obs.disconnect();
   }, []);
 
   return (
@@ -66,9 +62,7 @@ function TopNav() {
       <div
         id="nav-pill-box"
         className="relative flex items-center gap-0.5 rounded-full p-1 backdrop-blur-md"
-        style={{
-          backgroundColor: isDark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.6)",
-        }}
+        style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
       >
         {links.map((link) => {
           const id = link.href.replace("#", "");
@@ -100,8 +94,6 @@ function TopNav() {
             </a>
           );
         })}
-
-        <ThemeToggle inline />
       </div>
     </nav>
   );
@@ -172,16 +164,10 @@ function LocalTime() {
 }
 
 function HudFrame() {
-  const [isDark, setIsDark] = useState(false);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [pill, setPill] = useState<{ left: number; bottom: number } | null>(null);
 
   useEffect(() => {
-    const update = () => setIsDark(document.documentElement.classList.contains("dark"));
-    update();
-    const mo = new MutationObserver(update);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
     const measure = () => {
       setSize({ w: window.innerWidth, h: window.innerHeight });
       const el = document.getElementById("nav-pill-box");
@@ -196,7 +182,6 @@ function HudFrame() {
     window.addEventListener("resize", measure);
 
     return () => {
-      mo.disconnect();
       clearTimeout(t);
       window.removeEventListener("resize", measure);
     };
@@ -205,8 +190,8 @@ function HudFrame() {
   if (!size.w || !size.h) return null;
 
   const frame = buildFramePath(size.w, size.h, pill);
-  const maskColor = isDark ? "#000000" : "#ffffff";
-  const strokeColor = isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)";
+  const maskColor = "#000000";
+  const strokeColor = "rgba(255,255,255,0.22)";
 
   return (
     <svg
@@ -238,6 +223,9 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
 
+      {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
+      <MarketWorld />
+
       <TopNav />
       <HudFrame />
       <LocalTime />
@@ -267,7 +255,7 @@ export default function Home() {
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-[#000000] px-4 py-1.5 mb-5">
+                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-black/60 px-4 py-1.5 mb-5">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -321,7 +309,7 @@ export default function Home() {
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="md:min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black border border-white/[0.05]"
+              className="md:min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black/40 border border-white/[0.05]"
               {...cardEnter}
             >
               <Grid />

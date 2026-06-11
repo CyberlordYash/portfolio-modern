@@ -62,7 +62,7 @@ export const BentoGridItem = ({
       viewport={{ once: true }}
       className={cn(
         "relative overflow-hidden rounded-3xl group/bento flex flex-col justify-between",
-        "bg-white dark:bg-[#030712] border border-slate-200 dark:border-white/[0.05]",
+        "bg-white dark:bg-[#030712]/80 border border-slate-200 dark:border-white/[0.05]",
         "hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:border-indigo-500/30 transition-all",
         className,
       )}
