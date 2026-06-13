@@ -71,12 +71,12 @@ export default function MarketWorld() {
             <EffectComposer multisampling={0}>
               <Bloom
                 mipmapBlur
-                intensity={0.85}
-                luminanceThreshold={0.42}
-                luminanceSmoothing={0.25}
-                radius={0.75}
+                intensity={0.48}
+                luminanceThreshold={0.58}
+                luminanceSmoothing={0.32}
+                radius={0.58}
               />
-              <Vignette eskil={false} offset={0.22} darkness={0.78} />
+              <Vignette eskil={false} offset={0.24} darkness={0.82} />
             </EffectComposer>
           )}
         </Suspense>

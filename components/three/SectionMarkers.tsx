@@ -20,15 +20,15 @@ function makeMarkerTexture(text: string, sub: string) {
   const ctx = c.getContext("2d")!;
   ctx.textAlign = "center";
 
-  ctx.fillStyle = "rgba(130, 200, 255, 0.16)";
+  ctx.fillStyle = "rgba(120, 170, 255, 0.15)";
   ctx.font = "900 110px 'Orbitron', 'Courier New', monospace";
   ctx.fillText(text, 512, 140);
   /* bright core pass for a holographic double-exposure feel */
-  ctx.fillStyle = "rgba(170, 225, 255, 0.42)";
+  ctx.fillStyle = "rgba(160, 195, 255, 0.40)";
   ctx.font = "900 108px 'Orbitron', 'Courier New', monospace";
   ctx.fillText(text, 512, 138);
 
-  ctx.fillStyle = "rgba(110, 170, 220, 0.5)";
+  ctx.fillStyle = "rgba(120, 160, 220, 0.5)";
   ctx.font = "400 30px 'Courier New', monospace";
   ctx.fillText(sub.split("").join(" "), 512, 200);
 

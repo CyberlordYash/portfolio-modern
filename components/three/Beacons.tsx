@@ -30,7 +30,7 @@ const TIP_FRAG = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.04, d) * (0.25 + vBlink * 1.4);
-    gl_FragColor = vec4(vec3(0.55, 0.85, 1.0), a);
+    gl_FragColor = vec4(vec3(0.45, 0.65, 1.0), a);
   }
 `;
 
@@ -110,7 +110,7 @@ function Corridor() {
       gates.map(
         () =>
           new THREE.MeshBasicMaterial({
-            color: new THREE.Color("#3aa6e8"),
+            color: new THREE.Color("#2f6fe0"),
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,

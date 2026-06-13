@@ -73,19 +73,19 @@ const FRAG = /* glsl */ `
 
     float hN = clamp(vH / 46.0, 0.0, 1.0);
 
-    vec3 base = mix(vec3(0.012, 0.025, 0.060), vec3(0.030, 0.085, 0.190), hN);
-    vec3 lineCol = mix(vec3(0.05, 0.30, 0.55), vec3(0.25, 0.85, 1.00), hN);
-    vec3 col = base + line * lineCol * (0.35 + hN * 0.9);
+    vec3 base = mix(vec3(0.010, 0.022, 0.055), vec3(0.026, 0.060, 0.175), hN);
+    vec3 lineCol = mix(vec3(0.10, 0.20, 0.55), vec3(0.26, 0.45, 0.95), hN);
+    vec3 col = base + line * lineCol * (0.32 + hN * 0.8);
 
     /* data rivers — light flowing down the corridor toward the core */
     float river = 1.0 - smoothstep(4.0, 22.0, abs(vWorld.x));
     float flow = smoothstep(0.86, 1.0, sin(vWorld.z * 0.22 + uTime * 4.0) * 0.5 + 0.5);
-    col += river * flow * vec3(0.10, 0.55, 0.85) * 0.85;
+    col += river * flow * vec3(0.18, 0.34, 0.85) * 0.65;
 
     /* faint side rivers in the valleys */
     float valley = 1.0 - smoothstep(0.0, 0.12, hN);
     float sflow = smoothstep(0.9, 1.0, sin(vWorld.x * 0.3 + vWorld.z * 0.12 - uTime * 2.0) * 0.5 + 0.5);
-    col += valley * sflow * vec3(0.04, 0.20, 0.35) * 0.5;
+    col += valley * sflow * vec3(0.07, 0.15, 0.38) * 0.45;
 
     gl_FragColor = vec4(col, 1.0);
     #include <fog_fragment>
