@@ -24,27 +24,27 @@ export default function CoreStation() {
     <group position={[0, 12, -525]}>
       <mesh ref={core}>
         <icosahedronGeometry args={[4.2, 2]} />
-        <meshBasicMaterial color="#cfe0ff" />
+        <meshBasicMaterial color="#f4f4f4" />
       </mesh>
 
       <mesh ref={ring1} rotation={[Math.PI / 2.4, 0, 0]}>
         <torusGeometry args={[10, 0.18, 8, 96]} />
-        <meshBasicMaterial color="#4f8bff" transparent opacity={0.8} />
+        <meshBasicMaterial color="#d0d0d0" transparent opacity={0.8} />
       </mesh>
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
         <torusGeometry args={[15, 0.14, 8, 96]} />
-        <meshBasicMaterial color="#2f5fd4" transparent opacity={0.55} />
+        <meshBasicMaterial color="#8a8a8a" transparent opacity={0.55} />
       </mesh>
       <mesh ref={ring3} rotation={[Math.PI / 3, 0, Math.PI / 2.5]}>
         <torusGeometry args={[21, 0.1, 8, 96]} />
-        <meshBasicMaterial color="#1e4a8f" transparent opacity={0.4} />
+        <meshBasicMaterial color="#5a5a5a" transparent opacity={0.4} />
       </mesh>
 
       {/* vertical light beam */}
       <mesh position={[0, 60, 0]}>
         <cylinderGeometry args={[0.7, 2.4, 120, 12, 1, true]} />
         <meshBasicMaterial
-          color="#4f8bff"
+          color="#d0d0d0"
           transparent
           opacity={0.16}
           blending={THREE.AdditiveBlending}

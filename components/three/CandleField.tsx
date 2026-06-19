@@ -40,8 +40,8 @@ const FRAG = /* glsl */ `
   varying float vDist;
 
   void main() {
-    vec3 up = vec3(0.05, 0.62, 0.46);    /* teal-green, matches the 2D chart */
-    vec3 dn = vec3(0.66, 0.16, 0.16);
+    vec3 up = vec3(1.0);     /* monochrome: bright = up, dim = down */
+    vec3 dn = vec3(0.42);
     vec3 col = mix(dn, up, vUp);
     /* brighter toward the top — glowing candle caps */
     col *= 0.25 + vY * 1.15;

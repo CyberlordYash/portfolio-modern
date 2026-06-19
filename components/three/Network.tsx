@@ -23,10 +23,10 @@ function makeLabel(name: string, sub: string) {
   const ctx = c.getContext("2d")!;
   ctx.clearRect(0, 0, c.width, c.height);
   ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(150, 190, 255, 0.95)";
+  ctx.fillStyle = "rgba(235, 235, 235, 0.95)";
   ctx.font = "900 72px 'Orbitron', 'Courier New', monospace";
   ctx.fillText(name, 256, 78);
-  ctx.fillStyle = "rgba(120, 160, 230, 0.55)";
+  ctx.fillStyle = "rgba(170, 170, 170, 0.55)";
   ctx.font = "400 26px 'Courier New', monospace";
   ctx.fillText(sub.split("").join("  "), 256, 126);
   const tex = new THREE.CanvasTexture(c);
@@ -53,13 +53,13 @@ const LINE_FRAG = /* glsl */ `
   varying float vDist;
   void main() {
     /* faint base route */
-    vec3 col = vec3(0.12, 0.24, 0.55) * 0.5;
+    vec3 col = vec3(0.30) * 0.5;
     float a = 0.20;
     /* two latency pulses racing along the route */
     float p1 = abs(fract(vT - uTime * 0.22 + uPhase) - 0.5);
     float p2 = abs(fract(vT * 0.997 - uTime * 0.09 + uPhase * 1.7) - 0.5);
     float g = smoothstep(0.045, 0.0, p1) * 1.6 + smoothstep(0.03, 0.0, p2) * 0.9;
-    col += g * vec3(0.30, 0.50, 1.0);
+    col += g * vec3(0.92);
     a += g * 0.8;
     a *= smoothstep(600.0, 140.0, vDist);
     gl_FragColor = vec4(col, a);
@@ -138,11 +138,11 @@ function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
     <group position={pos}>
       <mesh ref={shell}>
         <icosahedronGeometry args={[r, 1]} />
-        <meshBasicMaterial color="#2547b8" wireframe transparent opacity={0.55} />
+        <meshBasicMaterial color="#cfcfcf" wireframe transparent opacity={0.6} />
       </mesh>
       <mesh ref={inner}>
         <icosahedronGeometry args={[r * 0.32, 1]} />
-        <meshBasicMaterial color="#9ab8ff" />
+        <meshBasicMaterial color="#e0e0e0" />
       </mesh>
       <sprite position={[0, r + 6, 0]} scale={[26, 8.1, 1]}>
         <spriteMaterial map={label} transparent opacity={0.9} fog />
@@ -170,9 +170,9 @@ function DataMonoliths() {
         const edges = new THREE.EdgesGeometry(geo);
         geo.dispose();
         const mat = new THREE.LineBasicMaterial({
-          color: new THREE.Color("#2f5fd4"),
+          color: new THREE.Color("#c4c4c4"),
           transparent: true,
-          opacity: 0.5,
+          opacity: 0.55,
         });
         const lines = new THREE.LineSegments(edges, mat);
         lines.position.set(...m.pos);
@@ -197,7 +197,7 @@ function DataMonoliths() {
       {MONOLITHS.map((m, i) => (
         <mesh key={`c${i}`} position={m.pos}>
           <boxGeometry args={[m.size[0] * 0.3, m.size[1] * 0.8, m.size[2] * 0.3]} />
-          <meshBasicMaterial color="#0c2444" transparent opacity={0.55} />
+          <meshBasicMaterial color="#161616" transparent opacity={0.55} />
         </mesh>
       ))}
     </group>

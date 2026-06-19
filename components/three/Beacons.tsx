@@ -30,7 +30,7 @@ const TIP_FRAG = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.04, d) * (0.25 + vBlink * 1.4);
-    gl_FragColor = vec4(vec3(0.45, 0.65, 1.0), a);
+    gl_FragColor = vec4(vec3(0.90), a);
   }
 `;
 
@@ -39,7 +39,7 @@ function Towers() {
     /* tower shafts as one merged set of thin boxes via InstancedMesh */
     const mesh = new THREE.InstancedMesh(
       new THREE.BoxGeometry(1.6, 1, 1.6),
-      new THREE.MeshBasicMaterial({ color: "#10283f", transparent: true, opacity: 0.9 }),
+      new THREE.MeshBasicMaterial({ color: "#1c1c1c", transparent: true, opacity: 0.9 }),
       TOWERS.length,
     );
     const m = new THREE.Matrix4();
@@ -110,7 +110,7 @@ function Corridor() {
       gates.map(
         () =>
           new THREE.MeshBasicMaterial({
-            color: new THREE.Color("#2f6fe0"),
+            color: new THREE.Color("#cdcdcd"),
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,

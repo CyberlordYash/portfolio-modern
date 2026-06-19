@@ -5,10 +5,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 
 import CameraRig from "./CameraRig";
 import Terrain from "./Terrain";
-import OrderFlow from "./OrderFlow";
 import Network from "./Network";
-import CandleField from "./CandleField";
-import Beacons from "./Beacons";
 import CoreStation from "./CoreStation";
 import SectionMarkers from "./SectionMarkers";
 import { attachWorldTrackers } from "./worldState";
@@ -56,27 +53,24 @@ export default function MarketWorld() {
         }}
         style={{ pointerEvents: "none" }}
       >
-        <color attach="background" args={["#020510"]} />
-        <fogExp2 attach="fog" args={["#020510", 0.0040]} />
+        <color attach="background" args={["#000000"]} />
+        <fogExp2 attach="fog" args={["#000000", 0.0040]} />
         <Suspense fallback={null}>
           <CameraRig />
           <Terrain quality={q} />
-          <OrderFlow count={q > 0 ? 3200 : 1200} />
           <Network />
-          <CandleField density={q > 0 ? 1 : 0.45} />
-          <Beacons />
           <CoreStation />
           <SectionMarkers />
           {q > 0 && (
             <EffectComposer multisampling={0}>
               <Bloom
                 mipmapBlur
-                intensity={0.48}
-                luminanceThreshold={0.58}
-                luminanceSmoothing={0.32}
-                radius={0.58}
+                intensity={0.42}
+                luminanceThreshold={0.5}
+                luminanceSmoothing={0.3}
+                radius={0.55}
               />
-              <Vignette eskil={false} offset={0.24} darkness={0.82} />
+              <Vignette eskil={false} offset={0.16} darkness={0.94} />
             </EffectComposer>
           )}
         </Suspense>

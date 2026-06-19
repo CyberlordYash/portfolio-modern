@@ -47,10 +47,10 @@ const FRAG = /* glsl */ `
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.05, d) * vFade;
     if (a < 0.01) discard;
-    /* uniform royal blue — slight tonal variation only, no colour gradient */
-    vec3 col = mix(vec3(0.20, 0.36, 0.82), vec3(0.34, 0.52, 1.00), vHue);
-    col += uStorm * vec3(0.10, 0.16, 0.28);
-    gl_FragColor = vec4(col, a * 0.78);
+    /* crisp white order-flow streaks, faint tonal variation */
+    vec3 col = mix(vec3(0.78), vec3(1.0), vHue);
+    col += uStorm * vec3(0.2);
+    gl_FragColor = vec4(col, a * 0.7);
   }
 `;
 

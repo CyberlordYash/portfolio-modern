@@ -3,14 +3,16 @@ import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-/* Procedural data-grid terrain — market-depth mountain ranges with a flight
-   corridor carved along x≈0 and glowing "data rivers" flowing through it.
-   All displacement + glow runs on the GPU. */
+/* Topographic contour terrain — crisp white elevation isolines on pure black,
+   like a survey map of a mountain range. Lines trace constant height (not a
+   grid); index contours every 5th level read bolder. The whole field drifts
+   slowly upward for a calm, editorial parallax. Minimal: no particles. */
 
 const VERT = /* glsl */ `
   uniform float uTime;
   varying vec3 vWorld;
   varying float vH;
+  varying float vEdge;
   #include <fog_pars_vertex>
 
   float hash(vec2 p) {
@@ -26,7 +28,7 @@ const VERT = /* glsl */ `
   }
   float fbm(vec2 p) {
     float v = 0.0, a = 0.5;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
       v += a * noise(p);
       p = p * 2.04 + 11.3;
       a *= 0.5;
@@ -37,19 +39,17 @@ const VERT = /* glsl */ `
   void main() {
     vec3 pos = position;
     /* local xy = ground plane (mesh is rotated -90° on X) */
-    float ridged = 1.0 - abs(fbm(pos.xy * 0.014) * 2.0 - 1.0);
-    float h = pow(ridged, 1.6) * fbm(pos.xy * 0.006 + 4.7) * 2.0;
+    float ridged = 1.0 - abs(fbm(pos.xy * 0.013) * 2.0 - 1.0);
+    float h = pow(ridged, 1.7) * fbm(pos.xy * 0.006 + 4.7) * 2.0;
 
     /* carve the flight corridor along x ≈ 0 */
-    float corridor = smoothstep(26.0, 120.0, abs(pos.x));
-    h *= mix(0.04, 1.0, corridor);
-    h *= 46.0;
-
-    /* terraced steps — market-depth ledger levels */
-    h = mix(h, floor(h / 5.0) * 5.0, 0.38);
+    float corridor = smoothstep(24.0, 130.0, abs(pos.x));
+    h *= mix(0.03, 1.0, corridor);
+    h *= 50.0;
 
     pos.z += h;
     vH = h;
+    vEdge = corridor;
 
     vec4 wp = modelMatrix * vec4(pos, 1.0);
     vWorld = wp.xyz;
@@ -63,31 +63,34 @@ const FRAG = /* glsl */ `
   uniform float uTime;
   varying vec3 vWorld;
   varying float vH;
+  varying float vEdge;
   #include <fog_pars_fragment>
 
+  /* anti-aliased isoline at every "spacing" of elevation h;
+     "thick" scales line width in screen pixels (derivative-based). */
+  float contour(float h, float spacing, float thick) {
+    float f = h / spacing;
+    float d = abs(fract(f - 0.5) - 0.5);
+    return 1.0 - smoothstep(0.0, thick * fwidth(f), d);
+  }
+
   void main() {
-    /* glowing data grid */
-    vec2 cell = vWorld.xz / 8.0;
-    vec2 g = abs(fract(cell - 0.5) - 0.5) / fwidth(cell);
-    float line = 1.0 - min(min(g.x, g.y), 1.0);
+    /* slow upward drift of the elevation field — calm editorial motion */
+    float h = vH + uTime * 0.7;
 
-    float hN = clamp(vH / 46.0, 0.0, 1.0);
+    /* fine contours + bolder index contours (every 5th line) */
+    float minor = contour(h, 3.2, 1.0);
+    float major = contour(h, 16.0, 1.4);
 
-    vec3 base = mix(vec3(0.010, 0.022, 0.055), vec3(0.026, 0.060, 0.175), hN);
-    vec3 lineCol = mix(vec3(0.10, 0.20, 0.55), vec3(0.26, 0.45, 0.95), hN);
-    vec3 col = base + line * lineCol * (0.32 + hN * 0.8);
+    float hN = clamp(vH / 50.0, 0.0, 1.0);
+    /* index lines fully white; intermediate lines softer; black between */
+    float intensity = minor * 0.45 + major * (0.7 + hN * 0.3);
 
-    /* data rivers — light flowing down the corridor toward the core */
-    float river = 1.0 - smoothstep(4.0, 22.0, abs(vWorld.x));
-    float flow = smoothstep(0.86, 1.0, sin(vWorld.z * 0.22 + uTime * 4.0) * 0.5 + 0.5);
-    col += river * flow * vec3(0.18, 0.34, 0.85) * 0.65;
+    /* a whisper of light along the flight corridor floor */
+    float river = (1.0 - smoothstep(2.0, 16.0, abs(vWorld.x))) * (1.0 - vEdge);
+    intensity += river * 0.18;
 
-    /* faint side rivers in the valleys */
-    float valley = 1.0 - smoothstep(0.0, 0.12, hN);
-    float sflow = smoothstep(0.9, 1.0, sin(vWorld.x * 0.3 + vWorld.z * 0.12 - uTime * 2.0) * 0.5 + 0.5);
-    col += valley * sflow * vec3(0.07, 0.15, 0.38) * 0.45;
-
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(vec3(intensity), 1.0);
     #include <fog_fragment>
   }
 `;
@@ -108,7 +111,7 @@ export default function Terrain({ quality }: { quality: number }) {
   );
 
   const geometry = useMemo(() => {
-    const seg = quality > 0 ? [240, 150] : [130, 80];
+    const seg = quality > 0 ? [300, 200] : [160, 100];
     return new THREE.PlaneGeometry(1500, 1000, seg[0], seg[1]);
   }, [quality]);
 
