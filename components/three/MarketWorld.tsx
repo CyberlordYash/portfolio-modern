@@ -65,8 +65,8 @@ export default function MarketWorld() {
             <EffectComposer multisampling={0}>
               <Bloom
                 mipmapBlur
-                intensity={0.42}
-                luminanceThreshold={0.5}
+                intensity={0.3}
+                luminanceThreshold={0.62}
                 luminanceSmoothing={0.3}
                 radius={0.55}
               />

@@ -83,12 +83,12 @@ const FRAG = /* glsl */ `
     float major = contour(h, 16.0, 1.4);
 
     float hN = clamp(vH / 50.0, 0.0, 1.0);
-    /* index lines fully white; intermediate lines softer; black between */
-    float intensity = minor * 0.45 + major * (0.7 + hN * 0.3);
+    /* kept subtle so floating UI text stays legible over the terrain */
+    float intensity = minor * 0.26 + major * (0.42 + hN * 0.26);
 
     /* a whisper of light along the flight corridor floor */
     float river = (1.0 - smoothstep(2.0, 16.0, abs(vWorld.x))) * (1.0 - vEdge);
-    intensity += river * 0.18;
+    intensity += river * 0.12;
 
     gl_FragColor = vec4(vec3(intensity), 1.0);
     #include <fog_fragment>

@@ -166,14 +166,14 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/25 dark:text-white/25"
+            className="text-black/50 dark:text-white/55"
             style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             SYSTEMS,
           </span>
           <br />
           <span
-            className="text-black/25 dark:text-white/25"
+            className="text-black/50 dark:text-white/55"
             style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             BY&nbsp;
@@ -270,14 +270,14 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/25 dark:text-white/25"
+            className="text-black/50 dark:text-white/55"
             style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             SYSTEMS,
           </span>
           <br />
           <span
-            className="text-black/25 dark:text-white/25"
+            className="text-black/50 dark:text-white/55"
             style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             BY&nbsp;
@@ -302,7 +302,7 @@ const Hero = () => {
 
         {/* ── ANNOTATION: top-right area ── */}
         <div className="absolute z-20" style={{ top: "24%", right: "30%" }}>
-          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/55 dark:text-white/55 text-right">
+          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/80 dark:text-white/80 text-right">
             WHERE ENGINEERING
             <br />
             MEETS PRECISION —<br />
@@ -325,7 +325,7 @@ const Hero = () => {
           className="absolute z-20 max-w-[150px]"
           style={{ top: "50%", left: "5%", transform: "translateY(-50%)" }}
         >
-          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/50 dark:text-white/50">
+          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/75 dark:text-white/75">
             FROM DEEP ROOTS,
             <br />
             PERFORMANCE
@@ -352,7 +352,7 @@ const Hero = () => {
               style={{ height: 36 }}
             />
           </div>
-          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/50 dark:text-white/50">
+          <p className="font-mono text-[8px] uppercase tracking-[0.2em] leading-relaxed text-black/75 dark:text-white/75">
             FOUNDATION
             <br />
             DESIGNED FOR
@@ -391,7 +391,7 @@ const Hero = () => {
               </div>
             </div>
             <div className="h-px bg-black/10 dark:bg-white/10 mb-3" />
-            <div className="font-mono text-[11px] tracking-[0.14em] leading-relaxed text-black/55 dark:text-white/55">
+            <div className="font-mono text-[11px] tracking-[0.14em] leading-relaxed text-black/80 dark:text-white/80">
               → HIGH-THROUGHPUT
               <br />→ INFRA ENGINEERING
             </div>
