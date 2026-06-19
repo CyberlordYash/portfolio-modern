@@ -7,10 +7,10 @@ import * as THREE from "three";
    carry latency pulses, plus the giant data monoliths of the projects zone. */
 
 export const EXCHANGES: { name: string; sub: string; pos: [number, number, number]; r: number }[] = [
-  { name: "NSE",    sub: "EQUITIES · MUMBAI",    pos: [-62, 30, -68],  r: 7 },
-  { name: "BSE",    sub: "EQUITIES · DALAL ST",  pos: [54, 36, -112],  r: 8 },
+  { name: "NSE",    sub: "EQUITIES · MUMBAI",    pos: [-58, 30, -52],  r: 7 },
+  { name: "BSE",    sub: "EQUITIES · DALAL ST",  pos: [56, 36, -78],   r: 8 },
   { name: "NIFTY",  sub: "INDEX · NSE",          pos: [-48, 32, -158], r: 9 },
-  { name: "MCX",    sub: "COMMODITIES · MUMBAI", pos: [44, 26, -42],   r: 6 },
+  { name: "MCX",    sub: "COMMODITIES · MUMBAI", pos: [46, 26, -128],  r: 6 },
   { name: "SENSEX", sub: "INDEX · BSE",          pos: [70, 42, -205],  r: 6 },
   { name: "NCDEX",  sub: "AGRI DERIVS · IN",     pos: [-70, 38, -240], r: 6 },
 ];
@@ -114,38 +114,89 @@ function Routes() {
 }
 
 function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
-  const shell = useRef<THREE.Mesh>(null);
-  const inner = useRef<THREE.Mesh>(null);
+  const light = useRef<THREE.Mesh>(null);
   const label = useMemo(() => makeLabel(name, sub), [name, sub]);
   useEffect(() => () => label.dispose(), [label]);
 
   const seed = useMemo(() => Math.random() * 10, []);
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    if (shell.current) {
-      shell.current.rotation.y += delta * 0.12;
-      shell.current.rotation.x += delta * 0.04;
-      shell.current.position.y = Math.sin(t * 0.4 + seed) * 1.6;
+  /* slender skyscraper rising from the ground to just above the node point */
+  const w = r * 1.25;
+  const h = pos[1] + 8;
+  const floors = Math.max(4, Math.round(h / 6));
+  const spireH = r * 0.9;
+
+  /* wireframe structure: 4 corner verticals + a square ring per floor */
+  const edges = useMemo(() => {
+    const hw = w / 2;
+    const corners: [number, number][] = [[-hw, -hw], [hw, -hw], [hw, hw], [-hw, hw]];
+    const segs: number[] = [];
+    /* vertical mullions — corner posts plus panels down each face (curtain wall) */
+    const panels = 3;
+    for (let c = 0; c < 4; c++) {
+      const [x1, z1] = corners[c];
+      const [x2, z2] = corners[(c + 1) % 4];
+      for (let p = 0; p < panels; p++) {
+        const tt = p / panels;
+        const x = x1 + (x2 - x1) * tt;
+        const z = z1 + (z2 - z1) * tt;
+        segs.push(x, 0, z, x, h, z);
+      }
     }
-    if (inner.current) {
-      const s = 1 + Math.sin(t * 1.8 + seed) * 0.12;
-      inner.current.scale.setScalar(s);
+    /* floor rings */
+    for (let i = 0; i <= floors; i++) {
+      const y = (h * i) / floors;
+      for (let c = 0; c < 4; c++) {
+        const [x1, z1] = corners[c];
+        const [x2, z2] = corners[(c + 1) % 4];
+        segs.push(x1, y, z1, x2, y, z2);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(segs), 3));
+    return g;
+  }, [w, h, floors]);
+
+  useEffect(() => () => edges.dispose(), [edges]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (light.current) {
+      const b = 0.5 + 0.5 * Math.sin(t * 2.0 + seed);
+      light.current.scale.setScalar(0.6 + b * 0.9);
+      (light.current.material as THREE.MeshBasicMaterial).opacity = 0.35 + b * 0.65;
     }
   });
 
   return (
-    <group position={pos}>
-      <mesh ref={shell}>
-        <icosahedronGeometry args={[r, 1]} />
-        <meshBasicMaterial color="#cfcfcf" wireframe transparent opacity={0.6} />
+    <group position={[pos[0], 0, pos[2]]}>
+      {/* dark core so the tower reads as solid against the terrain */}
+      <mesh position={[0, h / 2, 0]}>
+        <boxGeometry args={[w, h, w]} />
+        <meshBasicMaterial color="#0d0d0d" transparent opacity={0.68} />
       </mesh>
-      <mesh ref={inner}>
-        <icosahedronGeometry args={[r * 0.32, 1]} />
-        <meshBasicMaterial color="#e0e0e0" />
+      {/* frosted-glass sheen — modern white glow over the body */}
+      <mesh position={[0, h / 2, 0]}>
+        <boxGeometry args={[w * 0.99, h, w * 0.99]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.06} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
-      <sprite position={[0, r + 6, 0]} scale={[26, 8.1, 1]}>
-        <spriteMaterial map={label} transparent opacity={0.9} fog />
+      {/* bright white wireframe facade */}
+      <lineSegments geometry={edges}>
+        <lineBasicMaterial color="#ffffff" transparent opacity={0.88} />
+      </lineSegments>
+      {/* rooftop spire */}
+      <mesh position={[0, h + spireH / 2, 0]}>
+        <boxGeometry args={[0.5, spireH, 0.5]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.92} />
+      </mesh>
+      {/* blinking rooftop beacon */}
+      <mesh ref={light} position={[0, h + spireH, 0]}>
+        <sphereGeometry args={[1.1, 10, 10]} />
+        <meshBasicMaterial color="#ffffff" transparent />
+      </mesh>
+      {/* label */}
+      <sprite position={[0, h + spireH + 7, 0]} scale={[26, 8.1, 1]}>
+        <spriteMaterial map={label} transparent opacity={0.95} fog />
       </sprite>
     </group>
   );
