@@ -248,7 +248,12 @@ export default function Home() {
               <Hero />
             </section>
 
-            {/* ── Card 2: Skills ── */}
+            {/* ── Card 2: Experience ── (no scale transform: would break sticky stacking) */}
+            <section id="experience" className="px-2 md:px-0">
+              <Experience />
+            </section>
+
+            {/* ── Card 3: Skills ── */}
             <motion.section
               id="skills"
               className="md:min-h-screen relative"
@@ -300,11 +305,6 @@ export default function Home() {
                 <TerminalSnake />
               </div>
             </motion.section>
-
-            {/* ── Card 3: Experience ── (no scale transform: would break sticky stacking) */}
-            <section id="experience" className="px-2 md:px-0">
-              <Experience />
-            </section>
 
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section

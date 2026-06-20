@@ -135,15 +135,15 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[rgba(10,15,28,0.6)] backdrop-blur-sm">
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-black/40 backdrop-blur-sm">
       {/* Inner ambient glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(34,211,238,0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgba(99,102,241,0.04),transparent_45%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgba(255,255,255,0.04),transparent_45%)]" />
 
       <div className="relative z-10 px-4 py-8 md:px-8 md:py-10">
         {/* ── Header ── */}
         <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-cyan-400">
+            <div className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-white">
               <BriefcaseBusiness className="h-3 w-3" />
               Sys · Work Log
             </div>
@@ -193,8 +193,8 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
               <div
                 className={`rounded-lg border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.3em] ${
                   draft.id
-                    ? "border-amber-500/20 bg-amber-500/[0.06] text-amber-300"
-                    : "border-emerald-500/20 bg-emerald-500/[0.06] text-emerald-400"
+                    ? "border-white/20 bg-white/[0.06] text-white/70"
+                    : "border-white/20 bg-white/[0.06] text-white"
                 }`}
               >
                 {draft.id ? "Edit" : "Ready"}
@@ -215,7 +215,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     onChange={(e) =>
                       setDraft((cur) => ({ ...cur, date: e.target.value }))
                     }
-                    className="w-full rounded-xl border border-white/[0.08] bg-black/40 py-3 pl-10 pr-4 font-mono text-sm text-slate-300 outline-none transition focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/10"
+                    className="w-full rounded-xl border border-white/[0.08] bg-black/40 py-3 pl-10 pr-4 font-mono text-sm text-slate-300 outline-none transition focus:border-white/40 focus:ring-1 focus:ring-white/10"
                   />
                 </div>
               </div>
@@ -232,7 +232,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     setDraft((cur) => ({ ...cur, title: e.target.value }))
                   }
                   placeholder="Optimized order execution pipeline..."
-                  className="w-full rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-Quicksand text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/10"
+                  className="w-full rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-Quicksand text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/10"
                 />
               </div>
 
@@ -255,7 +255,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                   }
                   placeholder="What you built, blockers handled, key outcomes..."
                   rows={9}
-                  className="w-full resize-none rounded-xl border border-white/[0.08] bg-black/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-slate-300 outline-none transition placeholder:text-slate-700 focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/10"
+                  className="w-full resize-none rounded-xl border border-white/[0.08] bg-black/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-slate-300 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/10"
                 />
               </div>
 
@@ -264,7 +264,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting || !draft.title.trim() || !draft.note.trim()}
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-cyan-300 transition hover:border-cyan-400/50 hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {isSubmitting ? (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -301,7 +301,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                 </h3>
               </div>
               <div className="flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-slate-600">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
                 online
               </div>
             </div>
@@ -309,7 +309,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
             <div className="max-h-[560px] space-y-3 overflow-y-auto pr-0.5">
               {isLoading ? (
                 <div className="rounded-xl border border-dashed border-white/[0.08] px-5 py-14 text-center">
-                  <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-cyan-500" />
+                  <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-white" />
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-700">
                     Syncing...
                   </p>
@@ -332,20 +332,20 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     transition={{ delay: index * 0.04, duration: 0.3 }}
                     className={`group relative rounded-xl border p-4 transition-all ${
                       draft.id === entry.id
-                        ? "border-cyan-500/30 bg-cyan-500/[0.06]"
+                        ? "border-white/20 bg-white/[0.06]"
                         : "border-white/[0.06] bg-white/[0.015] hover:border-white/[0.1]"
                     }`}
                   >
                     {/* Left accent bar */}
                     <div
                       className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full transition-all ${
-                        draft.id === entry.id ? "bg-cyan-400" : "bg-white/[0.06] group-hover:bg-cyan-500/30"
+                        draft.id === entry.id ? "bg-white" : "bg-white/[0.06] group-hover:bg-white/30"
                       }`}
                     />
 
                     <div className="mb-3 flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between">
                       <div className="space-y-1.5 min-w-0">
-                        <div className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.06] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-cyan-400">
+                        <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.06] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-white">
                           <CalendarDays className="h-3 w-3" />
                           {formatDisplayDate(entry.date)}
                         </div>
@@ -359,7 +359,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                           type="button"
                           onClick={() => handleEdit(entry)}
                           disabled={isSubmitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.07] bg-white/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500 transition hover:border-cyan-500/30 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.07] bg-white/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500 transition hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <PencilLine className="h-3 w-3" />
                           Edit
@@ -404,9 +404,9 @@ function StatCard({
   helper: string;
   color: "cyan" | "violet";
 }) {
-  const border = color === "cyan" ? "border-cyan-500/15" : "border-violet-500/15";
-  const bg = color === "cyan" ? "bg-cyan-500/[0.04]" : "bg-violet-500/[0.04]";
-  const valColor = color === "cyan" ? "text-cyan-300" : "text-violet-300";
+  const border = "border-white/15";
+  const bg = "bg-white/[0.04]";
+  const valColor = "text-white";
   return (
     <div className={`rounded-xl border p-4 ${border} ${bg}`}>
       <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-slate-700">

@@ -63,9 +63,9 @@ export default function WorklogPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black-100 px-4 py-6 text-white md:px-8 md:py-8">
+    <main className="relative min-h-screen overflow-hidden bg-black px-4 py-6 text-white md:px-8 md:py-8">
       {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgba(34,211,238,0.07),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgba(99,102,241,0.07),transparent)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgba(255,255,255,0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgba(255,255,255,0.04),transparent)]" />
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
@@ -74,7 +74,7 @@ export default function WorklogPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700/50 bg-black/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 transition hover:border-blue-600/50 hover:bg-blue-950/40 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-700/50 bg-black/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 transition hover:border-white/40 hover:bg-white/[0.06] hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -92,7 +92,7 @@ export default function WorklogPage() {
             )}
           </div>
 
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400">
+          <div className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-white">
             <BriefcaseBusiness className="h-3 w-3" />
             Worklog
           </div>
@@ -102,7 +102,7 @@ export default function WorklogPage() {
         {isCheckingAuth ? (
           <div className="flex min-h-[60vh] items-center justify-center">
             <div className="text-center">
-              <LoaderCircle className="mx-auto h-6 w-6 animate-spin text-cyan-500" />
+              <LoaderCircle className="mx-auto h-6 w-6 animate-spin text-white" />
               <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-slate-600">
                 Verifying session...
               </p>
@@ -112,24 +112,24 @@ export default function WorklogPage() {
           <WorkJournal onUnauthorized={() => setIsUnlocked(false)} />
         ) : (
           /* Lock screen */
-          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-white/[0.07] bg-[rgba(10,15,28,0.6)] backdrop-blur-sm">
+          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-white/[0.07] bg-black/40 backdrop-blur-sm">
             {/* Decorations */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.05),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(99,102,241,0.05),transparent_50%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.04),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(255,255,255,0.04),transparent_50%)]" />
             <div className="pointer-events-none absolute -right-8 top-8 opacity-[0.06]">
-              <LockCircuitSvg className="h-52 w-52 text-cyan-400" />
+              <LockCircuitSvg className="h-52 w-52 text-white" />
             </div>
             <div className="pointer-events-none absolute -left-6 bottom-8 opacity-[0.05]">
-              <LockCircuitSvg className="h-36 w-36 text-violet-400" />
+              <LockCircuitSvg className="h-36 w-36 text-white" />
             </div>
 
             <div className="relative z-10 w-full max-w-md px-6 py-10">
               {/* Lock icon */}
               <div className="mb-8 flex justify-center">
                 <div
-                  className="flex h-20 w-20 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.06]"
-                  style={{ boxShadow: "0 0 40px rgba(34,211,238,0.12), 0 0 80px rgba(34,211,238,0.05)" }}
+                  className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.06]"
+                  style={{ boxShadow: "0 0 40px rgba(255,255,255,0.08), 0 0 80px rgba(255,255,255,0.04)" }}
                 >
-                  <LockKeyhole className="h-8 w-8 text-cyan-400" />
+                  <LockKeyhole className="h-8 w-8 text-white" />
                 </div>
               </div>
 
@@ -154,7 +154,7 @@ export default function WorklogPage() {
                     if (hasError) setHasError(false);
                   }}
                   placeholder="Enter access code"
-                  className="w-full rounded-xl border border-white/[0.08] bg-black/50 px-4 py-3.5 font-mono text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20"
+                  className="w-full rounded-xl border border-white/[0.08] bg-black/50 px-4 py-3.5 font-mono text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/20"
                 />
 
                 {hasError && (
@@ -166,7 +166,7 @@ export default function WorklogPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !password.trim()}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-600/50 bg-blue-950 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_20px_rgba(37,99,235,0.15)] transition hover:bg-blue-900 hover:border-blue-500/70 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {isSubmitting ? (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
