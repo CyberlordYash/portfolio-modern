@@ -402,7 +402,19 @@ const RecentProjects = () => {
       <Cross style={{ bottom: 24, left: 24 }} />
       <Cross style={{ bottom: 24, right: 24 }} />
 
-      <div className="relative mx-auto max-w-[90vw] 2xl:max-w-[1400px]">
+      <div className="relative mx-auto max-w-5xl">
+
+        {/* Side rails — frame the centered module, let the living background breathe */}
+        <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+        </div>
 
         {/* ── HEADER ── */}
         <div className="mb-10 md:mb-14">
@@ -441,12 +453,12 @@ const RecentProjects = () => {
             className="font-black uppercase leading-none whitespace-nowrap"
             style={{ fontFamily: "Impact,'Arial Black',sans-serif", fontSize: "clamp(2rem,9vw,8rem)", letterSpacing: "-0.03em" }}
           >
-            <span className="text-black dark:text-white">
+            <span className="text-black dark:text-white/90">
               <RevealText text="RECENT" delay={0.1} stagger={0.06} />
             </span>{" "}
             <span
-              className="text-black/25 dark:text-white/25"
-              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+              className="text-black/70 dark:text-white/85"
+              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
             >
               <RevealText text="PROJECTS" delay={0.22} stagger={0.06} />
             </span>

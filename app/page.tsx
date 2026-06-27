@@ -280,12 +280,12 @@ export default function Home() {
                     letterSpacing: "-0.025em",
                   }}
                 >
-                  <span className="text-black dark:text-white">
+                  <span className="text-black dark:text-white/90">
                     <RevealText text="TECHNICAL" delay={0.18} />
                   </span>{" "}
                   <span
-                    className="text-black/25 dark:text-white/25"
-                    style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+                    className="text-black/70 dark:text-white/85"
+                    style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
                   >
                     <RevealText text="STACK" delay={0.3} />
                   </span>
@@ -300,16 +300,30 @@ export default function Home() {
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
                 </div>
               </div>
-              <Skills />
-              <div className="px-2 md:px-0 mt-4">
-                <TerminalSnake />
+              <div className="relative mx-auto max-w-5xl">
+                {/* Side rails — frame the centered module, let the living background breathe */}
+                <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                </div>
+
+                <Skills />
+                <div className="px-2 md:px-0 mt-4">
+                  <TerminalSnake />
+                </div>
               </div>
             </motion.section>
 
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="md:min-h-screen overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black/40 border border-white/[0.05]"
+              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black/40 border border-white/[0.05]"
               {...cardEnter}
             >
               <Grid />

@@ -38,16 +38,19 @@ export default function Certificates() {
   const posRef = useRef(pos);
   posRef.current = pos;
 
-  // ── measure ──────────────────────────────────────────────
+  // ── measure (ResizeObserver so we catch the element gaining width,
+  //    not just window resizes — fixes empty track when width is 0 at mount) ──
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
     const measure = () => {
-      if (!containerRef.current) return;
-      const w = containerRef.current.offsetWidth;
-      setCardW(w < 600 ? w : (w - GAP) / 2);
+      const w = el.offsetWidth;
+      if (w > 0) setCardW(w < 600 ? w : (w - GAP) / 2);
     };
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // ── snap back into real range after clone zone ───────────
@@ -120,8 +123,8 @@ export default function Certificates() {
               <RevealText text="VERIFIED" delay={0.18} />
             </span>{" "}
             <span
-              className="text-black/25 dark:text-white/25"
-              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+              className="text-black/70 dark:text-white"
+              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
             >
               <RevealText text="CERTIFICATES" delay={0.3} />
             </span>

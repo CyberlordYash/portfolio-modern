@@ -16,43 +16,6 @@ const Cross = ({ style }: { style?: React.CSSProperties }) => (
   </div>
 );
 
-/* ─── YS monogram ─── */
-const GeminiYS = ({ size = 280 }: { size?: number }) => {
-  const fontPx = Math.round(size * 0.17);
-  const baseType: React.CSSProperties = {
-    fontFamily: "var(--font-orbitron)", fontSize: `${fontPx}px`, fontWeight: 900,
-    lineHeight: 1, letterSpacing: "-0.02em", display: "inline-block",
-  };
-
-  return (
-    <div
-      className="relative flex items-center justify-center text-black dark:text-white select-none"
-      style={{ width: size, height: size }}
-    >
-      <div className="relative z-10 flex flex-col items-center justify-center">
-        <div
-          className="font-mono text-[8px] uppercase text-black dark:text-white mb-2 opacity-40"
-          style={{ letterSpacing: "0.55em" }}
-        >
-          BE_DEV
-        </div>
-
-        {/* the name */}
-        <div className="whitespace-nowrap px-1" style={baseType}>
-          YS
-        </div>
-
-        <div
-          className="font-mono text-[8px] uppercase text-black dark:text-white mt-2 opacity-40"
-          style={{ letterSpacing: "0.45em" }}
-        >
-          IST · 2026
-        </div>
-      </div>
-    </div>
-  );
-};
-
 /* ─── Glitch overlay slices ─── */
 const GlitchOverlay = () => (
   <>
@@ -66,17 +29,6 @@ const GlitchOverlay = () => (
 ══════════════════════════════════════════ */
 const Hero = () => {
   const [time, setTime] = useState("--:--");
-  const [mobileOrbSize, setMobileOrbSize] = useState(200);
-
-  useEffect(() => {
-    const updateOrbSize = () => {
-      const vw = window.innerWidth;
-      setMobileOrbSize(Math.min(240, Math.max(160, Math.round(vw * 0.62))));
-    };
-    updateOrbSize();
-    window.addEventListener("resize", updateOrbSize);
-    return () => window.removeEventListener("resize", updateOrbSize);
-  }, []);
 
   useEffect(() => {
     const tick = () =>
@@ -143,8 +95,16 @@ const Hero = () => {
       `}</style>
       {/* ── TOP BAR ── */}
       <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-white/10">
-        <span className="font-sans text-[13px] md:text-[15px] font-semibold tracking-[0.25em] uppercase">
-          YASH<span className="hidden md:inline"> SACHAN</span>
+        <span className="flex items-center gap-2 select-none text-black/55 dark:text-white/55">
+          <span className="grid h-5 w-5 place-items-center border border-black/25 dark:border-white/25">
+            <span className="font-black text-[9px] leading-none" style={{ fontFamily: "var(--font-orbitron)" }}>S</span>
+          </span>
+          <span
+            className="font-black uppercase leading-none tracking-[0.18em] text-[9px] md:text-[10px]"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            SYSTEMS<span className="text-black/30 dark:text-white/30"> BY </span>DESIGN
+          </span>
         </span>
 
 
@@ -166,28 +126,18 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/50 dark:text-white/55"
-            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+            className="text-black/70 dark:text-white"
+            style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
           >
-            SYSTEMS,
+            YASH
           </span>
           <br />
-          <span
-            className="text-black/50 dark:text-white/55"
-            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
-          >
-            BY&nbsp;
+          <span className="text-black dark:text-white">SACHAN</span>
+          <span className="mt-3 block font-mono text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.45em] text-black/75 dark:text-white/85">
+            Software Engineer
           </span>
-          <span className="text-black dark:text-white">DESIGN.</span>
         </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <GeminiYS size={mobileOrbSize} />
-        </motion.div>
 
         {/* Core threads (mobile) */}
         <div className="w-full mt-10">
@@ -270,35 +220,18 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/50 dark:text-white/55"
-            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+            className="text-black/70 dark:text-white"
+            style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
           >
-            SYSTEMS,
+            YASH
           </span>
           <br />
-          <span
-            className="text-black/50 dark:text-white/55"
-            style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
-          >
-            BY&nbsp;
+          <span className="text-black dark:text-white">SACHAN</span>
+          <span className="mt-3 block font-mono text-[16px] font-medium uppercase tracking-[0.5em] text-black/75 dark:text-white/85">
+            Software Engineer
           </span>
-          <span className="text-black dark:text-white">DESIGN.</span>
         </motion.h1>
 
-        {/* ── CENTER ORB ── */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.88 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 1.2,
-              ease: [0.22, 1, 0.36, 1],
-              delay: 0.15,
-            }}
-          >
-            <GeminiYS />
-          </motion.div>
-        </div>
 
         {/* ── ANNOTATION: top-right area ── */}
         <div className="absolute z-20" style={{ top: "24%", right: "30%" }}>
@@ -503,7 +436,7 @@ const socials = [
     color: "text-[#0a66c2] dark:text-blue-400",
     dot: "bg-[#0a66c2] dark:bg-blue-400",
     border: "border-blue-500/30 dark:border-blue-400/25",
-    bg: "hover:bg-blue-500/[0.07] dark:hover:bg-blue-400/[0.07]",
+    bg: "bg-white dark:bg-[#0e0e14] hover:bg-blue-50 dark:hover:bg-[#13182a]",
   },
   {
     label: "GITHUB",
@@ -511,7 +444,7 @@ const socials = [
     color: "text-black/75 dark:text-white/75",
     dot: "bg-black/50 dark:bg-white/50",
     border: "border-black/20 dark:border-white/20",
-    bg: "hover:bg-black/[0.05] dark:hover:bg-white/[0.05]",
+    bg: "bg-white dark:bg-[#0e0e14] hover:bg-neutral-100 dark:hover:bg-[#1a1a1f]",
   },
   {
     label: "LEETCODE",
@@ -519,7 +452,7 @@ const socials = [
     color: "text-orange-500 dark:text-orange-400",
     dot: "bg-orange-500 dark:bg-orange-400",
     border: "border-orange-500/30 dark:border-orange-400/25",
-    bg: "hover:bg-orange-500/[0.07] dark:hover:bg-orange-400/[0.07]",
+    bg: "bg-white dark:bg-[#0e0e14] hover:bg-orange-50 dark:hover:bg-[#241608]",
   },
   {
     label: "CODECHEF",
@@ -527,7 +460,7 @@ const socials = [
     color: "text-yellow-600 dark:text-yellow-400",
     dot: "bg-yellow-600 dark:bg-yellow-400",
     border: "border-yellow-600/30 dark:border-yellow-400/25",
-    bg: "hover:bg-yellow-500/[0.07] dark:hover:bg-yellow-400/[0.07]",
+    bg: "bg-white dark:bg-[#0e0e14] hover:bg-yellow-50 dark:hover:bg-[#221c06]",
   },
 ];
 

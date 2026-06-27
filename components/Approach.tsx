@@ -194,8 +194,8 @@ const Approach = () => {
               <RevealText text="MY" delay={0.18} />
             </span>{" "}
             <span
-              className="text-black/25 dark:text-white/25"
-              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+              className="text-black/70 dark:text-white"
+              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
             >
               <RevealText text="APPROACH" delay={0.3} />
             </span>

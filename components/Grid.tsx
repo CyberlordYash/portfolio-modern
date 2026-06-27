@@ -141,7 +141,20 @@ const Grid = () => {
       id="about"
       className="w-full py-16 md:py-24 bg-[#ffffff] dark:bg-transparent transition-colors duration-500"
     >
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
+      <div className="relative mx-auto max-w-5xl px-4 md:px-6">
+
+        {/* Side rails — thin accent guides that frame the centered module and
+            let the living background breathe on either flank */}
+        <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
+          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+        </div>
 
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
@@ -165,12 +178,12 @@ const Grid = () => {
               letterSpacing: "-0.025em",
             }}
           >
-            <span className="text-black dark:text-white">
+            <span className="text-black dark:text-white/90">
               <RevealText text="ABOUT" delay={0.2} />
             </span>{" "}
             <span
-              className="text-black/25 dark:text-white/25"
-              style={{ WebkitTextStrokeWidth: "1.5px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
+              className="text-black/70 dark:text-white/85"
+              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
             >
               <RevealText text="ME" delay={0.32} />
             </span>
@@ -187,10 +200,10 @@ const Grid = () => {
         </div>
 
         {/* Bento grid — gap-px hairline separators */}
-        <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-1 gap-px md:grid-cols-6 bg-black/[0.09] dark:bg-white/[0.09]">
+        <div className="grid auto-rows-[minmax(118px,auto)] grid-cols-1 gap-px md:grid-cols-6 bg-black/[0.09] dark:bg-white/[0.09]">
 
           {/* ── Card 1: Bio ── */}
-          <Cell delay={0.05} className="min-h-[320px] md:col-span-4 md:row-span-2">
+          <Cell delay={0.05} className="min-h-[268px] md:col-span-4 md:row-span-2">
             {/* Cyan top strip */}
             <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-400 z-10" />
             {/* Corner crosses */}
