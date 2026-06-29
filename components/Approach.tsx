@@ -16,12 +16,12 @@ const colorMap: Record<PhaseColor, {
   canvasColors: number[][];
 }> = {
   cyan: {
-    strip: "bg-cyan-400",
-    led: "bg-cyan-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(34,211,238,0.7)]",
-    label: "text-cyan-500 dark:text-cyan-400",
-    canvasBg: "bg-cyan-950",
-    canvasColors: [[34, 211, 238]],
+    strip: "bg-green-400",
+    led: "bg-green-400",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(74,222,128,0.7)]",
+    label: "text-green-500 dark:text-green-400",
+    canvasBg: "bg-green-950",
+    canvasColors: [[74, 222, 128]],
   },
   emerald: {
     strip: "bg-emerald-400",
@@ -32,20 +32,20 @@ const colorMap: Record<PhaseColor, {
     canvasColors: [[52, 211, 153]],
   },
   violet: {
-    strip: "bg-violet-400",
-    led: "bg-violet-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(167,139,250,0.7)]",
-    label: "text-violet-500 dark:text-violet-400",
-    canvasBg: "bg-violet-950",
-    canvasColors: [[167, 139, 250]],
+    strip: "bg-teal-400",
+    led: "bg-teal-400",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(45,212,191,0.7)]",
+    label: "text-teal-500 dark:text-teal-400",
+    canvasBg: "bg-teal-950",
+    canvasColors: [[45, 212, 191]],
   },
   amber: {
-    strip: "bg-amber-400",
-    led: "bg-amber-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(251,191,36,0.7)]",
-    label: "text-amber-500 dark:text-amber-400",
-    canvasBg: "bg-amber-950",
-    canvasColors: [[251, 191, 36]],
+    strip: "bg-lime-400",
+    led: "bg-lime-400",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(163,230,53,0.7)]",
+    label: "text-lime-500 dark:text-lime-400",
+    canvasBg: "bg-lime-950",
+    canvasColors: [[163, 230, 53]],
   },
 };
 

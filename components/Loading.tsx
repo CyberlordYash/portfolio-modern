@@ -30,7 +30,7 @@ const Loading = () => {
       <div className="w-full max-w-sm px-6">
         {/* Terminal Header */}
         <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-2">
-          <IconTerminal2 size={18} className="text-blue-500" />
+          <IconTerminal2 size={18} className="text-green-500" />
           <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">
             System Boot Sequence
           </span>
@@ -72,7 +72,7 @@ const Loading = () => {
                   initial={{ x: "-100%" }}
                   animate={{ x: "0%" }}
                   transition={{ duration: 1, ease: "easeInOut" }}
-                  className="h-full w-full bg-blue-600"
+                  className="h-full w-full bg-green-600"
                 />
               </div>
             </motion.div>

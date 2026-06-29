@@ -84,13 +84,20 @@ const FRAG = /* glsl */ `
 
     float hN = clamp(vH / 50.0, 0.0, 1.0);
     /* kept subtle so floating UI text stays legible over the terrain */
-    float intensity = minor * 0.26 + major * (0.42 + hN * 0.26);
+    float minorI = minor * 0.26;
+    float majorI = major * (0.42 + hN * 0.26);
 
-    /* a whisper of light along the flight corridor floor */
-    float river = (1.0 - smoothstep(2.0, 16.0, abs(vWorld.x))) * (1.0 - vEdge);
-    intensity += river * 0.12;
+    /* white fine contours; index contours tinted trading-green (#22c55e),
+       reading like moving-average lines drawn across the range */
+    vec3 col = vec3(minorI);
+    col += majorI * mix(vec3(1.0), vec3(0.18, 0.80, 0.40), 0.55);
 
-    gl_FragColor = vec4(vec3(intensity), 1.0);
+    /* a faint green whisper of light along the flight corridor floor —
+       kept narrow and dim so it reads as an accent, not a spotlight */
+    float river = (1.0 - smoothstep(2.0, 8.0, abs(vWorld.x))) * (1.0 - vEdge);
+    col += river * vec3(0.035, 0.13, 0.07);
+
+    gl_FragColor = vec4(col, 1.0);
     #include <fog_fragment>
   }
 `;

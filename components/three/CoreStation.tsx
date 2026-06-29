@@ -24,12 +24,12 @@ export default function CoreStation() {
     <group position={[0, 12, -525]}>
       <mesh ref={core}>
         <icosahedronGeometry args={[4.2, 2]} />
-        <meshBasicMaterial color="#f4f4f4" />
+        <meshBasicMaterial color="#34d77f" />
       </mesh>
 
       <mesh ref={ring1} rotation={[Math.PI / 2.4, 0, 0]}>
         <torusGeometry args={[10, 0.18, 8, 96]} />
-        <meshBasicMaterial color="#d0d0d0" transparent opacity={0.8} />
+        <meshBasicMaterial color="#22c55e" transparent opacity={0.85} />
       </mesh>
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
         <torusGeometry args={[15, 0.14, 8, 96]} />
@@ -44,7 +44,7 @@ export default function CoreStation() {
       <mesh position={[0, 60, 0]}>
         <cylinderGeometry args={[0.7, 2.4, 120, 12, 1, true]} />
         <meshBasicMaterial
-          color="#d0d0d0"
+          color="#22c55e"
           transparent
           opacity={0.16}
           blending={THREE.AdditiveBlending}

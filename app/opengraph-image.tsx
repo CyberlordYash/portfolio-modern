@@ -25,7 +25,7 @@ export default async function Image() {
           <div style={{ fontSize: 52, fontWeight: 700, color: "#ffffff", lineHeight: 1.1 }}>
             Yash Sachan
           </div>
-          <div style={{ fontSize: 24, color: "#a78bfa", fontWeight: 500 }}>
+          <div style={{ fontSize: 24, color: "#22c55e", fontWeight: 500 }}>
             Software Engineer · Backend & Systems
           </div>
           <div style={{ fontSize: 20, color: "#9ca3af", lineHeight: 1.6 }}>

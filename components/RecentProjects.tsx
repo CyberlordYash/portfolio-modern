@@ -35,13 +35,13 @@ const meta: Record<number, {
 }> = {
   9: {
     num: "01", category: "HFT · TRADING",
-    accent: "text-cyan-600 dark:text-cyan-400",
-    border: "border-cyan-200", borderDark: "dark:border-cyan-500/20",
-    badgeBg: "bg-cyan-100 text-cyan-700", badgeBgDark: "dark:bg-cyan-950/80 dark:text-cyan-300",
-    headerBg: "bg-cyan-50", headerBgDark: "dark:bg-cyan-950/40",
-    strip: "from-cyan-500 to-teal-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(6,182,212,0.18)]",
-    ctaFrom: "from-cyan-500", ctaTo: "to-teal-400",
+    accent: "text-green-600 dark:text-green-400",
+    border: "border-green-200", borderDark: "dark:border-green-500/20",
+    badgeBg: "bg-green-100 text-green-700", badgeBgDark: "dark:bg-green-950/80 dark:text-green-300",
+    headerBg: "bg-green-50", headerBgDark: "dark:bg-green-950/40",
+    strip: "from-green-500 to-emerald-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(34,197,94,0.20)]",
+    ctaFrom: "from-green-500", ctaTo: "to-emerald-400",
   },
   8: {
     num: "02", category: "SECURITY",
@@ -55,13 +55,13 @@ const meta: Record<number, {
   },
   1: {
     num: "03", category: "FULLSTACK",
-    accent: "text-blue-600 dark:text-blue-400",
-    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
-    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
-    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
-    strip: "from-blue-500 to-indigo-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.18)]",
-    ctaFrom: "from-blue-500", ctaTo: "to-indigo-400",
+    accent: "text-teal-600 dark:text-teal-400",
+    border: "border-teal-200", borderDark: "dark:border-teal-500/20",
+    badgeBg: "bg-teal-100 text-teal-700", badgeBgDark: "dark:bg-teal-950/80 dark:text-teal-300",
+    headerBg: "bg-teal-50", headerBgDark: "dark:bg-teal-950/40",
+    strip: "from-teal-500 to-emerald-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(20,184,166,0.18)]",
+    ctaFrom: "from-teal-500", ctaTo: "to-emerald-400",
   },
   2: {
     num: "04", category: "REAL-TIME",
@@ -390,7 +390,7 @@ const RecentProjects = () => {
       {/* spotlight — dark mode accent */}
       <Spotlight
         className="-top-20 left-0 md:-left-10 md:-top-10 opacity-30 dark:opacity-50"
-        fill="cyan"
+        fill="#22c55e"
       />
 
       {/* subtle grid lines matching hero */}

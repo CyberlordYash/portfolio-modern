@@ -301,7 +301,7 @@ const Skills = () => {
         </div>
         <div className="flex items-center gap-2.5">
           <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-black/40 dark:text-white/30">AVG</span>
-          <span className="font-mono text-[10px] font-bold tabular-nums text-cyan-600 dark:text-cyan-400">{avg}%</span>
+          <span className="font-mono text-[10px] font-bold tabular-nums text-green-600 dark:text-green-400">{avg}%</span>
           <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
           <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/50 dark:text-white/50">{TECHS.length} NODES</span>
         </div>
@@ -334,8 +334,8 @@ const Skills = () => {
       <div className="flex items-center justify-between px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-1.5 w-1.5 shrink-0">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-500/50" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black dark:bg-cyan-400" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500/50" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black dark:bg-green-400" />
           </span>
           <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/65 dark:text-white/65">
             {active === "all" ? "ALL NODES ONLINE" : `${CAT_MAP[active].label} ISOLATED`}
@@ -343,7 +343,7 @@ const Skills = () => {
         </div>
         <div className="hidden md:flex items-end gap-[2px] h-4">
           {[...Array(20)].map((_, i) => (
-            <motion.div key={i} className="w-[3px] bg-black dark:bg-cyan-400/70 rounded-sm"
+            <motion.div key={i} className="w-[3px] bg-black dark:bg-green-400/70 rounded-sm"
               animate={{ height: ["3px", `${6 + Math.sin(i) * 5}px`, "3px"] }}
               transition={{ duration: 1 + (i % 3) * 0.3, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }} />
           ))}

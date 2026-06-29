@@ -75,8 +75,8 @@ const Hero = () => {
         }
         @keyframes glitch-border-kf {
           0%,80%,100% { box-shadow:none; }
-          81%,85% { box-shadow:inset 0 0 0 1px rgba(0,220,255,.9); }
-          86%,89% { box-shadow:inset 0 0 0 1px rgba(255,20,120,.8); }
+          81%,85% { box-shadow:inset 0 0 0 1px rgba(34,197,94,.9); }
+          86%,89% { box-shadow:inset 0 0 0 1px rgba(74,222,128,.7); }
           90%,94% { box-shadow:none; }
         }
         .glitch-box { position:relative; overflow:hidden; }
@@ -84,8 +84,8 @@ const Hero = () => {
           display:block; position:absolute; inset:0; pointer-events:none; opacity:0; z-index:20;
           will-change:transform,opacity,clip-path;
         }
-        .glitch-slice-1 { background:rgba(0,220,255,.22); }
-        .glitch-slice-2 { background:rgba(255,20,120,.18); }
+        .glitch-slice-1 { background:rgba(34,197,94,.22); }
+        .glitch-slice-2 { background:rgba(74,222,128,.16); }
         .glitch-box:hover {
           animation:glitch-jitter 1.1s steps(1) infinite,glitch-border-kf 1.1s steps(1) infinite;
           transition:none !important;
@@ -133,6 +133,10 @@ const Hero = () => {
           </span>
           <br />
           <span className="text-black dark:text-white">SACHAN</span>
+          <span
+            className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#16a34a] dark:bg-[#22c55e]"
+            style={{ boxShadow: "0 0 14px rgba(34,197,94,0.55)" }}
+          />
           <span className="mt-3 block font-mono text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.45em] text-black/75 dark:text-white/85">
             Software Engineer
           </span>
@@ -227,6 +231,10 @@ const Hero = () => {
           </span>
           <br />
           <span className="text-black dark:text-white">SACHAN</span>
+          <span
+            className="mt-4 mb-1 block h-[3px] w-28 bg-[#16a34a] dark:bg-[#22c55e]"
+            style={{ boxShadow: "0 0 14px rgba(34,197,94,0.55)" }}
+          />
           <span className="mt-3 block font-mono text-[16px] font-medium uppercase tracking-[0.5em] text-black/75 dark:text-white/85">
             Software Engineer
           </span>

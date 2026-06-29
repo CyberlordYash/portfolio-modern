@@ -107,19 +107,19 @@ const Footer = () => {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative flex flex-col border border-black/12 dark:border-white/12 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md overflow-hidden"
           >
-            <span className="absolute inset-x-0 top-0 h-[2px] bg-indigo-400 z-10" />
-            <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2 border-indigo-400" />
-            <span className="pointer-events-none absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2 border-indigo-400" />
+            <span className="absolute inset-x-0 top-0 h-[2px] bg-green-400 z-10" />
+            <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2 border-green-400" />
+            <span className="pointer-events-none absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2 border-green-400" />
 
             <div className="flex items-center justify-between px-5 py-3 border-b border-black/10 dark:border-white/10">
               <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/50 dark:text-white/55">DIRECT_LINE</span>
-              <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-indigo-500 dark:text-indigo-300">PRIMARY</span>
+              <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-green-600 dark:text-green-300">PRIMARY</span>
             </div>
 
             <div className="flex flex-1 flex-col p-5">
               <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40 mb-2">EMAIL</span>
               <div className="flex items-center gap-2 mb-6">
-                <Mail size={15} className="shrink-0 text-indigo-500 dark:text-indigo-300" />
+                <Mail size={15} className="shrink-0 text-green-600 dark:text-green-300" />
                 <span className="font-mono text-[13px] md:text-[14px] text-black/85 dark:text-white/90 break-all select-all">{EMAIL}</span>
               </div>
 
@@ -195,7 +195,7 @@ const Footer = () => {
                 href={profile.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md text-black/55 dark:text-white/65 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all duration-150"
+                className="flex h-10 w-10 items-center justify-center border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md text-black/55 dark:text-white/65 hover:border-green-500/60 dark:hover:border-green-400/60 hover:text-green-600 dark:hover:text-green-300 transition-all duration-150"
               >
                 <Icon size={16} />
               </a>

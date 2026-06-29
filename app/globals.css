@@ -20,11 +20,11 @@ body {
 /* ── Floating Nav: glitch text ──────────────────────────────── */
 .glitch-text {
   position: relative;
-  color: #3b82f6;
+  color: #16a34a;
   display: inline-block;
 }
 .dark .glitch-text {
-  color: #22d3ee;
+  color: #22c55e;
 }
 .glitch-text::before,
 .glitch-text::after {
@@ -34,12 +34,12 @@ body {
   opacity: 0;
 }
 .glitch-text::before {
-  color: #a855f7;
+  color: #4ade80;
   clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
   animation: glitch-before 4s infinite steps(1);
 }
 .glitch-text::after {
-  color: #06b6d4;
+  color: #15803d;
   clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
   animation: glitch-after 4s infinite steps(1);
 }
@@ -176,23 +176,23 @@ body {
 
 /* ── Gradient heading utilities — light mode: plain text; dark mode: gradient ── */
 .dark .heading-gradient-dark {
-  background-image: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.88) 60%, rgba(59,130,246,0.65) 100%);
+  background-image: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.88) 60%, rgba(34,197,94,0.70) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .dark .heading-gradient-blue {
-  background-image: linear-gradient(135deg, #ffffff 0%, #bfdbfe 55%, #60a5fa 100%);
+  background-image: linear-gradient(135deg, #ffffff 0%, #bbf7d0 55%, #22c55e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .dark .xbox-bg {
-  background: radial-gradient(ellipse 120% 70% at 10% 5%, #1a2d5a 0%, #07111c 45%, #000005 100%);
+  background: radial-gradient(ellipse 120% 70% at 10% 5%, #0c2a18 0%, #07140d 45%, #000200 100%);
 }
 .dark .heading-gradient-multicolor {
-  background-image: linear-gradient(135deg, #22d3ee 0%, #a78bfa 50%, #fbbf24 100%);
+  background-image: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #15803d 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -718,7 +718,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #2196f3;
+  background-color: #22c55e;
   -webkit-transition: 0.4s;
   transition: 0.4s;
   z-index: 0;
@@ -742,7 +742,7 @@ body {
 }
 
 #input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px #22c55e;
 }
 
 #input:checked + .slider .sun-moon {
@@ -1045,8 +1045,8 @@ body {
   left: 0;
   width: var(--size-orbe);
   height: var(--size-orbe);
-  background-color: #3a9fe3;
-  box-shadow: 0px 0px 20px 2px #3a6de3;
+  background-color: #22c55e;
+  box-shadow: 0px 0px 20px 2px #16a34a;
   border-radius: 50%;
 }
 

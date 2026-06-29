@@ -70,13 +70,13 @@ export const FollowPointer = ({
   title?: string | React.ReactNode;
 }) => {
   const colors = [
-    "var(--sky-500)",
-    "var(--neutral-500)",
-    "var(--teal-500)",
     "var(--green-500)",
-    "var(--blue-500)",
-    "var(--red-500)",
-    "var(--yellow-500)",
+    "var(--emerald-500)",
+    "var(--teal-500)",
+    "var(--green-400)",
+    "var(--lime-500)",
+    "var(--emerald-400)",
+    "var(--green-600)",
   ];
   return (
     <motion.div
@@ -104,7 +104,7 @@ export const FollowPointer = ({
         fill="currentColor"
         strokeWidth="1"
         viewBox="0 0 16 16"
-        className="h-6 w-6 text-sky-500 transform -rotate-[70deg] -translate-x-[12px] -translate-y-[10px] stroke-sky-600"
+        className="h-6 w-6 text-green-500 transform -rotate-[70deg] -translate-x-[12px] -translate-y-[10px] stroke-green-600"
         height="1em"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"

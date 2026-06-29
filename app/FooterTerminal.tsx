@@ -247,20 +247,20 @@ const FooterTerminal = () => {
 
   const cls = (c: string) => {
     switch (c) {
-      case "cmd":       return "text-blue-400 font-semibold";
+      case "cmd":       return "text-green-400 font-semibold";
       case "ok":        return "text-emerald-400";
       case "err":       return "text-red-400";
-      case "info":      return "text-sky-300";
+      case "info":      return "text-emerald-300";
       case "data":      return "text-neutral-300";
       case "dim":       return "text-neutral-600";
       case "sep":       return "text-neutral-700";
-      case "ready":     return "text-blue-400 font-semibold";
-      case "box":       return "text-blue-300/40";
-      case "box-hi":    return "text-blue-300/60";
-      case "box-title": return "text-blue-200 font-bold";
+      case "ready":     return "text-green-400 font-semibold";
+      case "box":       return "text-green-300/40";
+      case "box-hi":    return "text-green-300/60";
+      case "box-title": return "text-green-200 font-bold";
       case "ls":        return "text-neutral-300";
-      case "nf-art":    return "text-blue-500/70";
-      case "nf-title":  return "text-cyan-300 font-bold";
+      case "nf-art":    return "text-green-500/70";
+      case "nf-title":  return "text-emerald-300 font-bold";
       case "nf":        return "text-neutral-400";
       default:          return "text-neutral-400";
     }
@@ -278,8 +278,8 @@ const FooterTerminal = () => {
       <div
         className={cn(
           "relative flex flex-col overflow-hidden border transition-all duration-300",
-          "bg-[#05080f] border-blue-500/20",
-          "shadow-[0_0_80px_-20px_rgba(59,130,246,0.2),0_0_20px_-5px_rgba(59,130,246,0.05)]",
+          "bg-[#040a06] border-green-500/20",
+          "shadow-[0_0_80px_-20px_rgba(34,197,94,0.22),0_0_20px_-5px_rgba(34,197,94,0.06)]",
           full ? "h-screen rounded-none" : "h-[460px] md:h-[580px] rounded-xl",
         )}
       >
@@ -292,11 +292,11 @@ const FooterTerminal = () => {
           }}
         />
 
-        {/* Blue edge glow */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+        {/* Green edge glow */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent" />
 
         {/* Header */}
-        <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-blue-500/10 bg-[#030710] px-4 py-2.5">
+        <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-green-500/10 bg-[#030a06] px-4 py-2.5">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <span className="block h-3 w-3 rounded-full bg-[#ff5f56]" />
@@ -304,7 +304,7 @@ const FooterTerminal = () => {
               <span className="block h-3 w-3 rounded-full bg-[#27c93f]" />
             </div>
             <div className="hidden sm:flex items-center gap-2 text-[10px]">
-              <span className="text-blue-400/60 uppercase tracking-[0.2em]">
+              <span className="text-green-400/60 uppercase tracking-[0.2em]">
                 {USR}@{HOST}
               </span>
               <span className="text-neutral-700">—</span>
@@ -315,7 +315,7 @@ const FooterTerminal = () => {
             <span className="tabular-nums text-[10px] text-neutral-700">{time}</span>
             <button
               onClick={() => setFull(f => !f)}
-              className="text-neutral-700 transition-colors hover:text-blue-400"
+              className="text-neutral-700 transition-colors hover:text-green-400"
               aria-label="Toggle fullscreen"
             >
               {full ? (
@@ -361,7 +361,7 @@ const FooterTerminal = () => {
               onSubmit={e => { e.preventDefault(); run(input); }}
               className="mt-1.5 flex items-center"
             >
-              <span className="shrink-0 text-[11px] font-semibold text-blue-500 md:text-[13px]">
+              <span className="shrink-0 text-[11px] font-semibold text-green-500 md:text-[13px]">
                 {USR}@{HOST}
               </span>
               <span className="mx-1 shrink-0 text-[11px] text-neutral-600 md:text-[13px]">~</span>
@@ -372,7 +372,7 @@ const FooterTerminal = () => {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent font-mono text-[11px] text-white caret-blue-400 outline-none md:text-[13px]"
+                className="flex-1 bg-transparent font-mono text-[11px] text-white caret-green-400 outline-none md:text-[13px]"
                 spellCheck={false}
                 autoComplete="off"
                 autoFocus
@@ -382,7 +382,7 @@ const FooterTerminal = () => {
         </div>
 
         {/* Status bar */}
-        <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-blue-500/10 bg-[#030710] px-4 py-1.5 text-[9px] text-neutral-700">
+        <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-green-500/10 bg-[#020704] px-4 py-1.5 text-[9px] text-neutral-700">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
@@ -391,7 +391,7 @@ const FooterTerminal = () => {
             <span>GUARDIAN · 2200+</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="uppercase tracking-widest text-blue-500/30">bash</span>
+            <span className="uppercase tracking-widest text-green-500/30">bash</span>
             <span>{history.length} ln</span>
           </div>
         </div>

@@ -221,7 +221,7 @@ function HudFrame() {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
+    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-green-500/30">
 
       {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
       <MarketWorld />

@@ -20,7 +20,7 @@ export const TextGenerateEffect = ({
               key={`${word}-${idx}`}
               className={
                 idx > 1
-                  ? "text-blue-800 dark:text-blue-300"
+                  ? "text-green-700 dark:text-green-300"
                   : "text-black dark:text-white"
               }
             >

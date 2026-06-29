@@ -14,10 +14,10 @@ import Certificate5 from "../public/aws.jpg";
 
 const certs = [
   { num: "01", title: "Multithreading with Go (Golang)", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-711ced98-8cc0-4890-b170-370d51230530/", image: Certificate1, accent: "#14b8a6", accentRgb: "20,184,166" },
-  { num: "02", title: "Web Development Bootcamp",        platform: "Udemy", link: "https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/",  image: Certificate2, accent: "#8b5cf6", accentRgb: "139,92,246"  },
-  { num: "03", title: "Data Structures & Algorithms",    platform: "Udemy", link: "https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/",  image: Certificate3, accent: "#06b6d4", accentRgb: "6,182,212"   },
+  { num: "02", title: "Web Development Bootcamp",        platform: "Udemy", link: "https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/",  image: Certificate2, accent: "#4ade80", accentRgb: "74,222,128"  },
+  { num: "03", title: "Data Structures & Algorithms",    platform: "Udemy", link: "https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/",  image: Certificate3, accent: "#22c55e", accentRgb: "34,197,94"   },
   { num: "04", title: "Backend Engineering with Node.js", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-e1548ade-aca5-40b4-a66c-d17e7230dbcc/", image: Certificate4, accent: "#10b981", accentRgb: "16,185,129"  },
-  { num: "05", title: "AWS Cloud Practitioner",          platform: "AWS Credly", link: "https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq", image: Certificate5, accent: "#f59e0b", accentRgb: "245,158,11" },
+  { num: "05", title: "AWS Cloud Practitioner",          platform: "AWS Credly", link: "https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq", image: Certificate5, accent: "#84cc16", accentRgb: "132,204,22" },
 ];
 
 const N = certs.length;

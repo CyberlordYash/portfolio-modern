@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const CATEGORIES = [
-  { id: "lang",  label: "Languages",     color: "#3b82f6" },
-  { id: "fe",    label: "Frontend",      color: "#6366f1" },
-  { id: "be",    label: "Backend",       color: "#22d3ee" },
+  { id: "lang",  label: "Languages",     color: "#22c55e" },
+  { id: "fe",    label: "Frontend",      color: "#34d399" },
+  { id: "be",    label: "Backend",       color: "#14b8a6" },
   { id: "db",    label: "Databases",     color: "#10b981" },
   { id: "infra", label: "Infra",         color: "#a855f7" },
   { id: "msg",   label: "Messaging",     color: "#ec4899" },
@@ -152,7 +152,7 @@ export default function SkillsGraph() {
       // Links
       const linkEl = g.append("g").selectAll<SVGLineElement, GLink>("line")
         .data(links).join("line")
-        .attr("stroke", d => d.type === "hub" ? "rgba(59,130,246,0.13)" : "rgba(255,255,255,0.07)")
+        .attr("stroke", d => d.type === "hub" ? "rgba(34,197,94,0.14)" : "rgba(255,255,255,0.07)")
         .attr("stroke-width", d => d.type === "hub" ? 1 : 0.75)
         .attr("stroke-dasharray", d => d.type === "cross" ? "3,5" : "none");
 
@@ -198,7 +198,7 @@ export default function SkillsGraph() {
         .text(d => d.label)
         .attr("text-anchor", "middle")
         .attr("dy", d => d.isHub ? "0.35em" : d.r + 13)
-        .attr("fill", d => d.isHub ? d.color : "#93c5fd")
+        .attr("fill", d => d.isHub ? d.color : "#86efac")
         .attr("font-size", d => d.isHub ? "9.5px" : "8.5px")
         .attr("font-family", "monospace")
         .attr("font-weight", d => d.isHub ? "700" : "400")
@@ -217,7 +217,7 @@ export default function SkillsGraph() {
             .attr("stroke", (l: GLink) => {
               const s = (l.source as GNode).id ?? l.source as string;
               const t = (l.target as GNode).id ?? l.target as string;
-              return (s === d.id || t === d.id) ? d.color : "rgba(59,130,246,0.03)";
+              return (s === d.id || t === d.id) ? d.color : "rgba(34,197,94,0.03)";
             })
             .attr("stroke-width", (l: GLink) => {
               const s = (l.source as GNode).id ?? l.source as string;
@@ -238,7 +238,7 @@ export default function SkillsGraph() {
         .on("mouseout", () => {
           nodeEl.transition().duration(180).style("opacity", "1");
           linkEl.transition().duration(180)
-            .attr("stroke", (l: GLink) => l.type === "hub" ? "rgba(59,130,246,0.13)" : "rgba(255,255,255,0.07)")
+            .attr("stroke", (l: GLink) => l.type === "hub" ? "rgba(34,197,94,0.14)" : "rgba(255,255,255,0.07)")
             .attr("stroke-width", (l: GLink) => l.type === "hub" ? 1 : 0.75);
           setTooltip(null);
         });
@@ -275,7 +275,7 @@ export default function SkillsGraph() {
     <div className="max-w-5xl mx-auto mt-10 md:mt-20 px-2 md:px-4">
       {/* Header */}
       <div className="flex flex-col items-center mb-6">
-        <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-blue-400/50 mb-3">
+        <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-green-400/50 mb-3">
           TECH_ECOSYSTEM
         </span>
         <h2
@@ -288,7 +288,7 @@ export default function SkillsGraph() {
         >
           Technical Ecosystem
         </h2>
-        <p className="mt-2 font-mono text-[10px] text-blue-300/40 tracking-wider">
+        <p className="mt-2 font-mono text-[10px] text-green-300/40 tracking-wider">
           drag · scroll to zoom · hover to explore
         </p>
 
@@ -310,14 +310,14 @@ export default function SkillsGraph() {
       {/* Graph */}
       <div
         ref={containerRef}
-        className="relative w-full h-[480px] md:h-[580px] bg-[#1c1c23] border border-blue-500/20 rounded-xl overflow-hidden shadow-[0_0_80px_-20px_rgba(59,130,246,0.18),0_0_20px_-5px_rgba(59,130,246,0.06)]"
+        className="relative w-full h-[480px] md:h-[580px] bg-[#0d130f] border border-green-500/20 rounded-xl overflow-hidden shadow-[0_0_80px_-20px_rgba(34,197,94,0.20),0_0_20px_-5px_rgba(34,197,94,0.07)]"
       >
         <svg ref={svgRef} className="w-full h-full select-none" />
 
         {/* Tooltip */}
         {tooltip && (
           <div
-            className="pointer-events-none absolute z-10 px-3 py-2 rounded-lg bg-[#1a1b22] border border-blue-500/30 shadow-xl backdrop-blur-sm"
+            className="pointer-events-none absolute z-10 px-3 py-2 rounded-lg bg-[#11160f] border border-green-500/30 shadow-xl backdrop-blur-sm"
             style={{
               left: tooltip.x + 16,
               top: tooltip.y - 12,
@@ -331,7 +331,7 @@ export default function SkillsGraph() {
               {tooltip.label}
             </div>
             {!tooltip.isHub && (
-              <div className="font-mono text-[9px] text-blue-400/60 mt-0.5">
+              <div className="font-mono text-[9px] text-green-400/60 mt-0.5">
                 {catLabel}
               </div>
             )}
@@ -339,7 +339,7 @@ export default function SkillsGraph() {
         )}
 
         {/* Corner hint */}
-        <div className="absolute bottom-3 right-4 font-mono text-[8px] text-blue-500/15 uppercase tracking-widest pointer-events-none">
+        <div className="absolute bottom-3 right-4 font-mono text-[8px] text-green-500/15 uppercase tracking-widest pointer-events-none">
           25 technologies
         </div>
       </div>

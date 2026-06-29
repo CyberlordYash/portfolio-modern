@@ -74,8 +74,8 @@ const JOBS = [
     location: "Bengaluru",
     period: "JUL 2025 — PRESENT",
     status: "ACTIVE" as const,
-    color: "#818cf8",
-    colorRgb: "129,140,248",
+    color: "#4ade80",
+    colorRgb: "74,222,128",
     image: "/nubra.webp",
     imageAlt: "Nubra",
     summary:
@@ -105,8 +105,8 @@ const JOBS = [
     location: "Noida-NCR",
     period: "JAN 2025 — JUN 2025",
     status: "COMPLETED" as const,
-    color: "#22d3ee",
-    colorRgb: "34,211,238",
+    color: "#22c55e",
+    colorRgb: "34,197,94",
     image: "/onefinnet.png",
     imageAlt: "OneFinnet",
     summary:
@@ -158,8 +158,8 @@ const ACHIEVEMENTS = [
   {
     badge: "GUARDIAN",
     title: "Competitive Programming",
-    color: "#fbbf24",
-    colorRgb: "251,191,36",
+    color: "#14b8a6",
+    colorRgb: "20,184,166",
     points: [
       "LeetCode Guardian — Rating 2200+",
       "CodeChef 4★ — Rating 1850+",
@@ -169,8 +169,8 @@ const ACHIEVEMENTS = [
   {
     badge: "AIR 193",
     title: "NDA SSB Recommended",
-    color: "#818cf8",
-    colorRgb: "129,140,248",
+    color: "#16a34a",
+    colorRgb: "22,163,74",
     points: [
       "Cleared NDA SSB — All India Rank 193",
       "Leadership under high-pressure scenarios",
@@ -366,7 +366,7 @@ const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> 
         className="absolute top-0 left-0 right-0 h-full origin-top rounded-full"
         style={{
           scaleY,
-          background: "linear-gradient(to bottom, #818cf8, #22d3ee 50%, #34d399)",
+          background: "linear-gradient(to bottom, #4ade80, #22c55e 50%, #16a34a)",
           boxShadow: "0 0 16px rgba(129,140,248,0.9), 0 0 6px rgba(34,211,238,0.8)",
         }}
       />
@@ -387,7 +387,7 @@ export default function Experience() {
         {/* ── header (centered) ── */}
         <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
           <FadeReveal delay={0} className="flex items-center gap-3 mb-6">
-            <span className="w-1.5 h-1.5 bg-indigo-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-green-400 animate-pulse" />
             <RevealChars
               text="SYS.CAREER_LOG"
               className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/50"
