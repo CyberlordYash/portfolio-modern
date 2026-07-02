@@ -125,8 +125,9 @@ export default function RootLayout({
                 description:
                   "Software Engineer focused on Backend, HFT, and distributed systems.",
                 sameAs: [
-                  "https://github.com/yashsachan",
-                  "https://linkedin.com/in/yashsachan",
+                  "https://github.com/cyberlordyash",
+                  "https://www.linkedin.com/in/yashsachan321/",
+                  "https://leetcode.com/u/yashsachan/",
                 ],
               }),
             }}

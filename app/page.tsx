@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 
@@ -20,10 +20,11 @@ const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
 const MarketWorld = dynamic(() => import("@/components/three/MarketWorld"), { ssr: false });
 
 const links = [
-  { label: "Home",       href: "#home",       desktopOnly: false },
-  { label: "About",      href: "#skills",     desktopOnly: false },
-  { label: "Experience", href: "#experience", desktopOnly: true  },
-  { label: "Projects",   href: "#projects",   desktopOnly: false },
+  { n: "01", label: "Home",       href: "#home",       desktopOnly: false },
+  { n: "02", label: "Experience", href: "#experience", desktopOnly: true  },
+  { n: "03", label: "About",      href: "#skills",     desktopOnly: false },
+  { n: "04", label: "Projects",   href: "#projects",   desktopOnly: false },
+  { n: "05", label: "Contact",    href: "#contact",    desktopOnly: true  },
 ];
 
 // Shared entrance animation for all non-hero sections.
@@ -61,9 +62,14 @@ function TopNav() {
     <nav className="fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
       <div
         id="nav-pill-box"
-        className="relative flex items-center gap-0.5 rounded-full p-1 backdrop-blur-md"
-        style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
+        className="relative flex items-center gap-0.5 rounded-full border border-white/10 bg-black/60 p-1 pl-3.5 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
+        {/* system-online beacon */}
+        <span className="relative mr-2.5 flex h-1.5 w-1.5" aria-hidden>
+          <span className="absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-50 animate-ping" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e] shadow-[0_0_6px_rgba(34,197,94,0.9)]" />
+        </span>
+
         {links.map((link) => {
           const id = link.href.replace("#", "");
           const isActive = active === id;
@@ -76,20 +82,28 @@ function TopNav() {
                 document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
               }}
               className={cn(
-                "relative px-3 lg:px-4 py-1.5 rounded-full font-medium text-[11px] lg:text-[12px] transition-colors duration-300 z-10 whitespace-nowrap",
-                link.desktopOnly && "hidden md:block",
-                isActive
-                  ? "text-black dark:text-black"
-                  : "text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white",
+                "group relative flex items-baseline gap-1.5 px-3 lg:px-3.5 py-1.5 rounded-full font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.14em] transition-colors duration-300 z-10 whitespace-nowrap",
+                link.desktopOnly && "hidden md:flex",
+                isActive ? "text-black" : "text-white/55 hover:text-white",
               )}
             >
               {isActive && (
                 <motion.span
                   layoutId="nav-pill"
-                  className="absolute inset-0 -z-10 rounded-full bg-white"
+                  className="absolute inset-0 -z-10 rounded-full bg-white shadow-[0_1px_10px_rgba(34,197,94,0.28)]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
+              <span
+                className={cn(
+                  "text-[7px] tracking-[0.05em] transition-colors duration-300",
+                  isActive
+                    ? "font-bold text-[#15803d]"
+                    : "text-white/25 group-hover:text-[#22c55e]/80",
+                )}
+              >
+                {link.n}
+              </span>
               {link.label}
             </a>
           );
@@ -142,6 +156,9 @@ function buildFramePath(
 
 function LocalTime() {
   const [time, setTime] = useState("--:--");
+  // Camera flight altitude — mirrors the WebGL rig's descent (y: 88 → 13)
+  const [alt, setAlt] = useState(88);
+
   useEffect(() => {
     const tick = () =>
       setTime(new Date().toLocaleTimeString("en-US", {
@@ -151,13 +168,37 @@ function LocalTime() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    const el = document.getElementById("main-scroll");
+    if (!el) return;
+    const onScroll = () => {
+      const max = el.scrollHeight - el.clientHeight;
+      const p = max > 0 ? el.scrollTop / max : 0;
+      setAlt(Math.round(88 - p * 75));
+    };
+    onScroll();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div className="fixed bottom-3 left-5 z-50 pointer-events-none select-none">
-      <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
-        LOCAL TIME
+    <div className="fixed bottom-3 left-5 z-50 pointer-events-none select-none flex items-end gap-5">
+      <div>
+        <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
+          LOCAL TIME
+        </div>
+        <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
+          IST {time}
+        </div>
       </div>
-      <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-        IST {time}
+      <div className="hidden md:block">
+        <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
+          ALTITUDE
+        </div>
+        <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
+          <span className="text-[#22c55e]">▾</span> {String(alt).padStart(3, "0")}M
+        </div>
       </div>
     </div>
   );
@@ -166,6 +207,7 @@ function LocalTime() {
 function HudFrame() {
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [pill, setPill] = useState<{ left: number; bottom: number } | null>(null);
+  const progressRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
     const measure = () => {
@@ -186,6 +228,22 @@ function HudFrame() {
       window.removeEventListener("resize", measure);
     };
   }, []);
+
+  // Scroll progress traced along the frame itself — the green stroke fills
+  // the border clockwise from the top-left corner as the journey descends.
+  // Driven imperatively (no re-render per scroll frame).
+  useEffect(() => {
+    const el = document.getElementById("main-scroll");
+    if (!el) return;
+    const onScroll = () => {
+      const max = el.scrollHeight - el.clientHeight;
+      const p = max > 0 ? el.scrollTop / max : 0;
+      progressRef.current?.setAttribute("stroke-dashoffset", String(1 - p));
+    };
+    onScroll();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [size]);
 
   if (!size.w || !size.h) return null;
 
@@ -214,6 +272,21 @@ function HudFrame() {
         stroke={strokeColor}
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
+      />
+      {/* Scroll progress — green trace filling the frame as you descend */}
+      <path
+        ref={progressRef}
+        d={frame}
+        pathLength={1}
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeDasharray="1"
+        strokeDashoffset="1"
+        strokeOpacity="0.85"
+        vectorEffect="non-scaling-stroke"
+        style={{ filter: "drop-shadow(0 0 4px rgba(34,197,94,0.6))" }}
       />
     </svg>
   );

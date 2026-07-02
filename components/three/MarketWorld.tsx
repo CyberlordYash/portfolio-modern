@@ -53,8 +53,10 @@ export default function MarketWorld() {
         }}
         style={{ pointerEvents: "none" }}
       >
-        <color attach="background" args={["#000000"]} />
-        <fogExp2 attach="fog" args={["#000000", 0.0040]} />
+        {/* near-black with a whisper of green — gives the fog depth a subtle
+            atmosphere instead of dead #000 while staying invisible under UI */}
+        <color attach="background" args={["#010503"]} />
+        <fogExp2 attach="fog" args={["#010503", 0.0040]} />
         <Suspense fallback={null}>
           <CameraRig />
           <Terrain quality={q} />
@@ -65,10 +67,10 @@ export default function MarketWorld() {
             <EffectComposer multisampling={0}>
               <Bloom
                 mipmapBlur
-                intensity={0.3}
-                luminanceThreshold={0.62}
+                intensity={0.38}
+                luminanceThreshold={0.56}
                 luminanceSmoothing={0.3}
-                radius={0.55}
+                radius={0.6}
               />
               <Vignette eskil={false} offset={0.16} darkness={0.94} />
             </EffectComposer>

@@ -31,13 +31,14 @@ export default function CoreStation() {
         <torusGeometry args={[10, 0.18, 8, 96]} />
         <meshBasicMaterial color="#22c55e" transparent opacity={0.85} />
       </mesh>
+      {/* outer rings tinted green-steel to match the terrain palette */}
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
         <torusGeometry args={[15, 0.14, 8, 96]} />
-        <meshBasicMaterial color="#8a8a8a" transparent opacity={0.55} />
+        <meshBasicMaterial color="#7d9488" transparent opacity={0.55} />
       </mesh>
       <mesh ref={ring3} rotation={[Math.PI / 3, 0, Math.PI / 2.5]}>
         <torusGeometry args={[21, 0.1, 8, 96]} />
-        <meshBasicMaterial color="#5a5a5a" transparent opacity={0.4} />
+        <meshBasicMaterial color="#4f6157" transparent opacity={0.4} />
       </mesh>
 
       {/* vertical light beam */}

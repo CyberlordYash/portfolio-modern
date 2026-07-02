@@ -405,6 +405,23 @@ const Hero = () => {
           </div>
         </motion.div>
 
+        {/* ── SCROLL CUE (above quick nav) ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="absolute z-20 bottom-[4.6rem] left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 pointer-events-none select-none"
+        >
+          <span className="font-mono text-[7px] uppercase tracking-[0.45em] text-black/35 dark:text-white/35">
+            Scroll to descend
+          </span>
+          <motion.span
+            animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.25, 0.9, 0.25] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            className="block h-5 w-px origin-top bg-gradient-to-b from-[#22c55e] to-transparent"
+          />
+        </motion.div>
+
         {/* ── QUICK NAV (bottom-center) ── */}
         <div className="absolute z-20 bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
           {quickLinks.map((l) => (
