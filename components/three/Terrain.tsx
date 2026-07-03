@@ -6,7 +6,7 @@ import * as THREE from "three";
 /* Topographic contour terrain — elevation isolines on near-black, like a
    survey map of a mountain range. Lines trace constant height (not a grid);
    index contours every 5th level read bolder and take an altitude-graded
-   palette (steel valleys → green slopes → minted crests). The field drifts
+   palette (steel valleys → royal-blue slopes → icy crests). The field drifts
    slowly upward, and a radar-style survey sweep washes over the range. */
 
 const VERT = /* glsl */ `
@@ -88,21 +88,21 @@ const FRAG = /* glsl */ `
     float minorI = minor * (0.20 + hN * 0.12);
     float majorI = major * (0.40 + hN * 0.30);
 
-    /* altitude-graded palette — cool steel valleys rise through trading-green
-       slopes into minted-white crests, like a depth-colored survey map */
-    vec3 valley = vec3(0.40, 0.47, 0.50);
-    vec3 slope  = vec3(0.16, 0.74, 0.38);
-    vec3 crest  = vec3(0.72, 1.00, 0.82);
+    /* altitude-graded palette — cool steel valleys rise through royal-blue
+       slopes into icy-white crests, like a depth-colored survey map */
+    vec3 valley = vec3(0.40, 0.45, 0.52);
+    vec3 slope  = vec3(0.20, 0.45, 0.95);
+    vec3 crest  = vec3(0.75, 0.86, 1.00);
     vec3 ramp = mix(valley, slope, smoothstep(0.04, 0.55, hN));
     ramp = mix(ramp, crest, smoothstep(0.62, 0.96, hN));
 
     vec3 col = minorI * mix(vec3(0.70, 0.76, 0.78), ramp, 0.45);
     col += majorI * ramp;
 
-    /* crest glint — the highest ridgelines catch a soft emerald light that
+    /* crest glint — the highest ridgelines catch a soft sapphire light that
        feeds the bloom pass, so peaks shimmer without washing out UI text */
     float glint = smoothstep(0.80, 1.0, hN);
-    col += glint * vec3(0.09, 0.26, 0.14) * (0.35 + 0.65 * major);
+    col += glint * vec3(0.08, 0.15, 0.30) * (0.35 + 0.65 * major);
 
     /* survey sweep — a slow ring of light expanding across the range every
        ~24s, brightening the contour lines it passes like a radar return */
@@ -111,12 +111,12 @@ const FRAG = /* glsl */ `
     float dist = length(vWorld.xz - vec2(0.0, -220.0));
     float band = exp(-abs(dist - ringR) * 0.022);
     float envelope = smoothstep(0.02, 0.12, ringT) * (1.0 - smoothstep(0.7, 1.0, ringT));
-    col += band * envelope * (minor * 0.5 + major) * vec3(0.14, 0.60, 0.30) * 0.6;
+    col += band * envelope * (minor * 0.5 + major) * vec3(0.16, 0.38, 0.85) * 0.6;
 
-    /* a faint green whisper of light along the flight corridor floor —
+    /* a faint blue whisper of light along the flight corridor floor —
        kept narrow and dim so it reads as an accent, not a spotlight */
     float river = (1.0 - smoothstep(2.0, 8.0, abs(vWorld.x))) * (1.0 - vEdge);
-    col += river * vec3(0.035, 0.14, 0.075);
+    col += river * vec3(0.04, 0.08, 0.18);
 
     gl_FragColor = vec4(col, 1.0);
     #include <fog_fragment>

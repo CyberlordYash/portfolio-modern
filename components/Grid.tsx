@@ -101,7 +101,7 @@ const StatItem = ({ target, suffix, label }: { target: number; suffix: string; l
     >
       <span
         className="text-2xl font-black tabular-nums md:text-3xl"
-        style={{ fontFamily: "var(--font-orbitron)", color: "#34d399" }}
+        style={{ fontFamily: "var(--font-orbitron)", color: "#60a5fa" }}
       >
         {triggered ? `${count}${suffix}` : `0${suffix}`}
       </span>
@@ -205,7 +205,7 @@ const Grid = () => {
           {/* ── Card 1: Bio ── */}
           <Cell delay={0.05} className="min-h-[268px] md:col-span-4 md:row-span-2">
             {/* Green top strip */}
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-green-400 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
             {/* Corner crosses */}
             <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
             <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
@@ -213,14 +213,14 @@ const Grid = () => {
 
             <div className="relative z-10 flex h-full flex-col p-7 md:p-9">
               {/* Module label */}
-              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-green-600 dark:text-green-400 mb-4">
+              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-blue-600 dark:text-blue-400 mb-4">
                 BIO // CORE_IDENTITY
               </span>
 
               {/* Status */}
-              <div className="mb-5 flex items-center gap-2 self-start border border-emerald-500/25 bg-emerald-500/[0.07] dark:bg-emerald-500/[0.05] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 animate-pulse bg-emerald-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              <div className="mb-5 flex items-center gap-2 self-start border border-blue-500/25 bg-blue-500/[0.07] dark:bg-blue-500/[0.05] px-3 py-1.5">
+                <span className="h-1.5 w-1.5 animate-pulse bg-blue-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-600 dark:text-blue-400">
                   Open to senior backend roles
                 </span>
               </div>
@@ -279,8 +279,8 @@ const Grid = () => {
 
           {/* ── Card 2: Stats ── */}
           <Cell delay={0.1} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-emerald-400 z-10" />
-            <span className="absolute top-3 left-3 font-mono text-[8px] uppercase tracking-[0.4em] text-emerald-500 dark:text-emerald-400">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
+            <span className="absolute top-3 left-3 font-mono text-[8px] uppercase tracking-[0.4em] text-blue-500 dark:text-blue-400">
               METRICS
             </span>
             <GlowingEffect spread={30} proximity={60} disabled={false} borderWidth={1} />
@@ -290,12 +290,12 @@ const Grid = () => {
 
           {/* ── Card 3: Currently Building ── */}
           <Cell delay={0.15} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-green-400 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
-                <Zap size={13} className="text-green-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-green-500/80">
+                <Zap size={13} className="text-blue-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
                   Currently Building
                 </span>
               </div>
@@ -312,12 +312,12 @@ const Grid = () => {
 
           {/* ── Card 4: Education ── */}
           <Cell delay={0.2} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-emerald-400 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
-                <GraduationCap size={13} className="text-emerald-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-500/80">
+                <GraduationCap size={13} className="text-blue-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
                   Education // DEGREE
                 </span>
               </div>
@@ -334,13 +334,13 @@ const Grid = () => {
 
           {/* ── Card 5: Philosophy ── */}
           <Cell delay={0.25} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-teal-400 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-sky-400 z-10" />
             <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
 
             <div className="relative z-10 flex h-full flex-col justify-between p-6">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-teal-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-teal-500/80">
+                <Sparkles size={13} className="text-sky-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-sky-500/80">
                   CORE_PHILOSOPHY
                 </span>
               </div>
@@ -352,24 +352,24 @@ const Grid = () => {
 
           {/* ── Card 6: Beyond Code ── */}
           <Cell delay={0.3} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-emerald-500 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-500 z-10" />
 
             <div className="relative z-10 flex h-full flex-col gap-4 p-6">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-500/80">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
                 BEYOND_CODE
               </span>
               <div className="flex flex-col gap-2.5">
                 {[
                   {
-                    icon: <Dumbbell size={12} className="text-green-400" />,
+                    icon: <Dumbbell size={12} className="text-blue-400" />,
                     label: "Daily gym & nutrition tracking",
                   },
                   {
-                    icon: <Trophy size={12} className="text-emerald-400" />,
+                    icon: <Trophy size={12} className="text-blue-400" />,
                     label: "Competitive programming",
                   },
                   {
-                    icon: <BrainCircuit size={12} className="text-teal-400" />,
+                    icon: <BrainCircuit size={12} className="text-sky-400" />,
                     label: "Systems design deep dives",
                   },
                 ].map(({ icon, label }) => (
@@ -387,7 +387,7 @@ const Grid = () => {
 
           {/* ── Card 7: Contact CTA — full width ── */}
           <Cell delay={0.35} className="min-h-[140px] md:col-span-6">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-green-400 via-emerald-400 to-teal-500 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-blue-400 via-blue-400 to-sky-500 z-10" />
             <Cross className="absolute top-3 left-3 text-black/15 dark:text-white/15" />
             <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
             <Cross className="absolute bottom-3 left-3 text-black/15 dark:text-white/15" />

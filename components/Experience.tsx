@@ -74,8 +74,8 @@ const JOBS = [
     location: "Bengaluru",
     period: "JUL 2025 — PRESENT",
     status: "ACTIVE" as const,
-    color: "#4ade80",
-    colorRgb: "74,222,128",
+    color: "#60a5fa",
+    colorRgb: "96,165,250",
     image: "/nubra.webp",
     imageAlt: "Nubra",
     summary:
@@ -105,8 +105,8 @@ const JOBS = [
     location: "Noida-NCR",
     period: "JAN 2025 — JUN 2025",
     status: "COMPLETED" as const,
-    color: "#22c55e",
-    colorRgb: "34,197,94",
+    color: "#3b82f6",
+    colorRgb: "59,130,246",
     image: "/onefinnet.png",
     imageAlt: "OneFinnet",
     summary:
@@ -133,8 +133,8 @@ const JOBS = [
     location: "Remote",
     period: "JUL 2024 — OCT 2024",
     status: "COMPLETED" as const,
-    color: "#34d399",
-    colorRgb: "52,211,153",
+    color: "#60a5fa",
+    colorRgb: "96,165,250",
     image: "/ambill.jpg",
     imageAlt: "Ambill",
     summary:
@@ -158,8 +158,8 @@ const ACHIEVEMENTS = [
   {
     badge: "GUARDIAN",
     title: "Competitive Programming",
-    color: "#14b8a6",
-    colorRgb: "20,184,166",
+    color: "#38bdf8",
+    colorRgb: "56,189,248",
     points: [
       "LeetCode Guardian — Rating 2200+",
       "CodeChef 4★ — Rating 1850+",
@@ -169,8 +169,8 @@ const ACHIEVEMENTS = [
   {
     badge: "AIR 193",
     title: "NDA SSB Recommended",
-    color: "#16a34a",
-    colorRgb: "22,163,74",
+    color: "#2563eb",
+    colorRgb: "37,99,235",
     points: [
       "Cleared NDA SSB — All India Rank 193",
       "Leadership under high-pressure scenarios",
@@ -366,7 +366,7 @@ const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> 
         className="absolute top-0 left-0 right-0 h-full origin-top rounded-full"
         style={{
           scaleY,
-          background: "linear-gradient(to bottom, #4ade80, #22c55e 50%, #16a34a)",
+          background: "linear-gradient(to bottom, #60a5fa, #3b82f6 50%, #2563eb)",
           boxShadow: "0 0 16px rgba(129,140,248,0.9), 0 0 6px rgba(34,211,238,0.8)",
         }}
       />
@@ -387,13 +387,13 @@ export default function Experience() {
         {/* ── header (centered) ── */}
         <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
           <FadeReveal delay={0} className="flex items-center gap-3 mb-6">
-            <span className="w-1.5 h-1.5 bg-green-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-blue-400 animate-pulse" />
             <RevealChars
               text="SYS.CAREER_LOG"
               className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/50"
               delay={0.1}
             />
-            <span className="w-1.5 h-1.5 bg-emerald-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-blue-400 animate-pulse" />
           </FadeReveal>
 
           <h2

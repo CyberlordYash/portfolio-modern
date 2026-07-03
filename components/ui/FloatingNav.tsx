@@ -157,8 +157,8 @@ export const FloatingNav = ({ navItems, className }: any) => {
         {/* ── Status + Clock ── */}
         <div className="flex items-center gap-2 pl-1 pr-2.5 border-r border-black/[0.07] dark:border-white/[0.08] shrink-0">
           <span className="relative flex h-1.5 w-1.5 shrink-0">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-70" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
           </span>
           <span className="font-mono text-[10px] tabular-nums tracking-tight text-black/60 dark:text-white/60 leading-none">
             {time}

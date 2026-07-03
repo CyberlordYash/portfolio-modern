@@ -98,10 +98,10 @@ export default function SystemLoadBalancer() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-all"
       >
-        <IconActivity size={18} className="text-emerald-500" />
-        <span className="text-xs font-mono font-bold text-emerald-500">
+        <IconActivity size={18} className="text-blue-500" />
+        <span className="text-xs font-mono font-bold text-blue-500">
           STRESS_TEST_SYSTEM
         </span>
       </button>
@@ -126,7 +126,7 @@ export default function SystemLoadBalancer() {
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/20 dark:bg-red-500/40" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/20 dark:bg-amber-500/40" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/20 dark:bg-emerald-500/40" />
+                  <div className="w-3 h-3 rounded-full bg-blue-500/20 dark:bg-blue-500/40" />
                 </div>
                 <span className="text-[10px] font-mono font-black text-neutral-400">
                   TRAFFIC_MANAGER_V2
@@ -142,7 +142,7 @@ export default function SystemLoadBalancer() {
                   <p className="text-[9px] text-neutral-500 font-mono uppercase">
                     Throughput
                   </p>
-                  <p className="text-sm font-bold text-green-600 dark:text-green-400">
+                  <p className="text-sm font-bold text-blue-600 dark:text-blue-400">
                     {score} Req/s
                   </p>
                 </div>
@@ -151,7 +151,7 @@ export default function SystemLoadBalancer() {
                     Latency
                   </p>
                   <p
-                    className={`text-sm font-bold ${latency > 150 ? "text-red-500" : "text-emerald-500"}`}
+                    className={`text-sm font-bold ${latency > 150 ? "text-red-500" : "text-blue-500"}`}
                   >
                     {latency}ms
                   </p>
@@ -168,20 +168,20 @@ export default function SystemLoadBalancer() {
                 {packets.map((p) => (
                   <motion.div
                     key={p.id}
-                    className="absolute w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]"
+                    className="absolute w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"
                     style={{ left: `${p.x}%`, top: `${p.y}%` }}
                   />
                 ))}
 
                 {/* Server (Player) */}
                 <div
-                  className="absolute bottom-10 w-24 h-4 -translate-x-12 rounded-full bg-white dark:bg-green-500 border border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all duration-75 flex items-center justify-center"
+                  className="absolute bottom-10 w-24 h-4 -translate-x-12 rounded-full bg-white dark:bg-blue-500 border border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-75 flex items-center justify-center"
                   style={{ left: `${playerPos}%` }}
                 >
                   <div className="flex gap-1">
-                    <div className="w-1 h-1 rounded-full bg-green-200 animate-pulse" />
-                    <div className="w-1 h-1 rounded-full bg-green-200 animate-pulse delay-75" />
-                    <div className="w-1 h-1 rounded-full bg-green-200 animate-pulse delay-150" />
+                    <div className="w-1 h-1 rounded-full bg-blue-200 animate-pulse" />
+                    <div className="w-1 h-1 rounded-full bg-blue-200 animate-pulse delay-75" />
+                    <div className="w-1 h-1 rounded-full bg-blue-200 animate-pulse delay-150" />
                   </div>
                 </div>
 
@@ -206,7 +206,7 @@ export default function SystemLoadBalancer() {
                       </p>
                       <button
                         onClick={reset}
-                        className="flex items-center gap-2 px-8 py-3 bg-green-600 text-white rounded-2xl font-bold hover:scale-105 transition-transform"
+                        className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:scale-105 transition-transform"
                       >
                         <IconRefresh size={18} /> RESTART_NODE
                       </button>

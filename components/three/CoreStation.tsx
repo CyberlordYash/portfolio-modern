@@ -24,28 +24,28 @@ export default function CoreStation() {
     <group position={[0, 12, -525]}>
       <mesh ref={core}>
         <icosahedronGeometry args={[4.2, 2]} />
-        <meshBasicMaterial color="#34d77f" />
+        <meshBasicMaterial color="#4f86f7" />
       </mesh>
 
       <mesh ref={ring1} rotation={[Math.PI / 2.4, 0, 0]}>
         <torusGeometry args={[10, 0.18, 8, 96]} />
-        <meshBasicMaterial color="#22c55e" transparent opacity={0.85} />
+        <meshBasicMaterial color="#3b82f6" transparent opacity={0.85} />
       </mesh>
-      {/* outer rings tinted green-steel to match the terrain palette */}
+      {/* outer rings tinted blue-steel to match the terrain palette */}
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
         <torusGeometry args={[15, 0.14, 8, 96]} />
-        <meshBasicMaterial color="#7d9488" transparent opacity={0.55} />
+        <meshBasicMaterial color="#7d8a99" transparent opacity={0.55} />
       </mesh>
       <mesh ref={ring3} rotation={[Math.PI / 3, 0, Math.PI / 2.5]}>
         <torusGeometry args={[21, 0.1, 8, 96]} />
-        <meshBasicMaterial color="#4f6157" transparent opacity={0.4} />
+        <meshBasicMaterial color="#4f5a66" transparent opacity={0.4} />
       </mesh>
 
       {/* vertical light beam */}
       <mesh position={[0, 60, 0]}>
         <cylinderGeometry args={[0.7, 2.4, 120, 12, 1, true]} />
         <meshBasicMaterial
-          color="#22c55e"
+          color="#3b82f6"
           transparent
           opacity={0.16}
           blending={THREE.AdditiveBlending}

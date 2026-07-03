@@ -63,7 +63,7 @@ export const BentoGridItem = ({
       className={cn(
         "relative overflow-hidden rounded-3xl group/bento flex flex-col justify-between",
         "bg-white dark:bg-[#030712]/80 border border-slate-200 dark:border-white/[0.05]",
-        "hover:shadow-xl hover:shadow-green-500/10 dark:hover:border-green-500/30 transition-all",
+        "hover:shadow-xl hover:shadow-blue-500/10 dark:hover:border-blue-500/30 transition-all",
         className,
       )}
     >
@@ -83,7 +83,7 @@ export const BentoGridItem = ({
         <div className="flex gap-1.5">
           <div className="h-1.5 w-1.5 rounded-full bg-red-500/40" />
           <div className="h-1.5 w-1.5 rounded-full bg-amber-500/40" />
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40" />
+          <div className="h-1.5 w-1.5 rounded-full bg-blue-500/40" />
         </div>
         <div className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter">
           id_0{id}
@@ -96,7 +96,7 @@ export const BentoGridItem = ({
           titleClassName,
         )}
       >
-        <div className="font-mono text-[10px] font-bold text-green-500 uppercase tracking-widest mb-1">
+        <div className="font-mono text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1">
           {description}
         </div>
         <div className="font-bold text-lg lg:text-xl text-slate-900 dark:text-slate-100 leading-tight tracking-tight">
@@ -110,7 +110,7 @@ export const BentoGridItem = ({
               title="View Skills"
               icon={<IoCopyOutline />}
               position="left"
-              otherClasses="!h-9 !text-xs dark:!bg-green-950/30 border-green-500/20"
+              otherClasses="!h-9 !text-xs dark:!bg-blue-950/30 border-blue-500/20"
             />
           </div>
         )}

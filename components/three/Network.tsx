@@ -59,8 +59,8 @@ const LINE_FRAG = /* glsl */ `
     float p1 = abs(fract(vT - uTime * 0.22 + uPhase) - 0.5);
     float p2 = abs(fract(vT * 0.997 - uTime * 0.09 + uPhase * 1.7) - 0.5);
     float g = smoothstep(0.045, 0.0, p1) * 1.6 + smoothstep(0.03, 0.0, p2) * 0.9;
-    /* latency pulses race along the routes in trading-green */
-    col += g * vec3(0.20, 0.95, 0.46);
+    /* latency pulses race along the routes in royal blue */
+    col += g * vec3(0.25, 0.55, 1.00);
     a += g * 0.8;
     a *= smoothstep(600.0, 140.0, vDist);
     gl_FragColor = vec4(col, a);
@@ -190,10 +190,10 @@ function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
         <boxGeometry args={[0.5, spireH, 0.5]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.92} />
       </mesh>
-      {/* blinking rooftop beacon — trading-green signal light */}
+      {/* blinking rooftop beacon — royal-blue signal light */}
       <mesh ref={light} position={[0, h + spireH, 0]}>
         <sphereGeometry args={[1.1, 10, 10]} />
-        <meshBasicMaterial color="#22c55e" transparent />
+        <meshBasicMaterial color="#3b82f6" transparent />
       </mesh>
       {/* label */}
       <sprite position={[0, h + spireH + 7, 0]} scale={[26, 8.1, 1]}>

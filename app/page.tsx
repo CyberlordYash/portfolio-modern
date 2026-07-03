@@ -66,8 +66,8 @@ function TopNav() {
       >
         {/* system-online beacon */}
         <span className="relative mr-2.5 flex h-1.5 w-1.5" aria-hidden>
-          <span className="absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-50 animate-ping" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e] shadow-[0_0_6px_rgba(34,197,94,0.9)]" />
+          <span className="absolute inline-flex h-full w-full rounded-full bg-[#3b82f6] opacity-50 animate-ping" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#3b82f6] shadow-[0_0_6px_rgba(59,130,246,0.9)]" />
         </span>
 
         {links.map((link) => {
@@ -90,7 +90,7 @@ function TopNav() {
               {isActive && (
                 <motion.span
                   layoutId="nav-pill"
-                  className="absolute inset-0 -z-10 rounded-full bg-white shadow-[0_1px_10px_rgba(34,197,94,0.28)]"
+                  className="absolute inset-0 -z-10 rounded-full bg-white shadow-[0_1px_10px_rgba(59,130,246,0.28)]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
@@ -98,8 +98,8 @@ function TopNav() {
                 className={cn(
                   "text-[7px] tracking-[0.05em] transition-colors duration-300",
                   isActive
-                    ? "font-bold text-[#15803d]"
-                    : "text-white/25 group-hover:text-[#22c55e]/80",
+                    ? "font-bold text-[#1d4ed8]"
+                    : "text-white/25 group-hover:text-[#3b82f6]/80",
                 )}
               >
                 {link.n}
@@ -197,7 +197,7 @@ function LocalTime() {
           ALTITUDE
         </div>
         <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-          <span className="text-[#22c55e]">▾</span> {String(alt).padStart(3, "0")}M
+          <span className="text-[#3b82f6]">▾</span> {String(alt).padStart(3, "0")}M
         </div>
       </div>
     </div>
@@ -279,14 +279,14 @@ function HudFrame() {
         d={frame}
         pathLength={1}
         fill="none"
-        stroke="#22c55e"
+        stroke="#3b82f6"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeDasharray="1"
         strokeDashoffset="1"
         strokeOpacity="0.85"
         vectorEffect="non-scaling-stroke"
-        style={{ filter: "drop-shadow(0 0 4px rgba(34,197,94,0.6))" }}
+        style={{ filter: "drop-shadow(0 0 4px rgba(59,130,246,0.6))" }}
       />
     </svg>
   );
@@ -294,7 +294,7 @@ function HudFrame() {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-green-500/30">
+    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
 
       {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
       <MarketWorld />
@@ -367,7 +367,7 @@ export default function Home() {
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
                   <FadeReveal delay={0.6}>
                     <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                      20 Technologies
+                      19 Tools · 6 Domains
                     </span>
                   </FadeReveal>
                   <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />

@@ -134,7 +134,7 @@ export const projects = [
     des: "Built a secure file-sharing web application with user authentication & authorization (JWT, MFA) and role-based access control (RBAC).",
     img: "/fileshare.png",
     iconLists: [
-      <SiSpringboot key="spring" className="w-5 h-5 text-green-500" />,
+      <SiSpringboot key="spring" className="w-5 h-5 text-blue-500" />,
       <SiJavascript key="java" className="w-5 h-5 text-orange-500" />,
       <SiApachemaven key="maven" className="w-5 h-5 text-red-500" />,
       <SiGradle key="gradle" className="w-5 h-5 text-gray-400" />,
@@ -148,10 +148,10 @@ export const projects = [
     des: "Collaborate and learn! Share your notes on this MERN-powered platform. FInd,create and discuss study materials with ease",
     img: "/brainbytes.jpg",
     iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />,
+      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />,
       <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express icon is gray by default
       <SiReact key="react" className="w-5 h-5 text-cyan-400" />,
-      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />,
+      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />,
       <SiRedux key="redux" className="w-5 h-5 text-purple-500" />,
     ],
     link: "https://brainbytes-yash.netlify.app/",
@@ -162,9 +162,9 @@ export const projects = [
     des: "Collaborate and learn! Share gour notes on this MERN-powered platform. Find, create, and discuss study materials with ease.",
     img: "/flowchat.jpg",
     iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />,
+      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />,
       <SiExpress key="express" className="w-5 h-5 text-gray-300" />,
-      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />,
+      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />,
       <SiSocketdotio key="socketio" className="w-5 h-5 text-yellow-400" />,
     ],
     link: "https://flowchat-rcnd.onrender.com/",
@@ -189,9 +189,9 @@ export const projects = [
     des: "Summarize any sites with openAI GPT4",
     img: "/summarise.jpg",
     iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-green-500" />, // MongoDB
+      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />, // MongoDB
       <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express
-      <SiNodedotjs key="node" className="w-5 h-5 text-green-600" />, // Node.js
+      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />, // Node.js
       <SiPostman key="postman" className="w-5 h-5 text-orange-500" />,
     ],
     link: "https://dev-yash-summarizeit.netlify.app/",

@@ -35,13 +35,13 @@ const meta: Record<number, {
 }> = {
   9: {
     num: "01", category: "HFT · TRADING",
-    accent: "text-green-600 dark:text-green-400",
-    border: "border-green-200", borderDark: "dark:border-green-500/20",
-    badgeBg: "bg-green-100 text-green-700", badgeBgDark: "dark:bg-green-950/80 dark:text-green-300",
-    headerBg: "bg-green-50", headerBgDark: "dark:bg-green-950/40",
-    strip: "from-green-500 to-emerald-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(34,197,94,0.20)]",
-    ctaFrom: "from-green-500", ctaTo: "to-emerald-400",
+    accent: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
+    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
+    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
+    strip: "from-blue-500 to-blue-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.20)]",
+    ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
   },
   8: {
     num: "02", category: "SECURITY",
@@ -55,13 +55,13 @@ const meta: Record<number, {
   },
   1: {
     num: "03", category: "FULLSTACK",
-    accent: "text-teal-600 dark:text-teal-400",
-    border: "border-teal-200", borderDark: "dark:border-teal-500/20",
-    badgeBg: "bg-teal-100 text-teal-700", badgeBgDark: "dark:bg-teal-950/80 dark:text-teal-300",
-    headerBg: "bg-teal-50", headerBgDark: "dark:bg-teal-950/40",
-    strip: "from-teal-500 to-emerald-400",
+    accent: "text-sky-600 dark:text-sky-400",
+    border: "border-sky-200", borderDark: "dark:border-sky-500/20",
+    badgeBg: "bg-sky-100 text-sky-700", badgeBgDark: "dark:bg-sky-950/80 dark:text-sky-300",
+    headerBg: "bg-sky-50", headerBgDark: "dark:bg-sky-950/40",
+    strip: "from-sky-500 to-blue-400",
     glow: "dark:hover:shadow-[0_0_60px_rgba(20,184,166,0.18)]",
-    ctaFrom: "from-teal-500", ctaTo: "to-emerald-400",
+    ctaFrom: "from-sky-500", ctaTo: "to-blue-400",
   },
   2: {
     num: "04", category: "REAL-TIME",
@@ -85,13 +85,13 @@ const meta: Record<number, {
   },
   4: {
     num: "06", category: "AI · NLP",
-    accent: "text-emerald-600 dark:text-emerald-400",
-    border: "border-emerald-200", borderDark: "dark:border-emerald-500/20",
-    badgeBg: "bg-emerald-100 text-emerald-700", badgeBgDark: "dark:bg-emerald-950/80 dark:text-emerald-300",
-    headerBg: "bg-emerald-50", headerBgDark: "dark:bg-emerald-950/40",
-    strip: "from-emerald-500 to-green-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(16,185,129,0.18)]",
-    ctaFrom: "from-emerald-500", ctaTo: "to-green-400",
+    accent: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
+    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
+    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
+    strip: "from-blue-500 to-blue-400",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.18)]",
+    ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
   },
 };
 
@@ -390,7 +390,7 @@ const RecentProjects = () => {
       {/* spotlight — dark mode accent */}
       <Spotlight
         className="-top-20 left-0 md:-left-10 md:-top-10 opacity-30 dark:opacity-50"
-        fill="#22c55e"
+        fill="#3b82f6"
       />
 
       {/* subtle grid lines matching hero */}

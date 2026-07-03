@@ -75,8 +75,8 @@ const Hero = () => {
         }
         @keyframes glitch-border-kf {
           0%,80%,100% { box-shadow:none; }
-          81%,85% { box-shadow:inset 0 0 0 1px rgba(34,197,94,.9); }
-          86%,89% { box-shadow:inset 0 0 0 1px rgba(74,222,128,.7); }
+          81%,85% { box-shadow:inset 0 0 0 1px rgba(59,130,246,.9); }
+          86%,89% { box-shadow:inset 0 0 0 1px rgba(96,165,250,.7); }
           90%,94% { box-shadow:none; }
         }
         .glitch-box { position:relative; overflow:hidden; }
@@ -84,8 +84,8 @@ const Hero = () => {
           display:block; position:absolute; inset:0; pointer-events:none; opacity:0; z-index:20;
           will-change:transform,opacity,clip-path;
         }
-        .glitch-slice-1 { background:rgba(34,197,94,.22); }
-        .glitch-slice-2 { background:rgba(74,222,128,.16); }
+        .glitch-slice-1 { background:rgba(59,130,246,.22); }
+        .glitch-slice-2 { background:rgba(96,165,250,.16); }
         .glitch-box:hover {
           animation:glitch-jitter 1.1s steps(1) infinite,glitch-border-kf 1.1s steps(1) infinite;
           transition:none !important;
@@ -134,8 +134,8 @@ const Hero = () => {
           <br />
           <span className="text-black dark:text-white">SACHAN</span>
           <span
-            className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#16a34a] dark:bg-[#22c55e]"
-            style={{ boxShadow: "0 0 14px rgba(34,197,94,0.55)" }}
+            className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#2563eb] dark:bg-[#3b82f6]"
+            style={{ boxShadow: "0 0 14px rgba(59,130,246,0.55)" }}
           />
           <span className="mt-3 block font-mono text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.45em] text-black/75 dark:text-white/85">
             Software Engineer
@@ -232,8 +232,8 @@ const Hero = () => {
           <br />
           <span className="text-black dark:text-white">SACHAN</span>
           <span
-            className="mt-4 mb-1 block h-[3px] w-28 bg-[#16a34a] dark:bg-[#22c55e]"
-            style={{ boxShadow: "0 0 14px rgba(34,197,94,0.55)" }}
+            className="mt-4 mb-1 block h-[3px] w-28 bg-[#2563eb] dark:bg-[#3b82f6]"
+            style={{ boxShadow: "0 0 14px rgba(59,130,246,0.55)" }}
           />
           <span className="mt-3 block font-mono text-[16px] font-medium uppercase tracking-[0.5em] text-black/75 dark:text-white/85">
             Software Engineer
@@ -418,7 +418,7 @@ const Hero = () => {
           <motion.span
             animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.25, 0.9, 0.25] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            className="block h-5 w-px origin-top bg-gradient-to-b from-[#22c55e] to-transparent"
+            className="block h-5 w-px origin-top bg-gradient-to-b from-[#3b82f6] to-transparent"
           />
         </motion.div>
 
