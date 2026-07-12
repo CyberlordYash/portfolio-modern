@@ -11,7 +11,7 @@ import React, { useEffect, useRef } from "react";
 
 type Candle = { o: number; h: number; l: number; c: number };
 
-const UP = "37,99,235"; // royal blue
+const UP = "92,102,200"; // royal blue
 const DOWN = "150,28,28"; // darker red
 
 const TradingChart = () => {

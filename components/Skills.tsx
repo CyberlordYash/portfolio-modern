@@ -18,7 +18,7 @@ type Domain = { id: string; label: string; color: string; techs: Tech[] };
 
 const DOMAINS: Domain[] = [
   {
-    id: "lang", label: "LANGUAGES", color: "#3B82F6",
+    id: "lang", label: "LANGUAGES", color: "#7A83D7",
     techs: [
       { icon: SiGo,          name: "Go",         color: "#00ADD8", note: "Primary language — trading systems, services" },
       { icon: PiFileCppFill, name: "C++",        color: "#659AD2", note: "Low-latency paths, competitive programming" },
@@ -38,7 +38,7 @@ const DOMAINS: Domain[] = [
     ],
   },
   {
-    id: "be", label: "BACKEND", color: "#60A5FA",
+    id: "be", label: "BACKEND", color: "#9EA5E4",
     techs: [
       { icon: FaNode,        name: "Node.js",     color: "#5FA04E", note: "Real-time APIs & services" },
       { icon: SiSpringboot,  name: "Spring Boot", color: "#6DB33F", note: "JVM microservices" },

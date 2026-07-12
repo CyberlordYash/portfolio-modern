@@ -44,11 +44,14 @@ function TopNav() {
     const root = document.getElementById("main-scroll");
     if (!root) return;
 
+    // Track the section crossing the viewport's vertical center — works for
+    // sections taller than the screen (threshold-based detection never fires
+    // for those, since 30% of a 3-screen section is never visible at once).
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); });
       },
-      { root, threshold: 0.3, rootMargin: "-10% 0px -10% 0px" },
+      { root, threshold: 0, rootMargin: "-45% 0px -50% 0px" },
     );
     links.forEach((l) => {
       const el = document.getElementById(l.href.replace("#", ""));
@@ -62,14 +65,12 @@ function TopNav() {
     <nav className="fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
       <div
         id="nav-pill-box"
-        className="relative flex items-center gap-0.5 rounded-full border border-white/10 bg-black/60 p-1 pl-3.5 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]"
+        className="relative flex items-center gap-0.5 px-1.5 py-1"
+        style={{
+          background:
+            "radial-gradient(120% 160% at 50% 0%, rgba(37,42,106,0.28) 0%, rgba(26,30,77,0.12) 55%, transparent 100%)",
+        }}
       >
-        {/* system-online beacon */}
-        <span className="relative mr-2.5 flex h-1.5 w-1.5" aria-hidden>
-          <span className="absolute inline-flex h-full w-full rounded-full bg-[#3b82f6] opacity-50 animate-ping" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#3b82f6] shadow-[0_0_6px_rgba(59,130,246,0.9)]" />
-        </span>
-
         {links.map((link) => {
           const id = link.href.replace("#", "");
           const isActive = active === id;
@@ -82,29 +83,19 @@ function TopNav() {
                 document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
               }}
               className={cn(
-                "group relative flex items-baseline gap-1.5 px-3 lg:px-3.5 py-1.5 rounded-full font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.14em] transition-colors duration-300 z-10 whitespace-nowrap",
-                link.desktopOnly && "hidden md:flex",
-                isActive ? "text-black" : "text-white/55 hover:text-white",
+                "relative px-3 lg:px-3.5 py-1.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-300 whitespace-nowrap",
+                link.desktopOnly && "hidden md:inline-block",
+                isActive ? "text-white" : "text-white/40 hover:text-white/85",
               )}
             >
+              {link.label}
               {isActive && (
                 <motion.span
-                  layoutId="nav-pill"
-                  className="absolute inset-0 -z-10 rounded-full bg-white shadow-[0_1px_10px_rgba(59,130,246,0.28)]"
+                  layoutId="nav-active"
+                  className="absolute inset-x-2.5 -bottom-[3px] h-px bg-[#9EA5E4] shadow-[0_0_8px_rgba(158,165,228,0.9)]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
-              <span
-                className={cn(
-                  "text-[7px] tracking-[0.05em] transition-colors duration-300",
-                  isActive
-                    ? "font-bold text-[#1d4ed8]"
-                    : "text-white/25 group-hover:text-[#3b82f6]/80",
-                )}
-              >
-                {link.n}
-              </span>
-              {link.label}
             </a>
           );
         })}
@@ -197,7 +188,7 @@ function LocalTime() {
           ALTITUDE
         </div>
         <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-          <span className="text-[#3b82f6]">▾</span> {String(alt).padStart(3, "0")}M
+          <span className="text-[#7A83D7]">▾</span> {String(alt).padStart(3, "0")}M
         </div>
       </div>
     </div>
@@ -249,7 +240,7 @@ function HudFrame() {
 
   const frame = buildFramePath(size.w, size.h, pill);
   const maskColor = "#000000";
-  const strokeColor = "rgba(255,255,255,0.22)";
+  const strokeColor = "rgba(158,165,228,0.26)";
 
   return (
     <svg
@@ -279,14 +270,14 @@ function HudFrame() {
         d={frame}
         pathLength={1}
         fill="none"
-        stroke="#3b82f6"
+        stroke="#7A83D7"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeDasharray="1"
         strokeDashoffset="1"
         strokeOpacity="0.85"
         vectorEffect="non-scaling-stroke"
-        style={{ filter: "drop-shadow(0 0 4px rgba(59,130,246,0.6))" }}
+        style={{ filter: "drop-shadow(0 0 4px rgba(122,131,215,0.6))" }}
       />
     </svg>
   );
@@ -299,6 +290,13 @@ export default function Home() {
       {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
       <MarketWorld />
 
+      {/* Ambient navy aurora — fixed glow layers between the WebGL world and content */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[1] hidden dark:block">
+        <div className="absolute -top-[18%] -left-[12%] h-[60vh] w-[55vw] rounded-full bg-[#252A6A]/25 blur-[140px]" />
+        <div className="absolute top-[28%] -right-[18%] h-[55vh] w-[48vw] rounded-full bg-[#1A1E4D]/30 blur-[160px]" />
+        <div className="absolute -bottom-[15%] left-[18%] h-[50vh] w-[55vw] rounded-full bg-[#14102F]/40 blur-[150px]" />
+      </div>
+
       <TopNav />
       <HudFrame />
       <LocalTime />
@@ -308,7 +306,7 @@ export default function Home() {
         id="main-scroll"
         className="h-screen overflow-y-auto scroll-smooth bg-white dark:bg-transparent"
       >
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#9ea5e40c_1px,transparent_1px),linear-gradient(to_bottom,#9ea5e40c_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
         <div className="relative z-10 w-full">
           <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2">
@@ -333,11 +331,11 @@ export default function Home() {
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-black/60 px-4 py-1.5 mb-5">
+                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#7A83D7]/30 bg-[#ffffff] dark:bg-[#0A0B1E]/70 dark:shadow-[0_0_20px_rgba(37,42,106,0.35),inset_0_1px_0_rgba(158,165,228,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-1.5 h-1.5 bg-black dark:bg-white"
+                    className="w-1.5 h-1.5 bg-black dark:bg-[#9EA5E4] dark:shadow-[0_0_8px_rgba(158,165,228,0.8)]"
                   />
                   <RevealChars
                     text="SYSTEM_RUNTIME"
@@ -364,26 +362,26 @@ export default function Home() {
                   </span>
                 </h2>
                 <div className="flex items-center gap-3 mt-3">
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-r dark:from-transparent dark:to-[#7A83D7]/60" />
                   <FadeReveal delay={0.6}>
-                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
+                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-[#9EA5E4]/70">
                       19 Tools · 6 Domains
                     </span>
                   </FadeReveal>
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-l dark:from-transparent dark:to-[#7A83D7]/60" />
                 </div>
               </div>
               <div className="relative mx-auto max-w-5xl">
                 {/* Side rails — frame the centered module, let the living background breathe */}
                 <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#7A83D7]/30" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
                 </div>
                 <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#7A83D7]/30" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
                 </div>
 
                 <Skills />
@@ -396,7 +394,7 @@ export default function Home() {
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-black/40 border border-white/[0.05]"
+              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-gradient-to-b from-[#0D0F2B]/60 to-black/50 border border-[#7A83D7]/15 shadow-[0_0_60px_rgba(37,42,106,0.2),inset_0_1px_0_rgba(158,165,228,0.08)]"
               {...cardEnter}
             >
               <Grid />

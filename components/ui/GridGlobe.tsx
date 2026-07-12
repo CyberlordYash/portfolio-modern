@@ -18,7 +18,7 @@ const GridGlobe = () => {
     emissiveIntensity: 0.1,
     shininess: 0.9,
     polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#60a5fa",
+    ambientLight: "#9EA5E4",
     directionalLeftLight: "#ffffff",
     directionalTopLight: "#ffffff",
     pointLight: "#ffffff",
@@ -30,7 +30,7 @@ const GridGlobe = () => {
     autoRotate: true,
     autoRotateSpeed: 0.5,
   };
-  const colors = ["#3b82f6", "#2563eb", "#60a5fa"];
+  const colors = ["#7A83D7", "#5C66C8", "#9EA5E4"];
   const sampleArcs = [
     {
       order: 1,

@@ -168,14 +168,14 @@ export default function SystemLoadBalancer() {
                 {packets.map((p) => (
                   <motion.div
                     key={p.id}
-                    className="absolute w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"
+                    className="absolute w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_#7A83D7]"
                     style={{ left: `${p.x}%`, top: `${p.y}%` }}
                   />
                 ))}
 
                 {/* Server (Player) */}
                 <div
-                  className="absolute bottom-10 w-24 h-4 -translate-x-12 rounded-full bg-white dark:bg-blue-500 border border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-75 flex items-center justify-center"
+                  className="absolute bottom-10 w-24 h-4 -translate-x-12 rounded-full bg-white dark:bg-blue-500 border border-blue-400 shadow-[0_0_20px_rgba(122,131,215,0.5)] transition-all duration-75 flex items-center justify-center"
                   style={{ left: `${playerPos}%` }}
                 >
                   <div className="flex gap-1">

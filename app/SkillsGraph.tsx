@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const CATEGORIES = [
-  { id: "lang",  label: "Languages",     color: "#3b82f6" },
-  { id: "fe",    label: "Frontend",      color: "#60a5fa" },
+  { id: "lang",  label: "Languages",     color: "#7A83D7" },
+  { id: "fe",    label: "Frontend",      color: "#9EA5E4" },
   { id: "be",    label: "Backend",       color: "#38bdf8" },
-  { id: "db",    label: "Databases",     color: "#3b82f6" },
+  { id: "db",    label: "Databases",     color: "#7A83D7" },
   { id: "infra", label: "Infra",         color: "#a855f7" },
   { id: "msg",   label: "Messaging",     color: "#ec4899" },
   { id: "obs",   label: "Observability", color: "#f59e0b" },
@@ -152,7 +152,7 @@ export default function SkillsGraph() {
       // Links
       const linkEl = g.append("g").selectAll<SVGLineElement, GLink>("line")
         .data(links).join("line")
-        .attr("stroke", d => d.type === "hub" ? "rgba(59,130,246,0.14)" : "rgba(255,255,255,0.07)")
+        .attr("stroke", d => d.type === "hub" ? "rgba(122,131,215,0.14)" : "rgba(255,255,255,0.07)")
         .attr("stroke-width", d => d.type === "hub" ? 1 : 0.75)
         .attr("stroke-dasharray", d => d.type === "cross" ? "3,5" : "none");
 
@@ -198,7 +198,7 @@ export default function SkillsGraph() {
         .text(d => d.label)
         .attr("text-anchor", "middle")
         .attr("dy", d => d.isHub ? "0.35em" : d.r + 13)
-        .attr("fill", d => d.isHub ? d.color : "#93c5fd")
+        .attr("fill", d => d.isHub ? d.color : "#C3C7EF")
         .attr("font-size", d => d.isHub ? "9.5px" : "8.5px")
         .attr("font-family", "monospace")
         .attr("font-weight", d => d.isHub ? "700" : "400")
@@ -217,7 +217,7 @@ export default function SkillsGraph() {
             .attr("stroke", (l: GLink) => {
               const s = (l.source as GNode).id ?? l.source as string;
               const t = (l.target as GNode).id ?? l.target as string;
-              return (s === d.id || t === d.id) ? d.color : "rgba(59,130,246,0.03)";
+              return (s === d.id || t === d.id) ? d.color : "rgba(122,131,215,0.03)";
             })
             .attr("stroke-width", (l: GLink) => {
               const s = (l.source as GNode).id ?? l.source as string;
@@ -238,7 +238,7 @@ export default function SkillsGraph() {
         .on("mouseout", () => {
           nodeEl.transition().duration(180).style("opacity", "1");
           linkEl.transition().duration(180)
-            .attr("stroke", (l: GLink) => l.type === "hub" ? "rgba(59,130,246,0.14)" : "rgba(255,255,255,0.07)")
+            .attr("stroke", (l: GLink) => l.type === "hub" ? "rgba(122,131,215,0.14)" : "rgba(255,255,255,0.07)")
             .attr("stroke-width", (l: GLink) => l.type === "hub" ? 1 : 0.75);
           setTooltip(null);
         });
@@ -310,7 +310,7 @@ export default function SkillsGraph() {
       {/* Graph */}
       <div
         ref={containerRef}
-        className="relative w-full h-[480px] md:h-[580px] bg-[#0d1017] border border-blue-500/20 rounded-xl overflow-hidden shadow-[0_0_80px_-20px_rgba(59,130,246,0.20),0_0_20px_-5px_rgba(59,130,246,0.07)]"
+        className="relative w-full h-[480px] md:h-[580px] bg-[#0d1017] border border-blue-500/20 rounded-xl overflow-hidden shadow-[0_0_80px_-20px_rgba(122,131,215,0.20),0_0_20px_-5px_rgba(122,131,215,0.07)]"
       >
         <svg ref={svgRef} className="w-full h-full select-none" />
 

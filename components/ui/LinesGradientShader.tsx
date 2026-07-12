@@ -19,7 +19,7 @@ const defaultLinePath =
 export function LinesGradientShader({
   className,
   lineColor = "rgba(148, 163, 184, 0.18)",
-  accentColor = "rgba(59, 130, 246, 0.28)",
+  accentColor = "rgba(122,131,215, 0.28)",
   secondaryAccentColor = "rgba(34, 211, 238, 0.2)",
   lineCount = 14,
   showBackdrop = true,

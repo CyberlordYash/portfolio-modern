@@ -18,10 +18,10 @@ const colorMap: Record<PhaseColor, {
   cyan: {
     strip: "bg-blue-400",
     led: "bg-blue-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(96,165,250,0.7)]",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(158,165,228,0.7)]",
     label: "text-blue-500 dark:text-blue-400",
     canvasBg: "bg-blue-950",
-    canvasColors: [[96, 165, 250]],
+    canvasColors: [[158,165,228]],
   },
   emerald: {
     strip: "bg-sky-400",

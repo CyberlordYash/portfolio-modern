@@ -74,8 +74,8 @@ const JOBS = [
     location: "Bengaluru",
     period: "JUL 2025 — PRESENT",
     status: "ACTIVE" as const,
-    color: "#60a5fa",
-    colorRgb: "96,165,250",
+    color: "#9EA5E4",
+    colorRgb: "158,165,228",
     image: "/nubra.webp",
     imageAlt: "Nubra",
     summary:
@@ -105,8 +105,8 @@ const JOBS = [
     location: "Noida-NCR",
     period: "JAN 2025 — JUN 2025",
     status: "COMPLETED" as const,
-    color: "#3b82f6",
-    colorRgb: "59,130,246",
+    color: "#7A83D7",
+    colorRgb: "122,131,215",
     image: "/onefinnet.png",
     imageAlt: "OneFinnet",
     summary:
@@ -133,8 +133,8 @@ const JOBS = [
     location: "Remote",
     period: "JUL 2024 — OCT 2024",
     status: "COMPLETED" as const,
-    color: "#60a5fa",
-    colorRgb: "96,165,250",
+    color: "#9EA5E4",
+    colorRgb: "158,165,228",
     image: "/ambill.jpg",
     imageAlt: "Ambill",
     summary:
@@ -169,8 +169,8 @@ const ACHIEVEMENTS = [
   {
     badge: "AIR 193",
     title: "NDA SSB Recommended",
-    color: "#2563eb",
-    colorRgb: "37,99,235",
+    color: "#5C66C8",
+    colorRgb: "92,102,200",
     points: [
       "Cleared NDA SSB — All India Rank 193",
       "Leadership under high-pressure scenarios",
@@ -366,7 +366,7 @@ const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> 
         className="absolute top-0 left-0 right-0 h-full origin-top rounded-full"
         style={{
           scaleY,
-          background: "linear-gradient(to bottom, #60a5fa, #3b82f6 50%, #2563eb)",
+          background: "linear-gradient(to bottom, #9EA5E4, #7A83D7 50%, #5C66C8)",
           boxShadow: "0 0 16px rgba(129,140,248,0.9), 0 0 6px rgba(34,211,238,0.8)",
         }}
       />

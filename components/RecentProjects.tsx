@@ -40,7 +40,7 @@ const meta: Record<number, {
     badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
     headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
     strip: "from-blue-500 to-blue-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.20)]",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(122,131,215,0.20)]",
     ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
   },
   8: {
@@ -90,7 +90,7 @@ const meta: Record<number, {
     badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
     headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
     strip: "from-blue-500 to-blue-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(59,130,246,0.18)]",
+    glow: "dark:hover:shadow-[0_0_60px_rgba(122,131,215,0.18)]",
     ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
   },
 };
@@ -390,7 +390,7 @@ const RecentProjects = () => {
       {/* spotlight — dark mode accent */}
       <Spotlight
         className="-top-20 left-0 md:-left-10 md:-top-10 opacity-30 dark:opacity-50"
-        fill="#3b82f6"
+        fill="#7A83D7"
       />
 
       {/* subtle grid lines matching hero */}

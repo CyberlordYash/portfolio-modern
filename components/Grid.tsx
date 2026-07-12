@@ -101,7 +101,7 @@ const StatItem = ({ target, suffix, label }: { target: number; suffix: string; l
     >
       <span
         className="text-2xl font-black tabular-nums md:text-3xl"
-        style={{ fontFamily: "var(--font-orbitron)", color: "#60a5fa" }}
+        style={{ fontFamily: "var(--font-orbitron)", color: "#9EA5E4" }}
       >
         {triggered ? `${count}${suffix}` : `0${suffix}`}
       </span>
