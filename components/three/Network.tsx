@@ -193,7 +193,7 @@ function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
       {/* blinking rooftop beacon — royal-blue signal light */}
       <mesh ref={light} position={[0, h + spireH, 0]}>
         <sphereGeometry args={[1.1, 10, 10]} />
-        <meshBasicMaterial color="#7A83D7" transparent />
+        <meshBasicMaterial color="#91919A" transparent />
       </mesh>
       {/* label */}
       <sprite position={[0, h + spireH + 7, 0]} scale={[26, 8.1, 1]}>

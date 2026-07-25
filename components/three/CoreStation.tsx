@@ -29,7 +29,7 @@ export default function CoreStation() {
 
       <mesh ref={ring1} rotation={[Math.PI / 2.4, 0, 0]}>
         <torusGeometry args={[10, 0.18, 8, 96]} />
-        <meshBasicMaterial color="#7A83D7" transparent opacity={0.85} />
+        <meshBasicMaterial color="#91919A" transparent opacity={0.85} />
       </mesh>
       {/* outer rings tinted blue-steel to match the terrain palette */}
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
@@ -45,7 +45,7 @@ export default function CoreStation() {
       <mesh position={[0, 60, 0]}>
         <cylinderGeometry args={[0.7, 2.4, 120, 12, 1, true]} />
         <meshBasicMaterial
-          color="#7A83D7"
+          color="#91919A"
           transparent
           opacity={0.16}
           blending={THREE.AdditiveBlending}

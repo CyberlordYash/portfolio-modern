@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 /* ─── small "+" grid cross ─── */
 const Cross = ({ style }: { style?: React.CSSProperties }) => (
   <div
-    className="absolute pointer-events-none text-black dark:text-[#9EA5E4] opacity-20 dark:opacity-30"
+    className="absolute pointer-events-none text-black dark:text-[#D8D8DC] opacity-20 dark:opacity-30"
     style={style}
   >
     <div className="relative w-5 h-5">
@@ -75,8 +75,8 @@ const Hero = () => {
         }
         @keyframes glitch-border-kf {
           0%,80%,100% { box-shadow:none; }
-          81%,85% { box-shadow:inset 0 0 0 1px rgba(122,131,215,.9); }
-          86%,89% { box-shadow:inset 0 0 0 1px rgba(158,165,228,.7); }
+          81%,85% { box-shadow:inset 0 0 0 1px rgba(255,255,255,.9); }
+          86%,89% { box-shadow:inset 0 0 0 1px rgba(255,255,255,.7); }
           90%,94% { box-shadow:none; }
         }
         .glitch-box { position:relative; overflow:hidden; }
@@ -84,8 +84,8 @@ const Hero = () => {
           display:block; position:absolute; inset:0; pointer-events:none; opacity:0; z-index:20;
           will-change:transform,opacity,clip-path;
         }
-        .glitch-slice-1 { background:rgba(122,131,215,.22); }
-        .glitch-slice-2 { background:rgba(158,165,228,.16); }
+        .glitch-slice-1 { background:rgba(255,255,255,.22); }
+        .glitch-slice-2 { background:rgba(255,255,255,.16); }
         .glitch-box:hover {
           animation:glitch-jitter 1.1s steps(1) infinite,glitch-border-kf 1.1s steps(1) infinite;
           transition:none !important;
@@ -93,17 +93,12 @@ const Hero = () => {
         .glitch-box:hover .glitch-slice-1 { animation:glitch-slice-1-kf 1.1s steps(1) infinite; }
         .glitch-box:hover .glitch-slice-2 { animation:glitch-slice-2-kf 1.1s steps(1) infinite .07s; }
       `}</style>
-      {/* ── Ambient hero glow (dark mode) ── */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 hidden dark:block">
-        <div className="absolute top-[6%] left-[0%] h-[45vh] w-[42vw] rounded-full bg-[#252A6A]/30 blur-[130px]" />
-        <div className="absolute bottom-[8%] right-[2%] h-[38vh] w-[34vw] rounded-full bg-[#1A1E4D]/35 blur-[120px]" />
-        <div className="absolute top-[40%] left-[45%] h-[30vh] w-[28vw] rounded-full bg-[#14102F]/40 blur-[110px]" />
-      </div>
+      {/* Ambient glow blobs removed — see the note in app/page.tsx. */}
       {/* ── TOP BAR ── */}
-      <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-[#7A83D7]/15">
+      <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 md:px-8 py-4 border-b border-black/10 dark:border-[#91919A]/15">
         <span className="flex items-center gap-2 select-none text-black/55 dark:text-white/55">
-          <span className="grid h-5 w-5 place-items-center border border-black/25 dark:border-[#7A83D7]/50 dark:bg-[#252A6A]/30 dark:shadow-[0_0_10px_rgba(122,131,215,0.3)]">
-            <span className="font-black text-[9px] leading-none dark:text-[#9EA5E4]" style={{ fontFamily: "var(--font-orbitron)" }}>S</span>
+          <span className="grid h-5 w-5 place-items-center border border-black/25 dark:border-[#91919A]/50 dark:bg-[#29292E]/30 dark:shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+            <span className="font-black text-[9px] leading-none dark:text-[#D8D8DC]" style={{ fontFamily: "var(--font-orbitron)" }}>S</span>
           </span>
           <span
             className="font-black uppercase leading-none tracking-[0.18em] text-[9px] md:text-[10px]"
@@ -140,8 +135,8 @@ const Hero = () => {
           <br />
           <span className="text-black dark:text-white heading-gradient-dark">SACHAN</span>
           <span
-            className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#5C66C8] dark:bg-[#7A83D7]"
-            style={{ boxShadow: "0 0 14px rgba(122,131,215,0.55)" }}
+            className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#6D6D76] dark:bg-[#91919A]"
+            style={{ boxShadow: "0 0 14px rgba(255,255,255,0.55)" }}
           />
           <span className="mt-3 block font-mono text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.45em] text-black/75 dark:text-white/85">
             Software Engineer
@@ -157,7 +152,7 @@ const Hero = () => {
           <div className="space-y-2">
             {threads.map((t) => (
               <div key={t.n} className="flex items-center gap-3">
-                <span className="font-mono text-[7px] text-black/25 dark:text-[#7A83D7]/60">
+                <span className="font-mono text-[7px] text-black/25 dark:text-[#91919A]/60">
                   {t.n}.////
                 </span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.18em]">
@@ -169,7 +164,7 @@ const Hero = () => {
         </div>
 
         {/* About (mobile) */}
-        <div className="glitch-box hud-corners navy-glass w-full mt-8 border border-black/15 dark:border-[#7A83D7]/25 p-4">
+        <div className="glitch-box hud-corners navy-glass w-full mt-8 border border-black/15 dark:border-[#91919A]/25 p-4">
           <GlitchOverlay />
           <div className="font-mono text-[7px] uppercase tracking-[0.3em] font-bold mb-2">
             NOT A STUDIO — JUST ME
@@ -238,8 +233,8 @@ const Hero = () => {
           <br />
           <span className="text-black dark:text-white heading-gradient-dark">SACHAN</span>
           <span
-            className="mt-4 mb-1 block h-[3px] w-28 bg-[#5C66C8] dark:bg-[#7A83D7]"
-            style={{ boxShadow: "0 0 14px rgba(122,131,215,0.55)" }}
+            className="mt-4 mb-1 block h-[3px] w-28 bg-[#6D6D76] dark:bg-[#91919A]"
+            style={{ boxShadow: "0 0 14px rgba(255,255,255,0.55)" }}
           />
           <span className="mt-3 block font-mono text-[16px] font-medium uppercase tracking-[0.5em] text-black/75 dark:text-white/85">
             Software Engineer
@@ -321,7 +316,7 @@ const Hero = () => {
             width: 210,
           }}
         >
-          <div className="glitch-box hud-corners navy-glass border border-black/15 dark:border-[#7A83D7]/25 p-4 xl:p-5">
+          <div className="glitch-box hud-corners navy-glass border border-black/15 dark:border-[#91919A]/25 p-4 xl:p-5">
             <GlitchOverlay />
             <div className="font-mono text-[9px] tracking-[0.4em] uppercase text-black/35 dark:text-white/35 mb-3">
               SPECIALIZATION
@@ -358,7 +353,7 @@ const Hero = () => {
           <div className="space-y-2">
             {threads.map((t) => (
               <div key={t.n} className="flex items-center gap-3">
-                <span className="font-mono text-[7px] text-black/25 dark:text-[#7A83D7]/60 w-12">
+                <span className="font-mono text-[7px] text-black/25 dark:text-[#91919A]/60 w-12">
                   {t.n}.////
                 </span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.2em]">
@@ -377,7 +372,7 @@ const Hero = () => {
           className="absolute z-20 bottom-8 right-8"
           style={{ width: 270 }}
         >
-          <div className="glitch-box hud-corners navy-glass border border-black/15 dark:border-[#7A83D7]/25 p-4">
+          <div className="glitch-box hud-corners navy-glass border border-black/15 dark:border-[#91919A]/25 p-4">
             <GlitchOverlay />
             <div className="flex items-center justify-between mb-2">
               <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">
@@ -424,7 +419,7 @@ const Hero = () => {
           <motion.span
             animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.25, 0.9, 0.25] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            className="block h-5 w-px origin-top bg-gradient-to-b from-[#7A83D7] to-transparent"
+            className="block h-5 w-px origin-top bg-gradient-to-b from-[#91919A] to-transparent"
           />
         </motion.div>
 
@@ -467,7 +462,7 @@ const socials = [
     color: "text-[#0a66c2] dark:text-blue-400",
     dot: "bg-[#0a66c2] dark:bg-blue-400",
     border: "border-blue-500/30 dark:border-blue-400/25",
-    bg: "bg-white dark:bg-[#0B0C1E] hover:bg-blue-50 dark:hover:bg-[#161A3D]",
+    bg: "bg-white dark:bg-[#08080A] hover:bg-blue-50 dark:hover:bg-[#16161A]",
   },
   {
     label: "GITHUB",
@@ -475,7 +470,7 @@ const socials = [
     color: "text-black/75 dark:text-white/75",
     dot: "bg-black/50 dark:bg-white/50",
     border: "border-black/20 dark:border-white/20",
-    bg: "bg-white dark:bg-[#0B0C1E] hover:bg-neutral-100 dark:hover:bg-[#191B33]",
+    bg: "bg-white dark:bg-[#08080A] hover:bg-neutral-100 dark:hover:bg-[#16161A]",
   },
   {
     label: "LEETCODE",
@@ -483,7 +478,7 @@ const socials = [
     color: "text-orange-500 dark:text-orange-400",
     dot: "bg-orange-500 dark:bg-orange-400",
     border: "border-orange-500/30 dark:border-orange-400/25",
-    bg: "bg-white dark:bg-[#0B0C1E] hover:bg-orange-50 dark:hover:bg-[#241608]",
+    bg: "bg-white dark:bg-[#08080A] hover:bg-orange-50 dark:hover:bg-[#241608]",
   },
   {
     label: "CODECHEF",
@@ -491,7 +486,7 @@ const socials = [
     color: "text-yellow-600 dark:text-yellow-400",
     dot: "bg-yellow-600 dark:bg-yellow-400",
     border: "border-yellow-600/30 dark:border-yellow-400/25",
-    bg: "bg-white dark:bg-[#0B0C1E] hover:bg-yellow-50 dark:hover:bg-[#221c06]",
+    bg: "bg-white dark:bg-[#08080A] hover:bg-yellow-50 dark:hover:bg-[#221c06]",
   },
 ];
 
@@ -499,17 +494,17 @@ const quickLinks = [
   {
     label: "WORKLOG",
     href: "/worklog",
-    cls: "border-black/20 dark:border-[#7A83D7]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#7A83D7]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#12142E]/60 dark:hover:shadow-[0_0_14px_rgba(122,131,215,0.25)]",
+    cls: "border-black/20 dark:border-[#91919A]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#91919A]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#0E0E11]/60 dark:hover:shadow-[0_0_14px_rgba(255,255,255,0.25)]",
   },
   {
     label: "BLOGS",
     href: "/blogs",
-    cls: "border-black/20 dark:border-[#7A83D7]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#7A83D7]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#12142E]/60 dark:hover:shadow-[0_0_14px_rgba(122,131,215,0.25)]",
+    cls: "border-black/20 dark:border-[#91919A]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#91919A]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#0E0E11]/60 dark:hover:shadow-[0_0_14px_rgba(255,255,255,0.25)]",
   },
   {
     label: "GYM",
     href: "/gym",
-    cls: "border-black/20 dark:border-[#7A83D7]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#7A83D7]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#12142E]/60 dark:hover:shadow-[0_0_14px_rgba(122,131,215,0.25)]",
+    cls: "border-black/20 dark:border-[#91919A]/25 text-black/60 dark:text-white/60 hover:border-black/40 dark:hover:border-[#91919A]/60 hover:text-black dark:hover:text-white dark:hover:bg-[#0E0E11]/60 dark:hover:shadow-[0_0_14px_rgba(255,255,255,0.25)]",
   },
 ];
 

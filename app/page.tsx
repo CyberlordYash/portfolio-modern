@@ -63,13 +63,12 @@ function TopNav() {
 
   return (
     <nav className="fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
+      {/* No plate behind the links — the nav sits directly on the black
+          ground. The old radial wash existed to blend a navy tint that no
+          longer exists, and any fill here just reads as a floating grey box. */}
       <div
         id="nav-pill-box"
         className="relative flex items-center gap-0.5 px-1.5 py-1"
-        style={{
-          background:
-            "radial-gradient(120% 160% at 50% 0%, rgba(37,42,106,0.28) 0%, rgba(26,30,77,0.12) 55%, transparent 100%)",
-        }}
       >
         {links.map((link) => {
           const id = link.href.replace("#", "");
@@ -78,13 +77,14 @@ function TopNav() {
             <a
               key={link.href}
               href={link.href}
+              aria-current={isActive ? "true" : undefined}
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
               }}
               className={cn(
-                "relative px-3 lg:px-3.5 py-1.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-300 whitespace-nowrap",
-                link.desktopOnly && "hidden md:inline-block",
+                "relative grid min-h-[40px] place-items-center px-3 lg:px-3.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-200 whitespace-nowrap",
+                link.desktopOnly && "hidden md:grid",
                 isActive ? "text-white" : "text-white/40 hover:text-white/85",
               )}
             >
@@ -92,7 +92,7 @@ function TopNav() {
               {isActive && (
                 <motion.span
                   layoutId="nav-active"
-                  className="absolute inset-x-2.5 -bottom-[3px] h-px bg-[#9EA5E4] shadow-[0_0_8px_rgba(158,165,228,0.9)]"
+                  className="absolute inset-x-2.5 bottom-1 h-px bg-white"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
@@ -188,7 +188,7 @@ function LocalTime() {
           ALTITUDE
         </div>
         <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-          <span className="text-[#7A83D7]">▾</span> {String(alt).padStart(3, "0")}M
+          <span className="text-[#91919A]">▾</span> {String(alt).padStart(3, "0")}M
         </div>
       </div>
     </div>
@@ -240,7 +240,7 @@ function HudFrame() {
 
   const frame = buildFramePath(size.w, size.h, pill);
   const maskColor = "#000000";
-  const strokeColor = "rgba(158,165,228,0.26)";
+  const strokeColor = "rgba(255,255,255,0.26)";
 
   return (
     <svg
@@ -270,14 +270,14 @@ function HudFrame() {
         d={frame}
         pathLength={1}
         fill="none"
-        stroke="#7A83D7"
+        stroke="#91919A"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeDasharray="1"
         strokeDashoffset="1"
         strokeOpacity="0.85"
         vectorEffect="non-scaling-stroke"
-        style={{ filter: "drop-shadow(0 0 4px rgba(122,131,215,0.6))" }}
+        style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))" }}
       />
     </svg>
   );
@@ -290,12 +290,10 @@ export default function Home() {
       {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
       <MarketWorld />
 
-      {/* Ambient navy aurora — fixed glow layers between the WebGL world and content */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-[1] hidden dark:block">
-        <div className="absolute -top-[18%] -left-[12%] h-[60vh] w-[55vw] rounded-full bg-[#252A6A]/25 blur-[140px]" />
-        <div className="absolute top-[28%] -right-[18%] h-[55vh] w-[48vw] rounded-full bg-[#1A1E4D]/30 blur-[160px]" />
-        <div className="absolute -bottom-[15%] left-[18%] h-[50vh] w-[55vw] rounded-full bg-[#14102F]/40 blur-[150px]" />
-      </div>
+      {/* The three navy aurora blobs that sat here are gone. On a black ground
+          they were near-invisible yet each forced a full-viewport 150px blur
+          composite every frame — cost with no image. Depth now comes from the
+          WebGL layer and the surface steps instead. */}
 
       <TopNav />
       <HudFrame />
@@ -331,11 +329,11 @@ export default function Home() {
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#7A83D7]/30 bg-[#ffffff] dark:bg-[#0A0B1E]/70 dark:shadow-[0_0_20px_rgba(37,42,106,0.35),inset_0_1px_0_rgba(158,165,228,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
+                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-[#ffffff] dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-1.5 h-1.5 bg-black dark:bg-[#9EA5E4] dark:shadow-[0_0_8px_rgba(158,165,228,0.8)]"
+                    className="w-1.5 h-1.5 bg-black dark:bg-[#D8D8DC] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)]"
                   />
                   <RevealChars
                     text="SYSTEM_RUNTIME"
@@ -362,26 +360,26 @@ export default function Home() {
                   </span>
                 </h2>
                 <div className="flex items-center gap-3 mt-3">
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-r dark:from-transparent dark:to-[#7A83D7]/60" />
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-r dark:from-transparent dark:to-[#91919A]/60" />
                   <FadeReveal delay={0.6}>
-                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-[#9EA5E4]/70">
+                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-[#D8D8DC]/70">
                       19 Tools · 6 Domains
                     </span>
                   </FadeReveal>
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-l dark:from-transparent dark:to-[#7A83D7]/60" />
+                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-l dark:from-transparent dark:to-[#91919A]/60" />
                 </div>
               </div>
               <div className="relative mx-auto max-w-5xl">
                 {/* Side rails — frame the centered module, let the living background breathe */}
                 <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#7A83D7]/30" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#91919A]/30" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
                 </div>
                 <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#7A83D7]/30" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#7A83D7]/50" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
+                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#91919A]/30" />
+                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
                 </div>
 
                 <Skills />
@@ -394,7 +392,7 @@ export default function Home() {
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-gradient-to-b from-[#0D0F2B]/60 to-black/50 border border-[#7A83D7]/15 shadow-[0_0_60px_rgba(37,42,106,0.2),inset_0_1px_0_rgba(158,165,228,0.08)]"
+              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-gradient-to-b from-[#0B0B0E]/60 to-black/50 border border-[#91919A]/15 shadow-[0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
               {...cardEnter}
             >
               <Grid />

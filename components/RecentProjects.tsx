@@ -17,82 +17,34 @@ const Cross = ({ style }: { style?: React.CSSProperties }) => (
 );
 
 /* ══════════════════════════════════════
-   PER-PROJECT COLOUR DNA
+   PROJECT META — monochrome
+   Each of the six cards used to carry its own hue (blue/rose/sky/violet/
+   amber), which made the grid read as six unrelated products. Category is
+   now carried by the label alone and every card shares one surface, so the
+   grid reads as a single body of work. The record shape is unchanged, so
+   no call site below needed touching — each colour slot just resolves to
+   the same graphite step.
 ══════════════════════════════════════ */
-const meta: Record<number, {
-  num: string; category: string;
-  accent: string;        // text color (both modes)
-  border: string;        // border
-  borderDark: string;
-  badgeBg: string;       // category badge bg
-  badgeBgDark: string;
-  headerBg: string;      // image zone bg (light)
-  headerBgDark: string;  // image zone bg (dark)
-  strip: string;         // top strip gradient
-  glow: string;          // hover glow (dark only)
-  ctaFrom: string;
-  ctaTo: string;
-}> = {
-  9: {
-    num: "01", category: "HFT · TRADING",
-    accent: "text-blue-600 dark:text-blue-400",
-    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
-    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
-    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
-    strip: "from-blue-500 to-blue-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(122,131,215,0.20)]",
-    ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
-  },
-  8: {
-    num: "02", category: "SECURITY",
-    accent: "text-rose-600 dark:text-rose-400",
-    border: "border-rose-200", borderDark: "dark:border-rose-500/20",
-    badgeBg: "bg-rose-100 text-rose-700", badgeBgDark: "dark:bg-rose-950/80 dark:text-rose-300",
-    headerBg: "bg-rose-50", headerBgDark: "dark:bg-rose-950/40",
-    strip: "from-rose-500 to-pink-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(244,63,94,0.18)]",
-    ctaFrom: "from-rose-500", ctaTo: "to-pink-400",
-  },
-  1: {
-    num: "03", category: "FULLSTACK",
-    accent: "text-sky-600 dark:text-sky-400",
-    border: "border-sky-200", borderDark: "dark:border-sky-500/20",
-    badgeBg: "bg-sky-100 text-sky-700", badgeBgDark: "dark:bg-sky-950/80 dark:text-sky-300",
-    headerBg: "bg-sky-50", headerBgDark: "dark:bg-sky-950/40",
-    strip: "from-sky-500 to-blue-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(20,184,166,0.18)]",
-    ctaFrom: "from-sky-500", ctaTo: "to-blue-400",
-  },
-  2: {
-    num: "04", category: "REAL-TIME",
-    accent: "text-violet-600 dark:text-violet-400",
-    border: "border-violet-200", borderDark: "dark:border-violet-500/20",
-    badgeBg: "bg-violet-100 text-violet-700", badgeBgDark: "dark:bg-violet-950/80 dark:text-violet-300",
-    headerBg: "bg-violet-50", headerBgDark: "dark:bg-violet-950/40",
-    strip: "from-violet-500 to-purple-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(139,92,246,0.18)]",
-    ctaFrom: "from-violet-500", ctaTo: "to-purple-400",
-  },
-  3: {
-    num: "05", category: "E-COMMERCE",
-    accent: "text-amber-600 dark:text-amber-400",
-    border: "border-amber-200", borderDark: "dark:border-amber-500/20",
-    badgeBg: "bg-amber-100 text-amber-700", badgeBgDark: "dark:bg-amber-950/80 dark:text-amber-300",
-    headerBg: "bg-amber-50", headerBgDark: "dark:bg-amber-950/40",
-    strip: "from-amber-500 to-orange-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(245,158,11,0.18)]",
-    ctaFrom: "from-amber-500", ctaTo: "to-orange-400",
-  },
-  4: {
-    num: "06", category: "AI · NLP",
-    accent: "text-blue-600 dark:text-blue-400",
-    border: "border-blue-200", borderDark: "dark:border-blue-500/20",
-    badgeBg: "bg-blue-100 text-blue-700", badgeBgDark: "dark:bg-blue-950/80 dark:text-blue-300",
-    headerBg: "bg-blue-50", headerBgDark: "dark:bg-blue-950/40",
-    strip: "from-blue-500 to-blue-400",
-    glow: "dark:hover:shadow-[0_0_60px_rgba(122,131,215,0.18)]",
-    ctaFrom: "from-blue-500", ctaTo: "to-blue-400",
-  },
+const SURFACE = {
+  accent: "text-black/55 dark:text-white/55",
+  border: "border-black/[0.12]", borderDark: "dark:border-white/[0.12]",
+  badgeBg: "bg-black/[0.05] text-black/70",
+  badgeBgDark: "dark:bg-white/[0.06] dark:text-white/70",
+  headerBg: "bg-black/[0.02]", headerBgDark: "dark:bg-white/[0.02]",
+  // "strip" is consumed by `bg-gradient-to-r ${m.strip}` — a hairline
+  // fade-out replaces the solid 2px colour bar.
+  strip: "from-black/20 to-transparent dark:from-white/20 dark:to-transparent",
+  glow: "hover:border-black/25 dark:hover:border-white/25",
+  ctaFrom: "from-transparent", ctaTo: "to-transparent",
+};
+
+const meta: Record<number, typeof SURFACE & { num: string; category: string }> = {
+  9: { ...SURFACE, num: "01", category: "HFT · TRADING" },
+  8: { ...SURFACE, num: "02", category: "SECURITY"      },
+  1: { ...SURFACE, num: "03", category: "FULLSTACK"     },
+  2: { ...SURFACE, num: "04", category: "REAL-TIME"     },
+  3: { ...SURFACE, num: "05", category: "E-COMMERCE"    },
+  4: { ...SURFACE, num: "06", category: "AI · NLP"      },
 };
 
 const isGithub = (l: string) => l.includes("github.com");
@@ -141,18 +93,18 @@ const FeaturedCard = ({ id, title, des, img, iconLists, link }: (typeof projects
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={`group relative flex flex-col md:flex-row overflow-hidden border ${m.border} ${m.borderDark}
-        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} min-h-[360px] ${link ? "cursor-pointer" : "cursor-default"}`}
+        bg-white dark:bg-[#0B0B0E] transition-all duration-500 ${m.glow} min-h-[360px] ${link ? "cursor-pointer" : "cursor-default"}`}
     >
       {/* coloured top strip */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
+      <div className={"absolute top-0 left-0 right-0 h-px bg-white/15 z-10"} />
 
       {/* ── left image zone ── */}
       <div className={`relative md:w-[45%] shrink-0 h-56 md:h-auto overflow-hidden ${m.headerBg} ${m.headerBgDark}`}>
         <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-25 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
         <img src={img} alt={title} className="relative z-10 h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.04]" />
         {/* right blend to card bg */}
-        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-transparent to-white dark:to-[#111111]" />
-        <div className="absolute inset-0 md:hidden bg-gradient-to-t from-white dark:from-[#111111] via-transparent to-transparent" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-transparent to-white dark:to-[#0B0B0E]" />
+        <div className="absolute inset-0 md:hidden bg-gradient-to-t from-white dark:from-[#0B0B0E] via-transparent to-transparent" />
 
         {/* number watermark */}
         <div
@@ -214,7 +166,7 @@ const FeaturedCard = ({ id, title, des, img, iconLists, link }: (typeof projects
           <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/20 dark:text-white/20">
             PROJECT_{m.num}
           </span>
-          <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${m.strip} px-6 py-2.5 font-mono text-[10px] font-black uppercase tracking-wider text-white shadow-lg transition-all duration-300 group-hover:scale-105`}>
+          <div className={"inline-flex items-center gap-2 border border-white/25 bg-white/[0.06] px-6 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white/90 transition-colors duration-200 group-hover:bg-white/[0.14] group-hover:border-white/45"}>
             View Project
             <ArrowUpRight size={12} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </div>
@@ -239,10 +191,10 @@ const MediumCard = ({ id, title, des, img, iconLists, link, delay = 0 }: (typeof
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
       className={`group relative flex flex-col overflow-hidden border ${m.border} ${m.borderDark}
-        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
+        bg-white dark:bg-[#0B0B0E] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
     >
       {/* coloured top strip */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
+      <div className={"absolute top-0 left-0 right-0 h-px bg-white/15 z-10"} />
 
       {/* ── image zone ── */}
       <div className={`relative overflow-hidden ${m.headerBg} ${m.headerBgDark}`} style={{ height: 190 }}>
@@ -255,7 +207,7 @@ const MediumCard = ({ id, title, des, img, iconLists, link, delay = 0 }: (typeof
         </div>
 
         {/* left colour rule */}
-        <div className={`absolute top-0 left-0 w-[3px] h-full bg-gradient-to-b ${m.strip}`} />
+        <div className={"absolute top-0 left-0 w-px h-full bg-white/12"} />
 
         {/* blurry bg + centred image */}
         <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover scale-110 blur-xl opacity-20 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
@@ -296,7 +248,7 @@ const MediumCard = ({ id, title, des, img, iconLists, link, delay = 0 }: (typeof
               </div>
             ))}
           </div>
-          <div className={`flex items-center gap-1.5 bg-gradient-to-r ${m.strip} px-4 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-md transition-all duration-200 group-hover:scale-105`}>
+          <div className={"inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.06] px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white/90 transition-colors duration-200 group-hover:bg-white/[0.14] group-hover:border-white/45"}>
             View <ArrowUpRight size={10} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
@@ -320,18 +272,18 @@ const WideCard = ({ id, title, des, img, iconLists, link }: (typeof projects)[0]
       viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
       className={`group relative flex flex-col sm:flex-row overflow-hidden border ${m.border} ${m.borderDark}
-        bg-white dark:bg-[#111111] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
+        bg-white dark:bg-[#0B0B0E] transition-all duration-500 ${m.glow} ${link ? "cursor-pointer" : "cursor-default"}`}
     >
       {/* top strip */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.strip} z-10`} />
+      <div className={"absolute top-0 left-0 right-0 h-px bg-white/15 z-10"} />
       {/* left bar on desktop */}
-      <div className={`absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b ${m.strip} hidden sm:block`} />
+      <div className={"absolute left-0 top-0 bottom-0 w-px bg-white/12 hidden sm:block"} />
 
       {/* ── image panel ── */}
       <div className={`relative sm:w-[260px] shrink-0 h-44 sm:h-auto overflow-hidden ${m.headerBg} ${m.headerBgDark}`}>
         <img src={img} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover blur-2xl scale-110 opacity-25 dark:opacity-15 group-hover:scale-125 transition-transform duration-700" />
         <img src={img} alt={title} className="relative z-10 h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.05]" />
-        <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-transparent to-white dark:to-[#111111]" />
+        <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-transparent to-white dark:to-[#0B0B0E]" />
       </div>
 
       {/* ── content ── */}
@@ -361,7 +313,7 @@ const WideCard = ({ id, title, des, img, iconLists, link }: (typeof projects)[0]
               </div>
             ))}
           </div>
-          <div className={`inline-flex items-center gap-1.5 bg-gradient-to-r ${m.strip} px-5 py-2 font-mono text-[9px] font-black uppercase tracking-wider text-white shadow-md transition-all duration-200 group-hover:scale-105`}>
+          <div className={"inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.06] px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white/90 transition-colors duration-200 group-hover:bg-white/[0.14] group-hover:border-white/45"}>
             View Project <ArrowUpRight size={10} />
           </div>
         </div>
@@ -390,7 +342,7 @@ const RecentProjects = () => {
       {/* spotlight — dark mode accent */}
       <Spotlight
         className="-top-20 left-0 md:-left-10 md:-top-10 opacity-30 dark:opacity-50"
-        fill="#7A83D7"
+        fill="#91919A"
       />
 
       {/* subtle grid lines matching hero */}

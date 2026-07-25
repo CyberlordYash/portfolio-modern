@@ -279,7 +279,7 @@ const FooterTerminal = () => {
         className={cn(
           "relative flex flex-col overflow-hidden border transition-all duration-300",
           "bg-[#04070d] border-blue-500/20",
-          "shadow-[0_0_80px_-20px_rgba(122,131,215,0.22),0_0_20px_-5px_rgba(122,131,215,0.06)]",
+          "shadow-[0_0_80px_-20px_rgba(255,255,255,0.22),0_0_20px_-5px_rgba(255,255,255,0.06)]",
           full ? "h-screen rounded-none" : "h-[460px] md:h-[580px] rounded-xl",
         )}
       >

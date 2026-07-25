@@ -13,11 +13,11 @@ import Certificate4 from "../public/node.jpg";
 import Certificate5 from "../public/aws.jpg";
 
 const certs = [
-  { num: "01", title: "Multithreading with Go (Golang)", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-711ced98-8cc0-4890-b170-370d51230530/", image: Certificate1, accent: "#38bdf8", accentRgb: "56,189,248" },
-  { num: "02", title: "Web Development Bootcamp",        platform: "Udemy", link: "https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/",  image: Certificate2, accent: "#9EA5E4", accentRgb: "158,165,228"  },
-  { num: "03", title: "Data Structures & Algorithms",    platform: "Udemy", link: "https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/",  image: Certificate3, accent: "#7A83D7", accentRgb: "122,131,215"   },
-  { num: "04", title: "Backend Engineering with Node.js", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-e1548ade-aca5-40b4-a66c-d17e7230dbcc/", image: Certificate4, accent: "#7A83D7", accentRgb: "122,131,215"  },
-  { num: "05", title: "AWS Cloud Practitioner",          platform: "AWS Credly", link: "https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq", image: Certificate5, accent: "#818cf8", accentRgb: "129,140,248" },
+  { num: "01", title: "Multithreading with Go (Golang)", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-711ced98-8cc0-4890-b170-370d51230530/", image: Certificate1, accent: "#B7B7BE", accentRgb: "183,183,190" },
+  { num: "02", title: "Web Development Bootcamp",        platform: "Udemy", link: "https://www.udemy.com/certificate/UC-aa9d5a25-078e-4695-8145-09cd3ea1caea/",  image: Certificate2, accent: "#D8D8DC", accentRgb: "255,255,255"  },
+  { num: "03", title: "Data Structures & Algorithms",    platform: "Udemy", link: "https://www.udemy.com/certificate/UC-4e3acd8c-5690-4074-90cf-c602419371d9/",  image: Certificate3, accent: "#91919A", accentRgb: "255,255,255"   },
+  { num: "04", title: "Backend Engineering with Node.js", platform: "Udemy", link: "https://www.udemy.com/certificate/UC-e1548ade-aca5-40b4-a66c-d17e7230dbcc/", image: Certificate4, accent: "#91919A", accentRgb: "255,255,255"  },
+  { num: "05", title: "AWS Cloud Practitioner",          platform: "AWS Credly", link: "https://www.credly.com/badges/6886e2d2-89d9-4d4d-9a77-717c94f1fcdc/linked_in?t=rxjfrq", image: Certificate5, accent: "#B7B7BE", accentRgb: "216,216,220" },
 ];
 
 const N = certs.length;

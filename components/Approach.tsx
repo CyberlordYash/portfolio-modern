@@ -18,34 +18,34 @@ const colorMap: Record<PhaseColor, {
   cyan: {
     strip: "bg-blue-400",
     led: "bg-blue-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(158,165,228,0.7)]",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(255,255,255,0.7)]",
     label: "text-blue-500 dark:text-blue-400",
     canvasBg: "bg-blue-950",
-    canvasColors: [[158,165,228]],
+    canvasColors: [[255,255,255]],
   },
   emerald: {
     strip: "bg-sky-400",
     led: "bg-sky-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(56,189,248,0.7)]",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(183,183,190,0.7)]",
     label: "text-sky-500 dark:text-sky-400",
     canvasBg: "bg-sky-950",
-    canvasColors: [[56, 189, 248]],
+    canvasColors: [[183,183,190]],
   },
   violet: {
     strip: "bg-indigo-400",
     led: "bg-indigo-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(129,140,248,0.7)]",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(216,216,220,0.7)]",
     label: "text-indigo-500 dark:text-indigo-400",
     canvasBg: "bg-indigo-950",
-    canvasColors: [[129, 140, 248]],
+    canvasColors: [[216,216,220]],
   },
   amber: {
     strip: "bg-cyan-400",
     led: "bg-cyan-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(34,211,238,0.7)]",
+    ledGlow: "shadow-[0_0_6px_2px_rgba(216,216,220,0.7)]",
     label: "text-cyan-500 dark:text-cyan-400",
     canvasBg: "bg-cyan-950",
-    canvasColors: [[34, 211, 238]],
+    canvasColors: [[216,216,220]],
   },
 };
 
@@ -70,7 +70,7 @@ const PhaseCard = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="relative flex flex-col overflow-hidden border border-black/[0.1] dark:border-white/[0.1]
-        bg-[#ffffff] dark:bg-[#111111]/75 h-[20rem] lg:h-[24rem] cursor-default
+        bg-[#ffffff] dark:bg-[#0B0B0E]/75 h-[20rem] lg:h-[24rem] cursor-default
         transition-all duration-300 group"
     >
       {/* Colored top strip */}

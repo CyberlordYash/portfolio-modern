@@ -65,7 +65,7 @@ export function ThemeToggle({ inline = false }: { inline?: boolean }) {
       ? "linear-gradient(160deg,#0e1a2b 0%,#070c14 55%,#040404 100%)"
       : "linear-gradient(160deg,#bfe0f5 0%,#7bb6e6 100%)",
     boxShadow: isDark
-      ? "inset 0 1px 3px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,211,238,0.18)"
+      ? "inset 0 1px 3px rgba(0,0,0,0.7), 0 0 0 1px rgba(216,216,220,0.18)"
       : "inset 0 1px 3px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.4)",
     transition: "background 0.6s ease, box-shadow 0.6s ease",
   };
@@ -84,7 +84,7 @@ export function ThemeToggle({ inline = false }: { inline?: boolean }) {
         <span key={i} style={{
           position: "absolute", top: st.t, left: st.l, width: st.s, height: st.s,
           borderRadius: "50%", background: "#d6f7ff",
-          boxShadow: "0 0 0.18em rgba(34,211,238,0.9)",
+          boxShadow: "0 0 0.18em rgba(216,216,220,0.9)",
           opacity: isDark ? 1 : 0,
           animation: `tt-twinkle 2.6s ease-in-out ${st.d} infinite`,
           transition: "opacity 0.5s ease",
@@ -116,9 +116,9 @@ export function ThemeToggle({ inline = false }: { inline?: boolean }) {
           borderRadius: "50%",
           background: isDark
             ? "radial-gradient(circle at 35% 30%, #eef6fb 0%, #cdd9e3 60%, #aebccb 100%)"
-            : "radial-gradient(circle at 35% 30%, #fff3b0 0%, #fcd34d 45%, #f59e0b 100%)",
+            : "radial-gradient(circle at 35% 30%, #fff3b0 0%, #fcd34d 45%, #91919A 100%)",
           boxShadow: isDark
-            ? "0 0 0.6em 0.04em rgba(34,211,238,0.45), inset -0.12em -0.12em 0.2em rgba(0,0,0,0.14)"
+            ? "0 0 0.6em 0.04em rgba(216,216,220,0.45), inset -0.12em -0.12em 0.2em rgba(0,0,0,0.14)"
             : "0 0 0.7em 0.12em rgba(252,211,77,0.9), 0 0 0.25em rgba(245,158,11,0.7)",
           transition: "background 0.5s ease, box-shadow 0.5s ease",
         }}

@@ -73,7 +73,7 @@ const Cell = ({
     initial="hidden"
     whileInView="visible"
     viewport={{ once: true, margin: "-40px" }}
-    className={`group relative overflow-hidden bg-[#ffffff] dark:bg-[#111111] ${className}`}
+    className={`group relative overflow-hidden bg-[#ffffff] dark:bg-[#0B0B0E] ${className}`}
   >
     {children}
   </motion.div>
@@ -101,7 +101,7 @@ const StatItem = ({ target, suffix, label }: { target: number; suffix: string; l
     >
       <span
         className="text-2xl font-black tabular-nums md:text-3xl"
-        style={{ fontFamily: "var(--font-orbitron)", color: "#9EA5E4" }}
+        style={{ fontFamily: "var(--font-orbitron)", color: "#D8D8DC" }}
       >
         {triggered ? `${count}${suffix}` : `0${suffix}`}
       </span>

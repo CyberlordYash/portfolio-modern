@@ -18,7 +18,7 @@ type Domain = { id: string; label: string; color: string; techs: Tech[] };
 
 const DOMAINS: Domain[] = [
   {
-    id: "lang", label: "LANGUAGES", color: "#7A83D7",
+    id: "lang", label: "LANGUAGES", color: "#91919A",
     techs: [
       { icon: SiGo,          name: "Go",         color: "#00ADD8", note: "Primary language — trading systems, services" },
       { icon: PiFileCppFill, name: "C++",        color: "#659AD2", note: "Low-latency paths, competitive programming" },
@@ -28,7 +28,7 @@ const DOMAINS: Domain[] = [
     ],
   },
   {
-    id: "infra", label: "INFRA & OBSERVABILITY", color: "#F59E0B",
+    id: "infra", label: "INFRA & OBSERVABILITY", color: "#91919A",
     techs: [
       { icon: SiGooglecloud, name: "Google Cloud", color: "#4285F4", note: "Cloud-native deployments" },
       { icon: SiDocker,      name: "Docker",       color: "#2496ED", note: "Containerized builds & runtimes" },
@@ -38,14 +38,14 @@ const DOMAINS: Domain[] = [
     ],
   },
   {
-    id: "be", label: "BACKEND", color: "#9EA5E4",
+    id: "be", label: "BACKEND", color: "#D8D8DC",
     techs: [
       { icon: FaNode,        name: "Node.js",     color: "#5FA04E", note: "Real-time APIs & services" },
       { icon: SiSpringboot,  name: "Spring Boot", color: "#6DB33F", note: "JVM microservices" },
     ],
   },
   {
-    id: "data", label: "DATA & STORAGE", color: "#A855F7",
+    id: "data", label: "DATA & STORAGE", color: "#91919A",
     techs: [
       { icon: SiPostgresql,  name: "PostgreSQL", color: "#4169E1", note: "Relational modelling, query tuning" },
       { icon: SiMongodb,     name: "MongoDB",    color: "#47A248", note: "Document stores" },
@@ -53,18 +53,18 @@ const DOMAINS: Domain[] = [
     ],
   },
   {
-    id: "msg", label: "MESSAGING & STREAMING", color: "#EC4899",
+    id: "msg", label: "MESSAGING & STREAMING", color: "#91919A",
     techs: [
       { icon: SiApachekafka, name: "Kafka", color: "#9D5BD2", note: "Event streaming backbones" },
       { icon: SiNatsdotio,   name: "NATS",  color: "#27AAE1", note: "JetStream messaging" },
     ],
   },
   {
-    id: "fe", label: "FRONTEND", color: "#06B6D4",
+    id: "fe", label: "FRONTEND", color: "#91919A",
     techs: [
       { icon: FaReact,       name: "React",        color: "#61DAFB", note: "Component-driven UIs" },
       { icon: SiNextdotjs,   name: "Next.js",      color: "#9AA0A6", note: "App Router, RSC, this site" },
-      { icon: SiTailwindcss, name: "Tailwind CSS", color: "#06B6D4", note: "Design systems" },
+      { icon: SiTailwindcss, name: "Tailwind CSS", color: "#91919A", note: "Design systems" },
     ],
   },
 ];
@@ -219,7 +219,7 @@ const Skills = () => (
       {/* HUD backdrop */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.5] dark:opacity-100"
-        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(120,140,180,0.14) 1px, transparent 0)", backgroundSize: "26px 26px" }}
+        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.14) 1px, transparent 0)", backgroundSize: "26px 26px" }}
       />
       <div className="relative px-4 md:px-6 py-6 columns-1 md:columns-2 xl:columns-3 gap-5">
         {DOMAINS.map((d, i) => <DomainPanel key={d.id} d={d} i={i} />)}
