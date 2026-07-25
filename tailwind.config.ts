@@ -29,9 +29,24 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-quicksand)", ...defaultTheme.fontFamily.sans],
-        mono: ["var(--font-quicksand)", ...defaultTheme.fontFamily.sans],
+        // `mono` previously resolved to Quicksand — a rounded sans — so every
+        // terminal/HUD microlabel rendered proportional. Now a real mono face.
+        mono: ["var(--font-mono)", ...defaultTheme.fontFamily.mono],
         Quicksand: ["var(--font-quicksand)", "sans-serif"],
         Orbitron: ["var(--font-orbitron)", "sans-serif"],
+      },
+      // ── Type scale ───────────────────────────────────────────────
+      // Named steps replacing the ad-hoc text-[7px]…text-[15px] sprawl.
+      // 10px is the floor — below that, wide-tracked uppercase mono is
+      // illegible. Line-height and tracking travel with the size so the
+      // vertical rhythm stays consistent wherever a step is used.
+      fontSize: {
+        tick: ["0.625rem", { lineHeight: "1.1", letterSpacing: "0.28em" }],
+        micro: ["0.6875rem", { lineHeight: "1.35", letterSpacing: "0.24em" }],
+        label: ["0.75rem", { lineHeight: "1.45", letterSpacing: "0.16em" }],
+        meta: ["0.8125rem", { lineHeight: "1.6", letterSpacing: "0.03em" }],
+        body: ["0.875rem", { lineHeight: "1.7", letterSpacing: "0.01em" }],
+        "body-lg": ["0.9375rem", { lineHeight: "1.75" }],
       },
       colors: {
         black: {
@@ -45,61 +60,81 @@ const config = {
           "200": "#C1C2D3",
           DEFAULT: "#FFF",
         },
-        // Brand navy-indigo scale — anchored on #252A6A (800)
-        blue: {
-          "50": "#EEEFFB",
-          "100": "#DFE1F7",
-          "200": "#C3C7EF",
-          "300": "#9EA5E4",
-          "400": "#7A83D7",
-          "500": "#5C66C8",
-          "600": "#454EAD",
-          "700": "#363E8C",
-          "800": "#252A6A",
-          "900": "#1A1E4D",
-          "950": "#0F1131",
+        // ── Monochrome graphite scale ──────────────────────────────
+        // The accent family is intentionally hueless. A trace of cool
+        // tint (~250deg at <4% sat) keeps it from reading muddy on pure
+        // black without ever becoming "blue". All former navy/indigo/
+        // cyan aliases now point at this one scale, so the whole UI
+        // resolves to graphite-on-black with no palette drift.
+        graphite: {
+          "50": "#F7F7F8",
+          "100": "#EDEDEF",
+          "200": "#D8D8DC",
+          "300": "#B7B7BE",
+          "400": "#91919A",
+          "500": "#6D6D76",
+          "600": "#53535B",
+          "700": "#3D3D44",
+          "800": "#29292E",
+          "900": "#19191C",
+          "950": "#0E0E10",
         },
-        // Companion scales kept in the navy family (slight hue offsets)
+        // Legacy aliases — components still reference blue-/sky-/indigo-/
+        // cyan-*. Repointing them here neutralises every call site at once
+        // instead of rewriting hundreds of class names.
+        blue: {
+          "50": "#F7F7F8",
+          "100": "#EDEDEF",
+          "200": "#D8D8DC",
+          "300": "#B7B7BE",
+          "400": "#91919A",
+          "500": "#6D6D76",
+          "600": "#53535B",
+          "700": "#3D3D44",
+          "800": "#29292E",
+          "900": "#19191C",
+          "950": "#0E0E10",
+        },
         sky: {
-          "50": "#EFF2FB",
-          "100": "#DFE6F8",
-          "200": "#C4D0F1",
-          "300": "#9FB1E7",
-          "400": "#7B92DC",
-          "500": "#5D77CF",
-          "600": "#4660B4",
-          "700": "#384D92",
-          "800": "#293A70",
-          "900": "#1D2A52",
-          "950": "#0E1430",
+          "50": "#F7F7F8",
+          "100": "#EDEDEF",
+          "200": "#D8D8DC",
+          "300": "#B7B7BE",
+          "400": "#91919A",
+          "500": "#6D6D76",
+          "600": "#53535B",
+          "700": "#3D3D44",
+          "800": "#29292E",
+          "900": "#19191C",
+          "950": "#0E0E10",
         },
         indigo: {
-          "50": "#EFEEFB",
-          "100": "#E1DFF7",
-          "200": "#C8C3EF",
-          "300": "#A9A2E6",
-          "400": "#8A80D9",
-          "500": "#6F63CA",
-          "600": "#584CAF",
-          "700": "#463D8E",
-          "800": "#342D6C",
-          "900": "#25204F",
-          "950": "#14102F",
+          "50": "#F7F7F8",
+          "100": "#EDEDEF",
+          "200": "#D8D8DC",
+          "300": "#B7B7BE",
+          "400": "#91919A",
+          "500": "#6D6D76",
+          "600": "#53535B",
+          "700": "#3D3D44",
+          "800": "#29292E",
+          "900": "#19191C",
+          "950": "#0E0E10",
         },
         cyan: {
-          "50": "#EEF2FA",
-          "100": "#DEE7F6",
-          "200": "#C2D2EE",
-          "300": "#9CB6E2",
-          "400": "#7FA0DA",
-          "500": "#5F83C9",
-          "600": "#4869AE",
-          "700": "#3A548C",
-          "800": "#2B3F6A",
-          "900": "#1F2D4D",
-          "950": "#0D1526",
+          "50": "#F7F7F8",
+          "100": "#EDEDEF",
+          "200": "#D8D8DC",
+          "300": "#B7B7BE",
+          "400": "#91919A",
+          "500": "#6D6D76",
+          "600": "#53535B",
+          "700": "#3D3D44",
+          "800": "#29292E",
+          "900": "#19191C",
+          "950": "#0E0E10",
         },
-        purple: "#CBACF9",
+        purple: "#B7B7BE",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

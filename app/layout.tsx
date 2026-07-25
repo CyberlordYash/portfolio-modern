@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Quicksand, Orbitron } from "next/font/google";
+import { Quicksand, Orbitron, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
@@ -8,11 +8,20 @@ import PageLoader from "@/components/PageLoader";
 const quicksand = Quicksand({
   subsets: ["latin"],
   variable: "--font-quicksand",
+  display: "swap",
 });
 const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
   weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+// The HUD/telemetry language depends on a true monospace face.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 // 1. Dynamic Viewport Configuration
@@ -91,7 +100,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
+        className={`${quicksand.variable} ${orbitron.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -100,6 +109,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <a href="#home" className="skip-link">
+            Skip to content
+          </a>
           <PageLoader />
           <main className="relative z-10">{children}</main>
 

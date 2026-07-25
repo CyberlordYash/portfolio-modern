@@ -1,11 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
+/* Fonts load via next/font in app/layout.tsx (Quicksand, Orbitron, JetBrains
+   Mono). Re-@import-ing them here added three blocking requests for faces the
+   app already had, and `body { font-family: "Orbitron" }` referenced a family
+   name next/font never registers, so it silently did nothing. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  font-family: "Orbitron";
+
+/* ══ SURFACE TOKENS ══════════════════════════════════════════════
+   One flat, hueless ladder. Every surface is a solid black step —
+   no gradients, no navy. Elevation reads through the border and the
+   step value alone, which is what keeps it looking deliberate. */
+:root {
+  --ink: #ffffff;
+  --surface-0: #ffffff;
+  --surface-1: #fafafa;
+  --surface-2: #f4f4f5;
+  --line: rgba(0, 0, 0, 0.11);
+  --line-strong: rgba(0, 0, 0, 0.2);
+  --accent: #29292e;
+}
+.dark {
+  --ink: #000000;
+  --surface-0: #000000;
+  --surface-1: #08080a;
+  --surface-2: #0e0e11;
+  --surface-3: #16161a;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --accent: #b7b7be;
 }
 
 ::view-transition-old(root),
@@ -13,12 +35,84 @@ body {
   animation: none;
   mix-blend-mode: normal;
 }
-::-webkit-scrollbar {
-  display: none;
-}
 
 ::selection {
-  background: rgba(122,131,215, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+/* ── Scroll affordance ─────────────────────────────────────────
+   The whole site is a scroll narrative, so the bar stays — styled
+   down to a thin graphite rail rather than removed outright. */
+html,
+#main-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.34);
+  background-clip: content-box;
+}
+
+/* ── Keyboard focus ───────────────────────────────────────────
+   There was no visible focus state anywhere in the app. */
+:focus-visible {
+  outline: 2px solid #d8d8dc;
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Skip link ───────────────────────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -130%);
+  z-index: 200;
+  padding: 0.7rem 1.35rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #0e0e11;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  transition: transform 0.18s ease-out;
+}
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+/* ── Reduced motion ───────────────────────────────────────────
+   This site layers WebGL, infinite glitch loops and pulsing LEDs. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .glitch-box:hover,
+  .glitch-box:hover .glitch-slice-1,
+  .glitch-box:hover .glitch-slice-2 {
+    animation: none !important;
+  }
 }
 
 /* ── HUD corner ticks (dark mode) ─────────────────────────── */
@@ -34,38 +128,126 @@ body {
 .dark .hud-corners::before {
   top: -1px;
   left: -1px;
-  border-top: 1px solid rgba(158,165,228, 0.55);
-  border-left: 1px solid rgba(158,165,228, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.34);
+  border-left: 1px solid rgba(255, 255, 255, 0.34);
 }
 .dark .hud-corners::after {
   bottom: -1px;
   right: -1px;
-  border-bottom: 1px solid rgba(158,165,228, 0.55);
-  border-right: 1px solid rgba(158,165,228, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.34);
+  border-right: 1px solid rgba(255, 255, 255, 0.34);
 }
 
-/* ── Navy glass card (dark mode) ──────────────────────────── */
+/* ── Glass card (dark mode) ───────────────────────────────────
+   Was a navy vertical gradient; now one flat black step. The inset
+   hairline does the lifting a gradient used to fake. */
 .dark .navy-glass {
-  background: linear-gradient(
-    180deg,
-    rgba(20, 23, 60, 0.45) 0%,
-    rgba(7, 8, 24, 0.55) 100%
-  );
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: rgba(8, 8, 10, 0.72);
+  backdrop-filter: blur(8px) saturate(0.9);
+  -webkit-backdrop-filter: blur(8px) saturate(0.9);
   box-shadow:
-    inset 0 1px 0 rgba(158,165,228, 0.1),
-    0 12px 40px rgba(1, 1, 9, 0.45);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 48px rgba(0, 0, 0, 0.7);
+}
+
+/* ══ PANEL SYSTEM ════════════════════════════════════════════════
+   Sections each rolled their own border/bg/blur combo (bg-black/40,
+   /35, /30, /60, #111111, #fafafa…). These give one surface language
+   so the page reads as a single instrument, not six. */
+.panel {
+  position: relative;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+.panel-flush {
+  background: var(--surface-0);
+}
+.panel-raised {
+  background: var(--surface-2);
+}
+.panel-interactive:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-2);
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Hairline accent along a panel's top edge — replaces the coloured
+   2px gradient strips that used to differentiate cards. */
+.panel-accent::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line-strong);
+  z-index: 10;
+}
+
+/* Shared side rails — this markup was duplicated verbatim in three
+   components (Skills, RecentProjects, Footer). */
+.side-rail {
+  pointer-events: none;
+  position: absolute;
+  inset-block: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+@media (min-width: 768px) {
+  .side-rail {
+    display: flex;
+  }
+}
+.side-rail::before,
+.side-rail::after {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  rotate: 45deg;
+  border: 1px solid var(--line-strong);
+  flex-shrink: 0;
+}
+.side-rail > span {
+  width: 1px;
+  flex: 1;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--line-strong),
+    transparent
+  );
+}
+
+/* Section vertical rhythm — replaces arbitrary py-16/20/24/28 */
+.section-y {
+  padding-block: 5rem;
+}
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: 7rem;
+  }
 }
 
 /* ── Floating Nav: glitch text ──────────────────────────────── */
 .glitch-text {
   position: relative;
-  color: #5C66C8;
+  color: #53535b;
   display: inline-block;
 }
 .dark .glitch-text {
-  color: #7A83D7;
+  color: #b7b7be;
 }
 .glitch-text::before,
 .glitch-text::after {
@@ -75,12 +257,12 @@ body {
   opacity: 0;
 }
 .glitch-text::before {
-  color: #9EA5E4;
+  color: #ffffff;
   clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
   animation: glitch-before 4s infinite steps(1);
 }
 .glitch-text::after {
-  color: #454EAD;
+  color: #6d6d76;
   clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
   animation: glitch-after 4s infinite steps(1);
 }
@@ -202,7 +384,7 @@ body {
   }
 
   .black-gradient {
-    background: linear-gradient(90deg, #171a3e 0%, #070921 100%);
+    background: #0e0e11;
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -215,28 +397,27 @@ body {
 
 }
 
-/* ── Gradient heading utilities — light mode: plain text; dark mode: gradient ── */
-.dark .heading-gradient-dark {
-  background-image: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.88) 60%, rgba(122,131,215,0.70) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.dark .heading-gradient-blue {
-  background-image: linear-gradient(135deg, #ffffff 0%, #DFE1F7 55%, #7A83D7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.dark .xbox-bg {
-  background: radial-gradient(ellipse 120% 70% at 10% 5%, #14173c 0%, #0a0c22 45%, #010109 100%);
+/* ── Heading treatments ───────────────────────────────────────────
+   These were three navy text-gradients. Gradient-clipped text also
+   defeats subpixel antialiasing, so flattening them to solid ink is
+   both a look change and a legibility win. The names are kept so no
+   call site has to change. */
+.dark .heading-gradient-dark,
+.dark .heading-gradient-blue,
+.dark .heading-gradient-multicolor {
+  background-image: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  color: #ffffff;
 }
 .dark .heading-gradient-multicolor {
-  background-image: linear-gradient(135deg, #9EA5E4 0%, #7A83D7 50%, #454EAD 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #d8d8dc;
+}
+
+/* Was a navy radial wash; now a flat near-black plate. */
+.dark .xbox-bg {
+  background: #08080a;
 }
 
 /* LED glow keyframes for Approach phase cards */
@@ -759,7 +940,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #7A83D7;
+  background-color: #29292E;
   -webkit-transition: 0.4s;
   transition: 0.4s;
   z-index: 0;
@@ -783,7 +964,7 @@ body {
 }
 
 #input:focus + .slider {
-  box-shadow: 0 0 1px #7A83D7;
+  box-shadow: 0 0 1px #B7B7BE;
 }
 
 #input:checked + .slider .sun-moon {
@@ -1086,8 +1267,8 @@ body {
   left: 0;
   width: var(--size-orbe);
   height: var(--size-orbe);
-  background-color: #7A83D7;
-  box-shadow: 0px 0px 20px 2px #5C66C8;
+  background-color: #D8D8DC;
+  box-shadow: 0px 0px 18px 2px rgba(255,255,255,0.35);
   border-radius: 50%;
 }
 
@@ -1189,8 +1370,8 @@ body {
     z-index: -1;
     background-image: linear-gradient(
       120deg,
-      rgba(122,131,215, 0.1) 0%,
-      rgba(122,131,215, 0.1) 35%,
+      rgba(255,255,255, 0.06) 0%,
+      rgba(255,255,255, 0.06) 35%,
       rgba(234, 179, 8, 0.1) 65%,
       rgba(147, 51, 234, 0.1) 100%
     );
@@ -1237,8 +1418,8 @@ body {
     &::before {
       background-image: linear-gradient(
         120deg,
-        rgba(92,102,200, 0.1) 0%,
-        rgba(92,102,200, 0.1) 35%,
+        rgba(255,255,255, 0.05) 0%,
+        rgba(255,255,255, 0.05) 35%,
         rgba(217, 119, 6, 0.1) 65%,
         rgba(126, 34, 206, 0.1) 100%
       );
