@@ -15,6 +15,42 @@ export const EXCHANGES: { name: string; sub: string; pos: [number, number, numbe
   { name: "NCDEX",  sub: "AGRI DERIVS · IN",     pos: [-70, 38, -240], r: 6 },
 ];
 
+/* ── aurora-lit structure palette ──
+   The towers were pure #ffffff wireframes over opaque #0d0d0d cores. Against
+   the old contour terrain that read fine, but once the background became an
+   aurora nothing in them picked up the field's light, so they sat on top of
+   the scene as a separate visual language instead of standing in it.
+
+   These get baked into a colour attribute, which needs the manual sRGB→linear
+   conversion three applies automatically to material.color but NOT to vertex
+   colours (r152+ colour management). */
+const STRUCT_BASE = new THREE.Color("#0f6f66").convertSRGBToLinear(); // teal at the field
+const STRUCT_TOP = new THREE.Color("#dff7ec").convertSRGBToLinear(); // pale mint at altitude
+
+/* Vertical gradient baked into a geometry's colour attribute, so the built-in
+   line material can carry the gradient — and keep its fog — without needing a
+   custom shader. */
+function applyHeightGradient(
+  geo: THREE.BufferGeometry,
+  y0: number,
+  y1: number,
+) {
+  const pos = geo.getAttribute("position");
+  const out = new Float32Array(pos.count * 3);
+  const c = new THREE.Color();
+  for (let i = 0; i < pos.count; i++) {
+    const g = THREE.MathUtils.clamp((pos.getY(i) - y0) / (y1 - y0), 0, 1);
+    /* squared so the mint stays up near the crown rather than washing the
+       whole tower pale */
+    c.copy(STRUCT_BASE).lerp(STRUCT_TOP, g * g);
+    out[i * 3] = c.r;
+    out[i * 3 + 1] = c.g;
+    out[i * 3 + 2] = c.b;
+  }
+  geo.setAttribute("color", new THREE.BufferAttribute(out, 3));
+  return geo;
+}
+
 /* ── canvas-texture label sprites (no external font runtime needed) ── */
 function makeLabel(name: string, sub: string) {
   const c = document.createElement("canvas");
@@ -52,15 +88,16 @@ const LINE_FRAG = /* glsl */ `
   varying float vT;
   varying float vDist;
   void main() {
-    /* faint base route */
-    vec3 col = vec3(0.30) * 0.5;
+    /* faint base route, tinted teal so the idle routes belong to the aurora */
+    vec3 col = vec3(0.09, 0.17, 0.16);
     float a = 0.20;
     /* two latency pulses racing along the route */
     float p1 = abs(fract(vT - uTime * 0.22 + uPhase) - 0.5);
     float p2 = abs(fract(vT * 0.997 - uTime * 0.09 + uPhase * 1.7) - 0.5);
     float g = smoothstep(0.045, 0.0, p1) * 1.6 + smoothstep(0.03, 0.0, p2) * 0.9;
-    /* latency pulses race along the routes in royal blue */
-    col += g * vec3(0.25, 0.55, 1.00);
+    /* pulses run mint instead of royal blue — the blue was the one hue on
+       screen with no relationship to the aurora behind it */
+    col += g * vec3(0.32, 0.95, 0.80);
     a += g * 0.8;
     a *= smoothstep(600.0, 140.0, vDist);
     gl_FragColor = vec4(col, a);
@@ -121,42 +158,89 @@ function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
 
   const seed = useMemo(() => Math.random() * 10, []);
 
-  /* slender skyscraper rising from the ground to just above the node point */
+  /* Modelled on Phiroze Jeejeebhoy Towers, the BSE building on Dalal Street:
+     a slender, heavily banded shaft standing on a wide curved podium, capped
+     by a broader mechanical crown. Reads far more like an exchange than the
+     plain banded box that was here before. */
   const w = r * 1.25;
   const h = pos[1] + 8;
-  const floors = Math.max(4, Math.round(h / 6));
-  const spireH = r * 0.9;
+  const spireH = r * 0.55;
 
-  /* wireframe structure: 4 corner verticals + a square ring per floor */
+  /* the drum the shaft stands on */
+  const rPod = w * 1.2;
+  const hPod = h * 0.2;
+
   const edges = useMemo(() => {
-    const hw = w / 2;
-    const corners: [number, number][] = [[-hw, -hw], [hw, -hw], [hw, hw], [-hw, hw]];
     const segs: number[] = [];
-    /* vertical mullions — corner posts plus panels down each face (curtain wall) */
-    const panels = 3;
-    for (let c = 0; c < 4; c++) {
-      const [x1, z1] = corners[c];
-      const [x2, z2] = corners[(c + 1) % 4];
-      for (let p = 0; p < panels; p++) {
-        const tt = p / panels;
-        const x = x1 + (x2 - x1) * tt;
-        const z = z1 + (z2 - z1) * tt;
-        segs.push(x, 0, z, x, h, z);
+    const push = (
+      x1: number, y1: number, z1: number,
+      x2: number, y2: number, z2: number,
+    ) => segs.push(x1, y1, z1, x2, y2, z2);
+
+    /* ── podium: the curved drum, the building's most recognisable feature ── */
+    const SIDES = 26;
+    const podRings = 4;
+    for (let i = 0; i <= podRings; i++) {
+      const y = (hPod * i) / podRings;
+      for (let s = 0; s < SIDES; s++) {
+        const a1 = (s / SIDES) * Math.PI * 2;
+        const a2 = ((s + 1) / SIDES) * Math.PI * 2;
+        push(
+          Math.cos(a1) * rPod, y, Math.sin(a1) * rPod,
+          Math.cos(a2) * rPod, y, Math.sin(a2) * rPod,
+        );
       }
     }
-    /* floor rings */
-    for (let i = 0; i <= floors; i++) {
-      const y = (h * i) / floors;
+    /* every other side gets a mullion — all 26 would read as a solid wall */
+    for (let s = 0; s < SIDES; s += 2) {
+      const a = (s / SIDES) * Math.PI * 2;
+      push(
+        Math.cos(a) * rPod, 0, Math.sin(a) * rPod,
+        Math.cos(a) * rPod, hPod, Math.sin(a) * rPod,
+      );
+    }
+
+    /* ── shaft: dense horizontal banding is the signature ── */
+    const hw = w / 2;
+    const corners: [number, number][] = [[-hw, -hw], [hw, -hw], [hw, hw], [-hw, hw]];
+    const bands = Math.max(8, Math.round((h - hPod) / 2.6));
+    for (let i = 0; i <= bands; i++) {
+      const y = hPod + ((h - hPod) * i) / bands;
       for (let c = 0; c < 4; c++) {
         const [x1, z1] = corners[c];
         const [x2, z2] = corners[(c + 1) % 4];
-        segs.push(x1, y, z1, x2, y, z2);
+        push(x1, y, z1, x2, y, z2);
       }
     }
+    /* corner posts plus one mullion mid-face */
+    for (let c = 0; c < 4; c++) {
+      const [x1, z1] = corners[c];
+      const [x2, z2] = corners[(c + 1) % 4];
+      for (let p = 0; p < 2; p++) {
+        const tt = p / 2;
+        const x = x1 + (x2 - x1) * tt;
+        const z = z1 + (z2 - z1) * tt;
+        push(x, hPod, z, x, h, z);
+      }
+    }
+
+    /* ── crown: the broader band capping the shaft ── */
+    const rc = hw * 1.22;
+    const crown: [number, number][] = [[-rc, -rc], [rc, -rc], [rc, rc], [-rc, rc]];
+    const crownBase = h - Math.min(3.0, h * 0.07);
+    for (const y of [crownBase, h]) {
+      for (let c = 0; c < 4; c++) {
+        const [x1, z1] = crown[c];
+        const [x2, z2] = crown[(c + 1) % 4];
+        push(x1, y, z1, x2, y, z2);
+      }
+    }
+    for (const [x, z] of crown) push(x, crownBase, z, x, h, z);
+
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(segs), 3));
-    return g;
-  }, [w, h, floors]);
+    return applyHeightGradient(g, 0, h);
+  }, [w, h, rPod, hPod]);
 
   useEffect(() => () => edges.dispose(), [edges]);
 
@@ -171,29 +255,36 @@ function ExchangeNode({ name, sub, pos, r }: (typeof EXCHANGES)[number]) {
 
   return (
     <group position={[pos[0], 0, pos[2]]}>
-      {/* dark core so the tower reads as solid against the terrain */}
-      <mesh position={[0, h / 2, 0]}>
-        <boxGeometry args={[w, h, w]} />
-        <meshBasicMaterial color="#0d0d0d" transparent opacity={0.68} />
+      {/* Smoked-glass mass in two parts matching the wireframe's massing —
+          deep teal rather than neutral black, so the body reads as dark glass
+          standing in the aurora rather than a hole cut in it. Slightly inset
+          from the wireframe so the lines stay crisp on top of it. */}
+      <mesh position={[0, hPod / 2, 0]}>
+        <cylinderGeometry args={[rPod * 0.98, rPod * 0.98, hPod, 26]} />
+        <meshBasicMaterial color="#03100f" transparent opacity={0.62} />
       </mesh>
-      {/* frosted-glass sheen — modern white glow over the body */}
-      <mesh position={[0, h / 2, 0]}>
-        <boxGeometry args={[w * 0.99, h, w * 0.99]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.06} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <mesh position={[0, (hPod + h) / 2, 0]}>
+        <boxGeometry args={[w * 0.98, h - hPod, w * 0.98]} />
+        <meshBasicMaterial color="#03100f" transparent opacity={0.6} />
       </mesh>
-      {/* bright white wireframe facade */}
+      {/* frosted sheen over the shaft, tinted to the field's own light */}
+      <mesh position={[0, (hPod + h) / 2, 0]}>
+        <boxGeometry args={[w * 0.97, h - hPod, w * 0.97]} />
+        <meshBasicMaterial color="#a8f0dc" transparent opacity={0.05} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+      {/* wireframe facade — teal at the base easing to mint at the crown */}
       <lineSegments geometry={edges}>
-        <lineBasicMaterial color="#ffffff" transparent opacity={0.88} />
+        <lineBasicMaterial vertexColors transparent opacity={0.72} />
       </lineSegments>
       {/* rooftop spire */}
       <mesh position={[0, h + spireH / 2, 0]}>
         <boxGeometry args={[0.5, spireH, 0.5]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.92} />
+        <meshBasicMaterial color="#dff7ec" transparent opacity={0.85} />
       </mesh>
-      {/* blinking rooftop beacon — royal-blue signal light */}
+      {/* blinking rooftop beacon — aurora mint, was a dull neutral grey */}
       <mesh ref={light} position={[0, h + spireH, 0]}>
         <sphereGeometry args={[1.1, 10, 10]} />
-        <meshBasicMaterial color="#91919A" transparent />
+        <meshBasicMaterial color="#48e3c4" transparent />
       </mesh>
       {/* label */}
       <sprite position={[0, h + spireH + 7, 0]} scale={[26, 8.1, 1]}>
@@ -221,10 +312,12 @@ function DataMonoliths() {
         const geo = new THREE.BoxGeometry(...m.size, 2, 5, 2);
         const edges = new THREE.EdgesGeometry(geo);
         geo.dispose();
+        /* box geometry is centred, so the gradient spans ±height/2 */
+        applyHeightGradient(edges, -m.size[1] / 2, m.size[1] / 2);
         const mat = new THREE.LineBasicMaterial({
-          color: new THREE.Color("#c4c4c4"),
+          vertexColors: true,
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.46,
         });
         const lines = new THREE.LineSegments(edges, mat);
         lines.position.set(...m.pos);
@@ -249,7 +342,7 @@ function DataMonoliths() {
       {MONOLITHS.map((m, i) => (
         <mesh key={`c${i}`} position={m.pos}>
           <boxGeometry args={[m.size[0] * 0.3, m.size[1] * 0.8, m.size[2] * 0.3]} />
-          <meshBasicMaterial color="#161616" transparent opacity={0.55} />
+          <meshBasicMaterial color="#04100f" transparent opacity={0.5} />
         </mesh>
       ))}
     </group>

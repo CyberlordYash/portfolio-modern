@@ -22,32 +22,35 @@ export default function CoreStation() {
 
   return (
     <group position={[0, 12, -525]}>
+      {/* Core and rings were periwinkle/blue-steel, tuned to the old terrain
+          palette. Retuned to the aurora's mint→teal→violet so the station at
+          the end of the flight looks like it belongs to this sky. */}
       <mesh ref={core}>
         <icosahedronGeometry args={[4.2, 2]} />
-        <meshBasicMaterial color="#8A91DD" />
+        <meshBasicMaterial color="#8FF2D6" />
       </mesh>
 
       <mesh ref={ring1} rotation={[Math.PI / 2.4, 0, 0]}>
         <torusGeometry args={[10, 0.18, 8, 96]} />
-        <meshBasicMaterial color="#91919A" transparent opacity={0.85} />
+        <meshBasicMaterial color="#48e3c4" transparent opacity={0.8} />
       </mesh>
-      {/* outer rings tinted blue-steel to match the terrain palette */}
+      {/* outer rings cool off outward, ending on the aurora's violet fringe */}
       <mesh ref={ring2} rotation={[0, Math.PI / 3, Math.PI / 5]}>
         <torusGeometry args={[15, 0.14, 8, 96]} />
-        <meshBasicMaterial color="#7d8a99" transparent opacity={0.55} />
+        <meshBasicMaterial color="#2f9e9b" transparent opacity={0.5} />
       </mesh>
       <mesh ref={ring3} rotation={[Math.PI / 3, 0, Math.PI / 2.5]}>
         <torusGeometry args={[21, 0.1, 8, 96]} />
-        <meshBasicMaterial color="#4f5a66" transparent opacity={0.4} />
+        <meshBasicMaterial color="#5b4a9e" transparent opacity={0.38} />
       </mesh>
 
       {/* vertical light beam */}
       <mesh position={[0, 60, 0]}>
         <cylinderGeometry args={[0.7, 2.4, 120, 12, 1, true]} />
         <meshBasicMaterial
-          color="#91919A"
+          color="#3fd8bb"
           transparent
-          opacity={0.16}
+          opacity={0.14}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}

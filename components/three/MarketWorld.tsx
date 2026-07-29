@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 
 import CameraRig from "./CameraRig";
-import Terrain from "./Terrain";
+import Aurora from "./Aurora";
 import Network from "./Network";
 import CoreStation from "./CoreStation";
 import SectionMarkers from "./SectionMarkers";
@@ -53,22 +53,29 @@ export default function MarketWorld() {
         }}
         style={{ pointerEvents: "none" }}
       >
-        {/* near-black with a whisper of blue — gives the fog depth a subtle
-            atmosphere instead of dead #000 while staying invisible under UI */}
-        <color attach="background" args={["#010308"]} />
-        <fogExp2 attach="fog" args={["#010308", 0.0040]} />
+        {/* near-black with a whisper of teal — gives the fog depth a subtle
+            atmosphere instead of dead #000 while staying invisible under UI,
+            and sits in the aurora's own hue family rather than fighting it */}
+        <color attach="background" args={["#01070A"]} />
+        <fogExp2 attach="fog" args={["#01070A", 0.0040]} />
         <Suspense fallback={null}>
           <CameraRig />
-          <Terrain quality={q} />
+          <Aurora quality={q} />
           <Network />
           <CoreStation />
           <SectionMarkers />
           {q > 0 && (
             <EffectComposer multisampling={0}>
+              {/* Threshold dropped from 0.56 so the aurora's brightest ribbon
+                  cores glow — they peak near 0.3 and would otherwise never
+                  reach the bloom pass. Intensity and radius stay low: haze
+                  comes from blooming large bright areas, and a thin sparse
+                  ribbon is exactly what tolerates a glow without fogging the
+                  frame or eating into the UI's contrast. */}
               <Bloom
                 mipmapBlur
-                intensity={0.38}
-                luminanceThreshold={0.56}
+                intensity={0.36}
+                luminanceThreshold={0.26}
                 luminanceSmoothing={0.3}
                 radius={0.6}
               />
