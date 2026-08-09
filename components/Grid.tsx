@@ -113,7 +113,7 @@ const StatItem = ({ target, suffix, label }: { target: number; suffix: string; l
 };
 
 const StatsCard = () => (
-  <div className="relative z-10 flex h-full items-center justify-around p-6 pt-10">
+  <div className="relative z-10 flex h-full items-center justify-around p-4 pt-10 sm:p-6 sm:pt-10">
     {[
       { target: 1, suffix: "+", label: "Yrs Exp" },
       { target: 50, suffix: "K+", label: "msg/sec" },
@@ -211,7 +211,7 @@ const Grid = () => {
             <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
             <GlowingEffect spread={40} proximity={80} disabled={false} borderWidth={1} />
 
-            <div className="relative z-10 flex h-full flex-col p-7 md:p-9">
+            <div className="relative z-10 flex h-full flex-col p-5 sm:p-7 md:p-9">
               {/* Module label */}
               <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-blue-600 dark:text-blue-400 mb-4">
                 BIO // CORE_IDENTITY
@@ -404,7 +404,7 @@ const Grid = () => {
               </div>
             )}
 
-            <div className="relative z-10 flex flex-col items-center justify-between gap-6 px-8 py-9 text-center md:flex-row md:text-left">
+            <div className="relative z-10 flex flex-col items-center justify-between gap-6 px-5 py-7 sm:px-8 sm:py-9 text-center md:flex-row md:text-left">
               <div>
                 <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-black/35 dark:text-white/30">
                   COLLAB_REQUEST // OPEN

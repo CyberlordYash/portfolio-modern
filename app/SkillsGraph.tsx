@@ -131,10 +131,16 @@ export default function SkillsGraph() {
 
       const g = svg.append("g");
 
-      // Zoom
+      // Zoom. The filter is the default one minus touch: d3.zoom claims
+      // touchstart, so on a phone a finger landing anywhere in this box panned
+      // the graph and the page underneath refused to scroll past the section.
+      // Node dragging (d3.drag, below) still works by touch.
       svg.call(
         d3.zoom<SVGSVGElement, unknown>()
           .scaleExtent([0.35, 2.8])
+          .filter((ev: any) =>
+            !ev.type.startsWith("touch") && (!ev.ctrlKey || ev.type === "wheel") && !ev.button
+          )
           .on("zoom", ev => g.attr("transform", ev.transform))
       );
 

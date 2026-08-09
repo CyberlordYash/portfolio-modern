@@ -19,13 +19,19 @@ import dynamic from "next/dynamic";
 const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
 const MarketWorld = dynamic(() => import("@/components/three/MarketWorld"), { ssr: false });
 
+// `short` is only for the mobile bar, where each cell is ~1/5 of the screen —
+// "Experience" doesn't fit at any legible size, the rest do.
 const links = [
-  { n: "01", label: "Home",       href: "#home",       desktopOnly: false },
-  { n: "02", label: "Experience", href: "#experience", desktopOnly: true  },
-  { n: "03", label: "About",      href: "#skills",     desktopOnly: false },
-  { n: "04", label: "Projects",   href: "#projects",   desktopOnly: false },
-  { n: "05", label: "Contact",    href: "#contact",    desktopOnly: true  },
+  { n: "01", label: "Home",       short: "Home",     href: "#home"       },
+  { n: "02", label: "Experience", short: "Work",     href: "#experience" },
+  { n: "03", label: "About",      short: "About",    href: "#skills"     },
+  { n: "04", label: "Projects",   short: "Projects", href: "#projects"   },
+  { n: "05", label: "Contact",    short: "Contact",  href: "#contact"    },
 ];
+
+// Mobile nav sits on the bottom edge. If this changes, update the matching
+// `pb-[calc(56px+…)]` on the scroll content below so the footer still clears it.
+const MOBILE_NAV_H = 56;
 
 // Shared entrance animation for all non-hero sections.
 // once:true + opacity-only — re-triggering transforms on full-screen
@@ -61,60 +67,108 @@ function TopNav() {
     return () => obs.disconnect();
   }, []);
 
+  const go = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <nav className="fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
-      {/* No plate behind the links — the nav sits directly on the black
+    <>
+      {/* ── Desktop: floating top-right rail ──
+          No plate behind the links — the nav sits directly on the black
           ground. The old radial wash existed to blend a navy tint that no
           longer exists, and any fill here just reads as a floating grey box. */}
-      <div
-        id="nav-pill-box"
-        className="relative flex items-center gap-0.5 px-1.5 py-1"
+      <nav className="hidden md:block fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
+        <div
+          id="nav-pill-box"
+          className="relative flex items-center gap-0.5 px-1.5 py-1"
+        >
+          {links.map((link) => {
+            const id = link.href.replace("#", "");
+            const isActive = active === id;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "true" : undefined}
+                onClick={go(id)}
+                className={cn(
+                  "relative grid min-h-[40px] place-items-center px-3 lg:px-3.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-200 whitespace-nowrap",
+                  isActive ? "text-white" : "text-white/40 hover:text-white/85",
+                )}
+              >
+                {link.label}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-desktop"
+                    className="absolute inset-x-2.5 bottom-1 h-px bg-white"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* ── Mobile: bottom bar ──
+          The top-right rail collided with the Hero's own header strip and was
+          out of thumb reach, so two of the five sections were simply dropped
+          from it. Down here all five fit, nothing overlaps, and the targets
+          are full-height rather than 10px of text. */}
+      <nav
+        className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.14] bg-black/90 backdrop-blur-xl"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        {links.map((link) => {
-          const id = link.href.replace("#", "");
-          const isActive = active === id;
-          return (
-            <a
-              key={link.href}
-              href={link.href}
-              aria-current={isActive ? "true" : undefined}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={cn(
-                "relative grid min-h-[40px] place-items-center px-3 lg:px-3.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-200 whitespace-nowrap",
-                link.desktopOnly && "hidden md:grid",
-                isActive ? "text-white" : "text-white/40 hover:text-white/85",
-              )}
-            >
-              {link.label}
-              {isActive && (
-                <motion.span
-                  layoutId="nav-active"
-                  className="absolute inset-x-2.5 bottom-1 h-px bg-white"
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-            </a>
-          );
-        })}
-      </div>
-    </nav>
+        <div className="grid grid-cols-5" style={{ height: MOBILE_NAV_H }}>
+          {links.map((link) => {
+            const id = link.href.replace("#", "");
+            const isActive = active === id;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "true" : undefined}
+                onClick={go(id)}
+                className={cn(
+                  "relative flex flex-col items-center justify-center gap-1 transition-colors duration-200",
+                  isActive ? "text-white" : "text-white/40",
+                )}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-mobile"
+                    className="absolute inset-x-3 top-0 h-px bg-white"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="font-mono text-[7px] tracking-[0.22em] text-current opacity-45">
+                  {link.n}
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] whitespace-nowrap">
+                  {link.short}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }
 
 /* Parametric border frame — computed in real pixels so corners stay perfectly
-   round (no aspect distortion). Notch on the top-right (near nav) and bottom-left. */
+   round (no aspect distortion). Notch on the top-right (near nav) and bottom-left.
+   Desktop only: below md the frame's deep top-right region ate ~68px of a phone
+   screen to wrap a nav that no longer lives there. */
 function buildFramePath(
   w: number,
   h: number,
   pill: { left: number; bottom: number } | null,
 ) {
-  const isMobile = w < 768;
-  const m = isMobile ? 4 : 12;   // margin from edges
-  const r = isMobile ? 10 : 22;  // corner radius
-  const nW = isMobile ? 30 : 48; // notch diagonal horizontal span
+  const m = 12;   // margin from edges
+  const r = 22;   // corner radius
+  const nW = 48;  // notch diagonal horizontal span
   const left = m;
   const right = w - m;
   const topShallow = m;        // top edge y on the shallow (left) side
@@ -174,7 +228,9 @@ function LocalTime() {
   }, []);
 
   return (
-    <div className="fixed bottom-3 left-5 z-50 pointer-events-none select-none flex items-end gap-5">
+    // Hidden on mobile — it sat exactly where the bottom nav now lives, and
+    // the frame notch that used to carve room for it is desktop-only too.
+    <div className="hidden md:flex fixed bottom-3 left-5 z-50 pointer-events-none select-none items-end gap-5">
       <div>
         <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
           LOCAL TIME
@@ -236,7 +292,8 @@ function HudFrame() {
     return () => el.removeEventListener("scroll", onScroll);
   }, [size]);
 
-  if (!size.w || !size.h) return null;
+  // Desktop-only chrome (see buildFramePath).
+  if (!size.w || !size.h || size.w < 768) return null;
 
   const frame = buildFramePath(size.w, size.h, pill);
   const maskColor = "#000000";
@@ -299,15 +356,19 @@ export default function Home() {
       <HudFrame />
       <LocalTime />
 
-      {/* Main scroll container */}
+      {/* Main scroll container.
+          dvh, not vh: on mobile browsers 100vh is the *expanded* viewport, so
+          with the URL bar showing the last ~60px of every screen was cut off.
+          overflow-x-hidden stops any wide child from producing a sideways pan. */}
       <div
         id="main-scroll"
-        className="h-screen overflow-y-auto scroll-smooth bg-white dark:bg-transparent"
+        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-white dark:bg-transparent"
       >
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#9ea5e40c_1px,transparent_1px),linear-gradient(to_bottom,#9ea5e40c_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
         <div className="relative z-10 w-full">
-          <div className="max-w-full mx-auto px-1 sm:px-2 md:px-2">
+          {/* Bottom padding clears the mobile nav bar; desktop keeps none. */}
+          <div className="max-w-full mx-auto px-2 sm:px-3 md:px-2 pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
 
             {/* ── Card 1: Hero ── no entrance fade (landing view) */}
             <section

@@ -142,7 +142,7 @@ const Hero = () => {
   return (
     <div
       id="home"
-      className="relative w-full min-h-screen bg-[#ffffff] dark:bg-transparent text-black dark:text-white overflow-hidden"
+      className="relative w-full min-h-[100dvh] bg-[#ffffff] dark:bg-transparent text-black dark:text-white overflow-hidden"
     >
       <style>{`
         @keyframes glitch-jitter {
@@ -214,12 +214,12 @@ const Hero = () => {
       {/* ══════════════════════
           MOBILE LAYOUT
       ══════════════════════ */}
-      <div className="lg:hidden relative z-10 flex flex-col items-center pt-24 px-5 pb-12 min-h-screen">
+      <div className="lg:hidden relative z-10 flex flex-col items-center pt-20 px-4 sm:px-5 pb-14 min-h-[100dvh]">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full font-black uppercase leading-[1.05] text-center mb-8"
+          className="w-full font-black uppercase leading-[1.05] text-center"
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "clamp(2rem, 11vw, 5rem)",
@@ -238,24 +238,50 @@ const Hero = () => {
             className="mx-auto mt-4 mb-1 block h-[3px] w-24 bg-[#6D6D76] dark:bg-[#91919A]"
             style={{ boxShadow: "0 0 14px rgba(255,255,255,0.55)" }}
           />
-          <span className="mt-3 block font-mono text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.45em] text-black/75 dark:text-white/85">
+          {/* 0.45em of tracking on a 15px face overflowed a 360px screen once
+              the container padding was counted — sized off the viewport now. */}
+          <span className="mt-3 block font-mono text-[clamp(10px,3.1vw,14px)] font-medium uppercase tracking-[0.4em] text-black/75 dark:text-white/85">
             Software Engineer
           </span>
         </motion.h1>
 
+        {/* Specialization (mobile) — this panel was desktop-only, so the one
+            line that actually says what I do never reached a phone. */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full mt-9 hud-corners navy-glass relative border border-black/15 dark:border-[#91919A]/25 p-4"
+        >
+          <div className="font-mono text-[8px] tracking-[0.4em] uppercase text-black/35 dark:text-white/35 mb-3">
+            SPECIALIZATION
+          </div>
+          <div className="flex flex-wrap gap-x-2.5 gap-y-1 mb-3.5">
+            {["DISTRIBUTED", "+ SYSTEMS", "+ PERFORMANCE"].map((s) => (
+              <span key={s} className="font-mono text-[12px] font-bold tracking-[0.06em] uppercase">
+                {s}
+              </span>
+            ))}
+          </div>
+          <div className="h-px bg-black/10 dark:bg-white/10 mb-3" />
+          <div className="font-mono text-[10.5px] tracking-[0.1em] leading-relaxed text-black/80 dark:text-white/80">
+            → HIGH-THROUGHPUT
+            <br />→ INFRA ENGINEERING
+          </div>
+        </motion.div>
 
         {/* Core threads (mobile) */}
-        <div className="w-full mt-10">
-          <div className="font-mono text-[7px] tracking-[0.4em] uppercase text-black/35 dark:text-white/35 mb-3">
+        <div className="w-full mt-8">
+          <div className="font-mono text-[8px] tracking-[0.4em] uppercase text-black/40 dark:text-white/40 mb-3">
             [ CORE THREADS ]
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {threads.map((t) => (
               <div key={t.n} className="flex items-center gap-3">
-                <span className="font-mono text-[7px] text-black/25 dark:text-[#91919A]/60">
+                <span className="font-mono text-[8px] shrink-0 text-black/30 dark:text-[#91919A]/70">
                   {t.n}.////
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.18em]">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em]">
                   {t.label}
                 </span>
               </div>
@@ -268,19 +294,38 @@ const Hero = () => {
           <IdentityCard time={time} />
         </div>
 
-        {/* Quick links (mobile) */}
-        <div className="w-full mt-6 flex flex-wrap gap-1.5">
+        {/* Quick links (mobile) — 7px text in a 1-unit-tall box was both
+            unreadable and well under any usable tap target. */}
+        <div className="w-full mt-6 grid grid-cols-3 gap-2">
           {quickLinks.map((l) => (
             <Link
               key={l.label}
               href={l.href}
-              className={`glitch-box border px-2 py-1 font-mono text-[7px] uppercase tracking-[0.18em] transition-colors ${l.cls}`}
+              className={`glitch-box flex min-h-[40px] items-center justify-center border px-2 font-mono text-[9px] uppercase tracking-[0.2em] transition-colors ${l.cls}`}
             >
               <GlitchOverlay />
               {l.label}
             </Link>
           ))}
         </div>
+
+        {/* Scroll cue — the desktop layout has one, mobile had nothing telling
+            you the page continues past a full-height hero. */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1 }}
+          className="mt-auto pt-10 flex flex-col items-center gap-1.5 pointer-events-none select-none"
+        >
+          <span className="font-mono text-[7px] uppercase tracking-[0.45em] text-black/35 dark:text-white/35">
+            Scroll to descend
+          </span>
+          <motion.span
+            animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.25, 0.9, 0.25] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            className="block h-5 w-px origin-top bg-gradient-to-b from-[#91919A] to-transparent"
+          />
+        </motion.div>
       </div>
 
       {/* ══════════════════════

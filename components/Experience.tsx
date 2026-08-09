@@ -243,7 +243,7 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
           style={{ background: `radial-gradient(60% 100% at 50% 0%, rgba(${job.colorRgb},0.12), transparent 70%)` }}
         />
 
-        <div className="relative z-10 px-6 md:px-9 pt-7 pb-7 text-center">
+        <div className="relative z-10 px-4 sm:px-6 md:px-9 pt-6 pb-6 sm:pt-7 sm:pb-7 text-center">
           {/* company logo chip */}
           <div
             className="group/logo relative mx-auto mb-5 flex h-16 w-32 items-center justify-center border backdrop-blur-md overflow-hidden"
@@ -314,7 +314,7 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
           </ul>
 
           {/* metrics */}
-          <div className="mt-7 flex flex-wrap justify-center gap-x-9 gap-y-5 border-t border-white/[0.12] pt-6">
+          <div className="mt-7 grid grid-cols-2 gap-x-4 gap-y-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-9 border-t border-white/[0.12] pt-6">
             {job.metrics.map((m) => (
               <Metric key={m.label} {...m} color={job.color} />
             ))}

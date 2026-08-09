@@ -79,8 +79,11 @@ export default function SystemLoadBalancer() {
     return () => cancelAnimationFrame(requestRef.current!);
   }, [isOpen, gameOver, playerPos, latency]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 3. Controls
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // 3. Controls — pointer events, not mouse events: onMouseMove never fires
+  //    for a finger, so the paddle was frozen at 50% for the whole game on
+  //    every touch device. `touch-none` on the canvas stops the drag from
+  //    scrolling the page underneath while playing.
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!gameContainerRef.current) return;
     const rect = gameContainerRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -119,7 +122,7 @@ export default function SystemLoadBalancer() {
 
             <motion.div
               layoutId="game-window"
-              className="relative w-full max-w-lg bg-white dark:bg-black rounded-[2rem] border border-neutral-200 dark:border-white/10 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto bg-white dark:bg-black rounded-2xl sm:rounded-[2rem] border border-neutral-200 dark:border-white/10 shadow-2xl"
             >
               {/* Terminal Header */}
               <div className="p-4 border-b border-neutral-100 dark:border-white/5 flex justify-between items-center bg-neutral-50 dark:bg-white/[0.02]">
@@ -161,8 +164,9 @@ export default function SystemLoadBalancer() {
               {/* Canvas Area */}
               <div
                 ref={gameContainerRef}
-                onMouseMove={handleMouseMove}
-                className="relative h-[400px] bg-neutral-50 dark:bg-[#020617] cursor-none overflow-hidden"
+                onPointerMove={handlePointerMove}
+                onPointerDown={handlePointerMove}
+                className="relative h-[300px] sm:h-[400px] bg-neutral-50 dark:bg-[#020617] cursor-none touch-none overflow-hidden"
               >
                 {/* Packets */}
                 {packets.map((p) => (
@@ -217,7 +221,8 @@ export default function SystemLoadBalancer() {
 
               <div className="p-4 bg-neutral-100 dark:bg-white/[0.02] text-center">
                 <p className="text-[10px] font-mono text-neutral-400">
-                  Control the load balancer to intercept incoming data packets.
+                  <span className="sm:hidden">Drag to move the load balancer and intercept data packets.</span>
+                  <span className="hidden sm:inline">Control the load balancer to intercept incoming data packets.</span>
                 </p>
               </div>
             </motion.div>

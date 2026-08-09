@@ -93,34 +93,37 @@ const CoreCard = ({ c, i }: { c: (typeof CORE)[number]; i: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex-1 overflow-hidden p-5 md:p-6"
+      className="group relative flex-1 overflow-hidden p-4 sm:p-5 md:p-6"
       style={{ borderTop: `2px solid ${c.color}` }}
     >
       <div
         className="absolute inset-0 pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity duration-500"
         style={{ background: `linear-gradient(135deg, ${c.color}10, transparent 55%)` }}
       />
-      <div className="relative z-10 flex items-start gap-5 md:gap-6">
+      {/* A fixed 64px glyph next to a 2.7rem heading and a 0.35em-tracked badge
+          left roughly 190px for text on a phone. The glyph now scales down and
+          the badge drops onto its own line below the name. */}
+      <div className="relative z-10 flex items-start gap-4 sm:gap-5 md:gap-6">
         <Icon
-          className="shrink-0 text-[64px] md:text-[84px] leading-none transition-transform duration-300 group-hover:scale-105"
+          className="shrink-0 text-[44px] sm:text-[64px] md:text-[84px] leading-none transition-transform duration-300 group-hover:scale-105"
           style={{ color: c.color, filter: `drop-shadow(0 0 14px ${c.color}50)` }}
         />
         <div className="min-w-0">
-          <div className="flex items-baseline gap-3 flex-wrap">
+          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:gap-3 sm:flex-wrap">
             <h3
               className="font-black uppercase leading-none text-black dark:text-white"
-              style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.8rem, 3.2vw, 2.7rem)", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.5rem, 3.2vw, 2.7rem)", letterSpacing: "-0.02em" }}
             >
               {c.name}
             </h3>
             <span
-              className="font-mono text-[9px] uppercase tracking-[0.35em] px-2.5 py-1.5 border"
+              className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.35em] px-2 py-1 sm:px-2.5 sm:py-1.5 border"
               style={{ color: c.color, borderColor: `${c.color}50`, backgroundColor: `${c.color}0d` }}
             >
               {c.label}
             </span>
           </div>
-          <p className="font-mono text-[12px] leading-relaxed text-black/55 dark:text-white/50 mt-3 max-w-xl">
+          <p className="font-mono text-[11px] sm:text-[12px] leading-relaxed text-black/55 dark:text-white/50 mt-3 max-w-xl">
             {c.desc}
           </p>
         </div>
@@ -134,23 +137,25 @@ const CoreCard = ({ c, i }: { c: (typeof CORE)[number]; i: number }) => {
 const TechRow = ({ t }: { t: Tech }) => {
   const Icon = t.icon;
   return (
-    <div className="group/row relative flex items-center gap-4 px-5 py-3.5 transition-colors duration-200 hover:bg-white/[0.03]">
+    <div className="group/row relative flex items-center gap-3.5 sm:gap-4 px-4 sm:px-5 py-3 sm:py-3.5 transition-colors duration-200 hover:bg-white/[0.03]">
       {/* accent tick on hover */}
       <span
         className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-[2px] transition-all duration-200 group-hover/row:h-3/5"
         style={{ backgroundColor: t.color }}
       />
       <span
-        className="grid h-12 w-12 shrink-0 place-items-center border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] transition-colors duration-200"
+        className="grid h-10 w-10 sm:h-12 sm:w-12 shrink-0 place-items-center border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] transition-colors duration-200"
         style={{ color: t.color }}
       >
-        <Icon className="text-[24px]" />
+        <Icon className="text-[20px] sm:text-[24px]" />
       </span>
       <div className="min-w-0 flex-1">
-        <div className="font-mono text-[14px] font-bold tracking-[0.06em] text-black/85 dark:text-white/85 group-hover/row:text-black dark:group-hover/row:text-white transition-colors duration-200">
+        <div className="font-mono text-[13px] sm:text-[14px] font-bold tracking-[0.06em] text-black/85 dark:text-white/85 group-hover/row:text-black dark:group-hover/row:text-white transition-colors duration-200">
           {t.name}
         </div>
-        <div className="font-mono text-[10.5px] leading-snug text-black/40 dark:text-white/35 truncate">
+        {/* Was `truncate`: at phone width every note clipped to two or three
+            words, so the column read as a list of half-sentences. */}
+        <div className="font-mono text-[10px] sm:text-[10.5px] leading-snug text-black/40 dark:text-white/35 line-clamp-2 md:line-clamp-1">
           {t.note}
         </div>
       </div>
@@ -166,13 +171,13 @@ const DomainPanel = ({ d, i }: { d: Domain; i: number }) => (
     transition={{ duration: 0.5, delay: (i % 3) * 0.07, ease: [0.22, 1, 0.36, 1] }}
     className="mb-5 break-inside-avoid border border-black/10 dark:border-white/10 bg-[#ffffff] dark:bg-black/40"
   >
-    <div className="flex items-center justify-between px-5 py-3 border-b border-black/10 dark:border-white/10">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-black/10 dark:border-white/10">
+      <div className="flex items-center gap-3 min-w-0">
         <span
           className="h-2 w-2 rounded-full"
           style={{ backgroundColor: d.color, boxShadow: `0 0 8px ${d.color}90` }}
         />
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-black/70 dark:text-white/70">
+        <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.3em] text-black/70 dark:text-white/70 truncate">
           {d.label}
         </span>
       </div>
@@ -190,23 +195,24 @@ const DomainPanel = ({ d, i }: { d: Domain; i: number }) => (
 
 const Skills = () => (
   <div className="relative w-full bg-[#ffffff] dark:bg-black/30 border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
-    {/* HEADER */}
-    <div className="flex items-center justify-between px-5 md:px-7 py-3.5 border-b border-black/10 dark:border-white/10">
+    {/* HEADER — the two groups totalled ~440px of tracked mono against a
+        320px phone row, so they crushed into each other. Stacked below sm. */}
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-5 md:px-7 py-3 sm:py-3.5 border-b border-black/10 dark:border-white/10">
       <div className="flex items-center gap-3 md:gap-5">
-        <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-black/50 dark:text-white/50">SYS.MANIFEST</span>
+        <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] sm:tracking-[0.45em] text-black/50 dark:text-white/50">SYS.MANIFEST</span>
         <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
-        <span className="font-mono text-[12px] md:text-[13px] font-bold uppercase tracking-[0.15em] text-black dark:text-white">TECHNICAL_STACK</span>
+        <span className="font-mono text-[11px] sm:text-[12px] md:text-[13px] font-bold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-black dark:text-white">TECHNICAL_STACK</span>
       </div>
       <div className="flex items-center gap-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/40 dark:text-white/30">{TECH_COUNT} TOOLS</span>
+        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-black/40 dark:text-white/30">{TECH_COUNT} TOOLS</span>
         <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/50 dark:text-white/50">{DOMAINS.length} DOMAINS</span>
+        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-black/50 dark:text-white/50">{DOMAINS.length} DOMAINS</span>
       </div>
     </div>
 
     {/* CORE STACK */}
     <div className="border-b border-black/10 dark:border-white/10">
-      <div className="px-5 md:px-7 pt-5 pb-1">
+      <div className="px-4 sm:px-5 md:px-7 pt-5 pb-1">
         <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black/35 dark:text-white/35">[ CORE STACK ]</span>
       </div>
       <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-black/10 dark:divide-white/10">
@@ -221,19 +227,19 @@ const Skills = () => (
         className="absolute inset-0 pointer-events-none opacity-[0.5] dark:opacity-100"
         style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.14) 1px, transparent 0)", backgroundSize: "26px 26px" }}
       />
-      <div className="relative px-4 md:px-6 py-6 columns-1 md:columns-2 xl:columns-3 gap-5">
+      <div className="relative px-3 sm:px-4 md:px-6 py-6 columns-1 md:columns-2 xl:columns-3 gap-5">
         {DOMAINS.map((d, i) => <DomainPanel key={d.id} d={d} i={i} />)}
       </div>
     </div>
 
     {/* FOOTER */}
-    <div className="flex items-center justify-between px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
-      <div className="flex items-center gap-2.5">
+    <div className="flex items-center justify-between gap-3 px-4 sm:px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
+      <div className="flex items-center gap-2.5 min-w-0">
         <span className="relative flex h-1.5 w-1.5 shrink-0">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500/50" />
           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black dark:bg-blue-400" />
         </span>
-        <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/65 dark:text-white/65">
+        <span className="font-mono text-[7px] sm:text-[8px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-black/65 dark:text-white/65 truncate">
           ALL SYSTEMS NOMINAL
         </span>
       </div>
@@ -247,7 +253,7 @@ const Skills = () => (
           />
         ))}
       </div>
-      <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-black/55 dark:text-white/55">{TECH_COUNT} LOADED</span>
+      <span className="font-mono text-[7px] sm:text-[8px] uppercase tracking-[0.22em] sm:tracking-[0.3em] shrink-0 text-black/55 dark:text-white/55">{TECH_COUNT} LOADED</span>
     </div>
   </div>
 );

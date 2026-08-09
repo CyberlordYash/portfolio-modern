@@ -70,7 +70,7 @@ const PhaseCard = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="relative flex flex-col overflow-hidden border border-black/[0.1] dark:border-white/[0.1]
-        bg-[#ffffff] dark:bg-[#0B0B0E]/75 h-[20rem] lg:h-[24rem] cursor-default
+        bg-[#ffffff] dark:bg-[#0B0B0E]/75 h-[15rem] sm:h-[20rem] lg:h-[24rem] cursor-default
         transition-all duration-300 group"
     >
       {/* Colored top strip */}
@@ -158,7 +158,9 @@ const Approach = () => {
       className="w-full bg-[#ffffff] dark:bg-transparent transition-colors duration-500 py-16"
       id="approach"
     >
-      <div className="max-w-[90vw] 2xl:max-w-[1400px] mx-auto px-4">
+      {/* 90vw + px-4 double-inset the cards on a phone; full width below md
+          and let the padding alone do the work. */}
+      <div className="w-full md:max-w-[90vw] 2xl:max-w-[1400px] mx-auto px-4">
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
           {/* label tag */}

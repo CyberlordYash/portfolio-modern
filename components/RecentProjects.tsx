@@ -123,13 +123,13 @@ const FeaturedCard = ({ id, title, des, img, iconLists, link }: (typeof projects
       </div>
 
       {/* ── right content zone ── */}
-      <div className="relative z-10 flex flex-1 flex-col justify-between p-7 md:p-10">
+      <div className="relative z-10 flex flex-1 flex-col justify-between p-5 sm:p-7 md:p-10">
         {/* corner cross */}
         <Cross style={{ top: 12, right: 12 }} />
 
         {/* category + index */}
         <div>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-4">
             <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${m.accent}`}>{m.num}./</span>
             <span className={`border border-black/12 dark:border-white/12 px-2.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.25em] ${m.accent}`}>{m.category}</span>
             <div className="ml-auto">
@@ -354,7 +354,10 @@ const RecentProjects = () => {
       <Cross style={{ bottom: 24, left: 24 }} />
       <Cross style={{ bottom: 24, right: 24 }} />
 
-      <div className="relative mx-auto max-w-5xl">
+      {/* px-4: this container had no horizontal padding at all, so on a phone
+          the heading, the eyebrow row and every card butted straight against
+          the screen edge — the page wrapper's 8px was all that separated them. */}
+      <div className="relative mx-auto max-w-5xl px-4 md:px-0">
 
         {/* Side rails — frame the centered module, let the living background breathe */}
         <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
