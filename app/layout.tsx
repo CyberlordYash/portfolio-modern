@@ -102,10 +102,13 @@ export default function RootLayout({
       <body
         className={`${quicksand.variable} ${orbitron.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
+        {/* `forcedTheme="dark"` used to pin the site to dark and made every
+            light-mode style in the tree dead code. Dark stays the default —
+            it's the site's identity — but the toggle can now reach light.
+            enableSystem stays off so the choice is explicit, not ambient. */}
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          forcedTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >

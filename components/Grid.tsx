@@ -139,7 +139,7 @@ const Grid = () => {
   return (
     <section
       id="about"
-      className="w-full py-16 md:py-24 bg-[#ffffff] dark:bg-transparent transition-colors duration-500"
+      className="w-full py-16 md:py-24 bg-transparent transition-colors duration-500"
     >
       <div className="relative mx-auto max-w-5xl px-4 md:px-6">
 
@@ -158,7 +158,7 @@ const Grid = () => {
 
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-black/60 px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-white/70 dark:bg-black/60 px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -182,8 +182,8 @@ const Grid = () => {
               <RevealText text="ABOUT" delay={0.2} />
             </span>{" "}
             <span
-              className="text-black/70 dark:text-white/85"
-              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+              className="text-black dark:text-white/85"
+              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
             >
               <RevealText text="ME" delay={0.32} />
             </span>
@@ -267,7 +267,7 @@ const Grid = () => {
                 ].map(({ icon, label }) => (
                   <span
                     key={label}
-                    className="inline-flex items-center gap-1.5 border border-black/10 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-2.5 py-1 font-mono text-[10px] text-black/60 dark:text-white/40"
+                    className="inline-flex items-center gap-1.5 border border-black/10 dark:border-white/[0.08] bg-black/[0.03] dark:bg-white/[0.04] px-2.5 py-1 font-mono text-[10px] text-black/60 dark:text-white/40"
                   >
                     {icon}
                     {label}

@@ -25,7 +25,7 @@ export default function PageLoader() {
       {visible && (
         <motion.div
           key="loader"
-          className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
+          className="fixed inset-0 z-[9999] bg-paper flex items-center justify-center"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
         >
@@ -34,7 +34,7 @@ export default function PageLoader() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
             style={{ fontFamily: "var(--font-quicksand, 'Quicksand', sans-serif)" }}
-            className="text-white text-2xl sm:text-3xl font-light tracking-wide"
+            className="text-ink text-2xl sm:text-3xl font-light tracking-wide"
           >
             Hi, Welcome
           </motion.span>

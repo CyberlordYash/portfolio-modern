@@ -77,44 +77,44 @@ function getProgressState(completedCount: number, isRestDay = false): ProgressSt
   if (isRestDay) {
     return {
       stroke: "#ffffff",
-      text: "text-white/70",
-      glow: "rgba(255,255,255,0.2)",
-      glowFaint: "rgba(255,255,255,0.06)",
+      text: "text-ink/70",
+      glow: "rgb(var(--ink-rgb) / 0.2)",
+      glowFaint: "rgb(var(--ink-rgb) / 0.06)",
       label: "Rest",
-      bg: "bg-white/[0.06]",
-      border: "border-white/20",
+      bg: "bg-ink/[0.06]",
+      border: "border-ink/20",
     };
   }
   if (completedCount >= 5) {
     return {
       stroke: "#ffffff",
-      text: "text-white",
-      glow: "rgba(255,255,255,0.35)",
-      glowFaint: "rgba(255,255,255,0.12)",
+      text: "text-ink",
+      glow: "rgb(var(--ink-rgb) / 0.35)",
+      glowFaint: "rgb(var(--ink-rgb) / 0.12)",
       label: "Perfect",
-      bg: "bg-white/[0.08]",
-      border: "border-white/30",
+      bg: "bg-ink/[0.08]",
+      border: "border-ink/30",
     };
   }
   if (completedCount >= 3) {
     return {
       stroke: "#ffffff",
-      text: "text-white/85",
-      glow: "rgba(255,255,255,0.25)",
-      glowFaint: "rgba(255,255,255,0.09)",
+      text: "text-ink/85",
+      glow: "rgb(var(--ink-rgb) / 0.25)",
+      glowFaint: "rgb(var(--ink-rgb) / 0.09)",
       label: "Going",
-      bg: "bg-white/[0.06]",
-      border: "border-white/20",
+      bg: "bg-ink/[0.06]",
+      border: "border-ink/20",
     };
   }
   return {
     stroke: "#ffffff",
-    text: "text-white/60",
-    glow: "rgba(255,255,255,0.18)",
-    glowFaint: "rgba(255,255,255,0.06)",
+    text: "text-ink/60",
+    glow: "rgb(var(--ink-rgb) / 0.18)",
+    glowFaint: "rgb(var(--ink-rgb) / 0.06)",
     label: "Started",
-    bg: "bg-white/[0.05]",
-    border: "border-white/15",
+    bg: "bg-ink/[0.05]",
+    border: "border-ink/15",
   };
 }
 
@@ -290,10 +290,10 @@ export default function GymPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-4 py-6 text-white md:px-8 md:py-8">
+    <main className="relative min-h-screen overflow-hidden bg-paper px-4 py-6 text-ink md:px-8 md:py-8">
       {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgba(255,255,255,0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgba(255,255,255,0.04),transparent)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgb(var(--ink-rgb) / 0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgb(var(--ink-rgb) / 0.04),transparent)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* ── Header ── */}
@@ -301,7 +301,7 @@ export default function GymPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700/50 bg-black/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 transition hover:border-white/40 hover:bg-white/[0.06] hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-ink/20 bg-paper/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/75 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -311,7 +311,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700/40 bg-black/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-red-500/40 hover:text-red-300"
+                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition hover:border-red-500/40 hover:text-red-600 dark:text-red-300"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Exit Admin
@@ -320,7 +320,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={() => setShowAdminLogin((c) => !c)}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition hover:border-white/40 hover:bg-white/[0.1] hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-ink/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70 transition hover:border-ink/40 hover:bg-ink/[0.1] hover:text-ink"
               >
                 <LockKeyhole className="h-3.5 w-3.5" />
                 Admin
@@ -330,50 +330,50 @@ export default function GymPage() {
 
           <div className="flex flex-wrap items-center gap-2.5">
             {streak > 0 && (
-              <div className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/[0.06] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-white/85">
+              <div className="inline-flex items-center gap-1.5 rounded-xl border border-ink/20 bg-ink/[0.06] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-ink/85">
                 <Flame className="h-3 w-3" />
                 {streak}d streak
               </div>
             )}
-            <div className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-white/70">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+            <div className="inline-flex items-center gap-1.5 rounded-xl border border-ink/15 bg-ink/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink" />
               Gym Tracker
             </div>
           </div>
         </div>
 
         {/* ── Main card ── */}
-        <section className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-black/40 backdrop-blur-sm">
+        <section className="relative overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
           {/* Inner glow */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgba(255,255,255,0.04),transparent_45%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.04),transparent_45%)]" />
           {/* Decorative SVGs */}
           <div className="pointer-events-none absolute -right-6 top-4 opacity-[0.06]">
-            <CircuitSvg className="h-48 w-48 text-white" />
+            <CircuitSvg className="h-48 w-48 text-ink" />
           </div>
           <div className="pointer-events-none absolute -left-4 bottom-6 opacity-[0.05]">
-            <HexSvg className="h-36 w-36 text-white" />
+            <HexSvg className="h-36 w-36 text-ink" />
           </div>
 
           <div className="relative z-10 px-4 py-8 md:px-8 md:py-10">
             {/* ── Title row ── */}
             <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-white/70">
+                <div className="inline-flex items-center gap-2 rounded-lg border border-ink/15 bg-ink/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-ink/70">
                   <Dumbbell className="h-3 w-3" />
                   Sys · Gym Log
                 </div>
 
-                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-white md:text-[2.6rem]">
+                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-ink md:text-[2.6rem]">
                   Daily Progress
                 </h1>
 
-                <p className="max-w-md font-Quicksand text-sm text-slate-500 md:text-base">
+                <p className="max-w-md font-Quicksand text-sm text-ink/50 md:text-base">
                   My workout tracking system — public view, admin edit.
                 </p>
 
                 {/* 7-day heat row */}
                 <div className="flex items-center gap-2 pt-0.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-slate-700">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-ink/30">
                     7d
                   </span>
                   {last7Days.map((day) => (
@@ -382,10 +382,10 @@ export default function GymPage() {
                       title={`${formatDate(day.date)} · ${day.status}`}
                       className={`h-5 w-5 rounded-md transition-all ${
                         day.status === "done"
-                          ? "bg-white/80 shadow-[0_0_7px_rgba(255,255,255,0.5)]"
+                          ? "bg-ink/80 shadow-[0_0_7px_rgb(var(--ink-rgb) / 0.5)]"
                           : day.status === "rest"
-                            ? "bg-white/40 shadow-[0_0_7px_rgba(255,255,255,0.3)]"
-                            : "border border-white/[0.06] bg-white/[0.04]"
+                            ? "bg-ink/40 shadow-[0_0_7px_rgb(var(--ink-rgb) / 0.3)]"
+                            : "border border-ink/[0.06] bg-ink/[0.04]"
                       }`}
                     />
                   ))}
@@ -411,13 +411,13 @@ export default function GymPage() {
 
             {/* ── Admin login ── */}
             {showAdminLogin && !isAdmin && (
-              <div className="mb-6 rounded-xl border border-white/15 bg-white/[0.025] p-5 backdrop-blur-xl">
+              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5 backdrop-blur-xl">
                 <form onSubmit={handleUnlock} className="space-y-4">
                   <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                       Admin Access
                     </p>
-                    <h2 className="mt-1.5 font-Orbitron text-lg font-semibold text-white">
+                    <h2 className="mt-1.5 font-Orbitron text-lg font-semibold text-ink">
                       Unlock System
                     </h2>
                   </div>
@@ -429,17 +429,17 @@ export default function GymPage() {
                       if (hasError) setHasError(false);
                     }}
                     placeholder="Enter admin password"
-                    className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 font-mono text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/20"
+                    className="w-full rounded-xl border border-ink/10 bg-paper/50 px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
                   />
                   {hasError && (
-                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
                       Access denied — invalid password.
                     </p>
                   )}
                   <button
                     type="submit"
                     disabled={isSubmitting || !password.trim()}
-                    className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isSubmitting ? (
                       <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -453,23 +453,23 @@ export default function GymPage() {
             )}
 
             {requestError && (
-              <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/[0.05] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+              <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/[0.05] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
                 {requestError}
               </div>
             )}
 
             {/* ── Main grid ── */}
             {isCheckingAuth ? (
-              <div className="rounded-xl border border-dashed border-white/[0.08] bg-black/20 px-5 py-16 text-center">
-                <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-white" />
-                <p className="mt-3 font-mono text-xs uppercase tracking-[0.3em] text-slate-600">
+              <div className="rounded-xl border border-dashed border-ink/[0.08] bg-paper/20 px-5 py-16 text-center">
+                <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
+                <p className="mt-3 font-mono text-xs uppercase tracking-[0.3em] text-ink/40">
                   Initializing...
                 </p>
               </div>
             ) : (
               <div className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
                 {/* ── Left panel ── */}
-                <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5 md:p-6">
+                <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
                   <div className="flex flex-col items-center gap-6">
                     <ProgressRing
                       completedCount={completedCount}
@@ -478,7 +478,7 @@ export default function GymPage() {
 
                     {/* Date picker */}
                     <div className="w-full">
-                      <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                      <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                         Date
                       </p>
                       <input
@@ -489,7 +489,7 @@ export default function GymPage() {
                           setSelectedDate(d);
                           setChecklist(createInitialChecklist(d));
                         }}
-                        className="mt-2 w-full rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-mono text-sm text-slate-300 outline-none transition focus:border-white/40 focus:ring-1 focus:ring-white/10"
+                        className="mt-2 w-full rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                       />
                     </div>
 
@@ -507,18 +507,18 @@ export default function GymPage() {
                             className={`group flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition-all ${
                               checked
                                 ? isRest
-                                  ? "border-white/20 bg-white/[0.05] shadow-[0_0_14px_rgba(255,255,255,0.05)]"
-                                  : "border-white/30 bg-white/[0.08] shadow-[0_0_14px_rgba(255,255,255,0.06)]"
-                                : "border-white/[0.06] bg-white/[0.015] hover:border-white/[0.12]"
+                                  ? "border-ink/20 bg-ink/[0.05] shadow-[0_0_14px_rgb(var(--ink-rgb) / 0.05)]"
+                                  : "border-ink/30 bg-ink/[0.08] shadow-[0_0_14px_rgb(var(--ink-rgb) / 0.06)]"
+                                : "border-ink/[0.06] bg-ink/[0.015] hover:border-ink/[0.12]"
                             } ${!isAdmin ? "cursor-default" : "cursor-pointer"}`}
                           >
                             <span
                               className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border text-xs transition-all ${
                                 checked
                                   ? isRest
-                                    ? "border-white/30 bg-white/15 text-white/80"
-                                    : "border-white/40 bg-white/20 text-white"
-                                  : "border-white/[0.08] bg-white/[0.03] text-slate-600"
+                                    ? "border-ink/30 bg-ink/15 text-ink/80"
+                                    : "border-ink/40 bg-ink/20 text-ink"
+                                  : "border-ink/[0.08] bg-ink/[0.03] text-ink/40"
                               }`}
                             >
                               {checked ? (
@@ -531,9 +531,9 @@ export default function GymPage() {
                               className={`font-Quicksand text-sm font-semibold transition-colors ${
                                 checked
                                   ? isRest
-                                    ? "text-white/80"
-                                    : "text-white"
-                                  : "text-slate-500 group-hover:text-slate-300"
+                                    ? "text-ink/80"
+                                    : "text-ink"
+                                  : "text-ink/50 group-hover:text-ink/75"
                               }`}
                             >
                               {item.label}
@@ -541,9 +541,9 @@ export default function GymPage() {
                             {checked && (
                               <span className="ml-auto opacity-60">
                                 {isRest ? (
-                                  <Moon className="h-3 w-3 text-white/70" />
+                                  <Moon className="h-3 w-3 text-ink/70" />
                                 ) : (
-                                  <Zap className="h-3 w-3 text-white" />
+                                  <Zap className="h-3 w-3 text-ink" />
                                 )}
                               </span>
                             )}
@@ -557,7 +557,7 @@ export default function GymPage() {
                         type="button"
                         onClick={handleSave}
                         disabled={isSubmitting}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {isSubmitting ? (
                           <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -571,25 +571,25 @@ export default function GymPage() {
                 </div>
 
                 {/* ── Right panel: History ── */}
-                <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5 md:p-6">
+                <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
                   <div className="mb-5 flex items-center justify-between">
                     <div>
-                      <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                      <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                         Log
                       </p>
-                      <h3 className="mt-1.5 font-Orbitron text-lg font-semibold text-white">
+                      <h3 className="mt-1.5 font-Orbitron text-lg font-semibold text-ink">
                         History
                       </h3>
                     </div>
-                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-slate-600">
+                    <div className="rounded-lg border border-ink/[0.08] bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
                       public
                     </div>
                   </div>
 
                   <div className="max-h-[460px] space-y-2 overflow-y-auto pr-0.5">
                     {entries.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-white/[0.08] px-5 py-14 text-center">
-                        <p className="font-mono text-xs uppercase tracking-[0.3em] text-slate-700">
+                      <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-14 text-center">
+                        <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink/30">
                           No entries yet
                         </p>
                       </div>
@@ -617,11 +617,11 @@ export default function GymPage() {
                             className={`flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-all ${
                               isSelected
                                 ? `${state.border} ${state.bg}`
-                                : "border-white/[0.06] bg-white/[0.015] hover:border-white/[0.12]"
+                                : "border-ink/[0.06] bg-ink/[0.015] hover:border-ink/[0.12]"
                             }`}
                           >
                             <div className="min-w-0">
-                              <p className="font-Quicksand text-sm font-semibold text-white">
+                              <p className="font-Quicksand text-sm font-semibold text-ink">
                                 {formatDate(entry.date)}
                               </p>
                               <p
@@ -642,9 +642,9 @@ export default function GymPage() {
                                     className={`h-2 w-2 rounded-sm transition-all ${
                                       entry[item.key]
                                         ? item.key === "restDay"
-                                          ? "bg-white/50 shadow-[0_0_4px_rgba(255,255,255,0.4)]"
-                                          : "bg-white shadow-[0_0_4px_rgba(255,255,255,0.5)]"
-                                        : "bg-white/[0.07]"
+                                          ? "bg-ink/50 shadow-[0_0_4px_rgb(var(--ink-rgb) / 0.4)]"
+                                          : "bg-ink shadow-[0_0_4px_rgb(var(--ink-rgb) / 0.5)]"
+                                        : "bg-ink/[0.07]"
                                     }`}
                                   />
                                 ))}
@@ -676,16 +676,16 @@ function StatCard({
   helper: string;
   color: "cyan" | "violet";
 }) {
-  const border = color === "cyan" ? "border-white/15" : "border-white/10";
-  const bg = color === "cyan" ? "bg-white/[0.05]" : "bg-white/[0.03]";
-  const valColor = color === "cyan" ? "text-white" : "text-white/70";
+  const border = color === "cyan" ? "border-ink/15" : "border-ink/10";
+  const bg = color === "cyan" ? "bg-ink/[0.05]" : "bg-ink/[0.03]";
+  const valColor = color === "cyan" ? "text-ink" : "text-ink/70";
   return (
     <div className={`rounded-xl border p-4 ${border} ${bg}`}>
-      <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-slate-700">
+      <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-ink/30">
         {label}
       </p>
       <p className={`mt-2.5 font-Orbitron text-xl font-bold ${valColor}`}>{value}</p>
-      <p className="mt-1.5 truncate font-Quicksand text-xs text-slate-600">{helper}</p>
+      <p className="mt-1.5 truncate font-Quicksand text-xs text-ink/40">{helper}</p>
     </div>
   );
 }
@@ -709,14 +709,14 @@ function ProgressRing({
         boxShadow: `0 0 40px ${state.glow}, 0 0 80px ${state.glowFaint}`,
       }}
     >
-      <div className="absolute inset-0 rounded-full border border-white/[0.04]" />
+      <div className="absolute inset-0 rounded-full border border-ink/[0.04]" />
       <svg className="h-40 w-40 -rotate-90" viewBox="0 0 160 160">
         {/* Track ring */}
         <circle
           cx="80"
           cy="80"
           r={radius}
-          stroke="rgba(255,255,255,0.05)"
+          stroke="rgb(var(--ink-rgb) / 0.05)"
           strokeWidth="8"
           fill="none"
         />
@@ -734,7 +734,7 @@ function ProgressRing({
               y1={y1}
               x2={x2}
               y2={y2}
-              stroke="rgba(255,255,255,0.1)"
+              stroke="rgb(var(--ink-rgb) / 0.1)"
               strokeWidth="1.5"
             />
           );
@@ -757,12 +757,12 @@ function ProgressRing({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
-          className="font-Orbitron text-2xl font-bold text-white"
+          className="font-Orbitron text-2xl font-bold text-ink"
           style={{ textShadow: `0 0 20px ${state.stroke}` }}
         >
           {isRestDay ? "REST" : `${completedCount}/5`}
         </span>
-        <span className="mt-1.5 font-mono text-[8px] uppercase tracking-[0.4em] text-slate-600">
+        <span className="mt-1.5 font-mono text-[8px] uppercase tracking-[0.4em] text-ink/40">
           {state.label}
         </span>
       </div>
@@ -784,7 +784,7 @@ function MiniRing({
   return (
     <div className="relative h-8 w-8">
       <svg className="h-8 w-8 -rotate-90" viewBox="0 0 34 34">
-        <circle cx="17" cy="17" r={radius} stroke="rgba(255,255,255,0.07)" strokeWidth="3" fill="none" />
+        <circle cx="17" cy="17" r={radius} stroke="rgb(var(--ink-rgb) / 0.07)" strokeWidth="3" fill="none" />
         <circle
           cx="17"
           cy="17"

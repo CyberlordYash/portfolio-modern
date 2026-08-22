@@ -49,6 +49,22 @@ const config = {
         "body-lg": ["0.9375rem", { lineHeight: "1.75" }],
       },
       colors: {
+        // ── Theme-aware duo ───────────────────────────────────────
+        // `ink` is the foreground, `paper` the ground, and they swap
+        // between light and dark. Using them instead of literal
+        // white/black means one class works in both themes:
+        //   text-ink/70   → black at 70% on light, white at 70% on dark
+        //   bg-paper/40   → white at 40% on light, black at 40% on dark
+        // The rgb(... / <alpha-value>) form is what preserves Tailwind's
+        // slash-opacity syntax through the CSS variable.
+        ink: "rgb(var(--ink-rgb) / <alpha-value>)",
+        paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+        // Hueless accent pair, flipped per theme, for the HUD chrome that
+        // used to hard-code #D8D8DC / #91919A (invisible on white).
+        hud: {
+          DEFAULT: "rgb(var(--hud-rgb) / <alpha-value>)",
+          dim: "rgb(var(--hud-dim-rgb) / <alpha-value>)",
+        },
         black: {
           "100": "#000319",
           "200": "rgba(17, 25, 40, 0.75)",

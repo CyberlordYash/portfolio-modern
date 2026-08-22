@@ -26,10 +26,10 @@ const Loading = () => {
   }, [logIndex]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black font-mono">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-paper font-mono">
       <div className="w-full max-w-sm px-6">
         {/* Terminal Header */}
-        <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-2">
+        <div className="mb-4 flex items-center gap-2 border-b border-ink/10 pb-2">
           <IconTerminal2 size={18} className="text-blue-500" />
           <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">
             System Boot Sequence
@@ -57,12 +57,12 @@ const Loading = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="border-t border-white/10 pt-4"
+              className="border-t border-ink/10 pt-4"
             >
               <div className="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-2">
                 Root Operator:
               </div>
-              <div className="text-2xl md:text-3xl font-bold text-white tracking-tighter">
+              <div className="text-2xl md:text-3xl font-bold text-ink tracking-tighter">
                 <EncryptedText text="YASH SACHAN" />
               </div>
 

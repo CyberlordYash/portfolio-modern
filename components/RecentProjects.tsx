@@ -337,7 +337,7 @@ const RecentProjects = () => {
   const [p0, p1, p2, p3, p4, p5] = projects;
 
   return (
-    <section className="relative w-full overflow-hidden py-16 md:py-24 bg-[#ffffff] dark:bg-transparent">
+    <section className="relative w-full overflow-hidden py-16 md:py-24 bg-transparent">
 
       {/* spotlight — dark mode accent */}
       <Spotlight
@@ -412,8 +412,8 @@ const RecentProjects = () => {
               <RevealText text="RECENT" delay={0.1} stagger={0.06} />
             </span>{" "}
             <span
-              className="text-black/70 dark:text-white/85"
-              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+              className="text-black dark:text-white/85"
+              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
             >
               <RevealText text="PROJECTS" delay={0.22} stagger={0.06} />
             </span>
@@ -434,22 +434,22 @@ const RecentProjects = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-black/8 dark:bg-white/8">
 
           {/* Row 1: featured (2/3) + medium (1/3) */}
-          <div className="lg:col-span-2 bg-[#ffffff] dark:bg-black/60 p-px">
+          <div className="lg:col-span-2 bg-white/70 dark:bg-black/60 p-px">
             <FeaturedCard {...p0} />
           </div>
-          <div className="lg:col-span-1 bg-[#ffffff] dark:bg-black/60 p-px">
+          <div className="lg:col-span-1 bg-white/70 dark:bg-black/60 p-px">
             <MediumCard {...p1} delay={0.1} />
           </div>
 
           {/* Row 2: three equal medium cards */}
           {[p2, p3, p4].map((p, i) => (
-            <div key={p.id} className="lg:col-span-1 bg-[#ffffff] dark:bg-black/60 p-px">
+            <div key={p.id} className="lg:col-span-1 bg-white/70 dark:bg-black/60 p-px">
               <MediumCard {...p} delay={0.07 + i * 0.07} />
             </div>
           ))}
 
           {/* Row 3: wide card full width */}
-          <div className="lg:col-span-3 bg-[#ffffff] dark:bg-black/60 p-px">
+          <div className="lg:col-span-3 bg-white/70 dark:bg-black/60 p-px">
             <WideCard {...p5} />
           </div>
         </div>

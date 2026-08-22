@@ -4,9 +4,18 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { IconArrowUpRight } from "@tabler/icons-react";
 import { RevealText, RevealChars, FadeReveal } from "@/components/ui/ScrollReveal";
 
-/* Text legibility over the animated WebGL world — a soft dark halo that keeps
-   the background fully visible while lifting text off it. */
-const TXT = "0 2px 10px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.9)";
+/* Text legibility over the animated WebGL world — a soft halo that keeps the
+   background fully visible while lifting text off it. The halo colour has to
+   follow the theme (dark halo on black, light halo on white), so it lives in
+   globals.css as --txt-halo rather than being frozen here. */
+const TXT = "var(--txt-halo)";
+
+/* Per-entry accent, named as a CSS variable rather than a literal so it flips
+   with the theme: the old #D8D8DC / #91919A greys were invisible on white.
+   `accent` holds the variable NAME so both the solid colour and any alpha
+   wash can be derived from the one token. */
+const solid = (accent: string) => `rgb(var(${accent}))`;
+const wash = (accent: string, a: number) => `rgb(var(${accent}) / ${a})`;
 
 /* ─────────────────────────────────────────────────
    Count-up hook (subtle, fires once in view)
@@ -27,7 +36,7 @@ function useCountUp(target: number, duration = 1200, trigger: boolean) {
   return value;
 }
 
-const Metric = ({ value, label, color }: { value: string; label: string; color: string }) => {
+const Metric = ({ value, label, accent }: { value: string; label: string; accent: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [fired, setFired] = useState(false);
 
@@ -51,11 +60,11 @@ const Metric = ({ value, label, color }: { value: string; label: string; color: 
     <div ref={ref} className="flex flex-col items-center gap-1">
       <div
         className="font-semibold leading-none tabular-nums"
-        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1rem,1.8vw,1.45rem)", color, textShadow: `0 0 18px ${color}55, ${TXT}` }}
+        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1rem,1.8vw,1.45rem)", color: solid(accent), textShadow: `0 0 18px ${wash(accent, 0.33)}, ${TXT}` }}
       >
         {match ? `${counted}${suffix}` : value}
       </div>
-      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/55">
+      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-ink/55">
         {label}
       </div>
     </div>
@@ -74,8 +83,7 @@ const JOBS = [
     location: "Bengaluru",
     period: "JUL 2025 — PRESENT",
     status: "ACTIVE" as const,
-    color: "#D8D8DC",
-    colorRgb: "255,255,255",
+    accent: "--hud-rgb",
     image: "/nubra.webp",
     imageAlt: "Nubra",
     summary:
@@ -105,8 +113,7 @@ const JOBS = [
     location: "Noida-NCR",
     period: "JAN 2025 — JUN 2025",
     status: "COMPLETED" as const,
-    color: "#91919A",
-    colorRgb: "255,255,255",
+    accent: "--hud-dim-rgb",
     image: "/onefinnet.png",
     imageAlt: "OneFinnet",
     summary:
@@ -133,8 +140,7 @@ const JOBS = [
     location: "Remote",
     period: "JUL 2024 — OCT 2024",
     status: "COMPLETED" as const,
-    color: "#D8D8DC",
-    colorRgb: "255,255,255",
+    accent: "--hud-rgb",
     image: "/ambill.jpg",
     imageAlt: "Ambill",
     summary:
@@ -158,8 +164,7 @@ const ACHIEVEMENTS = [
   {
     badge: "GUARDIAN",
     title: "Competitive Programming",
-    color: "#B7B7BE",
-    colorRgb: "183,183,190",
+    accent: "--hud-rgb",
     points: [
       "LeetCode Guardian — Rating 2200+",
       "CodeChef 4★ — Rating 1850+",
@@ -169,8 +174,7 @@ const ACHIEVEMENTS = [
   {
     badge: "AIR 193",
     title: "NDA SSB Recommended",
-    color: "#6D6D76",
-    colorRgb: "160,160,168",
+    accent: "--hud-dim-rgb",
     points: [
       "Cleared NDA SSB — All India Rank 193",
       "Leadership under high-pressure scenarios",
@@ -184,6 +188,7 @@ const ACHIEVEMENTS = [
 ───────────────────────────────────────────────── */
 const Entry = ({ job }: { job: typeof JOBS[0] }) => {
   const [hover, setHover] = useState(false);
+  const c = solid(job.accent);
 
   return (
     <motion.div
@@ -197,19 +202,19 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
       <div className="relative z-10 flex flex-col items-center">
         <span
           className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] mb-3"
-          style={{ color: job.color, textShadow: TXT }}
+          style={{ color: c, textShadow: TXT }}
         >
           {job.idx}
         </span>
         <span className="relative flex h-6 w-6 items-center justify-center">
           {job.status === "ACTIVE" && (
-            <span className="absolute inline-flex h-6 w-6 rounded-full animate-ping" style={{ background: `rgba(${job.colorRgb},0.45)` }} />
+            <span className="absolute inline-flex h-6 w-6 rounded-full animate-ping" style={{ background: wash(job.accent, 0.45) }} />
           )}
           <span
             className="absolute inline-flex h-5 w-5 rounded-full border-2"
-            style={{ borderColor: job.color, background: `rgba(${job.colorRgb},0.15)`, boxShadow: `0 0 16px ${job.color}` }}
+            style={{ borderColor: c, background: wash(job.accent, 0.15), boxShadow: `0 0 16px ${c}` }}
           />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full" style={{ background: job.color, boxShadow: `0 0 8px ${job.color}` }} />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full" style={{ background: c, boxShadow: `0 0 8px ${c}` }} />
         </span>
       </div>
 
@@ -219,20 +224,20 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
         onMouseLeave={() => setHover(false)}
         className="relative mt-7 w-full max-w-[660px] border backdrop-blur-md overflow-hidden transition-all duration-300"
         style={{
-          borderColor: hover ? `rgba(${job.colorRgb},0.5)` : "rgba(255,255,255,0.12)",
-          background: "rgba(0,0,0,0.34)",
-          boxShadow: hover ? `0 0 40px rgba(${job.colorRgb},0.18)` : "none",
+          borderColor: hover ? wash(job.accent, 0.5) : "rgb(var(--ink-rgb) / 0.12)",
+          background: "var(--panel-fill)",
+          boxShadow: hover ? `0 0 40px ${wash(job.accent, 0.18)}` : "none",
         }}
       >
         {/* top accent strip */}
-        <span className="absolute inset-x-0 top-0 h-[2px] z-20" style={{ background: job.color }} />
+        <span className="absolute inset-x-0 top-0 h-[2px] z-20" style={{ background: c }} />
         {/* corner brackets (HUD) */}
-        <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2" style={{ borderColor: job.color }} />
-        <span className="pointer-events-none absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2" style={{ borderColor: job.color }} />
+        <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2" style={{ borderColor: c }} />
+        <span className="pointer-events-none absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2" style={{ borderColor: c }} />
 
         {/* giant ghost year behind the content */}
         <span
-          className="pointer-events-none absolute -top-2 right-3 font-black leading-none select-none text-white/[0.05]"
+          className="pointer-events-none absolute -top-2 right-3 font-black leading-none select-none text-ink/[0.05]"
           style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(4rem,9vw,7rem)", letterSpacing: "-0.05em" }}
         >
           {job.year}
@@ -240,14 +245,14 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
         {/* accent glow from the top edge */}
         <span
           className="pointer-events-none absolute inset-x-0 top-0 h-32"
-          style={{ background: `radial-gradient(60% 100% at 50% 0%, rgba(${job.colorRgb},0.12), transparent 70%)` }}
+          style={{ background: `radial-gradient(60% 100% at 50% 0%, ${wash(job.accent, 0.12)}, transparent 70%)` }}
         />
 
         <div className="relative z-10 px-4 sm:px-6 md:px-9 pt-6 pb-6 sm:pt-7 sm:pb-7 text-center">
           {/* company logo chip */}
           <div
             className="group/logo relative mx-auto mb-5 flex h-16 w-32 items-center justify-center border backdrop-blur-md overflow-hidden"
-            style={{ borderColor: `rgba(${job.colorRgb},0.3)`, background: "rgba(0,0,0,0.3)" }}
+            style={{ borderColor: wash(job.accent, 0.3), background: "var(--panel-fill)" }}
           >
             <img
               src={job.image}
@@ -255,29 +260,29 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
               aria-hidden
               className="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-50"
             />
-            <span className="pointer-events-none absolute inset-0 bg-black/40" />
+            <span className="pointer-events-none absolute inset-0 bg-paper/40" />
             <img
               src={job.image}
               alt={job.imageAlt}
               className="relative z-10 max-h-9 max-w-[80%] object-contain transition-transform duration-300 group-hover/logo:scale-105"
-              style={{ filter: `drop-shadow(0 0 10px rgba(${job.colorRgb},0.4))` }}
+              style={{ filter: `drop-shadow(0 0 10px ${wash(job.accent, 0.4)})` }}
             />
           </div>
 
           {/* meta */}
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-3">
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: job.color, textShadow: TXT }}>
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: c, textShadow: TXT }}>
               {job.period}
             </span>
-            <span className="font-mono text-[8px] uppercase tracking-[0.28em] text-white/45" style={{ textShadow: TXT }}>
+            <span className="font-mono text-[8px] uppercase tracking-[0.28em] text-ink/45" style={{ textShadow: TXT }}>
               {job.location}
             </span>
             <span
               className="font-mono text-[8px] uppercase tracking-[0.28em] px-2 py-0.5 border backdrop-blur-sm"
               style={{
-                color: job.status === "ACTIVE" ? job.color : "rgba(255,255,255,0.55)",
-                borderColor: job.status === "ACTIVE" ? `rgba(${job.colorRgb},0.4)` : "rgba(255,255,255,0.2)",
-                background: job.status === "ACTIVE" ? `rgba(${job.colorRgb},0.12)` : "rgba(0,0,0,0.25)",
+                color: job.status === "ACTIVE" ? c : "rgb(var(--ink-rgb) / 0.55)",
+                borderColor: job.status === "ACTIVE" ? wash(job.accent, 0.4) : "rgb(var(--ink-rgb) / 0.2)",
+                background: job.status === "ACTIVE" ? wash(job.accent, 0.12) : "rgb(var(--paper-rgb) / 0.25)",
               }}
             >
               {job.status}
@@ -286,37 +291,37 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
 
           {/* company + role */}
           <h3
-            className="font-bold uppercase leading-none text-white"
+            className="font-bold uppercase leading-none text-ink"
             style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.3rem,2.6vw,1.95rem)", letterSpacing: "-0.02em", textShadow: TXT }}
           >
             {job.company}
           </h3>
-          <p className="mt-2 font-mono text-[11px] md:text-[12px] tracking-wide text-white/80" style={{ textShadow: TXT }}>
+          <p className="mt-2 font-mono text-[11px] md:text-[12px] tracking-wide text-ink/80" style={{ textShadow: TXT }}>
             {job.role}
           </p>
 
           {/* summary */}
-          <p className="mt-4 mx-auto max-w-[540px] text-[13px] md:text-[14px] leading-relaxed text-white/95" style={{ textShadow: TXT }}>
+          <p className="mt-4 mx-auto max-w-[540px] text-[13px] md:text-[14px] leading-relaxed text-ink/95" style={{ textShadow: TXT }}>
             {job.summary}
           </p>
 
           {/* accent divider */}
-          <div className="mx-auto my-6 h-px w-16" style={{ background: `linear-gradient(to right, transparent, ${job.color}, transparent)` }} />
+          <div className="mx-auto my-6 h-px w-16" style={{ background: `linear-gradient(to right, transparent, ${c}, transparent)` }} />
 
           {/* bullets — left-aligned within a centered block for readability */}
           <ul className="mx-auto flex max-w-[560px] flex-col gap-2.5 text-left">
             {job.bullets.map((b, bi) => (
               <li key={bi} className="flex items-start gap-3">
-                <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: job.color }} />
-                <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-white/85" style={{ textShadow: TXT }}>{b}</span>
+                <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: c }} />
+                <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-ink/85" style={{ textShadow: TXT }}>{b}</span>
               </li>
             ))}
           </ul>
 
           {/* metrics */}
-          <div className="mt-7 grid grid-cols-2 gap-x-4 gap-y-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-9 border-t border-white/[0.12] pt-6">
+          <div className="mt-7 grid grid-cols-2 gap-x-4 gap-y-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-9 border-t border-ink/[0.12] pt-6">
             {job.metrics.map((m) => (
-              <Metric key={m.label} {...m} color={job.color} />
+              <Metric key={m.label} {...m} accent={job.accent} />
             ))}
           </div>
 
@@ -325,8 +330,8 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
             {job.tech.map((t) => (
               <span
                 key={t}
-                className="font-mono text-[8px] uppercase tracking-[0.18em] px-2.5 py-1 border border-white/[0.15] text-white/60 backdrop-blur-sm"
-                style={{ background: "rgba(0,0,0,0.2)" }}
+                className="font-mono text-[8px] uppercase tracking-[0.18em] px-2.5 py-1 border border-ink/[0.15] text-ink/60 backdrop-blur-sm"
+                style={{ background: "rgb(var(--paper-rgb) / 0.2)" }}
               >
                 {t}
               </span>
@@ -340,7 +345,7 @@ const Entry = ({ job }: { job: typeof JOBS[0] }) => {
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.22em] transition-colors"
-              style={{ color: hover ? job.color : "rgba(255,255,255,0.7)", textShadow: TXT }}
+              style={{ color: hover ? c : "rgb(var(--ink-rgb) / 0.7)", textShadow: TXT }}
             >
               {job.link.label}
               <IconArrowUpRight size={12} />
@@ -361,13 +366,13 @@ const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> 
 
   return (
     <div className="absolute top-3 bottom-10 w-[3px] overflow-hidden rounded-full left-1/2 -translate-x-1/2">
-      <div className="absolute inset-0 bg-white/20" />
+      <div className="absolute inset-0 bg-ink/20" />
       <motion.div
         className="absolute top-0 left-0 right-0 h-full origin-top rounded-full"
         style={{
           scaleY,
-          background: "linear-gradient(to bottom, #D8D8DC, #91919A 50%, #6D6D76)",
-          boxShadow: "0 0 16px rgba(216,216,220,0.9), 0 0 6px rgba(216,216,220,0.8)",
+          background: "linear-gradient(to bottom, rgb(var(--hud-rgb)), rgb(var(--hud-dim-rgb)) 50%, rgb(var(--hud-dim-rgb)))",
+          boxShadow: "0 0 16px rgb(var(--hud-rgb) / 0.9), 0 0 6px rgb(var(--hud-rgb) / 0.8)",
         }}
       />
     </div>
@@ -387,26 +392,25 @@ export default function Experience() {
         {/* ── header (centered) ── */}
         <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
           <FadeReveal delay={0} className="flex items-center gap-3 mb-6">
-            <span className="w-1.5 h-1.5 bg-blue-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
             <RevealChars
               text="SYS.CAREER_LOG"
-              className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/50"
+              className="font-mono text-[9px] uppercase tracking-[0.45em] text-ink/50"
               delay={0.1}
             />
-            <span className="w-1.5 h-1.5 bg-blue-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
           </FadeReveal>
 
           <h2
-            className="font-black uppercase leading-[0.92] whitespace-nowrap text-white/90"
+            className="font-black uppercase leading-[0.92] whitespace-nowrap text-ink/90"
             style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.9rem, 6.5vw, 4.2rem)", letterSpacing: "-0.035em", textShadow: TXT }}
           >
             <RevealText text="WORK" delay={0.1} stagger={0.05} />{" "}
             <span
               style={{
-                WebkitTextStrokeWidth: "1.75px",
-                WebkitTextStrokeColor: "rgba(255,255,255,0.82)",
+                WebkitTextStrokeWidth: "var(--heading-stroke-w)",
+                WebkitTextStrokeColor: "rgb(var(--ink-rgb))",
                 WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))",
               }}
             >
               <RevealText text="HISTORY" delay={0.18} stagger={0.045} />
@@ -422,12 +426,12 @@ export default function Experience() {
             ].map((s, i) => (
               <FadeReveal key={s.lbl} delay={0.4 + i * 0.06} className="flex items-baseline gap-2">
                 <span
-                  className="font-semibold text-white leading-none"
+                  className="font-semibold text-ink leading-none"
                   style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.85rem,1.6vw,1.05rem)", textShadow: TXT }}
                 >
                   {s.n}
                 </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-white/40" style={{ textShadow: TXT }}>{s.lbl}</span>
+                <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-ink/40" style={{ textShadow: TXT }}>{s.lbl}</span>
               </FadeReveal>
             ))}
           </div>
@@ -444,11 +448,11 @@ export default function Experience() {
         {/* ── recognition (centered) ── */}
         <div className="mt-10 md:mt-16">
           <FadeReveal delay={0} className="flex items-center justify-center gap-3 mb-10">
-            <div className="h-px flex-1 max-w-[80px] bg-white/[0.12]" />
-            <span className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/50" style={{ textShadow: TXT }}>RECOGNITION</span>
-            <span className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />
-            <div className="h-px flex-1 max-w-[80px] bg-white/[0.12]" />
+            <div className="h-px flex-1 max-w-[80px] bg-ink/[0.12]" />
+            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-ink/50" style={{ textShadow: TXT }}>RECOGNITION</span>
+            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
+            <div className="h-px flex-1 max-w-[80px] bg-ink/[0.12]" />
           </FadeReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
@@ -460,20 +464,20 @@ export default function Experience() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
                 className="relative border backdrop-blur-md overflow-hidden px-5 py-5"
-                style={{ borderColor: `rgba(${a.colorRgb},0.25)`, background: "rgba(0,0,0,0.3)" }}
+                style={{ borderColor: wash(a.accent, 0.25), background: "var(--panel-fill)" }}
               >
-                <span className="absolute inset-x-0 top-0 h-[2px]" style={{ background: a.color }} />
+                <span className="absolute inset-x-0 top-0 h-[2px]" style={{ background: solid(a.accent) }} />
                 <div className="flex items-center gap-3 mb-4">
                   <span
                     className="font-mono text-[8px] uppercase tracking-[0.3em] px-2.5 py-1 border font-bold backdrop-blur-sm"
-                    style={{ color: a.color, borderColor: `rgba(${a.colorRgb},0.4)`, background: `rgba(${a.colorRgb},0.12)` }}
+                    style={{ color: solid(a.accent), borderColor: wash(a.accent, 0.4), background: wash(a.accent, 0.12) }}
                   >
                     {a.badge}
                   </span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/35" style={{ textShadow: TXT }}>ACHIEVEMENT</span>
+                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-ink/35" style={{ textShadow: TXT }}>ACHIEVEMENT</span>
                 </div>
                 <h3
-                  className="font-bold uppercase leading-tight text-white mb-4"
+                  className="font-bold uppercase leading-tight text-ink mb-4"
                   style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.05rem,2.2vw,1.4rem)", letterSpacing: "-0.01em", textShadow: TXT }}
                 >
                   {a.title}
@@ -481,8 +485,8 @@ export default function Experience() {
                 <ul className="flex flex-col gap-2.5">
                   {a.points.map((p, pi) => (
                     <li key={pi} className="flex items-start gap-3">
-                      <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: a.color }} />
-                      <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-white/85" style={{ textShadow: TXT }}>{p}</span>
+                      <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: solid(a.accent) }} />
+                      <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-ink/85" style={{ textShadow: TXT }}>{p}</span>
                     </li>
                   ))}
                 </ul>

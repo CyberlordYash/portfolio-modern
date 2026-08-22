@@ -11,16 +11,43 @@
    no gradients, no navy. Elevation reads through the border and the
    step value alone, which is what keeps it looking deliberate. */
 :root {
-  --ink: #ffffff;
   --surface-0: #ffffff;
   --surface-1: #fafafa;
   --surface-2: #f4f4f5;
+  --surface-3: #ececee;
   --line: rgba(0, 0, 0, 0.11);
   --line-strong: rgba(0, 0, 0, 0.2);
   --accent: #29292e;
+
+  /* ── Theme duo (see `ink`/`paper` in tailwind.config.ts) ──────
+     Space-separated channels so both Tailwind's rgb(… / <alpha>)
+     and hand-written rgb(var(--ink-rgb) / 0.4) work. */
+  --ink-rgb: 0 0 0;
+  --paper-rgb: 255 255 255;
+
+  /* HUD accent pair — dark graphite on light ground. */
+  --hud-rgb: 41 41 46;
+  --hud-dim-rgb: 83 83 91;
+
+  /* Translucent card fill for panels floating over the WebGL layer. Light
+     mode carries more fill than dark: black text over a moving ribbon needs
+     more separation than white text does. */
+  --panel-fill: rgba(255, 255, 255, 0.62);
+
+  /* Stroke weight for the two-tone display headings (YASH / STACK / TALK …),
+     where one word is solid and its pair is hollow. The hollow half was drawn
+     for a black ground: a heavy 1.75px stroke reads as a wireframe there. On
+     white the same weight goes muddy — thick low-contrast edges colliding
+     under -0.035em tracking — so light mode takes a finer line. */
+  --heading-stroke-w: 1.1px;
+
+  /* Halo behind text floating over the WebGL layer. On white the halo
+     must be light, otherwise every label wears a dark smudge. */
+  --txt-halo:
+    0 2px 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(255, 255, 255, 0.85),
+    0 0 4px rgba(255, 255, 255, 0.9);
 }
 .dark {
-  --ink: #000000;
   --surface-0: #000000;
   --surface-1: #08080a;
   --surface-2: #0e0e11;
@@ -28,6 +55,20 @@
   --line: rgba(255, 255, 255, 0.1);
   --line-strong: rgba(255, 255, 255, 0.22);
   --accent: #b7b7be;
+
+  --ink-rgb: 255 255 255;
+  --paper-rgb: 0 0 0;
+
+  --hud-rgb: 216 216 220;
+  --hud-dim-rgb: 145 145 154;
+
+  --panel-fill: rgba(0, 0, 0, 0.34);
+
+  --heading-stroke-w: 1.75px;
+
+  --txt-halo:
+    0 2px 10px rgba(0, 0, 0, 0.95), 0 0 18px rgba(0, 0, 0, 0.85),
+    0 0 4px rgba(0, 0, 0, 0.9);
 }
 
 ::view-transition-old(root),
@@ -37,8 +78,8 @@
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
+  background: rgb(var(--ink-rgb) / 0.16);
+  color: rgb(var(--ink-rgb));
 }
 
 /* ── Scroll affordance ─────────────────────────────────────────
@@ -47,7 +88,7 @@
 html,
 #main-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  scrollbar-color: rgb(var(--ink-rgb) / 0.18) transparent;
 }
 ::-webkit-scrollbar {
   width: 9px;
@@ -57,19 +98,19 @@ html,
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgb(var(--ink-rgb) / 0.16);
   border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.34);
+  background: rgb(var(--ink-rgb) / 0.34);
   background-clip: content-box;
 }
 
 /* ── Keyboard focus ───────────────────────────────────────────
    There was no visible focus state anywhere in the app. */
 :focus-visible {
-  outline: 2px solid #d8d8dc;
+  outline: 2px solid rgb(var(--hud-rgb));
   outline-offset: 2px;
 }
 :focus:not(:focus-visible) {
@@ -88,9 +129,10 @@ html,
   font-size: 0.6875rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #ffffff;
-  background: #0e0e11;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  /* Inverted against the page: the link is a callout, not a surface. */
+  color: rgb(var(--paper-rgb));
+  background: rgb(var(--ink-rgb));
+  border: 1px solid rgb(var(--paper-rgb) / 0.28);
   transition: transform 0.18s ease-out;
 }
 .skip-link:focus {
@@ -115,9 +157,11 @@ html,
   }
 }
 
-/* ── HUD corner ticks (dark mode) ─────────────────────────── */
-.dark .hud-corners::before,
-.dark .hud-corners::after {
+/* ── HUD corner ticks ─────────────────────────────────────────
+   Was `.dark`-scoped, which left light mode with no corner ticks at
+   all. Driven off --ink-rgb now so the same marks read in both themes. */
+.hud-corners::before,
+.hud-corners::after {
   content: "";
   position: absolute;
   width: 10px;
@@ -125,28 +169,36 @@ html,
   pointer-events: none;
   z-index: 30;
 }
-.dark .hud-corners::before {
+.hud-corners::before {
   top: -1px;
   left: -1px;
-  border-top: 1px solid rgba(255, 255, 255, 0.34);
-  border-left: 1px solid rgba(255, 255, 255, 0.34);
+  border-top: 1px solid rgb(var(--ink-rgb) / 0.34);
+  border-left: 1px solid rgb(var(--ink-rgb) / 0.34);
 }
-.dark .hud-corners::after {
+.hud-corners::after {
   bottom: -1px;
   right: -1px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.34);
-  border-right: 1px solid rgba(255, 255, 255, 0.34);
+  border-bottom: 1px solid rgb(var(--ink-rgb) / 0.34);
+  border-right: 1px solid rgb(var(--ink-rgb) / 0.34);
 }
 
-/* ── Glass card (dark mode) ───────────────────────────────────
-   Was a navy vertical gradient; now one flat black step. The inset
+/* ── Glass card ───────────────────────────────────────────────
+   Was a navy vertical gradient; now one flat step. The inset
    hairline does the lifting a gradient used to fake.
 
-   Fill dropped from 0.72 to 0.44 so the aurora reads through the Hero
-   panels. The blur went UP to compensate: at a thinner fill it is the
-   blur, not the opacity, that keeps moving ribbons from competing with
-   small mono text. Raising the inset hairline keeps the panel edge
-   defined now that the fill alone no longer separates it. */
+   Fill kept thin (0.44 dark / 0.55 light) so the aurora reads through
+   the Hero panels. The blur compensates: at a thin fill it is the blur,
+   not the opacity, that keeps moving ribbons from competing with small
+   mono text. Light mode needs slightly more fill — black text over a
+   moving ribbon needs more separation than white text does. */
+.navy-glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 18px 48px rgba(0, 0, 0, 0.12);
+}
 .dark .navy-glass {
   background: rgba(8, 8, 10, 0.44);
   backdrop-filter: blur(14px) saturate(0.85);
@@ -421,7 +473,10 @@ html,
   color: #d8d8dc;
 }
 
-/* Was a navy radial wash; now a flat near-black plate. */
+/* Was a navy radial wash; now a flat plate one step off the ground. */
+.xbox-bg {
+  background: var(--surface-1);
+}
 .dark .xbox-bg {
   background: #08080a;
 }

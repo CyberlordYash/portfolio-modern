@@ -142,7 +142,7 @@ const Hero = () => {
   return (
     <div
       id="home"
-      className="relative w-full min-h-[100dvh] bg-[#ffffff] dark:bg-transparent text-black dark:text-white overflow-hidden"
+      className="relative w-full min-h-[100dvh] bg-transparent text-black dark:text-white overflow-hidden"
     >
       <style>{`
         @keyframes glitch-jitter {
@@ -227,8 +227,8 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/70 dark:text-white"
-            style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+            className="text-black dark:text-white"
+            style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             YASH
           </span>
@@ -346,8 +346,8 @@ const Hero = () => {
           }}
         >
           <span
-            className="text-black/70 dark:text-white"
-            style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+            className="text-black dark:text-white"
+            style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
           >
             YASH
           </span>

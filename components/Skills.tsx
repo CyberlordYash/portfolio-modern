@@ -169,7 +169,7 @@ const DomainPanel = ({ d, i }: { d: Domain; i: number }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay: (i % 3) * 0.07, ease: [0.22, 1, 0.36, 1] }}
-    className="mb-5 break-inside-avoid border border-black/10 dark:border-white/10 bg-[#ffffff] dark:bg-black/40"
+    className="mb-5 break-inside-avoid border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/40"
   >
     <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-black/10 dark:border-white/10">
       <div className="flex items-center gap-3 min-w-0">
@@ -194,7 +194,7 @@ const DomainPanel = ({ d, i }: { d: Domain; i: number }) => (
 /* ───────────────────────── MAIN ───────────────────────── */
 
 const Skills = () => (
-  <div className="relative w-full bg-[#ffffff] dark:bg-black/30 border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
+  <div className="relative w-full bg-white/55 dark:bg-black/30 border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
     {/* HEADER — the two groups totalled ~440px of tracked mono against a
         320px phone row, so they crushed into each other. Stacked below sm. */}
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-5 md:px-7 py-3 sm:py-3.5 border-b border-black/10 dark:border-white/10">

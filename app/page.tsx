@@ -13,6 +13,7 @@ import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import TerminalSnake from "./TerminalSnake";
 import dynamic from "next/dynamic";
 
@@ -94,14 +95,14 @@ function TopNav() {
                 onClick={go(id)}
                 className={cn(
                   "relative grid min-h-[40px] place-items-center px-3 lg:px-3.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-200 whitespace-nowrap",
-                  isActive ? "text-white" : "text-white/40 hover:text-white/85",
+                  isActive ? "text-ink" : "text-ink/40 hover:text-ink/85",
                 )}
               >
                 {link.label}
                 {isActive && (
                   <motion.span
                     layoutId="nav-active-desktop"
-                    className="absolute inset-x-2.5 bottom-1 h-px bg-white"
+                    className="absolute inset-x-2.5 bottom-1 h-px bg-ink"
                     transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
@@ -117,7 +118,7 @@ function TopNav() {
           from it. Down here all five fit, nothing overlaps, and the targets
           are full-height rather than 10px of text. */}
       <nav
-        className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.14] bg-black/90 backdrop-blur-xl"
+        className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-ink/[0.14] bg-paper/90 backdrop-blur-xl"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="grid grid-cols-5" style={{ height: MOBILE_NAV_H }}>
@@ -132,13 +133,13 @@ function TopNav() {
                 onClick={go(id)}
                 className={cn(
                   "relative flex flex-col items-center justify-center gap-1 transition-colors duration-200",
-                  isActive ? "text-white" : "text-white/40",
+                  isActive ? "text-ink" : "text-ink/40",
                 )}
               >
                 {isActive && (
                   <motion.span
                     layoutId="nav-active-mobile"
-                    className="absolute inset-x-3 top-0 h-px bg-white"
+                    className="absolute inset-x-3 top-0 h-px bg-ink"
                     transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
@@ -296,8 +297,6 @@ function HudFrame() {
   if (!size.w || !size.h || size.w < 768) return null;
 
   const frame = buildFramePath(size.w, size.h, pill);
-  const maskColor = "#000000";
-  const strokeColor = "rgba(255,255,255,0.26)";
 
   return (
     <svg
@@ -307,34 +306,39 @@ function HudFrame() {
       height={size.h}
       viewBox={`0 0 ${size.w} ${size.h}`}
     >
-      {/* Opaque mask — fills the margin OUTSIDE the frame so content can't bleed past it */}
+      {/* Opaque mask — fills the margin OUTSIDE the frame so content can't
+          bleed past it. fill/stroke are CSS properties, so driving them from
+          `style` lets the theme variables resolve without reading the theme
+          in JS (which would need a mount guard to avoid a hydration flash). */}
       <path
         d={`M 0,0 H ${size.w} V ${size.h} H 0 Z ${frame}`}
-        fill={maskColor}
         fillRule="evenodd"
+        style={{ fill: "rgb(var(--paper-rgb))" }}
       />
       {/* Frame stroke */}
       <path
         d={frame}
         fill="none"
-        stroke={strokeColor}
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
+        style={{ stroke: "rgb(var(--ink-rgb) / 0.26)" }}
       />
-      {/* Scroll progress — green trace filling the frame as you descend */}
+      {/* Scroll progress — a trace filling the frame as you descend */}
       <path
         ref={progressRef}
         d={frame}
         pathLength={1}
         fill="none"
-        stroke="#91919A"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeDasharray="1"
         strokeDashoffset="1"
         strokeOpacity="0.85"
         vectorEffect="non-scaling-stroke"
-        style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))" }}
+        style={{
+          stroke: "rgb(var(--hud-dim-rgb))",
+          filter: "drop-shadow(0 0 4px rgb(var(--ink-rgb) / 0.6))",
+        }}
       />
     </svg>
   );
@@ -342,10 +346,12 @@ function HudFrame() {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-black text-slate-200 font-Quicksand selection:bg-blue-500/30">
+    <main className="relative min-h-screen bg-paper text-black dark:text-slate-200 font-Quicksand selection:bg-blue-500/30">
 
-      {/* Living market world — fixed WebGL layer behind everything (dark mode) */}
+      {/* Living market world — fixed WebGL layer behind everything, in both
+          themes (it composites to a light ground in light mode). */}
       <MarketWorld />
+      <ThemeToggle />
 
       {/* The three navy aurora blobs that sat here are gone. On a black ground
           they were near-invisible yet each forced a full-viewport 150px blur
@@ -360,9 +366,12 @@ export default function Home() {
           dvh, not vh: on mobile browsers 100vh is the *expanded* viewport, so
           with the URL bar showing the last ~60px of every screen was cut off.
           overflow-x-hidden stops any wide child from producing a sideways pan. */}
+      {/* Transparent in BOTH themes. This used to be `bg-white` in light mode,
+          which painted an opaque sheet over the fixed WebGL layer and hid the
+          aurora completely. The ground now comes from <main> + the canvas. */}
       <div
         id="main-scroll"
-        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-white dark:bg-transparent"
+        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-transparent"
       >
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#9ea5e40c_1px,transparent_1px),linear-gradient(to_bottom,#9ea5e40c_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
 
@@ -390,7 +399,7 @@ export default function Home() {
               {...cardEnter}
             >
               <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-[#ffffff] dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
+                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-white/75 dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
                   <motion.div
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -414,8 +423,8 @@ export default function Home() {
                     <RevealText text="TECHNICAL" delay={0.18} />
                   </span>{" "}
                   <span
-                    className="text-black/70 dark:text-white/85"
-                    style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+                    className="text-black dark:text-white/85"
+                    style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
                   >
                     <RevealText text="STACK" delay={0.3} />
                   </span>
@@ -453,7 +462,7 @@ export default function Home() {
             {/* ── Card 5: Architecture / Grid ── */}
             <motion.section
               id="architecture"
-              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-gradient-to-b from-[#0B0B0E]/60 to-black/50 border border-[#91919A]/15 shadow-[0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
+              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] border border-hud-dim/20 bg-paper/55 backdrop-blur-sm shadow-[0_18px_48px_rgba(0,0,0,0.10)] dark:border-[#91919A]/15 dark:bg-gradient-to-b dark:from-[#0B0B0E]/60 dark:to-black/50 dark:backdrop-blur-none dark:shadow-[0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
               {...cardEnter}
             >
               <Grid />

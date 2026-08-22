@@ -9,8 +9,10 @@ import {
 
 const EMAIL = "yashsachan321@gmail.com";
 
-/* Text legibility over the animated WebGL world (dark mode is transparent). */
-const TXT = "0 2px 10px rgba(0,0,0,0.9), 0 0 18px rgba(0,0,0,0.7)";
+/* Text legibility over the animated WebGL world. The halo has to invert with
+   the theme — this was a hard-coded dark glow, which on a white page rendered
+   as a blurry smudge behind the black heading instead of lifting it. */
+const TXT = "var(--txt-halo)";
 
 const COORDINATES = [
   { icon: <Briefcase size={13} />, label: "ROLE",     value: "Software Engineer · Zanskar Securities" },
@@ -32,7 +34,7 @@ const Footer = () => {
   return (
     <footer
       id="contact"
-      className="relative w-full overflow-hidden bg-[#ffffff] dark:bg-transparent border-t border-black/10 dark:border-white/10"
+      className="relative w-full overflow-hidden bg-transparent border-t border-black/10 dark:border-white/10"
     >
       {/* grid lines */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px]" />
@@ -75,12 +77,11 @@ const Footer = () => {
           >
             LET&apos;S{" "}
             <span
-              className="text-black/70 dark:text-white/85"
+              className="text-black dark:text-white/85"
               style={{
-                WebkitTextStrokeWidth: "1.75px",
+                WebkitTextStrokeWidth: "var(--heading-stroke-w)",
                 WebkitTextStrokeColor: "currentColor",
                 WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))",
               }}
             >
               TALK
@@ -105,7 +106,7 @@ const Footer = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex flex-col border border-black/12 dark:border-white/12 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md overflow-hidden"
+            className="relative flex flex-col border border-black/12 dark:border-white/12 bg-white/60 dark:bg-black/35 backdrop-blur-md overflow-hidden"
           >
             <span className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
             <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2 border-blue-400" />
@@ -150,7 +151,7 @@ const Footer = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex flex-col border border-black/12 dark:border-white/12 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md overflow-hidden"
+            className="relative flex flex-col border border-black/12 dark:border-white/12 bg-white/60 dark:bg-black/35 backdrop-blur-md overflow-hidden"
           >
             <span className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
             <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2 border-blue-400" />
@@ -195,7 +196,7 @@ const Footer = () => {
                 href={profile.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center border border-black/15 dark:border-white/15 bg-[#fafafa] dark:bg-black/35 backdrop-blur-md text-black/55 dark:text-white/65 hover:border-blue-500/60 dark:hover:border-blue-400/60 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-150"
+                className="flex h-10 w-10 items-center justify-center border border-black/15 dark:border-white/15 bg-white/60 dark:bg-black/35 backdrop-blur-md text-black/55 dark:text-white/65 hover:border-blue-500/60 dark:hover:border-blue-400/60 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-150"
               >
                 <Icon size={16} />
               </a>

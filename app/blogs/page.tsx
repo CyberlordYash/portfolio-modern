@@ -156,10 +156,10 @@ export default function BlogsPage() {
   const wordCount = draft.content.trim() ? draft.content.trim().split(/\s+/).length : 0;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-4 py-6 text-white md:px-8 md:py-8">
+    <main className="relative min-h-screen overflow-hidden bg-paper px-4 py-6 text-ink md:px-8 md:py-8">
       {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgba(255,255,255,0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgba(255,255,255,0.03),transparent)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgb(var(--ink-rgb) / 0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgb(var(--ink-rgb) / 0.03),transparent)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* ── Header ── */}
@@ -167,7 +167,7 @@ export default function BlogsPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700/50 bg-black/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 transition hover:border-white/40 hover:bg-white/[0.06] hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-ink/20 bg-paper/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/75 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -177,7 +177,7 @@ export default function BlogsPage() {
               <button
                 type="button"
                 onClick={handleAdminLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700/40 bg-black/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400 transition hover:border-red-500/40 hover:text-red-300"
+                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition hover:border-red-500/40 hover:text-red-600 dark:text-red-300"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Exit Admin
@@ -186,7 +186,7 @@ export default function BlogsPage() {
               <button
                 type="button"
                 onClick={() => setShowAdminLogin((c) => !c)}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition hover:border-white/40 hover:bg-white/[0.1] hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-ink/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70 transition hover:border-ink/40 hover:bg-ink/[0.1] hover:text-ink"
               >
                 <LockKeyhole className="h-3.5 w-3.5" />
                 Admin
@@ -194,31 +194,31 @@ export default function BlogsPage() {
             )}
           </div>
 
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-white/70">
+          <div className="inline-flex items-center gap-1.5 rounded-xl border border-ink/15 bg-ink/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
             <BookOpenText className="h-3 w-3" />
             Field Notes
           </div>
         </div>
 
         {/* ── Main card ── */}
-        <section className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-black/40 backdrop-blur-sm">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgba(255,255,255,0.03),transparent_45%)]" />
+        <section className="relative overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.03),transparent_45%)]" />
           <div className="pointer-events-none absolute -right-6 top-4 opacity-[0.055]">
-            <PenSvg className="h-48 w-48 text-white" />
+            <PenSvg className="h-48 w-48 text-ink" />
           </div>
 
           <div className="relative z-10 px-4 py-8 md:px-8 md:py-10">
             {/* ── Title row ── */}
             <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-white/70">
+                <div className="inline-flex items-center gap-2 rounded-lg border border-ink/15 bg-ink/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-ink/70">
                   <BookOpenText className="h-3 w-3" />
                   Sys · Blog Feed
                 </div>
-                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-white md:text-[2.6rem]">
+                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-ink md:text-[2.6rem]">
                   Blogs
                 </h1>
-                <p className="max-w-md font-Quicksand text-sm text-slate-500 md:text-base">
+                <p className="max-w-md font-Quicksand text-sm text-ink/50 md:text-base">
                   Notes, learnings, and thoughts — written for the public.
                 </p>
               </div>
@@ -241,13 +241,13 @@ export default function BlogsPage() {
 
             {/* ── Admin login ── */}
             {showAdminLogin && !isAdmin && (
-              <div className="mb-6 rounded-xl border border-white/15 bg-white/[0.025] p-5 backdrop-blur-xl">
+              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5 backdrop-blur-xl">
                 <form onSubmit={handleAdminUnlock} className="space-y-4">
                   <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                       Admin Access
                     </p>
-                    <h2 className="mt-1.5 font-Orbitron text-lg font-semibold text-white">
+                    <h2 className="mt-1.5 font-Orbitron text-lg font-semibold text-ink">
                       Unlock Editor
                     </h2>
                   </div>
@@ -259,17 +259,17 @@ export default function BlogsPage() {
                       if (loginError) setLoginError(false);
                     }}
                     placeholder="Enter admin password"
-                    className="w-full rounded-xl border border-white/[0.08] bg-black/50 px-4 py-3 font-mono text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/20"
+                    className="w-full rounded-xl border border-ink/[0.08] bg-paper/50 px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
                   />
                   {loginError && (
-                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
                       Access denied — invalid password.
                     </p>
                   )}
                   <button
                     type="submit"
                     disabled={isSubmitting || !password.trim()}
-                    className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isSubmitting ? (
                       <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -284,21 +284,21 @@ export default function BlogsPage() {
 
             {/* ── Admin editor ── */}
             {isAdmin && (
-              <div className="mb-6 rounded-xl border border-white/15 bg-white/[0.025] p-5 md:p-6">
+              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5 md:p-6">
                 <div className="mb-5 flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                       Admin Editor
                     </p>
-                    <h2 className="mt-1.5 font-Orbitron text-base font-semibold text-white">
+                    <h2 className="mt-1.5 font-Orbitron text-base font-semibold text-ink">
                       {draft.id ? "Edit Post" : "New Post"}
                     </h2>
                   </div>
                   <div
                     className={`rounded-lg border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.3em] ${
                       draft.id
-                        ? "border-white/15 bg-white/[0.06] text-white/70"
-                        : "border-white/15 bg-white/[0.06] text-white/70"
+                        ? "border-ink/15 bg-ink/[0.06] text-ink/70"
+                        : "border-ink/15 bg-ink/[0.06] text-ink/70"
                     }`}
                   >
                     {draft.id ? "Edit" : "Create"}
@@ -311,7 +311,7 @@ export default function BlogsPage() {
                     value={draft.title}
                     onChange={(e) => setDraft((cur) => ({ ...cur, title: e.target.value }))}
                     placeholder="Blog title..."
-                    className="w-full rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-Quicksand text-sm text-slate-200 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/10"
+                    className="w-full rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-Quicksand text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                   />
 
                   <textarea
@@ -319,16 +319,16 @@ export default function BlogsPage() {
                     onChange={(e) => setDraft((cur) => ({ ...cur, summary: e.target.value }))}
                     rows={3}
                     placeholder="Short summary shown on the post card..."
-                    className="w-full resize-none rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-Quicksand text-sm leading-relaxed text-slate-300 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/10"
+                    className="w-full resize-none rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-Quicksand text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                   />
 
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[9px] uppercase tracking-[0.38em] text-slate-600">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
                         Content
                       </span>
                       {wordCount > 0 && (
-                        <span className="font-mono text-[9px] text-slate-700">
+                        <span className="font-mono text-[9px] text-ink/30">
                           {wordCount}w
                         </span>
                       )}
@@ -338,7 +338,7 @@ export default function BlogsPage() {
                       onChange={(e) => setDraft((cur) => ({ ...cur, content: e.target.value }))}
                       rows={10}
                       placeholder="Write your full blog post here..."
-                      className="w-full resize-none rounded-xl border border-white/[0.08] bg-black/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-slate-300 outline-none transition placeholder:text-slate-700 focus:border-white/40 focus:ring-1 focus:ring-white/10"
+                      className="w-full resize-none rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                     />
                   </div>
 
@@ -352,7 +352,7 @@ export default function BlogsPage() {
                         !draft.summary.trim() ||
                         !draft.content.trim()
                       }
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       {isSubmitting ? (
                         <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -369,7 +369,7 @@ export default function BlogsPage() {
                         type="button"
                         onClick={() => setDraft(createInitialDraft())}
                         disabled={isSubmitting}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700/40 bg-black/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-slate-500 transition hover:border-slate-600/50 hover:text-slate-300 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-ink/25 hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <X className="h-3.5 w-3.5" />
                         Cancel
@@ -381,7 +381,7 @@ export default function BlogsPage() {
             )}
 
             {requestError && (
-              <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/[0.05] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+              <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/[0.05] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
                 {requestError}
               </div>
             )}
@@ -389,19 +389,19 @@ export default function BlogsPage() {
             {/* ── Posts list ── */}
             <div className="space-y-4">
               {isLoading ? (
-                <div className="rounded-xl border border-dashed border-white/[0.08] bg-black/20 px-5 py-16 text-center">
-                  <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-white" />
-                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-700">
+                <div className="rounded-xl border border-dashed border-ink/[0.08] bg-paper/20 px-5 py-16 text-center">
+                  <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
+                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     Loading posts...
                   </p>
                 </div>
               ) : sortedPosts.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-white/[0.08] px-5 py-16 text-center">
-                  <BookOpenText className="mx-auto h-6 w-6 text-slate-700" />
-                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-700">
+                <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-16 text-center">
+                  <BookOpenText className="mx-auto h-6 w-6 text-ink/30" />
+                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     No posts yet
                   </p>
-                  <p className="mt-2 font-Quicksand text-xs text-slate-700">
+                  <p className="mt-2 font-Quicksand text-xs text-ink/30">
                     {isAdmin ? "Use the editor above to publish your first post." : "Check back soon."}
                   </p>
                 </div>
@@ -411,16 +411,16 @@ export default function BlogsPage() {
                     key={post.id}
                     className={`group relative rounded-xl border transition-all ${
                       draft.id === post.id
-                        ? "border-white/30 bg-white/[0.05]"
-                        : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]"
+                        ? "border-ink/30 bg-ink/[0.05]"
+                        : "border-ink/[0.06] bg-ink/[0.02] hover:border-ink/[0.1]"
                     }`}
                   >
                     {/* Left accent bar */}
                     <div
                       className={`absolute left-0 top-5 bottom-5 w-[2px] rounded-full transition-all ${
                         draft.id === post.id
-                          ? "bg-white"
-                          : "bg-white/[0.05] group-hover:bg-white/40"
+                          ? "bg-ink"
+                          : "bg-ink/[0.05] group-hover:bg-ink/40"
                       }`}
                     />
 
@@ -429,14 +429,14 @@ export default function BlogsPage() {
                       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                         <div className="space-y-2 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <div className="inline-flex items-center rounded-lg border border-white/15 bg-white/[0.06] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-white/70">
+                            <div className="inline-flex items-center rounded-lg border border-ink/15 bg-ink/[0.06] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/70">
                               Post {String(index + 1).padStart(2, "0")}
                             </div>
-                            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-700">
+                            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-ink/30">
                               {formatDate(post.publishedAt)}
                             </span>
                           </div>
-                          <h2 className="font-Orbitron text-xl font-bold leading-snug text-white md:text-2xl">
+                          <h2 className="font-Orbitron text-xl font-bold leading-snug text-ink md:text-2xl">
                             {post.title}
                           </h2>
                         </div>
@@ -453,7 +453,7 @@ export default function BlogsPage() {
                                   content: post.content,
                                 })
                               }
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/30 bg-black/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500 transition hover:border-white/40 hover:bg-white/[0.06] hover:text-white disabled:opacity-40"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-paper/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink disabled:opacity-40"
                             >
                               <Edit3 className="h-3 w-3" />
                               Edit
@@ -462,7 +462,7 @@ export default function BlogsPage() {
                               type="button"
                               onClick={() => handleDelete(post.id)}
                               disabled={isSubmitting}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/30 bg-black/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500 transition hover:border-red-600/40 hover:bg-red-950/20 hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-paper/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-600/40 hover:bg-red-950/20 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Trash2 className="h-3 w-3" />
                             </button>
@@ -471,13 +471,13 @@ export default function BlogsPage() {
                       </div>
 
                       {/* Summary */}
-                      <p className="mb-4 max-w-3xl font-Quicksand text-sm leading-relaxed text-slate-400 md:text-base">
+                      <p className="mb-4 max-w-3xl font-Quicksand text-sm leading-relaxed text-ink/60 md:text-base">
                         {post.summary}
                       </p>
 
                       {/* Content */}
-                      <div className="rounded-xl border border-white/10 bg-black/30 px-5 py-4">
-                        <p className="whitespace-pre-wrap font-Quicksand text-sm leading-7 text-slate-400">
+                      <div className="rounded-xl border border-ink/10 bg-paper/30 px-5 py-4">
+                        <p className="whitespace-pre-wrap font-Quicksand text-sm leading-7 text-ink/60">
                           {post.content}
                         </p>
                       </div>
@@ -504,16 +504,16 @@ function StatCard({
   helper: string;
   color: "indigo" | "violet";
 }) {
-  const border = color === "indigo" ? "border-white/15" : "border-white/15";
-  const bg = color === "indigo" ? "bg-white/[0.04]" : "bg-white/[0.04]";
-  const valColor = color === "indigo" ? "text-white" : "text-white";
+  const border = color === "indigo" ? "border-ink/15" : "border-ink/15";
+  const bg = color === "indigo" ? "bg-ink/[0.04]" : "bg-ink/[0.04]";
+  const valColor = color === "indigo" ? "text-ink" : "text-ink";
   return (
     <div className={`rounded-xl border p-4 ${border} ${bg}`}>
-      <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-slate-700">
+      <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-ink/30">
         {label}
       </p>
       <p className={`mt-2.5 font-Orbitron text-xl font-bold ${valColor}`}>{value}</p>
-      <p className="mt-1.5 truncate font-Quicksand text-xs text-slate-600">{helper}</p>
+      <p className="mt-1.5 truncate font-Quicksand text-xs text-ink/40">{helper}</p>
     </div>
   );
 }

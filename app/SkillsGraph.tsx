@@ -285,7 +285,7 @@ export default function SkillsGraph() {
           TECH_ECOSYSTEM
         </span>
         <h2
-          className="font-black uppercase text-white text-center"
+          className="font-black uppercase text-ink text-center"
           style={{
             fontFamily: "var(--font-orbitron, monospace)",
             fontSize: "clamp(1.6rem, 4vw, 3rem)",
@@ -313,10 +313,15 @@ export default function SkillsGraph() {
         </div>
       </div>
 
-      {/* Graph */}
+      {/* Graph — deliberately dark in BOTH themes. The D3 layer paints
+          light-grey nodes, links and labels, so a light ground would mean
+          re-tuning the whole colour model; a dark instrument panel on a white
+          page is the convention a code block or chart canvas already uses.
+          Light mode trades the outer white glow for a drop shadow so the panel
+          sits ON the page rather than glowing into it. */}
       <div
         ref={containerRef}
-        className="relative w-full h-[480px] md:h-[580px] bg-[#0d1017] border border-blue-500/20 rounded-xl overflow-hidden shadow-[0_0_80px_-20px_rgba(255,255,255,0.20),0_0_20px_-5px_rgba(255,255,255,0.07)]"
+        className="relative w-full h-[480px] md:h-[580px] bg-[#0d1017] rounded-xl overflow-hidden border border-black/15 shadow-[0_18px_48px_rgba(0,0,0,0.18)] dark:border-blue-500/20 dark:shadow-[0_0_80px_-20px_rgba(255,255,255,0.20),0_0_20px_-5px_rgba(255,255,255,0.07)]"
       >
         <svg ref={svgRef} className="w-full h-full select-none" />
 

@@ -70,7 +70,7 @@ const PhaseCard = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="relative flex flex-col overflow-hidden border border-black/[0.1] dark:border-white/[0.1]
-        bg-[#ffffff] dark:bg-[#0B0B0E]/75 h-[15rem] sm:h-[20rem] lg:h-[24rem] cursor-default
+        bg-white/80 dark:bg-[#0B0B0E]/75 h-[15rem] sm:h-[20rem] lg:h-[24rem] cursor-default
         transition-all duration-300 group"
     >
       {/* Colored top strip */}
@@ -155,7 +155,7 @@ const Approach = () => {
   React.useEffect(() => { setMounted(true); }, []);
   return (
     <section
-      className="w-full bg-[#ffffff] dark:bg-transparent transition-colors duration-500 py-16"
+      className="w-full bg-transparent transition-colors duration-500 py-16"
       id="approach"
     >
       {/* 90vw + px-4 double-inset the cards on a phone; full width below md
@@ -164,7 +164,7 @@ const Approach = () => {
         {/* Section header */}
         <div className="flex flex-col items-center mb-12">
           {/* label tag */}
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-[#ffffff] dark:bg-black/60 px-4 py-1.5 mb-5">
+          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-white/70 dark:bg-black/60 px-4 py-1.5 mb-5">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -196,8 +196,8 @@ const Approach = () => {
               <RevealText text="MY" delay={0.18} />
             </span>{" "}
             <span
-              className="text-black/70 dark:text-white"
-              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+              className="text-black dark:text-white"
+              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
             >
               <RevealText text="APPROACH" delay={0.3} />
             </span>

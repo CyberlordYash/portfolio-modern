@@ -96,7 +96,7 @@ const CertCard = ({ cert }: { cert: (typeof certs)[0] }) => (
     target="_blank"
     rel="noopener noreferrer"
     className="group relative flex h-full flex-col overflow-hidden border border-black/[0.12] dark:border-white/[0.12]
-      bg-white dark:bg-[#0B0B0E]/80 transition-colors duration-500
+      bg-white/85 dark:bg-[#0B0B0E]/80 transition-colors duration-500
       hover:border-black/25 dark:hover:border-white/25"
   >
     {/* hairline top strip — same treatment as the project cards */}
@@ -247,7 +247,7 @@ export default function Certificates() {
 
   return (
     <section
-      className="relative w-full overflow-hidden py-16 md:py-24 bg-[#ffffff] dark:bg-transparent transition-colors duration-500"
+      className="relative w-full overflow-hidden py-16 md:py-24 bg-transparent transition-colors duration-500"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -281,7 +281,7 @@ export default function Certificates() {
         <div className="mb-10 flex flex-col items-center">
           <FadeReveal
             delay={0}
-            className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-[#ffffff] dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm"
+            className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-white/75 dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm"
           >
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
@@ -303,8 +303,8 @@ export default function Certificates() {
               <RevealText text="VERIFIED" delay={0.18} />
             </span>{" "}
             <span
-              className="text-black/70 dark:text-white/85"
-              style={{ WebkitTextStrokeWidth: "1.75px", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.95)) drop-shadow(0 0 14px rgba(0,0,0,0.85))" }}
+              className="text-black dark:text-white/85"
+              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
             >
               <RevealText text="CERTIFICATES" delay={0.3} />
             </span>

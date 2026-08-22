@@ -40,7 +40,23 @@ export default function MarketWorld() {
   const q = env.quality;
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+    /* Light mode: composite the whole layer inverted.
+
+       The aurora is additive light on a near-black ground — additive over
+       white is a no-op, so on a light page the ribbons would simply vanish.
+       Re-authoring the shaders for a subtractive light pass would mean two
+       parallel colour models to keep in sync.
+
+       `invert(1) hue-rotate(180deg)` is the cheaper and more faithful move:
+       invert flips the ground (#01070A → near-white) AND rotates every hue by
+       ~180°, so the second rotation puts them back. Net effect is lightness
+       inverted, hue preserved — the ribbons keep their green/teal/violet
+       identity and read as saturated bands on white instead of glow on black.
+       One GPU compositing pass, and only while light mode is active. */
+    <div
+      className="fixed inset-0 z-0 pointer-events-none [filter:invert(1)_hue-rotate(180deg)] dark:[filter:none]"
+      aria-hidden="true"
+    >
       <WorldSideEffects />
       <Canvas
         dpr={q > 0 ? [1, 1.5] : [1, 1.2]}
