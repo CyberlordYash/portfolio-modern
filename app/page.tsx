@@ -13,7 +13,7 @@ import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
 import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import ThemeClock from "@/components/ThemeClock";
 import TerminalSnake from "./TerminalSnake";
 import dynamic from "next/dynamic";
 
@@ -351,7 +351,7 @@ export default function Home() {
       {/* Living market world — fixed WebGL layer behind everything, in both
           themes (it composites to a light ground in light mode). */}
       <MarketWorld />
-      <ThemeToggle />
+      <ThemeClock />
 
       {/* The three navy aurora blobs that sat here are gone. On a black ground
           they were near-invisible yet each forced a full-viewport 150px blur

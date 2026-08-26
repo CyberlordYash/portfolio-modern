@@ -2,8 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Quicksand, Orbitron, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { ThemeProvider } from "./provider";
+import { prepaintScript } from "@/lib/solar-theme";
 import PageLoader from "@/components/PageLoader";
+import SolarThemeProvider from "@/components/SolarThemeProvider";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -98,20 +99,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${quicksand.variable} ${orbitron.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
-        {/* `forcedTheme="dark"` used to pin the site to dark and made every
-            light-mode style in the tree dead code. Dark stays the default —
-            it's the site's identity — but the toggle can now reach light.
-            enableSystem stays off so the choice is explicit, not ambient. */}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        {/* Pre-paint. Blocking, first child of <body>, so the first frame
+            already carries the right polarity for the visitor local time.
+            Without it the page paints the default dark ground and then
+            snaps to white for anyone loading at noon. */}
+        <script
+          id="solar-prepaint"
+          dangerouslySetInnerHTML={{ __html: prepaintScript() }}
+        />
+        <SolarThemeProvider>
           <a href="#home" className="skip-link">
             Skip to content
           </a>
@@ -165,7 +165,7 @@ export default function RootLayout({
               `,
             }}
           />
-        </ThemeProvider>
+        </SolarThemeProvider>
       </body>
     </html>
   );
