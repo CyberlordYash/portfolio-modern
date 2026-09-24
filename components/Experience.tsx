@@ -1,500 +1,281 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { IconArrowUpRight } from "@tabler/icons-react";
-import { RevealText, RevealChars, FadeReveal } from "@/components/ui/ScrollReveal";
 
-/* Text legibility over the animated WebGL world — a soft halo that keeps the
-   background fully visible while lifting text off it. The halo colour has to
-   follow the theme (dark halo on black, light halo on white), so it lives in
-   globals.css as --txt-halo rather than being frozen here. */
-const TXT = "var(--txt-halo)";
+import React from "react";
+import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 
-/* Per-entry accent, named as a CSS variable rather than a literal so it flips
-   with the theme: the old #D8D8DC / #91919A greys were invisible on white.
-   `accent` holds the variable NAME so both the solid colour and any alpha
-   wash can be derived from the one token. */
-const solid = (accent: string) => `rgb(var(${accent}))`;
-const wash = (accent: string, a: number) => `rgb(var(${accent}) / ${a})`;
+/* ══════════════════════════════════════════════════════════════════
+   EXPERIENCE
 
-/* ─────────────────────────────────────────────────
-   Count-up hook (subtle, fires once in view)
-───────────────────────────────────────────────── */
-function useCountUp(target: number, duration = 1200, trigger: boolean) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      setValue(Math.floor(ease * target));
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [trigger, target, duration]);
-  return value;
+   A CV, set as one. Each role is a two-column spread: identity on the
+   left, evidence on the right, a hairline between entries. No cards,
+   no centre spine, no glass.
+
+   The previous version rendered a vertical timeline of centred glass
+   cards with per-job accent colours, hover states, a scroll-driven
+   progress rail and a thumbnail each. All of that framing competed
+   with the only thing a reader is here for — what was built and what
+   it moved.
+
+   The metrics are the one graphic moment: four numbers set at display
+   scale. On a page of body copy, a row of large figures is what the
+   eye lands on, and they are the strongest thing in this section.
+══════════════════════════════════════════════════════════════════ */
+
+type Job = (typeof JOBS)[number];
+
+function Entry({ job, i }: { job: Job; i: number }) {
+  return (
+    <article className="grid grid-cols-1 gap-x-10 gap-y-8 border-t border-rule py-14 md:py-20 lg:grid-cols-12">
+      {/* ── Identity ───────────────────────────────────────────── */}
+      <div className="lg:col-span-4">
+        <Rise>
+          <div className="flex items-baseline gap-3">
+            <span className="micro num">{job.idx}/</span>
+            {job.status === "ACTIVE" && (
+              <span className="flex items-center gap-1.5">
+                <span className="block-mark h-[5px] w-[5px] rounded-full" />
+                {/* text-mark, not text-accent: shadcn's config defines
+                    `accent` as hsl(var(--accent)), and this system sets
+                    --accent to an rgb() value — so `text-accent`
+                    compiles to hsl(rgb(…)), which is invalid and gets
+                    dropped, leaving the label inheriting grey. */}
+                <span className="micro text-mark">Current</span>
+              </span>
+            )}
+          </div>
+        </Rise>
+
+        <h3 className="display mt-4" style={{ fontSize: "var(--t-h2)" }}>
+          <Mask>{job.company}</Mask>
+        </h3>
+
+        <Rise delay={0.08}>
+          <p className="mt-3 text-[0.95rem] leading-snug text-ink2">{job.role}</p>
+          <p className="micro mt-4">{job.period}</p>
+          <p className="micro mt-1">{job.location}</p>
+
+          {job.link && (
+            <a
+              href={job.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="elink micro mt-5 inline-block text-ink"
+            >
+              {job.link.label} ↗
+            </a>
+          )}
+        </Rise>
+      </div>
+
+      {/* ── Evidence ───────────────────────────────────────────── */}
+      <div className="lg:col-span-7 lg:col-start-6">
+        <Rise delay={0.05}>
+          <p className="lede max-w-[46ch]">{job.summary}</p>
+        </Rise>
+
+        {/* Metrics. Sized off the heading scale so they read as
+            display type rather than as a stat widget. */}
+        <Rise delay={0.12}>
+          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+            {job.metrics.map((m) => (
+              <div key={m.label}>
+                <dt className="sr-only">{m.label}</dt>
+                <dd
+                  className="display num"
+                  style={{ fontSize: "clamp(1.6rem, 3vw, 2.5rem)" }}
+                >
+                  {m.value}
+                </dd>
+                <p className="micro mt-2">{m.label}</p>
+              </div>
+            ))}
+          </dl>
+        </Rise>
+
+        <Draw delay={0.18} className="mt-10" />
+
+        <Rise delay={0.2}>
+          <ul className="mt-8 flex flex-col gap-4">
+            {job.bullets.map((b, bi) => (
+              <li key={bi} className="flex gap-4">
+                <span className="micro num mt-[0.3em] shrink-0 opacity-60">
+                  {String(bi + 1).padStart(2, "0")}
+                </span>
+                <span className="text-[0.9375rem] leading-relaxed text-ink2">
+                  {b}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <ul className="mt-8 flex flex-wrap gap-x-4 gap-y-1.5">
+            {job.tech.map((t) => (
+              <li key={t} className="micro">
+                {t}
+              </li>
+            ))}
+          </ul>
+        </Rise>
+      </div>
+    </article>
+  );
 }
 
-const Metric = ({ value, label, accent }: { value: string; label: string; accent: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [fired, setFired] = useState(false);
+const Experience = () => (
+  <div>
+    {JOBS.map((job, i) => (
+      <Entry key={job.idx} job={job} i={i} />
+    ))}
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setFired(true); obs.disconnect(); } },
-      { threshold: 0.6 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+    {/* ── Outside the job history ──────────────────────────────── */}
+    <div className="border-t border-rule pt-14 md:pt-20">
+      <Rise>
+        <span className="micro">Also worth knowing</span>
+      </Rise>
 
-  const match = value.match(/^(\d+)(.*)/);
-  const num = match ? parseInt(match[1]) : 0;
-  const suffix = match ? match[2] : "";
-  const counted = useCountUp(num, 1200, fired);
-
-  return (
-    <div ref={ref} className="flex flex-col items-center gap-1">
-      <div
-        className="font-semibold leading-none tabular-nums"
-        style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1rem,1.8vw,1.45rem)", color: solid(accent), textShadow: `0 0 18px ${wash(accent, 0.33)}, ${TXT}` }}
-      >
-        {match ? `${counted}${suffix}` : value}
-      </div>
-      <div className="font-mono text-[8px] uppercase tracking-[0.3em] text-ink/55">
-        {label}
+      <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2">
+        {ACHIEVEMENTS.map((a, i) => (
+          <Rise key={a.badge} delay={0.06 * i}>
+            <div className="flex items-baseline gap-3">
+              <span className="sec-num">{a.badge}</span>
+            </div>
+            <h4 className="h3 mt-5">{a.title}</h4>
+            <ul className="mt-4 flex flex-col gap-2">
+              {a.points.map((p) => (
+                <li key={p} className="text-[0.9375rem] leading-relaxed text-ink2">
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </Rise>
+        ))}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-/* ─────────────────────────────────────────────────
-   Data
-───────────────────────────────────────────────── */
+/* ─── content ─────────────────────────────────────────────────────
+   Unchanged from the previous build except for the removal of the
+   per-job `accent` and `image` fields, which existed only to colour
+   and illustrate the retired cards. */
+
 const JOBS = [
   {
     idx: "01",
-    year: "2025",
-    company: "ZANSKAR SECURITIES",
+    company: "Zanskar Securities",
     role: "Analyst · Software Engineer",
-    location: "Bengaluru",
-    period: "JUL 2025 — PRESENT",
+    location: "Bengaluru, India",
+    period: "Jul 2025 — Present",
     status: "ACTIVE" as const,
-    accent: "--hud-rgb",
-    image: "/nubra.webp",
-    imageAlt: "Nubra",
     summary:
       "Building sub-millisecond order execution infrastructure for Nubra — an in-house fintech trading platform serving retail and institutional users.",
     metrics: [
-      { value: "50K+", label: "MSG/SEC" },
-      { value: "35%",  label: "P99 DROP" },
-      { value: "40%",  label: "GC SAVED" },
-      { value: "<1MS", label: "LATENCY"  },
+      { value: "50K+", label: "Msg / sec" },
+      { value: "35%", label: "P99 drop" },
+      { value: "40%", label: "GC saved" },
+      { value: "<1ms", label: "Latency" },
     ],
     bullets: [
-      "Designed low-latency Golang services using advanced concurrency patterns — goroutines, channels, and worker pools — for high-frequency trading workloads",
-      "Built batch-based WebSocket pipelines that aggregate and stream market & trade data in real time, cutting network overhead and lifting client-side throughput",
-      "Used NATS JetStream for durable event streaming and integrated Python alerting pipelines for live monitoring",
-      "Distributed order book on custom ring-buffer structures, cutting GC pressure ~40% and P99 latency 35% via Go pprof profiling",
-      "Integrated NSE, BSE, MF, and IPO platforms over SOAP-based and Open APIs, enabling real-time data ingestion and order workflows",
-      "Engineered core Nubra modules — order management, portfolio tracking, and real-time market feeds, plus eDIS, Early Pay-in & Pledge settlement flows",
+      "Designed low-latency Golang services using advanced concurrency patterns — goroutines, channels, and worker pools — for high-frequency trading workloads.",
+      "Built batch-based WebSocket pipelines that aggregate and stream market and trade data in real time, cutting network overhead and lifting client-side throughput.",
+      "Used NATS JetStream for durable event streaming, and integrated Python alerting pipelines for live monitoring.",
+      "Distributed the order book across custom ring-buffer structures, cutting GC pressure ~40% and P99 latency 35%, profiled with Go pprof.",
+      "Integrated NSE, BSE, MF and IPO platforms over SOAP and Open APIs, enabling real-time data ingestion and order workflows.",
+      "Engineered core Nubra modules — order management, portfolio tracking, real-time market feeds, plus eDIS, Early Pay-in and Pledge settlement flows.",
     ],
     link: { label: "nubra.io", href: "https://nubra.io" },
-    tech: ["Golang", "NATS JetStream", "Kafka", "PostgreSQL", "Redis", "Python", "OpenTelemetry"],
+    tech: [
+      "Golang",
+      "NATS JetStream",
+      "Kafka",
+      "PostgreSQL",
+      "Redis",
+      "Python",
+      "OpenTelemetry",
+    ],
   },
   {
     idx: "02",
-    year: "2025",
-    company: "ONEFINNET",
+    company: "Onefinnet",
     role: "Software Engineering Intern",
-    location: "Noida-NCR",
-    period: "JAN 2025 — JUN 2025",
+    location: "Noida NCR, India",
+    period: "Jan 2025 — Jun 2025",
     status: "COMPLETED" as const,
-    accent: "--hud-dim-rgb",
-    image: "/onefinnet.png",
-    imageAlt: "OneFinnet",
     summary:
       "Worked across the stack — Next.js frontend and high-performance Golang backend — on a fintech platform under production load.",
     metrics: [
-      { value: "25%", label: "THROUGHPUT" },
-      { value: "21%", label: "MANUAL ↓"   },
-      { value: "3",   label: "OBS. TOOLS" },
+      { value: "25%", label: "Throughput" },
+      { value: "21%", label: "Manual work ↓" },
+      { value: "3", label: "Obs. tools" },
     ],
     bullets: [
-      "Contributed to the frontend architecture using Next.js and Material UI",
-      "Engineered high-performance Golang backend services leveraging goroutines and channels for concurrent request handling — improving throughput by 25% and reducing latency",
-      "Developed an internal chatbot with Go and Azure AI Services, using concurrency patterns for parallel workflow execution and multi-user interactions, cutting manual tasks by 21%",
-      "Enhanced observability with Grafana, Prometheus, and Loki — identified slow endpoints and optimised hot paths",
+      "Contributed to the frontend architecture using Next.js and Material UI.",
+      "Engineered high-performance Golang backend services using goroutines and channels for concurrent request handling — improving throughput 25% and reducing latency.",
+      "Developed an internal chatbot with Go and Azure AI Services, using concurrency patterns for parallel workflow execution across multiple users, cutting manual tasks 21%.",
+      "Enhanced observability with Grafana, Prometheus and Loki — identified slow endpoints and optimised hot paths.",
     ],
     link: { label: "onefinnet.com", href: "https://onefinnet.com/talent" },
-    tech: ["Golang", "Next.js", "Material UI", "Azure AI", "Grafana", "Prometheus", "Loki"],
+    tech: [
+      "Golang",
+      "Next.js",
+      "Material UI",
+      "Azure AI",
+      "Grafana",
+      "Prometheus",
+      "Loki",
+    ],
   },
   {
     idx: "03",
-    year: "2024",
-    company: "MODULUS TECHNOLOGIES",
+    company: "Modulus Technologies",
     role: "Software Engineering Intern",
     location: "Remote",
-    period: "JUL 2024 — OCT 2024",
+    period: "Jul 2024 — Oct 2024",
     status: "COMPLETED" as const,
-    accent: "--hud-rgb",
-    image: "/ambill.jpg",
-    imageAlt: "Ambill",
     summary:
       "Modernised a billing management platform — front to back — for faster loads and a more robust data layer.",
     metrics: [
-      { value: "30%",  label: "LOAD FASTER" },
-      { value: "SSR",  label: "NEXT.JS"     },
-      { value: "GCP",  label: "DEPLOYED"    },
+      { value: "30%", label: "Faster loads" },
+      { value: "SSR", label: "Next.js" },
+      { value: "GCP", label: "Deployed" },
     ],
     bullets: [
-      "Migrated the billing management system from React to Next.js, reducing page load times by 30%",
-      "Designed and implemented a robust backend architecture using PostgreSQL, FeatherJS, and GCP",
-      "Built typed, responsive UI with TypeScript and Tailwind CSS across the billing dashboard",
+      "Migrated the billing management system from React to Next.js, reducing page load times 30%.",
+      "Designed and implemented a backend architecture using PostgreSQL, FeatherJS and GCP.",
+      "Built typed, responsive UI with TypeScript and Tailwind CSS across the billing dashboard.",
     ],
     link: null,
-    tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "FeatherJS", "PostgreSQL", "GCP"],
+    tech: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "FeatherJS",
+      "PostgreSQL",
+      "GCP",
+    ],
   },
 ];
 
 const ACHIEVEMENTS = [
   {
-    badge: "GUARDIAN",
-    title: "Competitive Programming",
-    accent: "--hud-rgb",
+    badge: "CP",
+    title: "Competitive programming",
     points: [
-      "LeetCode Guardian — Rating 2200+",
-      "CodeChef 4★ — Rating 1850+",
+      "LeetCode Guardian — rating 2200+",
+      "CodeChef 4★ — rating 1850+",
       "800+ algorithmic problems solved",
     ],
   },
   {
-    badge: "AIR 193",
-    title: "NDA SSB Recommended",
-    accent: "--hud-dim-rgb",
+    badge: "NDA",
+    title: "NDA SSB recommended",
     points: [
-      "Cleared NDA SSB — All India Rank 193",
+      "Cleared the NDA SSB — All India Rank 193",
       "Leadership under high-pressure scenarios",
       "Strategic thinking in officer-selection assessments",
     ],
   },
 ];
 
-/* ─────────────────────────────────────────────────
-   Timeline entry — centered glass card on a center spine
-───────────────────────────────────────────────── */
-const Entry = ({ job }: { job: typeof JOBS[0] }) => {
-  const [hover, setHover] = useState(false);
-  const c = solid(job.accent);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-70px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative flex w-full flex-col items-center mb-16 md:mb-24"
-    >
-      {/* ── node on the spine: index + pulsing dot ── */}
-      <div className="relative z-10 flex flex-col items-center">
-        <span
-          className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] mb-3"
-          style={{ color: c, textShadow: TXT }}
-        >
-          {job.idx}
-        </span>
-        <span className="relative flex h-6 w-6 items-center justify-center">
-          {job.status === "ACTIVE" && (
-            <span className="absolute inline-flex h-6 w-6 rounded-full animate-ping" style={{ background: wash(job.accent, 0.45) }} />
-          )}
-          <span
-            className="absolute inline-flex h-5 w-5 rounded-full border-2"
-            style={{ borderColor: c, background: wash(job.accent, 0.15), boxShadow: `0 0 16px ${c}` }}
-          />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full" style={{ background: c, boxShadow: `0 0 8px ${c}` }} />
-        </span>
-      </div>
-
-      {/* ── centered glass card ── */}
-      <div
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        className="relative mt-7 w-full max-w-[660px] border backdrop-blur-md overflow-hidden transition-all duration-300"
-        style={{
-          borderColor: hover ? wash(job.accent, 0.5) : "rgb(var(--ink-rgb) / 0.12)",
-          background: "var(--panel-fill)",
-          boxShadow: hover ? `0 0 40px ${wash(job.accent, 0.18)}` : "none",
-        }}
-      >
-        {/* top accent strip */}
-        <span className="absolute inset-x-0 top-0 h-[2px] z-20" style={{ background: c }} />
-        {/* corner brackets (HUD) */}
-        <span className="pointer-events-none absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2" style={{ borderColor: c }} />
-        <span className="pointer-events-none absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2" style={{ borderColor: c }} />
-
-        {/* giant ghost year behind the content */}
-        <span
-          className="pointer-events-none absolute -top-2 right-3 font-black leading-none select-none text-ink/[0.05]"
-          style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(4rem,9vw,7rem)", letterSpacing: "-0.05em" }}
-        >
-          {job.year}
-        </span>
-        {/* accent glow from the top edge */}
-        <span
-          className="pointer-events-none absolute inset-x-0 top-0 h-32"
-          style={{ background: `radial-gradient(60% 100% at 50% 0%, ${wash(job.accent, 0.12)}, transparent 70%)` }}
-        />
-
-        <div className="relative z-10 px-4 sm:px-6 md:px-9 pt-6 pb-6 sm:pt-7 sm:pb-7 text-center">
-          {/* company logo chip */}
-          <div
-            className="group/logo relative mx-auto mb-5 flex h-16 w-32 items-center justify-center border backdrop-blur-md overflow-hidden"
-            style={{ borderColor: wash(job.accent, 0.3), background: "var(--panel-fill)" }}
-          >
-            <img
-              src={job.image}
-              alt=""
-              aria-hidden
-              className="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-50"
-            />
-            <span className="pointer-events-none absolute inset-0 bg-paper/40" />
-            <img
-              src={job.image}
-              alt={job.imageAlt}
-              className="relative z-10 max-h-9 max-w-[80%] object-contain transition-transform duration-300 group-hover/logo:scale-105"
-              style={{ filter: `drop-shadow(0 0 10px ${wash(job.accent, 0.4)})` }}
-            />
-          </div>
-
-          {/* meta */}
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-3">
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: c, textShadow: TXT }}>
-              {job.period}
-            </span>
-            <span className="font-mono text-[8px] uppercase tracking-[0.28em] text-ink/45" style={{ textShadow: TXT }}>
-              {job.location}
-            </span>
-            <span
-              className="font-mono text-[8px] uppercase tracking-[0.28em] px-2 py-0.5 border backdrop-blur-sm"
-              style={{
-                color: job.status === "ACTIVE" ? c : "rgb(var(--ink-rgb) / 0.55)",
-                borderColor: job.status === "ACTIVE" ? wash(job.accent, 0.4) : "rgb(var(--ink-rgb) / 0.2)",
-                background: job.status === "ACTIVE" ? wash(job.accent, 0.12) : "rgb(var(--paper-rgb) / 0.25)",
-              }}
-            >
-              {job.status}
-            </span>
-          </div>
-
-          {/* company + role */}
-          <h3
-            className="font-bold uppercase leading-none text-ink"
-            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.3rem,2.6vw,1.95rem)", letterSpacing: "-0.02em", textShadow: TXT }}
-          >
-            {job.company}
-          </h3>
-          <p className="mt-2 font-mono text-[11px] md:text-[12px] tracking-wide text-ink/80" style={{ textShadow: TXT }}>
-            {job.role}
-          </p>
-
-          {/* summary */}
-          <p className="mt-4 mx-auto max-w-[540px] text-[13px] md:text-[14px] leading-relaxed text-ink/95" style={{ textShadow: TXT }}>
-            {job.summary}
-          </p>
-
-          {/* accent divider */}
-          <div className="mx-auto my-6 h-px w-16" style={{ background: `linear-gradient(to right, transparent, ${c}, transparent)` }} />
-
-          {/* bullets — left-aligned within a centered block for readability */}
-          <ul className="mx-auto flex max-w-[560px] flex-col gap-2.5 text-left">
-            {job.bullets.map((b, bi) => (
-              <li key={bi} className="flex items-start gap-3">
-                <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: c }} />
-                <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-ink/85" style={{ textShadow: TXT }}>{b}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* metrics */}
-          <div className="mt-7 grid grid-cols-2 gap-x-4 gap-y-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-9 border-t border-ink/[0.12] pt-6">
-            {job.metrics.map((m) => (
-              <Metric key={m.label} {...m} accent={job.accent} />
-            ))}
-          </div>
-
-          {/* tech */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            {job.tech.map((t) => (
-              <span
-                key={t}
-                className="font-mono text-[8px] uppercase tracking-[0.18em] px-2.5 py-1 border border-ink/[0.15] text-ink/60 backdrop-blur-sm"
-                style={{ background: "rgb(var(--paper-rgb) / 0.2)" }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-
-          {/* link */}
-          {job.link && (
-            <a
-              href={job.link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.22em] transition-colors"
-              style={{ color: hover ? c : "rgb(var(--ink-rgb) / 0.7)", textShadow: TXT }}
-            >
-              {job.link.label}
-              <IconArrowUpRight size={12} />
-            </a>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-/* ─────────────────────────────────────────────────
-   Scroll-fill rail (down the center spine)
-───────────────────────────────────────────────── */
-const Rail = ({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> }) => {
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start 30%", "end 70%"] });
-  const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  return (
-    <div className="absolute top-3 bottom-10 w-[3px] overflow-hidden rounded-full left-1/2 -translate-x-1/2">
-      <div className="absolute inset-0 bg-ink/20" />
-      <motion.div
-        className="absolute top-0 left-0 right-0 h-full origin-top rounded-full"
-        style={{
-          scaleY,
-          background: "linear-gradient(to bottom, rgb(var(--hud-rgb)), rgb(var(--hud-dim-rgb)) 50%, rgb(var(--hud-dim-rgb)))",
-          boxShadow: "0 0 16px rgb(var(--hud-rgb) / 0.9), 0 0 6px rgb(var(--hud-rgb) / 0.8)",
-        }}
-      />
-    </div>
-  );
-};
-
-/* ─────────────────────────────────────────────────
-   EXPERIENCE — main export (centered, transparent)
-───────────────────────────────────────────────── */
-export default function Experience() {
-  const railRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <section className="relative w-full py-16 md:py-28 transition-colors duration-500">
-      <div className="mx-auto max-w-[760px] px-4">
-
-        {/* ── header (centered) ── */}
-        <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
-          <FadeReveal delay={0} className="flex items-center gap-3 mb-6">
-            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
-            <RevealChars
-              text="SYS.CAREER_LOG"
-              className="font-mono text-[9px] uppercase tracking-[0.45em] text-ink/50"
-              delay={0.1}
-            />
-            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
-          </FadeReveal>
-
-          <h2
-            className="font-black uppercase leading-[0.92] whitespace-nowrap text-ink/90"
-            style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.9rem, 6.5vw, 4.2rem)", letterSpacing: "-0.035em", textShadow: TXT }}
-          >
-            <RevealText text="WORK" delay={0.1} stagger={0.05} />{" "}
-            <span
-              style={{
-                WebkitTextStrokeWidth: "var(--heading-stroke-w)",
-                WebkitTextStrokeColor: "rgb(var(--ink-rgb))",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              <RevealText text="HISTORY" delay={0.18} stagger={0.045} />
-            </span>
-          </h2>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-7">
-            {[
-              { n: "3",    lbl: "ROLES"   },
-              { n: "1.5+", lbl: "YRS EXP" },
-              { n: "50K+", lbl: "MSG/SEC" },
-              { n: "<1MS", lbl: "LATENCY" },
-            ].map((s, i) => (
-              <FadeReveal key={s.lbl} delay={0.4 + i * 0.06} className="flex items-baseline gap-2">
-                <span
-                  className="font-semibold text-ink leading-none"
-                  style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(0.85rem,1.6vw,1.05rem)", textShadow: TXT }}
-                >
-                  {s.n}
-                </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.35em] text-ink/40" style={{ textShadow: TXT }}>{s.lbl}</span>
-              </FadeReveal>
-            ))}
-          </div>
-        </div>
-
-        {/* ── timeline (center spine) ── */}
-        <div ref={railRef} className="relative flex flex-col items-center">
-          <Rail containerRef={railRef as React.RefObject<HTMLDivElement>} />
-          {JOBS.map((job) => (
-            <Entry key={job.idx} job={job} />
-          ))}
-        </div>
-
-        {/* ── recognition (centered) ── */}
-        <div className="mt-10 md:mt-16">
-          <FadeReveal delay={0} className="flex items-center justify-center gap-3 mb-10">
-            <div className="h-px flex-1 max-w-[80px] bg-ink/[0.12]" />
-            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-ink/50" style={{ textShadow: TXT }}>RECOGNITION</span>
-            <span className="w-1.5 h-1.5 bg-hud-dim animate-pulse" />
-            <div className="h-px flex-1 max-w-[80px] bg-ink/[0.12]" />
-          </FadeReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-            {ACHIEVEMENTS.map((a, i) => (
-              <motion.div
-                key={a.badge}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
-                className="relative border backdrop-blur-md overflow-hidden px-5 py-5"
-                style={{ borderColor: wash(a.accent, 0.25), background: "var(--panel-fill)" }}
-              >
-                <span className="absolute inset-x-0 top-0 h-[2px]" style={{ background: solid(a.accent) }} />
-                <div className="flex items-center gap-3 mb-4">
-                  <span
-                    className="font-mono text-[8px] uppercase tracking-[0.3em] px-2.5 py-1 border font-bold backdrop-blur-sm"
-                    style={{ color: solid(a.accent), borderColor: wash(a.accent, 0.4), background: wash(a.accent, 0.12) }}
-                  >
-                    {a.badge}
-                  </span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-ink/35" style={{ textShadow: TXT }}>ACHIEVEMENT</span>
-                </div>
-                <h3
-                  className="font-bold uppercase leading-tight text-ink mb-4"
-                  style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.05rem,2.2vw,1.4rem)", letterSpacing: "-0.01em", textShadow: TXT }}
-                >
-                  {a.title}
-                </h3>
-                <ul className="flex flex-col gap-2.5">
-                  {a.points.map((p, pi) => (
-                    <li key={pi} className="flex items-start gap-3">
-                      <span className="mt-[7px] h-px w-3 shrink-0" style={{ background: solid(a.accent) }} />
-                      <span className="font-mono text-[11.5px] md:text-[12.5px] leading-relaxed text-ink/85" style={{ textShadow: TXT }}>{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+export default Experience;

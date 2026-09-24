@@ -1,446 +1,188 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
-import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-import animationData from "@/data/confetti.json";
-import {
-  MapPin,
-  GraduationCap,
-  Dumbbell,
-  Code2,
-  Cpu,
-  Mail,
-  CheckCheck,
-  Zap,
-  BrainCircuit,
-  Trophy,
-  Sparkles,
-  GitBranch,
-} from "lucide-react";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  visible: (delay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
-  }),
-};
+import React from "react";
+import { Mask, Rise } from "@/components/ui/Reveal";
 
-function useCountUp(target: number, duration = 1400, trigger: boolean) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    const start = performance.now();
-    const raf = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      setValue(Math.floor(t * target));
-      if (t < 1) requestAnimationFrame(raf);
-    };
-    requestAnimationFrame(raf);
-  }, [trigger, target, duration]);
-  return value;
-}
+/* ══════════════════════════════════════════════════════════════════
+   ABOUT
 
-const Cross = ({ className = "" }: { className?: string }) => (
-  <svg
-    className={`w-3 h-3 ${className}`}
-    viewBox="0 0 12 12"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-  >
-    <line x1="6" y1="0" x2="6" y2="12" />
-    <line x1="0" y1="6" x2="12" y2="6" />
-  </svg>
-);
+   One flood-colour panel holding the whole section — identity,
+   statement, background, facts and education. Nothing sits outside
+   it.
 
-const Cell = ({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) => (
-  <motion.div
-    variants={fadeUp}
-    custom={delay}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, margin: "-40px" }}
-    className={`group relative overflow-hidden bg-[#ffffff] dark:bg-[#0B0B0E] ${className}`}
-  >
-    {children}
-  </motion.div>
-);
+   The panel is the only place on the site where the accent is used as
+   a *surface* rather than as a mark. That is deliberate and it only
+   works once: after a long monochrome page, a single saturated field
+   lands hard. Used twice it would just read as a brand colour.
 
-const StatItem = ({ target, suffix, label }: { target: number; suffix: string; label: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [triggered, setTriggered] = useState(false);
-  const count = useCountUp(target, 1400, triggered);
+   ── The contrast decision ──
+   The obvious pairing is a near-black roman line against a white
+   italic one. Over a light saturated field that works. Over this
+   accent it does not: #1A32FF is a dark blue, and near-black display
+   type on it lands around 1.4:1 — below even the 3:1 that large text
+   is allowed.
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setTriggered(true); obs.disconnect(); } }, { threshold: 0.5 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+   So the pairing is inverted: white roman, pale-blue italic (~6:1).
+   Same two-voice device, same hierarchy, without shipping a heading
+   that can't be read. Everything else on the panel is white or a
+   white alpha, for the same reason.
 
-  return (
-    <motion.div
-      ref={ref}
-      className="flex flex-col items-center gap-1 text-center"
-      whileHover={{ scale: 1.08 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+   This replaces a bento grid whose cells held a WebGL globe with
+   animated arcs, a Lottie confetti burst, a copy-to-clipboard button
+   and a glowing border — roughly 450 lines for a section whose job is
+   to say who this person is.
+══════════════════════════════════════════════════════════════════ */
+
+const PANEL = "#1A32FF";
+const INK = "#FFFFFF";
+const INK_SOFT = "rgba(255,255,255,0.74)";
+const ITALIC = "#A9B6FF";
+const RULE = "rgba(255,255,255,0.22)";
+
+const Grid = () => (
+  <Rise>
+    <div
+      className="grid grid-cols-1 gap-x-14 gap-y-14 p-7 md:p-12 lg:grid-cols-12 lg:p-16"
+      style={{ background: PANEL, color: INK }}
     >
-      <span
-        className="text-2xl font-black tabular-nums md:text-3xl"
-        style={{ fontFamily: "var(--font-orbitron)", color: "#D8D8DC" }}
-      >
-        {triggered ? `${count}${suffix}` : `0${suffix}`}
-      </span>
-      <span className="font-mono text-[8px] uppercase tracking-widest text-black/40 dark:text-white/35">
-        {label}
-      </span>
-    </motion.div>
-  );
-};
-
-const StatsCard = () => (
-  <div className="relative z-10 flex h-full items-center justify-around p-4 pt-10 sm:p-6 sm:pt-10">
-    {[
-      { target: 1, suffix: "+", label: "Yrs Exp" },
-      { target: 50, suffix: "K+", label: "msg/sec" },
-      { target: 800, suffix: "+", label: "Problems" },
-    ].map(({ target, suffix, label }, i) => (
-      <React.Fragment key={label}>
-        <StatItem target={target} suffix={suffix} label={label} />
-        {i < 2 && <div className="h-8 w-px bg-black/10 dark:bg-white/10" />}
-      </React.Fragment>
-    ))}
-  </div>
-);
-
-const Grid = () => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("yashsachan321@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  };
-
-  return (
-    <section
-      id="about"
-      className="w-full py-16 md:py-24 bg-transparent transition-colors duration-500"
-    >
-      <div className="relative mx-auto max-w-5xl px-4 md:px-6">
-
-        {/* Side rails — thin accent guides that frame the centered module and
-            let the living background breathe on either flank */}
-        <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
-          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-        </div>
-        <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-          <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/15" />
-          <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-white/25" />
-        </div>
-
-        {/* Section header */}
-        <div className="flex flex-col items-center mb-12">
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-white/70 dark:bg-black/60 px-4 py-1.5 mb-5">
-            <motion.div
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-black dark:bg-white"
-            />
-            <RevealChars
-              text="UNIT_YS // BIO_MODULE"
-              className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
-              delay={0.1}
-            />
-          </FadeReveal>
-          <h2
-            className="font-black uppercase leading-none text-center whitespace-nowrap"
-            style={{
-              fontFamily: "var(--font-orbitron)",
-              fontSize: "clamp(2.2rem, 9vw, 5.5rem)",
-              letterSpacing: "-0.025em",
-            }}
+      {/* ══ Left: who, and what ═══════════════════════════════════ */}
+      <div className="flex flex-col lg:col-span-7">
+        <div className="flex items-center gap-3">
+          <span
+            className="border px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em]"
+            style={{ borderColor: INK }}
           >
-            <span className="text-black dark:text-white/90">
-              <RevealText text="ABOUT" delay={0.2} />
-            </span>{" "}
-            <span
-              className="text-black dark:text-white/85"
-              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
-            >
-              <RevealText text="ME" delay={0.32} />
-            </span>
-          </h2>
-          <div className="flex items-center gap-3 mt-3">
-            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-            <FadeReveal delay={0.6}>
-              <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                System Profile
-              </span>
-            </FadeReveal>
-            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-          </div>
+            YS®
+          </span>
+          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.18em]">
+            Open to work
+          </span>
         </div>
 
-        {/* Bento grid — gap-px hairline separators */}
-        <div className="grid auto-rows-[minmax(118px,auto)] grid-cols-1 gap-px md:grid-cols-6 bg-black/[0.09] dark:bg-white/[0.09]">
-
-          {/* ── Card 1: Bio ── */}
-          <Cell delay={0.05} className="min-h-[268px] md:col-span-4 md:row-span-2">
-            {/* Green top strip */}
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
-            {/* Corner crosses */}
-            <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
-            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
-            <GlowingEffect spread={40} proximity={80} disabled={false} borderWidth={1} />
-
-            <div className="relative z-10 flex h-full flex-col p-5 sm:p-7 md:p-9">
-              {/* Module label */}
-              <span className="font-mono text-[8px] uppercase tracking-[0.4em] text-blue-600 dark:text-blue-400 mb-4">
-                BIO // CORE_IDENTITY
-              </span>
-
-              {/* Status */}
-              <div className="mb-5 flex items-center gap-2 self-start border border-blue-500/25 bg-blue-500/[0.07] dark:bg-blue-500/[0.05] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 animate-pulse bg-blue-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                  Open to senior backend roles
-                </span>
-              </div>
-
-              {/* Name */}
-              <h3
-                className="mb-1 font-black uppercase leading-none text-black dark:text-white"
-                style={{
-                  fontFamily: "var(--font-orbitron)",
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Hey, I&apos;m Yash
-              </h3>
-              <p className="mb-5 font-mono text-[9px] uppercase tracking-[0.22em] text-black/40 dark:text-white/35">
-                Backend Developer · Distributed Systems · HFT Specialist
-              </p>
-
-              {/* Bio */}
-              <p className="mb-6 max-w-lg text-[13px] leading-relaxed text-black/60 dark:text-white/50 md:text-[14px]">
-                I build software that handles serious scale — trading engines,
-                distributed pipelines, real-time infrastructure. I care deeply
-                about{" "}
-                <span className="font-semibold text-black dark:text-white">
-                  performance
-                </span>
-                ,{" "}
-                <span className="font-semibold text-black dark:text-white">
-                  correctness
-                </span>
-                , and clean architecture. When I&apos;m not profiling Go
-                binaries, I&apos;m in the gym or grinding algorithms.
-              </p>
-
-              {/* Tags */}
-              <div className="mt-auto flex flex-wrap gap-2">
-                {[
-                  { icon: <MapPin size={11} />, label: "India" },
-                  { icon: <GraduationCap size={11} />, label: "IIIT Sonepat" },
-                  { icon: <Cpu size={11} />, label: "HFT Systems" },
-                  { icon: <Code2 size={11} />, label: "Go · Distributed" },
-                  { icon: <GitBranch size={11} />, label: "Open Source" },
-                ].map(({ icon, label }) => (
-                  <span
-                    key={label}
-                    className="inline-flex items-center gap-1.5 border border-black/10 dark:border-white/[0.08] bg-black/[0.03] dark:bg-white/[0.04] px-2.5 py-1 font-mono text-[10px] text-black/60 dark:text-white/40"
-                  >
-                    {icon}
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Cell>
-
-          {/* ── Card 2: Stats ── */}
-          <Cell delay={0.1} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
-            <span className="absolute top-3 left-3 font-mono text-[8px] uppercase tracking-[0.4em] text-blue-500 dark:text-blue-400">
-              METRICS
+        <h3
+          className="display mt-10"
+          style={{ fontSize: "clamp(2.1rem, 5vw, 4.25rem)" }}
+        >
+          <Mask>I build the parts</Mask>
+          <Mask delay={0.08}>
+            <span className="ink-italic" style={{ color: ITALIC }}>
+              nobody sees.
             </span>
-            <GlowingEffect spread={30} proximity={60} disabled={false} borderWidth={1} />
+          </Mask>
+        </h3>
 
-            <StatsCard />
-          </Cell>
+        <Rise delay={0.16}>
+          <p className="mt-9 max-w-[52ch] font-mono text-[0.8125rem] leading-[1.95] tracking-[0.01em]">
+            Order execution, event pipelines, the storage underneath — the
+            machinery that only gets noticed when it stops. Most of my time
+            goes to making things faster without making them wrong, which is
+            a harder trade than it sounds.
+          </p>
+        </Rise>
 
-          {/* ── Card 3: Currently Building ── */}
-          <Cell delay={0.15} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
+        <Rise delay={0.2}>
+          <p
+            className="mt-6 max-w-[52ch] font-mono text-[0.8125rem] leading-[1.95] tracking-[0.01em]"
+            style={{ color: INK_SOFT }}
+          >
+            I&apos;m from Greater Noida, now based in Bengaluru. I studied
+            Computer Science at IIIT Sonepat, and spent most of those evenings
+            on competitive programming — it still shows in how I approach a
+            problem: work out the bound first, then write the code. Outside
+            work I lift, and I write up what I learn.
+          </p>
+        </Rise>
 
-            <div className="relative z-10 flex h-full flex-col justify-between p-6">
-              <div className="flex items-center gap-2">
-                <Zap size={13} className="text-blue-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
-                  Currently Building
-                </span>
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold leading-snug text-black dark:text-white">
-                  High-performance order execution &amp; trading infrastructure
-                </p>
-                <p className="mt-1 font-mono text-[10px] text-black/40 dark:text-white/30">
-                  @ Zanskar Securities
-                </p>
-              </div>
-            </div>
-          </Cell>
+        <Rise delay={0.26}>
+          <p className="mt-11 font-mono text-[0.6875rem] uppercase tracking-[0.16em]">
+            {TOOLS.join("  ·  ")}
+          </p>
+        </Rise>
 
-          {/* ── Card 4: Education ── */}
-          <Cell delay={0.2} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 z-10" />
-
-            <div className="relative z-10 flex h-full flex-col justify-between p-6">
-              <div className="flex items-center gap-2">
-                <GraduationCap size={13} className="text-blue-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
-                  Education // DEGREE
-                </span>
-              </div>
-              <div>
-                <p className="text-[13px] font-bold text-black dark:text-white">
-                  B.Tech Computer Science and Engineering
-                </p>
-                <p className="mt-0.5 font-mono text-[11px] text-black/50 dark:text-white/40">
-                  IIIT Sonepat, Haryana
-                </p>
-              </div>
-            </div>
-          </Cell>
-
-          {/* ── Card 5: Philosophy ── */}
-          <Cell delay={0.25} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-sky-400 z-10" />
-            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
-
-            <div className="relative z-10 flex h-full flex-col justify-between p-6">
-              <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-sky-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-sky-500/80">
-                  CORE_PHILOSOPHY
-                </span>
-              </div>
-              <p className="font-mono text-[11px] leading-relaxed text-black/60 dark:text-white/50 italic">
-                {`"Performance is a feature, not an afterthought. Great software is invisible — it just works."`}
-              </p>
-            </div>
-          </Cell>
-
-          {/* ── Card 6: Beyond Code ── */}
-          <Cell delay={0.3} className="md:col-span-2">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-500 z-10" />
-
-            <div className="relative z-10 flex h-full flex-col gap-4 p-6">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500/80">
-                BEYOND_CODE
-              </span>
-              <div className="flex flex-col gap-2.5">
-                {[
-                  {
-                    icon: <Dumbbell size={12} className="text-blue-400" />,
-                    label: "Daily gym & nutrition tracking",
-                  },
-                  {
-                    icon: <Trophy size={12} className="text-blue-400" />,
-                    label: "Competitive programming",
-                  },
-                  {
-                    icon: <BrainCircuit size={12} className="text-sky-400" />,
-                    label: "Systems design deep dives",
-                  },
-                ].map(({ icon, label }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-2.5 text-black/60 dark:text-white/50"
-                  >
-                    {icon}
-                    <span className="font-mono text-[11px]">{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Cell>
-
-          {/* ── Card 7: Contact CTA — full width ── */}
-          <Cell delay={0.35} className="min-h-[140px] md:col-span-6">
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-blue-400 via-blue-400 to-sky-500 z-10" />
-            <Cross className="absolute top-3 left-3 text-black/15 dark:text-white/15" />
-            <Cross className="absolute top-3 right-3 text-black/15 dark:text-white/15" />
-            <Cross className="absolute bottom-3 left-3 text-black/15 dark:text-white/15" />
-            <Cross className="absolute bottom-3 right-3 text-black/15 dark:text-white/15" />
-
-            {/* Confetti */}
-            {copied && (
-              <div className="absolute left-1/2 top-0 z-50 -translate-x-1/2 -translate-y-1/2">
-                <Lottie
-                  options={{ loop: false, autoplay: true, animationData }}
-                  height={160}
-                  width={280}
-                />
-              </div>
-            )}
-
-            <div className="relative z-10 flex flex-col items-center justify-between gap-6 px-5 py-7 sm:px-8 sm:py-9 text-center md:flex-row md:text-left">
-              <div>
-                <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-black/35 dark:text-white/30">
-                  COLLAB_REQUEST // OPEN
-                </p>
-                <h3
-                  className="font-black uppercase leading-none text-black dark:text-white mb-2"
-                  style={{
-                    fontFamily: "var(--font-orbitron)",
-                    fontSize: "clamp(1.4rem, 3vw, 2.2rem)",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  Want to build something impactful?
-                </h3>
-                <p className="font-mono text-[10px] text-black/40 dark:text-white/30">
-                  yashsachan321@gmail.com
-                </p>
-              </div>
-
-              <button
-                onClick={handleCopy}
-                className="inline-flex shrink-0 items-center gap-2.5 border border-black dark:border-white
-                  bg-black dark:bg-white text-white dark:text-black
-                  px-7 py-3.5 font-mono text-[10px] font-bold uppercase tracking-widest
-                  hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white
-                  transition-all duration-200 active:scale-[0.98]"
-              >
-                {copied ? <CheckCheck size={14} /> : <Mail size={14} />}
-                {copied ? "Email Copied!" : "Copy Email"}
-              </button>
-            </div>
-          </Cell>
-        </div>
+        {/* mt-auto pins this to the foot of the column on tall
+            viewports, so the panel's two columns end level. */}
+        <Rise delay={0.32} className="mt-auto pt-12">
+          <a
+            href="mailto:yashsachan321@gmail.com"
+            className="group inline-flex items-center gap-3 px-7 py-5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] transition-transform duration-500 ease-out hover:-translate-y-0.5"
+            style={{ background: "#0B0B0C", color: INK }}
+          >
+            Email me
+            <span className="transition-transform duration-500 ease-out group-hover:translate-x-1">
+              ↗
+            </span>
+          </a>
+        </Rise>
       </div>
-    </section>
-  );
-};
+
+      {/* ══ Right: the record ═════════════════════════════════════ */}
+      <div className="lg:col-span-4 lg:col-start-9">
+        <Rise delay={0.12}>
+          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em]">
+            At a glance
+          </span>
+        </Rise>
+
+        <dl className="mt-4 border-t" style={{ borderColor: INK }}>
+          {FACTS.map((f, i) => (
+            <Rise key={f.k} delay={0.16 + i * 0.04}>
+              <div
+                className="flex items-baseline justify-between gap-4 border-b py-3"
+                style={{ borderColor: RULE }}
+              >
+                <dt
+                  className="font-mono text-[0.6875rem] uppercase tracking-[0.14em]"
+                  style={{ color: INK_SOFT }}
+                >
+                  {f.k}
+                </dt>
+                <dd className="num text-right text-sm">{f.v}</dd>
+              </div>
+            </Rise>
+          ))}
+        </dl>
+
+        <Rise delay={0.4}>
+          <span className="mt-12 block font-mono text-[0.6875rem] uppercase tracking-[0.2em]">
+            Education
+          </span>
+        </Rise>
+
+        <Rise delay={0.44}>
+          <div className="mt-4 border-t pt-4" style={{ borderColor: INK }}>
+            <span
+              className="num font-mono text-[0.6875rem] uppercase tracking-[0.14em]"
+              style={{ color: INK_SOFT }}
+            >
+              2021 — 2025
+            </span>
+            <h4 className="h3 mt-2 leading-snug">
+              Indian Institute of Information Technology, Sonepat
+            </h4>
+            <p
+              className="mt-2 font-mono text-[0.75rem] leading-relaxed tracking-[0.02em]"
+              style={{ color: INK_SOFT }}
+            >
+              B.Tech, Computer Science &amp; Engineering
+              <br />
+              Sonepat, Haryana
+            </p>
+          </div>
+        </Rise>
+      </div>
+    </div>
+  </Rise>
+);
+
+const TOOLS = ["Go", "Kafka", "NATS", "Redis", "PostgreSQL", "Kubernetes"];
+
+const FACTS = [
+  { k: "Based", v: "Bengaluru, IN" },
+  { k: "From", v: "Greater Noida, UP" },
+  { k: "Timezone", v: "IST · UTC+5:30" },
+  { k: "Focus", v: "Backend · HFT" },
+  { k: "Writing in", v: "Go" },
+  { k: "Status", v: "Open to work" },
+];
 
 export default Grid;

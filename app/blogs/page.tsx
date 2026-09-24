@@ -156,18 +156,15 @@ export default function BlogsPage() {
   const wordCount = draft.content.trim() ? draft.content.trim().split(/\s+/).length : 0;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-paper px-4 py-6 text-ink md:px-8 md:py-8">
-      {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgb(var(--ink-rgb) / 0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgb(var(--ink-rgb) / 0.03),transparent)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <main className="relative min-h-screen bg-paper text-ink">
+      
+      <div className="shell relative z-10 py-16 md:py-24">
         {/* ── Header ── */}
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-ink/20 bg-paper/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/75 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink"
+              className="btn-line"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -177,7 +174,7 @@ export default function BlogsPage() {
               <button
                 type="button"
                 onClick={handleAdminLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition hover:border-red-500/40 hover:text-red-600 dark:text-red-300"
+                className="btn-line"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Exit Admin
@@ -186,7 +183,7 @@ export default function BlogsPage() {
               <button
                 type="button"
                 onClick={() => setShowAdminLogin((c) => !c)}
-                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-ink/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70 transition hover:border-ink/40 hover:bg-ink/[0.1] hover:text-ink"
+                className="btn-line"
               >
                 <LockKeyhole className="h-3.5 w-3.5" />
                 Admin
@@ -201,7 +198,7 @@ export default function BlogsPage() {
         </div>
 
         {/* ── Main card ── */}
-        <section className="relative overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
+        <section className="relative overflow-hidden rounded-2xl border border-rule bg-transparent">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.03),transparent_45%)]" />
           <div className="pointer-events-none absolute -right-6 top-4 opacity-[0.055]">
             <PenSvg className="h-48 w-48 text-ink" />
@@ -218,7 +215,7 @@ export default function BlogsPage() {
                 <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-ink md:text-[2.6rem]">
                   Blogs
                 </h1>
-                <p className="max-w-md font-Quicksand text-sm text-ink/50 md:text-base">
+                <p className="max-w-md text-sm text-ink/50 md:text-base">
                   Notes, learnings, and thoughts — written for the public.
                 </p>
               </div>
@@ -241,7 +238,7 @@ export default function BlogsPage() {
 
             {/* ── Admin login ── */}
             {showAdminLogin && !isAdmin && (
-              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5 backdrop-blur-xl">
+              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5">
                 <form onSubmit={handleAdminUnlock} className="space-y-4">
                   <div>
                     <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
@@ -259,7 +256,7 @@ export default function BlogsPage() {
                       if (loginError) setLoginError(false);
                     }}
                     placeholder="Enter admin password"
-                    className="w-full rounded-xl border border-ink/[0.08] bg-paper/50 px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
+                    className="w-full rounded-xl border border-rule bg-transparent px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
                   />
                   {loginError && (
                     <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
@@ -311,7 +308,7 @@ export default function BlogsPage() {
                     value={draft.title}
                     onChange={(e) => setDraft((cur) => ({ ...cur, title: e.target.value }))}
                     placeholder="Blog title..."
-                    className="w-full rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-Quicksand text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                    className="w-full rounded-xl border border-rule bg-transparent px-4 py-3 text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                   />
 
                   <textarea
@@ -319,7 +316,7 @@ export default function BlogsPage() {
                     onChange={(e) => setDraft((cur) => ({ ...cur, summary: e.target.value }))}
                     rows={3}
                     placeholder="Short summary shown on the post card..."
-                    className="w-full resize-none rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-Quicksand text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                    className="w-full resize-none rounded-xl border border-rule bg-transparent px-4 py-3 text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                   />
 
                   <div className="space-y-1.5">
@@ -338,7 +335,7 @@ export default function BlogsPage() {
                       onChange={(e) => setDraft((cur) => ({ ...cur, content: e.target.value }))}
                       rows={10}
                       placeholder="Write your full blog post here..."
-                      className="w-full resize-none rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                      className="w-full resize-none rounded-xl border border-rule bg-transparent px-4 py-4 text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                     />
                   </div>
 
@@ -369,7 +366,7 @@ export default function BlogsPage() {
                         type="button"
                         onClick={() => setDraft(createInitialDraft())}
                         disabled={isSubmitting}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-ink/25 hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-ink/15 bg-transparent px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-ink/25 hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <X className="h-3.5 w-3.5" />
                         Cancel
@@ -389,19 +386,19 @@ export default function BlogsPage() {
             {/* ── Posts list ── */}
             <div className="space-y-4">
               {isLoading ? (
-                <div className="rounded-xl border border-dashed border-ink/[0.08] bg-paper/20 px-5 py-16 text-center">
+                <div className="rounded-xl border border-dashed border-rule bg-transparent px-5 py-16 text-center">
                   <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     Loading posts...
                   </p>
                 </div>
               ) : sortedPosts.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-16 text-center">
+                <div className="rounded-xl border border-dashed border-rule px-5 py-16 text-center">
                   <BookOpenText className="mx-auto h-6 w-6 text-ink/30" />
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     No posts yet
                   </p>
-                  <p className="mt-2 font-Quicksand text-xs text-ink/30">
+                  <p className="mt-2 text-xs text-ink/30">
                     {isAdmin ? "Use the editor above to publish your first post." : "Check back soon."}
                   </p>
                 </div>
@@ -412,7 +409,7 @@ export default function BlogsPage() {
                     className={`group relative rounded-xl border transition-all ${
                       draft.id === post.id
                         ? "border-ink/30 bg-ink/[0.05]"
-                        : "border-ink/[0.06] bg-ink/[0.02] hover:border-ink/[0.1]"
+                        : "border-rule bg-ink/[0.02] hover:border-rule"
                     }`}
                   >
                     {/* Left accent bar */}
@@ -453,7 +450,7 @@ export default function BlogsPage() {
                                   content: post.content,
                                 })
                               }
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-paper/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink disabled:opacity-40"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-transparent px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink disabled:opacity-40"
                             >
                               <Edit3 className="h-3 w-3" />
                               Edit
@@ -462,7 +459,7 @@ export default function BlogsPage() {
                               type="button"
                               onClick={() => handleDelete(post.id)}
                               disabled={isSubmitting}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-paper/30 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-600/40 hover:bg-red-950/20 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-ink/12 bg-transparent px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-600/40 hover:bg-red-950/20 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Trash2 className="h-3 w-3" />
                             </button>
@@ -471,13 +468,13 @@ export default function BlogsPage() {
                       </div>
 
                       {/* Summary */}
-                      <p className="mb-4 max-w-3xl font-Quicksand text-sm leading-relaxed text-ink/60 md:text-base">
+                      <p className="mb-4 max-w-3xl text-sm leading-relaxed text-ink/60 md:text-base">
                         {post.summary}
                       </p>
 
                       {/* Content */}
-                      <div className="rounded-xl border border-ink/10 bg-paper/30 px-5 py-4">
-                        <p className="whitespace-pre-wrap font-Quicksand text-sm leading-7 text-ink/60">
+                      <div className="rounded-xl border border-ink/10 bg-transparent px-5 py-4">
+                        <p className="whitespace-pre-wrap text-sm leading-7 text-ink/60">
                           {post.content}
                         </p>
                       </div>
@@ -513,7 +510,7 @@ function StatCard({
         {label}
       </p>
       <p className={`mt-2.5 font-Orbitron text-xl font-bold ${valColor}`}>{value}</p>
-      <p className="mt-1.5 truncate font-Quicksand text-xs text-ink/40">{helper}</p>
+      <p className="mt-1.5 truncate text-xs text-ink/40">{helper}</p>
     </div>
   );
 }

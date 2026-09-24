@@ -116,84 +116,74 @@ export const gridItems = [
   },
 ];
 
+/* Projects.
+   `iconLists` is gone. It carried five multicoloured brand glyphs per
+   entry (#F89F1B, #4DA3FF, #E535AB …) which is a dozen accent colours
+   fighting a palette that allows exactly one. Tech is plain text now:
+   it reads at any size, needs no icon payload, and says `PostgreSQL`
+   rather than a logo the reader has to recognise.
+
+   `tag` and `year` are new — a project index needs something to set
+   on the right-hand side of each row besides the title. */
 export const projects = [
   {
     id: 9,
     title: "Order Matching System",
-    des: "A high-performance order matching engine built in Go with Redis for state management, NATS for event streaming, and gRPC for inter-service communication.",
+    des: "A high-performance order matching engine: price-time priority matching, Redis-backed state, NATS event streaming, and gRPC between services.",
     img: "/oms.png",
-    iconLists: [
-      <SiGo key="go" className="w-5 h-5 text-cyan-400" />,
-      <SiRedis key="redis" className="w-5 h-5 text-red-500" />,
-    ],
+    tag: "Trading infrastructure",
+    year: "2025",
+    tech: ["Go", "Redis", "NATS", "gRPC"],
     link: "",
   },
   {
     id: 8,
     title: "Secure File Share",
-    des: "Built a secure file-sharing web application with user authentication & authorization (JWT, MFA) and role-based access control (RBAC).",
+    des: "Secure file-sharing platform with JWT auth, multi-factor login, and role-based access control across shared workspaces.",
     img: "/fileshare.png",
-    iconLists: [
-      <SiSpringboot key="spring" className="w-5 h-5 text-blue-500" />,
-      <SiJavascript key="java" className="w-5 h-5 text-orange-500" />,
-      <SiApachemaven key="maven" className="w-5 h-5 text-red-500" />,
-      <SiGradle key="gradle" className="w-5 h-5 text-gray-400" />,
-      <SiHibernate key="hibernate" className="w-5 h-5 text-yellow-500" />,
-    ],
+    tag: "Platform",
+    year: "2024",
+    tech: ["Spring Boot", "Java", "Hibernate", "Maven"],
     link: "https://github.com/CyberlordYash/SecureFileShare",
   },
   {
     id: 1,
     title: "Brain Bytes",
-    des: "Collaborate and learn! Share your notes on this MERN-powered platform. FInd,create and discuss study materials with ease",
+    des: "A collaborative study platform — students publish notes, discover material by topic, and discuss it in place.",
     img: "/brainbytes.jpg",
-    iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />,
-      <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express icon is gray by default
-      <SiReact key="react" className="w-5 h-5 text-cyan-400" />,
-      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />,
-      <SiRedux key="redux" className="w-5 h-5 text-purple-500" />,
-    ],
+    tag: "Product",
+    year: "2024",
+    tech: ["MongoDB", "Express", "React", "Node.js"],
     link: "https://brainbytes-yash.netlify.app/",
   },
   {
     id: 2,
     title: "Flow Chat",
-    des: "Collaborate and learn! Share gour notes on this MERN-powered platform. Find, create, and discuss study materials with ease.",
+    des: "Real-time messaging with WebSocket rooms, presence, and delivery state held consistent across reconnects.",
     img: "/flowchat.jpg",
-    iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />,
-      <SiExpress key="express" className="w-5 h-5 text-gray-300" />,
-      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />,
-      <SiSocketdotio key="socketio" className="w-5 h-5 text-yellow-400" />,
-    ],
+    tag: "Real-time",
+    year: "2023",
+    tech: ["Socket.IO", "Node.js", "Express", "MongoDB"],
     link: "https://flowchat-rcnd.onrender.com/",
   },
   {
     id: 3,
-    title: "E bazaar",
-    des: "A robust CRUD e-commerce website,browse products, add items to their cart, and complete purchases",
+    title: "E-Bazaar",
+    des: "A full commerce flow — catalogue, cart, and checkout — with content managed through a headless CMS.",
     img: "/ebazaar.jpg",
-    iconLists: [
-      <SiNextdotjs key="nextjs" className="w-5 h-5 text-white" />, // Next.js (white/black depending on theme)
-      <SiCss3 key="css" className="w-5 h-5 text-blue-500" />, // CSS
-      <SiSass key="scss" className="w-5 h-5 text-pink-400" />, // SCSS (Sass)
-      <SiSanity key="sanity" className="w-5 h-5 text-red-500" />, // Sanity CMS
-      <SiRedux key="redux" className="w-5 h-5 text-purple-500" />,
-    ],
+    tag: "Commerce",
+    year: "2023",
+    tech: ["Next.js", "Sanity", "Redux", "SCSS"],
     link: "https://dev-yash-ebazaar.netlify.app/",
   },
   {
     id: 4,
-    title: "Summarize it",
-    des: "Summarize any sites with openAI GPT4",
+    title: "Summarize It",
+    des: "Paste any URL and get the page back as a short, readable summary, powered by GPT-4.",
     img: "/summarise.jpg",
-    iconLists: [
-      <SiMongodb key="mongodb" className="w-5 h-5 text-blue-500" />, // MongoDB
-      <SiExpress key="express" className="w-5 h-5 text-gray-300" />, // Express
-      <SiNodedotjs key="node" className="w-5 h-5 text-blue-600" />, // Node.js
-      <SiPostman key="postman" className="w-5 h-5 text-orange-500" />,
-    ],
+    tag: "Tool",
+    year: "2023",
+    tech: ["Node.js", "Express", "OpenAI", "MongoDB"],
     link: "https://dev-yash-summarizeit.netlify.app/",
   },
 ];

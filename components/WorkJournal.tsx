@@ -135,7 +135,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
+    <div className="relative overflow-hidden rounded-2xl border border-rule bg-transparent">
       {/* Inner ambient glow */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.04),transparent_45%)]" />
 
@@ -150,7 +150,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
             <h2 className="font-Orbitron text-3xl font-bold tracking-tight text-ink md:text-[2.6rem]">
               Daily Notes
             </h2>
-            <p className="max-w-md font-Quicksand text-sm text-ink/50 md:text-base">
+            <p className="max-w-md text-sm text-ink/50 md:text-base">
               My private work journal — captured daily, secured by auth.
             </p>
           </div>
@@ -180,7 +180,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
         {/* ── Main grid ── */}
         <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           {/* Editor panel */}
-          <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
+          <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
@@ -215,7 +215,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     onChange={(e) =>
                       setDraft((cur) => ({ ...cur, date: e.target.value }))
                     }
-                    className="w-full rounded-xl border border-ink/[0.08] bg-paper/40 py-3 pl-10 pr-4 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                    className="w-full rounded-xl border border-rule bg-transparent py-3 pl-10 pr-4 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                   />
                 </div>
               </div>
@@ -232,7 +232,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     setDraft((cur) => ({ ...cur, title: e.target.value }))
                   }
                   placeholder="Optimized order execution pipeline..."
-                  className="w-full rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-Quicksand text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                  className="w-full rounded-xl border border-rule bg-transparent px-4 py-3 text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                 />
               </div>
 
@@ -255,7 +255,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                   }
                   placeholder="What you built, blockers handled, key outcomes..."
                   rows={9}
-                  className="w-full resize-none rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-4 font-Quicksand text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                  className="w-full resize-none rounded-xl border border-rule bg-transparent px-4 py-4 text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                 />
               </div>
 
@@ -279,7 +279,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     type="button"
                     onClick={() => setDraft(createInitialDraft())}
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-ink/[0.08] bg-ink/[0.03] px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-ink/[0.14] hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-rule bg-ink/[0.03] px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-rule hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <X className="h-3.5 w-3.5" />
                     Cancel
@@ -290,7 +290,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
           </div>
 
           {/* Timeline panel */}
-          <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
+          <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
             <div className="mb-5 flex items-center justify-between">
               <div>
                 <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
@@ -300,7 +300,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                   Work Log
                 </h3>
               </div>
-              <div className="flex items-center gap-1.5 rounded-lg border border-ink/[0.08] bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
+              <div className="flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
                 <span className="h-1.5 w-1.5 rounded-full bg-ink animate-pulse" />
                 online
               </div>
@@ -308,18 +308,18 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
 
             <div className="max-h-[560px] space-y-3 overflow-y-auto pr-0.5">
               {isLoading ? (
-                <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-14 text-center">
+                <div className="rounded-xl border border-dashed border-rule px-5 py-14 text-center">
                   <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     Syncing...
                   </p>
                 </div>
               ) : sortedEntries.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-14 text-center">
+                <div className="rounded-xl border border-dashed border-rule px-5 py-14 text-center">
                   <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
                     No entries yet
                   </p>
-                  <p className="mt-2 font-Quicksand text-xs text-ink/30">
+                  <p className="mt-2 text-xs text-ink/30">
                     Save your first entry to see it here.
                   </p>
                 </div>
@@ -333,7 +333,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                     className={`group relative rounded-xl border p-4 transition-all ${
                       draft.id === entry.id
                         ? "border-ink/20 bg-ink/[0.06]"
-                        : "border-ink/[0.06] bg-ink/[0.015] hover:border-ink/[0.1]"
+                        : "border-rule bg-ink/[0.015] hover:border-rule"
                     }`}
                   >
                     {/* Left accent bar */}
@@ -349,7 +349,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                           <CalendarDays className="h-3 w-3" />
                           {formatDisplayDate(entry.date)}
                         </div>
-                        <h4 className="font-Quicksand text-sm font-semibold text-ink leading-snug">
+                        <h4 className="text-sm font-semibold text-ink leading-snug">
                           {entry.title}
                         </h4>
                       </div>
@@ -359,7 +359,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                           type="button"
                           onClick={() => handleEdit(entry)}
                           disabled={isSubmitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-ink/[0.07] bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/30 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/30 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <PencilLine className="h-3 w-3" />
                           Edit
@@ -368,18 +368,18 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
                           type="button"
                           onClick={() => handleDelete(entry.id)}
                           disabled={isSubmitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-ink/[0.07] bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-500/30 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-500/30 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
 
-                    <p className="whitespace-pre-wrap font-Quicksand text-xs leading-relaxed text-ink/50">
+                    <p className="whitespace-pre-wrap text-xs leading-relaxed text-ink/50">
                       {entry.note}
                     </p>
 
-                    <div className="mt-3 border-t border-ink/[0.05] pt-2.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/30">
+                    <div className="mt-3 border-t border-rule pt-2.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/30">
                       Synced · {formatTimestamp(entry.updatedAt)}
                     </div>
                   </motion.article>
@@ -415,7 +415,7 @@ function StatCard({
       <p className={`mt-2.5 font-Orbitron text-lg font-bold ${valColor} truncate`}>
         {value}
       </p>
-      <p className="mt-1.5 truncate font-Quicksand text-xs text-ink/40">{helper}</p>
+      <p className="mt-1.5 truncate text-xs text-ink/40">{helper}</p>
     </div>
   );
 }

@@ -290,18 +290,15 @@ export default function GymPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-paper px-4 py-6 text-ink md:px-8 md:py-8">
-      {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgb(var(--ink-rgb) / 0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgb(var(--ink-rgb) / 0.04),transparent)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <main className="relative min-h-screen bg-paper text-ink">
+      
+      <div className="shell relative z-10 py-16 md:py-24">
         {/* ── Header ── */}
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-ink/20 bg-paper/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/75 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink"
+              className="btn-line"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -311,7 +308,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition hover:border-red-500/40 hover:text-red-600 dark:text-red-300"
+                className="btn-line"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Exit Admin
@@ -320,7 +317,7 @@ export default function GymPage() {
               <button
                 type="button"
                 onClick={() => setShowAdminLogin((c) => !c)}
-                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-ink/[0.06] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70 transition hover:border-ink/40 hover:bg-ink/[0.1] hover:text-ink"
+                className="btn-line"
               >
                 <LockKeyhole className="h-3.5 w-3.5" />
                 Admin
@@ -343,7 +340,7 @@ export default function GymPage() {
         </div>
 
         {/* ── Main card ── */}
-        <section className="relative overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
+        <section className="relative overflow-hidden rounded-2xl border border-rule bg-transparent">
           {/* Inner glow */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.04),transparent_45%)]" />
           {/* Decorative SVGs */}
@@ -367,7 +364,7 @@ export default function GymPage() {
                   Daily Progress
                 </h1>
 
-                <p className="max-w-md font-Quicksand text-sm text-ink/50 md:text-base">
+                <p className="max-w-md text-sm text-ink/50 md:text-base">
                   My workout tracking system — public view, admin edit.
                 </p>
 
@@ -385,7 +382,7 @@ export default function GymPage() {
                           ? "bg-ink/80 shadow-[0_0_7px_rgb(var(--ink-rgb) / 0.5)]"
                           : day.status === "rest"
                             ? "bg-ink/40 shadow-[0_0_7px_rgb(var(--ink-rgb) / 0.3)]"
-                            : "border border-ink/[0.06] bg-ink/[0.04]"
+                            : "border border-rule bg-ink/[0.04]"
                       }`}
                     />
                   ))}
@@ -411,7 +408,7 @@ export default function GymPage() {
 
             {/* ── Admin login ── */}
             {showAdminLogin && !isAdmin && (
-              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5 backdrop-blur-xl">
+              <div className="mb-6 rounded-xl border border-ink/15 bg-ink/[0.025] p-5">
                 <form onSubmit={handleUnlock} className="space-y-4">
                   <div>
                     <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
@@ -429,7 +426,7 @@ export default function GymPage() {
                       if (hasError) setHasError(false);
                     }}
                     placeholder="Enter admin password"
-                    className="w-full rounded-xl border border-ink/10 bg-paper/50 px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
+                    className="w-full rounded-xl border border-ink/10 bg-transparent px-4 py-3 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
                   />
                   {hasError && (
                     <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
@@ -460,7 +457,7 @@ export default function GymPage() {
 
             {/* ── Main grid ── */}
             {isCheckingAuth ? (
-              <div className="rounded-xl border border-dashed border-ink/[0.08] bg-paper/20 px-5 py-16 text-center">
+              <div className="rounded-xl border border-dashed border-rule bg-transparent px-5 py-16 text-center">
                 <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
                 <p className="mt-3 font-mono text-xs uppercase tracking-[0.3em] text-ink/40">
                   Initializing...
@@ -469,7 +466,7 @@ export default function GymPage() {
             ) : (
               <div className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
                 {/* ── Left panel ── */}
-                <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
+                <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
                   <div className="flex flex-col items-center gap-6">
                     <ProgressRing
                       completedCount={completedCount}
@@ -489,7 +486,7 @@ export default function GymPage() {
                           setSelectedDate(d);
                           setChecklist(createInitialChecklist(d));
                         }}
-                        className="mt-2 w-full rounded-xl border border-ink/[0.08] bg-paper/40 px-4 py-3 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
+                        className="mt-2 w-full rounded-xl border border-rule bg-transparent px-4 py-3 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
                       />
                     </div>
 
@@ -509,7 +506,7 @@ export default function GymPage() {
                                 ? isRest
                                   ? "border-ink/20 bg-ink/[0.05] shadow-[0_0_14px_rgb(var(--ink-rgb) / 0.05)]"
                                   : "border-ink/30 bg-ink/[0.08] shadow-[0_0_14px_rgb(var(--ink-rgb) / 0.06)]"
-                                : "border-ink/[0.06] bg-ink/[0.015] hover:border-ink/[0.12]"
+                                : "border-rule bg-ink/[0.015] hover:border-rule"
                             } ${!isAdmin ? "cursor-default" : "cursor-pointer"}`}
                           >
                             <span
@@ -518,7 +515,7 @@ export default function GymPage() {
                                   ? isRest
                                     ? "border-ink/30 bg-ink/15 text-ink/80"
                                     : "border-ink/40 bg-ink/20 text-ink"
-                                  : "border-ink/[0.08] bg-ink/[0.03] text-ink/40"
+                                  : "border-rule bg-ink/[0.03] text-ink/40"
                               }`}
                             >
                               {checked ? (
@@ -528,7 +525,7 @@ export default function GymPage() {
                               )}
                             </span>
                             <span
-                              className={`font-Quicksand text-sm font-semibold transition-colors ${
+                              className={`text-sm font-semibold transition-colors ${
                                 checked
                                   ? isRest
                                     ? "text-ink/80"
@@ -571,7 +568,7 @@ export default function GymPage() {
                 </div>
 
                 {/* ── Right panel: History ── */}
-                <div className="rounded-xl border border-ink/[0.07] bg-ink/[0.02] p-5 md:p-6">
+                <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
                   <div className="mb-5 flex items-center justify-between">
                     <div>
                       <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
@@ -581,14 +578,14 @@ export default function GymPage() {
                         History
                       </h3>
                     </div>
-                    <div className="rounded-lg border border-ink/[0.08] bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
+                    <div className="rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
                       public
                     </div>
                   </div>
 
                   <div className="max-h-[460px] space-y-2 overflow-y-auto pr-0.5">
                     {entries.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-ink/[0.08] px-5 py-14 text-center">
+                      <div className="rounded-xl border border-dashed border-rule px-5 py-14 text-center">
                         <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink/30">
                           No entries yet
                         </p>
@@ -617,11 +614,11 @@ export default function GymPage() {
                             className={`flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-all ${
                               isSelected
                                 ? `${state.border} ${state.bg}`
-                                : "border-ink/[0.06] bg-ink/[0.015] hover:border-ink/[0.12]"
+                                : "border-rule bg-ink/[0.015] hover:border-rule"
                             }`}
                           >
                             <div className="min-w-0">
-                              <p className="font-Quicksand text-sm font-semibold text-ink">
+                              <p className="text-sm font-semibold text-ink">
                                 {formatDate(entry.date)}
                               </p>
                               <p
@@ -685,7 +682,7 @@ function StatCard({
         {label}
       </p>
       <p className={`mt-2.5 font-Orbitron text-xl font-bold ${valColor}`}>{value}</p>
-      <p className="mt-1.5 truncate font-Quicksand text-xs text-ink/40">{helper}</p>
+      <p className="mt-1.5 truncate text-xs text-ink/40">{helper}</p>
     </div>
   );
 }
@@ -709,7 +706,7 @@ function ProgressRing({
         boxShadow: `0 0 40px ${state.glow}, 0 0 80px ${state.glowFaint}`,
       }}
     >
-      <div className="absolute inset-0 rounded-full border border-ink/[0.04]" />
+      <div className="absolute inset-0 rounded-full border border-rule" />
       <svg className="h-40 w-40 -rotate-90" viewBox="0 0 160 160">
         {/* Track ring */}
         <circle

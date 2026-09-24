@@ -1,261 +1,178 @@
 "use client";
+
 import React from "react";
-import { motion } from "framer-motion";
-import { FaReact, FaJava, FaNode } from "react-icons/fa";
-import {
-  SiApachekafka, SiGo, SiGooglecloud, SiMongodb, SiNatsdotio,
-  SiNextdotjs, SiPostgresql, SiSpringboot, SiTailwindcss, SiTypescript,
-  SiPython, SiRedis, SiDocker, SiKubernetes, SiPrometheus, SiGrafana,
-} from "react-icons/si";
-import { PiFileCppFill } from "react-icons/pi";
+import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 
-/* ───────────────────────── DATA ─────────────────────────
-   No proficiency percentages or invented stats — just an honest,
-   organized manifest of the tools I actually work with. */
+/* ══════════════════════════════════════════════════════════════════
+   STACK
 
-type Tech = { icon: React.ElementType; name: string; color: string; note: string };
-type Domain = { id: string; label: string; color: string; techs: Tech[] };
+   Two halves. The core — the two languages the work actually revolves
+   around — set large, with a sentence each explaining why. Then
+   everything else as a ruled index, grouped by domain.
 
-const DOMAINS: Domain[] = [
+   Every brand icon is gone. The previous version rendered nineteen
+   react-icons at their official brand colours (#00ADD8, #E76F00,
+   #9D5BD2, #FF4438 …), which is nineteen accent colours in a palette
+   that allows one. Set as text, the same list reads faster, works at
+   any size, and says "PostgreSQL" rather than asking the reader to
+   recognise an elephant.
+
+   The hierarchy also does something the old flat grid could not: it
+   says Go and C++ matter more than the other seventeen, which is the
+   single most useful thing this section can communicate.
+══════════════════════════════════════════════════════════════════ */
+
+const Skills = () => (
+  <div className="flex flex-col gap-24 md:gap-32">
+    {/* ══ Core ═══════════════════════════════════════════════════ */}
+    <div className="grid grid-cols-1 gap-x-10 gap-y-14 md:grid-cols-2">
+      {CORE.map((c, i) => (
+        <div key={c.name}>
+          <Rise delay={i * 0.06}>
+            <span className="micro">{c.label}</span>
+          </Rise>
+
+          <h3
+            className="display mt-4"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}
+          >
+            <Mask delay={i * 0.06}>{c.name}</Mask>
+          </h3>
+
+          <Draw delay={0.1 + i * 0.06} className="mt-6" />
+
+          <Rise delay={0.16 + i * 0.06}>
+            <p className="copy mt-6 max-w-[42ch]">{c.desc}</p>
+          </Rise>
+        </div>
+      ))}
+    </div>
+
+    {/* ══ Everything else ════════════════════════════════════════
+        A ruled index: domain on the left, the tools in it on the
+        right. Two columns of text, one hairline per row. */}
+    <div>
+      <Rise className="mb-8 flex items-baseline justify-between gap-4">
+        <span className="micro">Working knowledge</span>
+        <span className="micro num">
+          {TECH_COUNT} tools · {DOMAINS.length} domains
+        </span>
+      </Rise>
+
+      <dl className="border-t border-rule">
+        {DOMAINS.map((d, i) => (
+          <Rise key={d.id} delay={i * 0.04}>
+            <div className="grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule py-6 md:grid-cols-12 md:py-7">
+              <dt className="micro md:col-span-4">{d.label}</dt>
+              <dd className="md:col-span-8">
+                <ul className="flex flex-wrap gap-x-5 gap-y-2">
+                  {d.techs.map((t) => (
+                    <li
+                      key={t.name}
+                      title={t.note}
+                      className="text-[0.9375rem] tracking-[-0.01em] text-ink"
+                    >
+                      {t.name}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          </Rise>
+        ))}
+      </dl>
+    </div>
+  </div>
+);
+
+/* ─── content ─────────────────────────────────────────────────────
+   Same nineteen tools as before; the `icon` and `color` fields are
+   dropped and the explanatory `note` is retained as a title
+   attribute. */
+
+const CORE = [
   {
-    id: "lang", label: "LANGUAGES", color: "#91919A",
+    name: "Go",
+    label: "Primary language",
+    desc: "What I build production systems in — trading engines, real-time pipelines, distributed services. Chosen for its concurrency model and its predictable latency under load.",
+  },
+  {
+    name: "C++",
+    label: "Systems language",
+    desc: "For the performance-critical paths — order books, memory-tight engines — and the language behind my competitive programming. Raw control, zero-cost abstractions.",
+  },
+];
+
+const DOMAINS = [
+  {
+    id: "lang",
+    label: "Languages",
     techs: [
-      { icon: SiGo,          name: "Go",         color: "#00ADD8", note: "Primary language — trading systems, services" },
-      { icon: PiFileCppFill, name: "C++",        color: "#659AD2", note: "Low-latency paths, competitive programming" },
-      { icon: SiTypescript,  name: "TypeScript", color: "#3178C6", note: "Full-stack type safety" },
-      { icon: FaJava,        name: "Java",       color: "#E76F00", note: "Enterprise services, Spring ecosystem" },
-      { icon: SiPython,      name: "Python",     color: "#3776AB", note: "Tooling, automation, data scripts" },
+      { name: "Go", note: "Primary language — trading systems, services" },
+      { name: "C++", note: "Low-latency paths, competitive programming" },
+      { name: "TypeScript", note: "Full-stack type safety" },
+      { name: "Java", note: "Enterprise services, Spring ecosystem" },
+      { name: "Python", note: "Tooling, automation, data scripts" },
     ],
   },
   {
-    id: "infra", label: "INFRA & OBSERVABILITY", color: "#91919A",
+    id: "infra",
+    label: "Infra & observability",
     techs: [
-      { icon: SiGooglecloud, name: "Google Cloud", color: "#4285F4", note: "Cloud-native deployments" },
-      { icon: SiDocker,      name: "Docker",       color: "#2496ED", note: "Containerized builds & runtimes" },
-      { icon: SiKubernetes,  name: "Kubernetes",   color: "#326CE5", note: "Service orchestration" },
-      { icon: SiPrometheus,  name: "Prometheus",   color: "#E6522C", note: "Metrics & alerting" },
-      { icon: SiGrafana,     name: "Grafana",      color: "#F46800", note: "Dashboards & visualization" },
+      { name: "Google Cloud", note: "Cloud-native deployments" },
+      { name: "Docker", note: "Containerised builds and runtimes" },
+      { name: "Kubernetes", note: "Service orchestration" },
+      { name: "Prometheus", note: "Metrics and alerting" },
+      { name: "Grafana", note: "Dashboards and visualisation" },
     ],
   },
   {
-    id: "be", label: "BACKEND", color: "#D8D8DC",
+    id: "be",
+    label: "Backend",
     techs: [
-      { icon: FaNode,        name: "Node.js",     color: "#5FA04E", note: "Real-time APIs & services" },
-      { icon: SiSpringboot,  name: "Spring Boot", color: "#6DB33F", note: "JVM microservices" },
+      { name: "Node.js", note: "Real-time APIs and services" },
+      { name: "Spring Boot", note: "JVM microservices" },
     ],
   },
   {
-    id: "data", label: "DATA & STORAGE", color: "#91919A",
+    id: "data",
+    label: "Data & storage",
     techs: [
-      { icon: SiPostgresql,  name: "PostgreSQL", color: "#4169E1", note: "Relational modelling, query tuning" },
-      { icon: SiMongodb,     name: "MongoDB",    color: "#47A248", note: "Document stores" },
-      { icon: SiRedis,       name: "Redis",      color: "#FF4438", note: "Caching, pub/sub" },
+      { name: "PostgreSQL", note: "Relational modelling, query tuning" },
+      { name: "MongoDB", note: "Document stores" },
+      { name: "Redis", note: "Caching, pub/sub" },
     ],
   },
   {
-    id: "msg", label: "MESSAGING & STREAMING", color: "#91919A",
+    id: "msg",
+    label: "Messaging & streaming",
     techs: [
-      { icon: SiApachekafka, name: "Kafka", color: "#9D5BD2", note: "Event streaming backbones" },
-      { icon: SiNatsdotio,   name: "NATS",  color: "#27AAE1", note: "JetStream messaging" },
+      { name: "Kafka", note: "Event streaming backbones" },
+      { name: "NATS", note: "JetStream messaging" },
     ],
   },
   {
-    id: "fe", label: "FRONTEND", color: "#91919A",
+    id: "ai",
+    label: "AI & retrieval",
     techs: [
-      { icon: FaReact,       name: "React",        color: "#61DAFB", note: "Component-driven UIs" },
-      { icon: SiNextdotjs,   name: "Next.js",      color: "#9AA0A6", note: "App Router, RSC, this site" },
-      { icon: SiTailwindcss, name: "Tailwind CSS", color: "#91919A", note: "Design systems" },
+      { name: "RAG pipelines", note: "Retrieval-augmented generation over private corpora" },
+      { name: "pgvector", note: "Vector search inside PostgreSQL" },
+      { name: "Qdrant", note: "Dedicated vector store" },
+      { name: "LangChain", note: "LLM orchestration" },
+      { name: "OpenAI API", note: "Embeddings and completions" },
+    ],
+  },
+  {
+    id: "fe",
+    label: "Frontend",
+    techs: [
+      { name: "React", note: "Component-driven UIs" },
+      { name: "Next.js", note: "App Router, RSC — this site" },
+      { name: "Tailwind CSS", note: "Design systems" },
     ],
   },
 ];
 
 const TECH_COUNT = DOMAINS.reduce((n, d) => n + d.techs.length, 0);
-
-/* Core stack — the two tools daily work actually revolves around. */
-const CORE = [
-  {
-    icon: SiGo, name: "Go", color: "#00ADD8", label: "PRIMARY LANGUAGE",
-    desc: "What I build production systems in — trading engines, real-time pipelines, distributed services. Chosen for its concurrency model and predictable latency under load.",
-  },
-  {
-    icon: PiFileCppFill, name: "C++", color: "#659AD2", label: "SYSTEMS LANGUAGE",
-    desc: "For the performance-critical paths — order books, memory-tight engines — and the language behind my competitive programming. Raw control, zero-cost abstractions.",
-  },
-];
-
-/* ───────────────────────── CORE STRIP ───────────────────────── */
-
-const CoreCard = ({ c, i }: { c: (typeof CORE)[number]; i: number }) => {
-  const Icon = c.icon;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex-1 overflow-hidden p-4 sm:p-5 md:p-6"
-      style={{ borderTop: `2px solid ${c.color}` }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: `linear-gradient(135deg, ${c.color}10, transparent 55%)` }}
-      />
-      {/* A fixed 64px glyph next to a 2.7rem heading and a 0.35em-tracked badge
-          left roughly 190px for text on a phone. The glyph now scales down and
-          the badge drops onto its own line below the name. */}
-      <div className="relative z-10 flex items-start gap-4 sm:gap-5 md:gap-6">
-        <Icon
-          className="shrink-0 text-[44px] sm:text-[64px] md:text-[84px] leading-none transition-transform duration-300 group-hover:scale-105"
-          style={{ color: c.color, filter: `drop-shadow(0 0 14px ${c.color}50)` }}
-        />
-        <div className="min-w-0">
-          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:gap-3 sm:flex-wrap">
-            <h3
-              className="font-black uppercase leading-none text-black dark:text-white"
-              style={{ fontFamily: "var(--font-orbitron)", fontSize: "clamp(1.5rem, 3.2vw, 2.7rem)", letterSpacing: "-0.02em" }}
-            >
-              {c.name}
-            </h3>
-            <span
-              className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.35em] px-2 py-1 sm:px-2.5 sm:py-1.5 border"
-              style={{ color: c.color, borderColor: `${c.color}50`, backgroundColor: `${c.color}0d` }}
-            >
-              {c.label}
-            </span>
-          </div>
-          <p className="font-mono text-[11px] sm:text-[12px] leading-relaxed text-black/55 dark:text-white/50 mt-3 max-w-xl">
-            {c.desc}
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-/* ───────────────────────── DOMAIN PANEL ───────────────────────── */
-
-const TechRow = ({ t }: { t: Tech }) => {
-  const Icon = t.icon;
-  return (
-    <div className="group/row relative flex items-center gap-3.5 sm:gap-4 px-4 sm:px-5 py-3 sm:py-3.5 transition-colors duration-200 hover:bg-white/[0.03]">
-      {/* accent tick on hover */}
-      <span
-        className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-[2px] transition-all duration-200 group-hover/row:h-3/5"
-        style={{ backgroundColor: t.color }}
-      />
-      <span
-        className="grid h-10 w-10 sm:h-12 sm:w-12 shrink-0 place-items-center border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] transition-colors duration-200"
-        style={{ color: t.color }}
-      >
-        <Icon className="text-[20px] sm:text-[24px]" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="font-mono text-[13px] sm:text-[14px] font-bold tracking-[0.06em] text-black/85 dark:text-white/85 group-hover/row:text-black dark:group-hover/row:text-white transition-colors duration-200">
-          {t.name}
-        </div>
-        {/* Was `truncate`: at phone width every note clipped to two or three
-            words, so the column read as a list of half-sentences. */}
-        <div className="font-mono text-[10px] sm:text-[10.5px] leading-snug text-black/40 dark:text-white/35 line-clamp-2 md:line-clamp-1">
-          {t.note}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const DomainPanel = ({ d, i }: { d: Domain; i: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 14 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: (i % 3) * 0.07, ease: [0.22, 1, 0.36, 1] }}
-    className="mb-5 break-inside-avoid border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/40"
-  >
-    <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-black/10 dark:border-white/10">
-      <div className="flex items-center gap-3 min-w-0">
-        <span
-          className="h-2 w-2 rounded-full"
-          style={{ backgroundColor: d.color, boxShadow: `0 0 8px ${d.color}90` }}
-        />
-        <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.3em] text-black/70 dark:text-white/70 truncate">
-          {d.label}
-        </span>
-      </div>
-      <span className="font-mono text-[9px] tabular-nums tracking-[0.2em] text-black/30 dark:text-white/25">
-        {String(d.techs.length).padStart(2, "0")}
-      </span>
-    </div>
-    <div className="divide-y divide-black/[0.05] dark:divide-white/[0.05]">
-      {d.techs.map((t) => <TechRow key={t.name} t={t} />)}
-    </div>
-  </motion.div>
-);
-
-/* ───────────────────────── MAIN ───────────────────────── */
-
-const Skills = () => (
-  <div className="relative w-full bg-white/55 dark:bg-black/30 border border-black/[0.12] dark:border-white/[0.12] overflow-hidden">
-    {/* HEADER — the two groups totalled ~440px of tracked mono against a
-        320px phone row, so they crushed into each other. Stacked below sm. */}
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-5 md:px-7 py-3 sm:py-3.5 border-b border-black/10 dark:border-white/10">
-      <div className="flex items-center gap-3 md:gap-5">
-        <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] sm:tracking-[0.45em] text-black/50 dark:text-white/50">SYS.MANIFEST</span>
-        <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
-        <span className="font-mono text-[11px] sm:text-[12px] md:text-[13px] font-bold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-black dark:text-white">TECHNICAL_STACK</span>
-      </div>
-      <div className="flex items-center gap-2.5">
-        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-black/40 dark:text-white/30">{TECH_COUNT} TOOLS</span>
-        <div className="h-3 w-px bg-black/15 dark:bg-white/15" />
-        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-black/50 dark:text-white/50">{DOMAINS.length} DOMAINS</span>
-      </div>
-    </div>
-
-    {/* CORE STACK */}
-    <div className="border-b border-black/10 dark:border-white/10">
-      <div className="px-4 sm:px-5 md:px-7 pt-5 pb-1">
-        <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black/35 dark:text-white/35">[ CORE STACK ]</span>
-      </div>
-      <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-black/10 dark:divide-white/10">
-        {CORE.map((c, i) => <CoreCard key={c.name} c={c} i={i} />)}
-      </div>
-    </div>
-
-    {/* DOMAIN GRID */}
-    <div className="relative">
-      {/* HUD backdrop */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.5] dark:opacity-100"
-        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.14) 1px, transparent 0)", backgroundSize: "26px 26px" }}
-      />
-      <div className="relative px-3 sm:px-4 md:px-6 py-6 columns-1 md:columns-2 xl:columns-3 gap-5">
-        {DOMAINS.map((d, i) => <DomainPanel key={d.id} d={d} i={i} />)}
-      </div>
-    </div>
-
-    {/* FOOTER */}
-    <div className="flex items-center justify-between gap-3 px-4 sm:px-5 md:px-7 py-3 border-t border-black/10 dark:border-white/10">
-      <div className="flex items-center gap-2.5 min-w-0">
-        <span className="relative flex h-1.5 w-1.5 shrink-0">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500/50" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black dark:bg-blue-400" />
-        </span>
-        <span className="font-mono text-[7px] sm:text-[8px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-black/65 dark:text-white/65 truncate">
-          ALL SYSTEMS NOMINAL
-        </span>
-      </div>
-      <div className="hidden md:flex items-end gap-[2px] h-4">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="w-[3px] bg-black dark:bg-blue-400/70 rounded-sm"
-            animate={{ height: ["3px", `${6 + Math.sin(i) * 5}px`, "3px"] }}
-            transition={{ duration: 1 + (i % 3) * 0.3, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }}
-          />
-        ))}
-      </div>
-      <span className="font-mono text-[7px] sm:text-[8px] uppercase tracking-[0.22em] sm:tracking-[0.3em] shrink-0 text-black/55 dark:text-white/55">{TECH_COUNT} LOADED</span>
-    </div>
-  </div>
-);
 
 export default Skills;

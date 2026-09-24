@@ -8,6 +8,31 @@ const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
+/* ── Warm ink ramp ──────────────────────────────────────────────────
+   Paper at the light end, ink at the dark end, a few points of yellow
+   held through the middle so it never goes cold against the newsprint
+   ground.
+
+   The previous ramp was a cool graphite drawn for a black page: its
+   900/950 steps were #19191C and #0E0E10, which is why any section
+   still carrying `bg-blue-900` painted a black slab. Re-pointing the
+   ramp here converts every one of those call sites at once, so the
+   un-restyled sections degrade to warm grey instead of fighting the
+   paper while the revamp works through them. */
+const INK_RAMP = {
+  "50": "#F7F6F2",
+  "100": "#EFEDE7",
+  "200": "#E1DED4",
+  "300": "#C6C3B8",
+  "400": "#A3A199",
+  "500": "#8C8A80",
+  "600": "#6F6D64",
+  "700": "#5C5A51",
+  "800": "#3A3833",
+  "900": "#262520",
+  "950": "#16150F",
+};
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -28,12 +53,16 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-quicksand)", ...defaultTheme.fontFamily.sans],
-        // `mono` previously resolved to Quicksand — a rounded sans — so every
-        // terminal/HUD microlabel rendered proportional. Now a real mono face.
+        // One grotesk (Inter Tight) carries display and text alike; mono is
+        // for marginalia; the serif appears italic, lowercase, and rarely.
+        sans: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
+        display: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
         mono: ["var(--font-mono)", ...defaultTheme.fontFamily.mono],
-        Quicksand: ["var(--font-quicksand)", "sans-serif"],
-        Orbitron: ["var(--font-orbitron)", "sans-serif"],
+        // Retired faces. Aliased onto the grotesk so the ~40 remaining
+        // `font-Orbitron` / `font-Quicksand` call sites across the
+        // sub-pages convert with the theme instead of after it.
+        Quicksand: ["var(--font-display)", "sans-serif"],
+        Orbitron: ["var(--font-display)", "sans-serif"],
       },
       // ── Type scale ───────────────────────────────────────────────
       // Named steps replacing the ad-hoc text-[7px]…text-[15px] sprawl.
@@ -59,98 +88,47 @@ const config = {
         // slash-opacity syntax through the CSS variable.
         ink: "rgb(var(--ink-rgb) / <alpha-value>)",
         paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+        // ── Swiss editorial tokens ─────────────────────────────────
+        // Named steps, so a component never has to guess an opacity for
+        // "secondary text" or "a hairline" again.
+        ink2: "var(--ink-2)",
+        ink3: "var(--ink-3)",
+        paper2: "var(--paper-2)",
+        paper3: "var(--paper-3)",
+        rule: "var(--rule)",
+        rule2: "var(--rule-strong)",
+        // The single accent. See --mark in globals.css for why it isn't
+        // called `accent` (shadcn's base layer already owns that name).
+        mark: "var(--mark)",
         // Hueless accent pair, flipped per theme, for the HUD chrome that
         // used to hard-code #D8D8DC / #91919A (invisible on white).
         hud: {
           DEFAULT: "rgb(var(--hud-rgb) / <alpha-value>)",
           dim: "rgb(var(--hud-dim-rgb) / <alpha-value>)",
         },
+        // `text-black` / `bg-white` appear in the hundreds across the
+        // un-converted sections. Re-pointing the two defaults at the
+        // real ink and paper means those call sites land on the warm
+        // palette rather than punching pure #000 into newsprint.
         black: {
-          "100": "#000319",
-          "200": "rgba(17, 25, 40, 0.75)",
-          "300": "rgba(255, 255, 255, 0.125)",
-          DEFAULT: "#000",
+          "100": INK_RAMP["950"],
+          "200": INK_RAMP["800"],
+          "300": "var(--rule)",
+          DEFAULT: "#16150F",
         },
         white: {
-          "100": "#BEC1DD",
-          "200": "#C1C2D3",
-          DEFAULT: "#FFF",
+          "100": INK_RAMP["200"],
+          "200": INK_RAMP["100"],
+          DEFAULT: "#F2F1EC",
         },
-        // ── Monochrome graphite scale ──────────────────────────────
-        // The accent family is intentionally hueless. A trace of cool
-        // tint (~250deg at <4% sat) keeps it from reading muddy on pure
-        // black without ever becoming "blue". All former navy/indigo/
-        // cyan aliases now point at this one scale, so the whole UI
-        // resolves to graphite-on-black with no palette drift.
-        graphite: {
-          "50": "#F7F7F8",
-          "100": "#EDEDEF",
-          "200": "#D8D8DC",
-          "300": "#B7B7BE",
-          "400": "#91919A",
-          "500": "#6D6D76",
-          "600": "#53535B",
-          "700": "#3D3D44",
-          "800": "#29292E",
-          "900": "#19191C",
-          "950": "#0E0E10",
-        },
-        // Legacy aliases — components still reference blue-/sky-/indigo-/
-        // cyan-*. Repointing them here neutralises every call site at once
-        // instead of rewriting hundreds of class names.
-        blue: {
-          "50": "#F7F7F8",
-          "100": "#EDEDEF",
-          "200": "#D8D8DC",
-          "300": "#B7B7BE",
-          "400": "#91919A",
-          "500": "#6D6D76",
-          "600": "#53535B",
-          "700": "#3D3D44",
-          "800": "#29292E",
-          "900": "#19191C",
-          "950": "#0E0E10",
-        },
-        sky: {
-          "50": "#F7F7F8",
-          "100": "#EDEDEF",
-          "200": "#D8D8DC",
-          "300": "#B7B7BE",
-          "400": "#91919A",
-          "500": "#6D6D76",
-          "600": "#53535B",
-          "700": "#3D3D44",
-          "800": "#29292E",
-          "900": "#19191C",
-          "950": "#0E0E10",
-        },
-        indigo: {
-          "50": "#F7F7F8",
-          "100": "#EDEDEF",
-          "200": "#D8D8DC",
-          "300": "#B7B7BE",
-          "400": "#91919A",
-          "500": "#6D6D76",
-          "600": "#53535B",
-          "700": "#3D3D44",
-          "800": "#29292E",
-          "900": "#19191C",
-          "950": "#0E0E10",
-        },
-        cyan: {
-          "50": "#F7F7F8",
-          "100": "#EDEDEF",
-          "200": "#D8D8DC",
-          "300": "#B7B7BE",
-          "400": "#91919A",
-          "500": "#6D6D76",
-          "600": "#53535B",
-          "700": "#3D3D44",
-          "800": "#29292E",
-          "900": "#19191C",
-          "950": "#0E0E10",
-        },
-        purple: "#B7B7BE",
+        // Every former navy/indigo/cyan/graphite family collapses onto
+        // the one warm ink ramp, so no call site can reintroduce a hue.
+        graphite: INK_RAMP,
+        blue: INK_RAMP,
+        sky: INK_RAMP,
+        indigo: INK_RAMP,
+        cyan: INK_RAMP,
+        purple: INK_RAMP["400"],
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -192,10 +170,20 @@ const config = {
           "5": "hsl(var(--chart-5))",
         },
       },
+      // Swiss: nothing is rounded. Overriding the whole scale (rather
+      // than editing `rounded-2xl` out of forty files) makes the rule
+      // structural — a corner radius can't creep back in by accident.
+      // `full` survives for the genuinely circular: dots and avatars.
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        none: "0px",
+        sm: "0px",
+        DEFAULT: "0px",
+        md: "0px",
+        lg: "0px",
+        xl: "0px",
+        "2xl": "0px",
+        "3xl": "0px",
+        full: "9999px",
       },
       keyframes: {
         meteor: {

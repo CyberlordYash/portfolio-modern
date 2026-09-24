@@ -63,18 +63,15 @@ export default function WorklogPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-paper px-4 py-6 text-ink md:px-8 md:py-8">
-      {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_10%_10%,rgb(var(--ink-rgb) / 0.04),transparent),radial-gradient(ellipse_60%_50%_at_90%_90%,rgb(var(--ink-rgb) / 0.04),transparent)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink-rgb) / 0.022)_1px,transparent_1px)] bg-[size:36px_36px]" />
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <main className="relative min-h-screen bg-paper text-ink">
+      
+      <div className="shell relative z-10 py-16 md:py-24">
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-xl border border-ink/20 bg-paper/50 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/75 transition hover:border-ink/40 hover:bg-ink/[0.06] hover:text-ink"
+              className="btn-line"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Portfolio
@@ -84,7 +81,7 @@ export default function WorklogPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-paper/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition hover:border-red-500/40 hover:text-red-600 dark:text-red-300"
+                className="btn-line"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Lock
@@ -112,7 +109,7 @@ export default function WorklogPage() {
           <WorkJournal onUnauthorized={() => setIsUnlocked(false)} />
         ) : (
           /* Lock screen */
-          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-ink/[0.07] bg-paper/40 backdrop-blur-sm">
+          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-rule bg-transparent">
             {/* Decorations */}
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgb(var(--ink-rgb) / 0.04),transparent_50%),radial-gradient(circle_at_70%_70%,rgb(var(--ink-rgb) / 0.04),transparent_50%)]" />
             <div className="pointer-events-none absolute -right-8 top-8 opacity-[0.06]">
@@ -140,7 +137,7 @@ export default function WorklogPage() {
                 <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-ink">
                   Worklog
                 </h1>
-                <p className="font-Quicksand text-sm text-ink/50">
+                <p className="text-sm text-ink/50">
                   My daily work journal. Restricted access.
                 </p>
               </div>
@@ -154,7 +151,7 @@ export default function WorklogPage() {
                     if (hasError) setHasError(false);
                   }}
                   placeholder="Enter access code"
-                  className="w-full rounded-xl border border-ink/[0.08] bg-paper/50 px-4 py-3.5 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
+                  className="w-full rounded-xl border border-rule bg-transparent px-4 py-3.5 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
                 />
 
                 {hasError && (

@@ -1,249 +1,77 @@
 "use client";
+
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { CanvasRevealEffect } from "@/components/ui/CanvanRevealEffect";
-import { RevealText, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
-import { EncryptedText } from "@/components/ui/encrypted-text";
+import { Mask, Rise } from "@/components/ui/Reveal";
 
-type PhaseColor = "cyan" | "emerald" | "violet" | "amber";
+/* ══════════════════════════════════════════════════════════════════
+   METHOD
 
-const colorMap: Record<PhaseColor, {
-  strip: string;
-  led: string;
-  ledGlow: string;
-  label: string;
-  canvasBg: string;
-  canvasColors: number[][];
-}> = {
-  cyan: {
-    strip: "bg-blue-400",
-    led: "bg-blue-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(255,255,255,0.7)]",
-    label: "text-blue-500 dark:text-blue-400",
-    canvasBg: "bg-blue-950",
-    canvasColors: [[255,255,255]],
+   Four phases as four numbered blocks on one hairline grid.
+
+   The previous version rendered each phase as a card running a WebGL
+   canvas-reveal shader on hover, behind an encrypted-text scramble
+   animation, with a per-phase accent colour and a pulsing LED. Four
+   shader canvases to communicate four sentences.
+
+   The phases are sequential, so the strongest thing to show is the
+   sequence: large numerals, one per column, reading left to right.
+══════════════════════════════════════════════════════════════════ */
+
+const Approach = () => (
+  <ol className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+    {PHASES.map((p, i) => (
+      <li key={p.title} className="border-t border-rule pt-6">
+        <Rise delay={i * 0.06}>
+          <span className="micro num">Phase {p.n}</span>
+        </Rise>
+
+        {/* The numeral is the graphic. Set large and light so a row of
+            four reads as a sequence rather than four headings. */}
+        <p
+          className="display mt-4 leading-none text-ink3"
+          style={{ fontSize: "clamp(3rem, 6vw, 5rem)" }}
+          aria-hidden
+        >
+          {p.n}
+        </p>
+
+        <h3 className="h3 mt-5">
+          <Mask delay={i * 0.06}>{p.title}</Mask>
+        </h3>
+
+        <Rise delay={0.1 + i * 0.06}>
+          <p className="copy mt-3 text-sm">{p.description}</p>
+        </Rise>
+      </li>
+    ))}
+  </ol>
+);
+
+const PHASES = [
+  {
+    n: "01",
+    title: "Architecture",
+    description:
+      "Scalable system design, database selection, and low-latency architectural planning before a line of it gets written.",
   },
-  emerald: {
-    strip: "bg-sky-400",
-    led: "bg-sky-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(183,183,190,0.7)]",
-    label: "text-sky-500 dark:text-sky-400",
-    canvasBg: "bg-sky-950",
-    canvasColors: [[183,183,190]],
+  {
+    n: "02",
+    title: "Development",
+    description:
+      "High-performance gRPC and REST APIs, cloud infrastructure, and distributed service integration.",
   },
-  violet: {
-    strip: "bg-indigo-400",
-    led: "bg-indigo-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(216,216,220,0.7)]",
-    label: "text-indigo-500 dark:text-indigo-400",
-    canvasBg: "bg-indigo-950",
-    canvasColors: [[216,216,220]],
+  {
+    n: "03",
+    title: "Optimisation",
+    description:
+      "Latency reduction, memory profiling, and stress testing for reliability at peak traffic.",
   },
-  amber: {
-    strip: "bg-cyan-400",
-    led: "bg-cyan-400",
-    ledGlow: "shadow-[0_0_6px_2px_rgba(216,216,220,0.7)]",
-    label: "text-cyan-500 dark:text-cyan-400",
-    canvasBg: "bg-cyan-950",
-    canvasColors: [[216,216,220]],
+  {
+    n: "04",
+    title: "Deployment",
+    description:
+      "CI/CD automation, Kubernetes orchestration, and monitoring that catches problems before users do.",
   },
-};
-
-const PhaseCard = ({
-  moduleId,
-  title,
-  description,
-  color,
-  status = "ACTIVE",
-}: {
-  moduleId: string;
-  title: string;
-  description: string;
-  color: PhaseColor;
-  status?: string;
-}) => {
-  const [hovered, setHovered] = React.useState(false);
-  const c = colorMap[color];
-
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="relative flex flex-col overflow-hidden border border-black/[0.1] dark:border-white/[0.1]
-        bg-white/80 dark:bg-[#0B0B0E]/75 h-[15rem] sm:h-[20rem] lg:h-[24rem] cursor-default
-        transition-all duration-300 group"
-    >
-      {/* Colored top strip */}
-      <div className={`absolute inset-x-0 top-0 h-[2px] ${c.strip} z-20`} />
-
-      {/* Canvas reveal on hover */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-10"
-          >
-            <CanvasRevealEffect
-              animationSpeed={4}
-              containerClassName={c.canvasBg}
-              colors={c.canvasColors}
-              dotSize={3}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Content */}
-      <div className="relative z-20 flex flex-col h-full p-5">
-        {/* Top row */}
-        <div className="flex items-center justify-between mb-4">
-          <span className={`font-mono text-[8px] uppercase tracking-[0.4em] ${c.label}`}>
-            {moduleId}
-          </span>
-          {/* LED indicator */}
-          <span
-            className={`inline-block w-1.5 h-1.5 ${c.led}`}
-            style={{
-              animation: hovered
-                ? "led-active 0.8s ease-in-out infinite"
-                : "led-idle 2.5s ease-in-out infinite",
-            }}
-          />
-        </div>
-
-        {/* Phase label */}
-        <div className="flex-1 flex flex-col justify-center">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-black/40 dark:text-white/30 mb-2
-            group-hover:text-white/40 transition-colors duration-300">
-            PHASE // {moduleId.slice(-2)}
-          </p>
-          <h3
-            className="font-bold uppercase leading-tight text-black dark:text-white mb-4
-              group-hover:text-white transition-colors duration-300"
-            style={{
-              fontFamily: "var(--font-orbitron)",
-              fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)",
-              letterSpacing: "0em",
-            }}
-          >
-            {title}
-          </h3>
-          <p className="font-mono text-[10px] leading-relaxed text-black/50 dark:text-white/40
-            group-hover:text-white/70 transition-colors duration-300 max-w-[22ch]">
-            {description}
-          </p>
-        </div>
-
-        {/* Footer status */}
-        <div className="flex items-center gap-2 border-t border-black/[0.08] dark:border-white/[0.08]
-          group-hover:border-white/[0.12] pt-3 transition-colors duration-300">
-          <span className={`inline-block w-1 h-1 ${c.led}`} />
-          <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/35 dark:text-white/30
-            group-hover:text-white/50 transition-colors duration-300">
-            STATUS: {status}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Approach = () => {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => { setMounted(true); }, []);
-  return (
-    <section
-      className="w-full bg-transparent transition-colors duration-500 py-16"
-      id="approach"
-    >
-      {/* 90vw + px-4 double-inset the cards on a phone; full width below md
-          and let the padding alone do the work. */}
-      <div className="w-full md:max-w-[90vw] 2xl:max-w-[1400px] mx-auto px-4">
-        {/* Section header */}
-        <div className="flex flex-col items-center mb-12">
-          {/* label tag */}
-          <FadeReveal delay={0} className="flex items-center gap-2 border border-black/15 dark:border-white/15 bg-white/70 dark:bg-black/60 px-4 py-1.5 mb-5">
-            <motion.div
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-black dark:bg-white"
-            />
-            {mounted ? (
-              <EncryptedText
-                text="EXECUTION_PIPELINE"
-                className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
-                revealDelayMs={40}
-                charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./[]"
-              />
-            ) : (
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white">
-                EXECUTION_PIPELINE
-              </span>
-            )}
-          </FadeReveal>
-
-          <h2
-            className="font-black uppercase leading-none text-center whitespace-nowrap"
-            style={{
-              fontFamily: "var(--font-orbitron)",
-              fontSize: "clamp(2rem, 8vw, 5.5rem)",
-              letterSpacing: "-0.025em",
-            }}
-          >
-            <span className="text-black dark:text-white">
-              <RevealText text="MY" delay={0.18} />
-            </span>{" "}
-            <span
-              className="text-black dark:text-white"
-              style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
-            >
-              <RevealText text="APPROACH" delay={0.3} />
-            </span>
-          </h2>
-
-          <div className="flex items-center gap-3 mt-3">
-            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-            <FadeReveal delay={0.6}>
-              <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-white/45">
-                4 Phase Protocol
-              </span>
-            </FadeReveal>
-            <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-white/20" />
-          </div>
-        </div>
-
-        {/* Phase cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-black/[0.09] dark:bg-white/[0.09]">
-          <PhaseCard
-            moduleId="MODULE_01"
-            title="Architecture"
-            description="Scalable system design, database selection, and low-latency architectural planning."
-            color="cyan"
-          />
-          <PhaseCard
-            moduleId="MODULE_02"
-            title="Development"
-            description="High-performance gRPC/REST APIs, cloud infra, and distributed service integration."
-            color="emerald"
-          />
-          <PhaseCard
-            moduleId="MODULE_03"
-            title="Optimization"
-            description="Latency reduction, memory profiling, and stress testing for peak traffic reliability."
-            color="violet"
-          />
-          <PhaseCard
-            moduleId="MODULE_04"
-            title="Deployment"
-            description="CI/CD automation, Kubernetes orchestration, and proactive system monitoring."
-            color="amber"
-          />
-        </div>
-      </div>
-    </section>
-  );
-};
+];
 
 export default Approach;

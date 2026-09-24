@@ -3,357 +3,318 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
+/* ══════════════════════════════════════════════════════════════════
+   SKILL GRAPH
+
+   The stack as a graph rather than a list, because the interesting
+   claim is not which tools are known but which ones are used
+   together — Go with gRPC and Kafka, Docker with Kubernetes with GCP,
+   Prometheus with Grafana. A list flattens that; edges carry it.
+
+   ── Colour ──
+   The previous version gave each of the seven categories its own
+   hex and hovering lit a node in it. That is eight colours in a
+   palette that permits one. Structure is now carried entirely by
+   position and edge weight, and the single accent is reserved for the
+   hovered node and its immediate neighbours — so the accent answers a
+   question ("what connects to this?") instead of decorating.
+
+   ── Tone ──
+   Every colour is written as `rgb(var(--ink-rgb) / a)` rather than a
+   literal, so the graph inverts with whatever tone block it sits in.
+   D3 writes these straight into attributes; they resolve at paint.
+══════════════════════════════════════════════════════════════════ */
+
+const INK = (a: number) => `rgb(var(--ink-rgb) / ${a})`;
+const ACCENT = "var(--mark)";
+
 const CATEGORIES = [
-  { id: "lang",  label: "Languages",     color: "#91919A" },
-  { id: "fe",    label: "Frontend",      color: "#D8D8DC" },
-  { id: "be",    label: "Backend",       color: "#B7B7BE" },
-  { id: "db",    label: "Databases",     color: "#91919A" },
-  { id: "infra", label: "Infra",         color: "#91919A" },
-  { id: "msg",   label: "Messaging",     color: "#91919A" },
-  { id: "obs",   label: "Observability", color: "#91919A" },
+  { id: "lang", label: "Languages" },
+  { id: "be", label: "Backend" },
+  { id: "db", label: "Data" },
+  { id: "infra", label: "Infra" },
+  { id: "msg", label: "Messaging" },
+  { id: "obs", label: "Observability" },
+  { id: "ai", label: "AI & retrieval" },
+  { id: "fe", label: "Frontend" },
 ] as const;
 
-type CatId = typeof CATEGORIES[number]["id"];
+type CatId = (typeof CATEGORIES)[number]["id"];
 
 const SKILLS: { id: string; label: string; cat: CatId }[] = [
-  { id: "golang",     label: "Golang",         cat: "lang"  },
-  { id: "cpp",        label: "C++",            cat: "lang"  },
-  { id: "ts",         label: "TypeScript",     cat: "lang"  },
-  { id: "java",       label: "Java",           cat: "lang"  },
-  { id: "python",     label: "Python",         cat: "lang"  },
-  { id: "react",      label: "React.js",       cat: "fe"    },
-  { id: "nextjs",     label: "Next.js",        cat: "fe"    },
-  { id: "tailwind",   label: "Tailwind",       cat: "fe"    },
-  { id: "nodejs",     label: "Node.js",        cat: "be"    },
-  { id: "express",    label: "Express",        cat: "be"    },
-  { id: "fiber",      label: "Fiber",          cat: "be"    },
-  { id: "spring",     label: "Spring Boot",    cat: "be"    },
-  { id: "grpc",       label: "gRPC",           cat: "be"    },
-  { id: "postgres",   label: "PostgreSQL",     cat: "db"    },
-  { id: "mongo",      label: "MongoDB",        cat: "db"    },
-  { id: "redis",      label: "Redis",          cat: "db"    },
-  { id: "elastic",    label: "Elasticsearch",  cat: "db"    },
-  { id: "docker",     label: "Docker",         cat: "infra" },
-  { id: "k8s",        label: "Kubernetes",     cat: "infra" },
-  { id: "gcp",        label: "GCP",            cat: "infra" },
-  { id: "kafka",      label: "Kafka",          cat: "msg"   },
-  { id: "nats",       label: "NATS JetStream", cat: "msg"   },
-  { id: "prometheus", label: "Prometheus",     cat: "obs"   },
-  { id: "grafana",    label: "Grafana",        cat: "obs"   },
-  { id: "otel",       label: "OpenTelemetry",  cat: "obs"   },
+  { id: "golang", label: "Go", cat: "lang" },
+  { id: "cpp", label: "C++", cat: "lang" },
+  { id: "ts", label: "TypeScript", cat: "lang" },
+  { id: "java", label: "Java", cat: "lang" },
+  { id: "python", label: "Python", cat: "lang" },
+  { id: "nodejs", label: "Node.js", cat: "be" },
+  { id: "spring", label: "Spring Boot", cat: "be" },
+  { id: "grpc", label: "gRPC", cat: "be" },
+  { id: "postgres", label: "PostgreSQL", cat: "db" },
+  { id: "mongo", label: "MongoDB", cat: "db" },
+  { id: "redis", label: "Redis", cat: "db" },
+  { id: "docker", label: "Docker", cat: "infra" },
+  { id: "k8s", label: "Kubernetes", cat: "infra" },
+  { id: "gcp", label: "GCP", cat: "infra" },
+  { id: "kafka", label: "Kafka", cat: "msg" },
+  { id: "nats", label: "NATS JetStream", cat: "msg" },
+  { id: "prometheus", label: "Prometheus", cat: "obs" },
+  { id: "grafana", label: "Grafana", cat: "obs" },
+  { id: "otel", label: "OpenTelemetry", cat: "obs" },
+  { id: "pgvector", label: "pgvector", cat: "ai" },
+  { id: "qdrant", label: "Qdrant", cat: "ai" },
+  { id: "langchain", label: "LangChain", cat: "ai" },
+  { id: "openai", label: "OpenAI API", cat: "ai" },
+  { id: "rag", label: "RAG", cat: "ai" },
+  { id: "react", label: "React", cat: "fe" },
+  { id: "nextjs", label: "Next.js", cat: "fe" },
+  { id: "tailwind", label: "Tailwind", cat: "fe" },
 ];
 
+/* Edges that cross category boundaries — the ones that actually say
+   something about how the work is put together. */
 const CROSS_LINKS: [string, string][] = [
-  ["golang",   "grpc"],
-  ["golang",   "kafka"],
-  ["golang",   "prometheus"],
-  ["ts",       "react"],
-  ["ts",       "nextjs"],
-  ["ts",       "nodejs"],
-  ["nodejs",   "postgres"],
-  ["nodejs",   "mongo"],
-  ["kafka",    "nats"],
-  ["docker",   "k8s"],
-  ["gcp",      "k8s"],
+  ["golang", "grpc"],
+  ["golang", "kafka"],
+  ["golang", "nats"],
+  ["golang", "prometheus"],
+  ["golang", "redis"],
+  ["ts", "react"],
+  ["ts", "nextjs"],
+  ["ts", "nodejs"],
+  ["nodejs", "postgres"],
+  ["nodejs", "mongo"],
+  ["kafka", "nats"],
+  ["docker", "k8s"],
+  ["gcp", "k8s"],
   ["postgres", "redis"],
-  ["grafana",  "prometheus"],
-  ["java",     "spring"],
-  ["nextjs",   "tailwind"],
+  ["grafana", "prometheus"],
+  ["otel", "prometheus"],
+  ["java", "spring"],
+  ["nextjs", "tailwind"],
+  ["cpp", "redis"],
+  /* Retrieval sits across the existing stack rather than beside it,
+     which is the point worth showing: the vector store is Postgres,
+     the orchestration is Python, and RAG is the thing the other three
+     add up to. */
+  ["postgres", "pgvector"],
+  ["python", "langchain"],
+  ["langchain", "openai"],
+  ["langchain", "qdrant"],
+  ["rag", "langchain"],
+  ["rag", "pgvector"],
+  ["rag", "openai"],
 ];
 
 type GNode = d3.SimulationNodeDatum & {
   id: string;
   label: string;
-  cat: string;
   isHub: boolean;
   r: number;
-  color: string;
 };
-
-type GLink = d3.SimulationLinkDatum<GNode> & {
-  type: "hub" | "cross";
-};
-
-type Tooltip = {
-  x: number;
-  y: number;
-  label: string;
-  cat: string;
-  color: string;
-  isHub: boolean;
-};
+type GLink = d3.SimulationLinkDatum<GNode> & { cross: boolean };
 
 export default function SkillsGraph() {
   const svgRef = useRef<SVGSVGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [tooltip, setTooltip] = useState<Tooltip | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
     const svg = d3.select(svgRef.current!);
-    const container = containerRef.current!;
+    const wrap = wrapRef.current!;
 
-    const build = () => {
-      const width = container.clientWidth;
-      const height = container.clientHeight;
+    const nodes: GNode[] = [
+      ...CATEGORIES.map((c) => ({
+        id: c.id,
+        label: c.label,
+        isHub: true,
+        r: 5,
+      })),
+      ...SKILLS.map((s) => ({
+        id: s.id,
+        label: s.label,
+        isHub: false,
+        r: 3.5,
+      })),
+    ];
+
+    const links: GLink[] = [
+      ...SKILLS.map((s) => ({ source: s.cat, target: s.id, cross: false })),
+      ...CROSS_LINKS.map(([a, b]) => ({ source: a, target: b, cross: true })),
+    ];
+
+    /* Adjacency, built once — recomputing it inside the hover handler
+       would walk every edge on each mouse move. */
+    const neighbours = new Map<string, Set<string>>();
+    nodes.forEach((n) => neighbours.set(n.id, new Set()));
+    [...SKILLS.map((s) => [s.cat, s.id] as const), ...CROSS_LINKS].forEach(
+      ([a, b]) => {
+        neighbours.get(a)?.add(b);
+        neighbours.get(b)?.add(a);
+      },
+    );
+
+    let sim: d3.Simulation<GNode, GLink> | null = null;
+
+    const draw = () => {
+      const width = wrap.clientWidth;
+      const height = wrap.clientHeight;
+      if (!width || !height) return;
 
       svg.selectAll("*").remove();
-      svg.attr("width", width).attr("height", height);
-
-      const catColorMap = Object.fromEntries(CATEGORIES.map(c => [c.id, c.color]));
-
-      const nodes: GNode[] = [
-        ...CATEGORIES.map(c => ({
-          id: c.id, label: c.label, cat: c.id,
-          isHub: true, r: 22, color: c.color,
-        })),
-        ...SKILLS.map(s => ({
-          id: s.id, label: s.label, cat: s.cat,
-          isHub: false, r: 11, color: catColorMap[s.cat],
-        })),
-      ];
-
-      const links: GLink[] = [
-        ...SKILLS.map(s => ({ source: s.cat, target: s.id, type: "hub" as const })),
-        ...CROSS_LINKS.map(([a, b]) => ({ source: a, target: b, type: "cross" as const })),
-      ];
-
-      // Pre-build adjacency before D3 mutates link objects
-      const adjacent = new Set<string>();
-      SKILLS.forEach(s => {
-        adjacent.add(`${s.cat}|${s.id}`);
-        adjacent.add(`${s.id}|${s.cat}`);
-      });
-      CROSS_LINKS.forEach(([a, b]) => {
-        adjacent.add(`${a}|${b}`);
-        adjacent.add(`${b}|${a}`);
-      });
-      const connected = (a: string, b: string) => adjacent.has(`${a}|${b}`) || a === b;
+      svg.attr("viewBox", `0 0 ${width} ${height}`);
 
       const g = svg.append("g");
 
-      // Zoom. The filter is the default one minus touch: d3.zoom claims
-      // touchstart, so on a phone a finger landing anywhere in this box panned
-      // the graph and the page underneath refused to scroll past the section.
-      // Node dragging (d3.drag, below) still works by touch.
-      svg.call(
-        d3.zoom<SVGSVGElement, unknown>()
-          .scaleExtent([0.35, 2.8])
-          .filter((ev: any) =>
-            !ev.type.startsWith("touch") && (!ev.ctrlKey || ev.type === "wheel") && !ev.button
-          )
-          .on("zoom", ev => g.attr("transform", ev.transform))
-      );
+      const linkEl = g
+        .append("g")
+        .selectAll<SVGLineElement, GLink>("line")
+        .data(links)
+        .join("line")
+        .attr("stroke", (l) => INK(l.cross ? 0.18 : 0.1))
+        .attr("stroke-width", 1);
 
-      // Simulation
-      const sim = d3.forceSimulation<GNode>(nodes)
-        .force("link", d3.forceLink<GNode, GLink>(links)
-          .id(d => d.id)
-          .distance(d => d.type === "hub" ? 75 : 110)
-          .strength(d => d.type === "hub" ? 0.65 : 0.12))
-        .force("charge", d3.forceManyBody<GNode>().strength(d => d.isHub ? -450 : -160))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collide", d3.forceCollide<GNode>().radius(d => d.r + 8))
-        .alphaDecay(0.022);
+      const nodeEl = g
+        .append("g")
+        .selectAll<SVGGElement, GNode>("g")
+        .data(nodes)
+        .join("g")
+        .attr("cursor", "pointer")
+        .on("mouseenter", (_, d) => setHovered(d.id))
+        .on("mouseleave", () => setHovered(null));
 
-      // Links
-      const linkEl = g.append("g").selectAll<SVGLineElement, GLink>("line")
-        .data(links).join("line")
-        .attr("stroke", d => d.type === "hub" ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.07)")
-        .attr("stroke-width", d => d.type === "hub" ? 1 : 0.75)
-        .attr("stroke-dasharray", d => d.type === "cross" ? "3,5" : "none");
-
-      // Nodes
-      const nodeEl = g.append("g").selectAll<SVGGElement, GNode>("g")
-        .data(nodes).join("g")
-        .attr("cursor", "grab");
-
-      // Drag
-      nodeEl.call(
-        d3.drag<SVGGElement, GNode>()
-          .on("start", (ev, d) => {
-            if (!ev.active) sim.alphaTarget(0.3).restart();
-            d.fx = d.x; d.fy = d.y;
-          })
-          .on("drag", (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
-          .on("end", (ev, d) => {
-            if (!ev.active) sim.alphaTarget(0);
-            d.fx = null; d.fy = null;
-          })
-      );
-
-      // Outer ring for hubs
-      nodeEl.filter(d => d.isHub).append("circle")
-        .attr("r", d => d.r + 6)
-        .attr("fill", "none")
-        .attr("stroke", d => d.color + "30")
-        .attr("stroke-width", 0.75)
-        .attr("stroke-dasharray", "2,4");
-
-      // Main circle
-      nodeEl.append("circle")
-        .attr("r", d => d.r)
-        .attr("fill", d => d.color + (d.isHub ? "28" : "18"))
-        .attr("stroke", d => d.color)
-        .attr("stroke-width", d => d.isHub ? 1.5 : 1)
-        .attr("opacity", 0)
-        .transition().delay((_, i) => i * 18).duration(550)
-        .attr("opacity", 1);
-
-      // Label: inside hub circles, below skill circles
-      nodeEl.append("text")
-        .text(d => d.label)
-        .attr("text-anchor", "middle")
-        .attr("dy", d => d.isHub ? "0.35em" : d.r + 13)
-        .attr("fill", d => d.isHub ? d.color : "#C3C7EF")
-        .attr("font-size", d => d.isHub ? "9.5px" : "8.5px")
-        .attr("font-family", "monospace")
-        .attr("font-weight", d => d.isHub ? "700" : "400")
-        .attr("letter-spacing", "0.03em")
-        .attr("pointer-events", "none")
-        .attr("opacity", 0)
-        .transition().delay((_, i) => i * 18 + 250).duration(400)
-        .attr("opacity", 1);
-
-      // Hover
       nodeEl
-        .on("mouseover", function (ev, d) {
-          nodeEl.transition().duration(120)
-            .style("opacity", (o: GNode) => connected(d.id, o.id) ? "1" : "0.12");
-          linkEl.transition().duration(120)
-            .attr("stroke", (l: GLink) => {
-              const s = (l.source as GNode).id ?? l.source as string;
-              const t = (l.target as GNode).id ?? l.target as string;
-              return (s === d.id || t === d.id) ? d.color : "rgba(255,255,255,0.03)";
-            })
-            .attr("stroke-width", (l: GLink) => {
-              const s = (l.source as GNode).id ?? l.source as string;
-              const t = (l.target as GNode).id ?? l.target as string;
-              return (s === d.id || t === d.id) ? 2.5 : (l.type === "hub" ? 1 : 0.75);
-            });
-          const rect = container.getBoundingClientRect();
-          setTooltip({
-            x: ev.clientX - rect.left,
-            y: ev.clientY - rect.top,
-            label: d.label, cat: d.cat, color: d.color, isHub: d.isHub,
-          });
-        })
-        .on("mousemove", ev => {
-          const rect = container.getBoundingClientRect();
-          setTooltip(p => p ? { ...p, x: ev.clientX - rect.left, y: ev.clientY - rect.top } : null);
-        })
-        .on("mouseout", () => {
-          nodeEl.transition().duration(180).style("opacity", "1");
-          linkEl.transition().duration(180)
-            .attr("stroke", (l: GLink) => l.type === "hub" ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.07)")
-            .attr("stroke-width", (l: GLink) => l.type === "hub" ? 1 : 0.75);
-          setTooltip(null);
+        .append("circle")
+        .attr("r", (d) => d.r)
+        .attr("fill", (d) => INK(d.isHub ? 1 : 0.7));
+
+      nodeEl
+        .append("text")
+        .text((d) => d.label)
+        .attr("x", (d) => d.r + 7)
+        .attr("y", 3.5)
+        .attr("fill", (d) => INK(d.isHub ? 0.9 : 0.5))
+        .attr("font-family", "var(--font-mono), monospace")
+        .attr("font-size", (d) => (d.isHub ? 11 : 10))
+        .attr("letter-spacing", "0.08em")
+        .attr("text-transform", "uppercase");
+
+      sim = d3
+        .forceSimulation<GNode>(nodes)
+        .force(
+          "link",
+          d3
+            .forceLink<GNode, GLink>(links)
+            .id((d) => d.id)
+            // Cross-category edges are given more slack so the seven
+            // clusters stay visually separate instead of collapsing
+            // into one ball.
+            .distance((l) => (l.cross ? 90 : 46))
+            .strength((l) => (l.cross ? 0.12 : 0.7)),
+        )
+        .force("charge", d3.forceManyBody().strength(-230))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collide", d3.forceCollide<GNode>().radius(34))
+        .on("tick", () => {
+          linkEl
+            .attr("x1", (l) => (l.source as GNode).x!)
+            .attr("y1", (l) => (l.source as GNode).y!)
+            .attr("x2", (l) => (l.target as GNode).x!)
+            .attr("y2", (l) => (l.target as GNode).y!);
+          nodeEl.attr("transform", (d) => `translate(${d.x},${d.y})`);
         });
 
-      // Tick
-      sim.on("tick", () => {
-        linkEl
-          .attr("x1", d => (d.source as GNode).x ?? 0)
-          .attr("y1", d => (d.source as GNode).y ?? 0)
-          .attr("x2", d => (d.target as GNode).x ?? 0)
-          .attr("y2", d => (d.target as GNode).y ?? 0);
-        nodeEl.attr("transform", d => `translate(${d.x ?? 0},${d.y ?? 0})`);
-      });
-
-      return sim;
+      // Expose for the hover effect below without re-running the sim.
+      svg.property("__linkEl", linkEl).property("__nodeEl", nodeEl);
     };
 
-    let sim = build();
+    draw();
+    const ro = new ResizeObserver(draw);
+    ro.observe(wrap);
 
-    const ro = new ResizeObserver(() => {
-      sim.stop();
-      sim = build();
-    });
-    ro.observe(container);
-
-    return () => { sim.stop(); ro.disconnect(); };
+    return () => {
+      sim?.stop();
+      ro.disconnect();
+    };
   }, []);
 
-  const catLabel = tooltip
-    ? CATEGORIES.find(c => c.id === tooltip.cat)?.label ?? ""
-    : "";
+  /* Highlighting is a separate pass so hovering never restarts the
+     simulation — the layout would jump on every mouse move. */
+  useEffect(() => {
+    const svg = d3.select(svgRef.current!);
+    const linkEl = svg.property("__linkEl") as d3.Selection<
+      SVGLineElement,
+      GLink,
+      SVGGElement,
+      unknown
+    > | null;
+    const nodeEl = svg.property("__nodeEl") as d3.Selection<
+      SVGGElement,
+      GNode,
+      SVGGElement,
+      unknown
+    > | null;
+    if (!linkEl || !nodeEl) return;
+
+    const isLinked = (l: GLink) => {
+      const s = (l.source as GNode).id ?? (l.source as unknown as string);
+      const t = (l.target as GNode).id ?? (l.target as unknown as string);
+      return s === hovered || t === hovered;
+    };
+
+    linkEl
+      .attr("stroke", (l) =>
+        hovered && isLinked(l) ? ACCENT : INK(l.cross ? 0.18 : 0.1),
+      )
+      .attr("stroke-width", (l) => (hovered && isLinked(l) ? 1.6 : 1))
+      .attr("opacity", (l) => (hovered && !isLinked(l) ? 0.35 : 1));
+
+    nodeEl
+      .select("circle")
+      .attr("fill", (d) =>
+        hovered === d.id ? ACCENT : INK(d.isHub ? 1 : 0.7),
+      );
+
+    nodeEl
+      .select("text")
+      .attr("fill", (d) =>
+        hovered === d.id ? ACCENT : INK(d.isHub ? 0.9 : 0.5),
+      )
+      .attr("opacity", (d) =>
+        hovered && hovered !== d.id && !isNeighbour(d.id) ? 0.3 : 1,
+      );
+
+    function isNeighbour(id: string) {
+      if (!hovered) return false;
+      const edges = [
+        ...SKILLS.map((s) => [s.cat, s.id] as [string, string]),
+        ...CROSS_LINKS,
+      ];
+      return edges.some(
+        ([a, b]) => (a === hovered && b === id) || (b === hovered && a === id),
+      );
+    }
+  }, [hovered]);
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 md:mt-20 px-2 md:px-4">
-      {/* Header */}
-      <div className="flex flex-col items-center mb-6">
-        <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-blue-400/50 mb-3">
-          TECH_ECOSYSTEM
+    <div>
+      <div className="mb-6 flex items-baseline justify-between gap-4">
+        <span className="micro">Tools, and what they sit beside</span>
+        <span className="micro num">
+          {SKILLS.length} nodes · {SKILLS.length + CROSS_LINKS.length} edges
         </span>
-        <h2
-          className="font-black uppercase text-ink text-center"
-          style={{
-            fontFamily: "var(--font-orbitron, monospace)",
-            fontSize: "clamp(1.6rem, 4vw, 3rem)",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          Technical Ecosystem
-        </h2>
-        <p className="mt-2 font-mono text-[10px] text-blue-300/40 tracking-wider">
-          drag · scroll to zoom · hover to explore
-        </p>
-
-        {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4">
-          {CATEGORIES.map(c => (
-            <span
-              key={c.id}
-              className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-[0.25em]"
-              style={{ color: c.color + "cc" }}
-            >
-              <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ background: c.color }} />
-              {c.label}
-            </span>
-          ))}
-        </div>
       </div>
 
-      {/* Graph — deliberately dark in BOTH themes. The D3 layer paints
-          light-grey nodes, links and labels, so a light ground would mean
-          re-tuning the whole colour model; a dark instrument panel on a white
-          page is the convention a code block or chart canvas already uses.
-          Light mode trades the outer white glow for a drop shadow so the panel
-          sits ON the page rather than glowing into it. */}
       <div
-        ref={containerRef}
-        className="relative w-full h-[480px] md:h-[580px] bg-[#0d1017] rounded-xl overflow-hidden border border-black/15 shadow-[0_18px_48px_rgba(0,0,0,0.18)] dark:border-blue-500/20 dark:shadow-[0_0_80px_-20px_rgba(255,255,255,0.20),0_0_20px_-5px_rgba(255,255,255,0.07)]"
+        ref={wrapRef}
+        className="relative h-[460px] w-full border border-rule md:h-[580px]"
       >
-        <svg ref={svgRef} className="w-full h-full select-none" />
-
-        {/* Tooltip */}
-        {tooltip && (
-          <div
-            className="pointer-events-none absolute z-10 px-3 py-2 rounded-lg bg-[#10141c] border border-blue-500/30 shadow-xl backdrop-blur-sm"
-            style={{
-              left: tooltip.x + 16,
-              top: tooltip.y - 12,
-              transform:
-                tooltip.x > (containerRef.current?.clientWidth ?? 0) - 170
-                  ? "translateX(-115%)"
-                  : undefined,
-            }}
-          >
-            <div className="font-mono font-semibold text-[11px]" style={{ color: tooltip.color }}>
-              {tooltip.label}
-            </div>
-            {!tooltip.isHub && (
-              <div className="font-mono text-[9px] text-blue-400/60 mt-0.5">
-                {catLabel}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Corner hint */}
-        <div className="absolute bottom-3 right-4 font-mono text-[8px] text-blue-500/15 uppercase tracking-widest pointer-events-none">
-          25 technologies
-        </div>
+        <svg ref={svgRef} className="h-full w-full select-none" />
       </div>
+
+      <p className="copy mt-4 text-sm">
+        Hover a node to trace what it connects to.
+      </p>
     </div>
   );
 }

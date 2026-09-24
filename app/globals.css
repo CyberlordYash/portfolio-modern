@@ -6,69 +6,133 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ══ SURFACE TOKENS ══════════════════════════════════════════════
-   One flat, hueless ladder. Every surface is a solid black step —
-   no gradients, no navy. Elevation reads through the border and the
-   step value alone, which is what keeps it looking deliberate. */
-:root {
-  --surface-0: #ffffff;
-  --surface-1: #fafafa;
-  --surface-2: #f4f4f5;
-  --surface-3: #ececee;
-  --line: rgba(0, 0, 0, 0.11);
-  --line-strong: rgba(0, 0, 0, 0.2);
-  --accent: #29292e;
+/* ══ DESIGN SYSTEM ═══════════════════════════════════════════════
+   Near-neutral ground, near-black ink, one electric blue.
 
-  /* ── Theme duo (see `ink`/`paper` in tailwind.config.ts) ──────
-     Space-separated channels so both Tailwind's rgb(… / <alpha>)
-     and hand-written rgb(var(--ink-rgb) / 0.4) work. */
-  --ink-rgb: 0 0 0;
-  --paper-rgb: 255 255 255;
+   ── The tone system ──
+   The page is not one theme. It is a sequence of full-bleed blocks
+   that alternate between a light and a dark ground, and that rhythm
+   is the main structural device on the site — it does the work that
+   borders and cards used to do.
 
-  /* HUD accent pair — dark graphite on light ground. */
-  --hud-rgb: 41 41 46;
-  --hud-dim-rgb: 83 83 91;
+   Rather than write every component twice, the ground and ink are a
+   *pair of variables that swap*. A block declares `data-tone="dark"`
+   and every descendant — including the sections not yet converted,
+   which still use text-ink and bg-paper — inverts with it. One
+   attribute, no duplicated styles, no `.dark:` variant anywhere.
 
-  /* Translucent card fill for panels floating over the WebGL layer. Light
-     mode carries more fill than dark: black text over a moving ribbon needs
-     more separation than white text does. */
-  --panel-fill: rgba(255, 255, 255, 0.62);
-
-  /* Stroke weight for the two-tone display headings (YASH / STACK / TALK …),
-     where one word is solid and its pair is hollow. The hollow half was drawn
-     for a black ground: a heavy 1.75px stroke reads as a wireframe there. On
-     white the same weight goes muddy — thick low-contrast edges colliding
-     under -0.035em tracking — so light mode takes a finer line. */
-  --heading-stroke-w: 1.1px;
-
-  /* Halo behind text floating over the WebGL layer. On white the halo
-     must be light, otherwise every label wears a dark smudge. */
-  --txt-halo:
-    0 2px 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(255, 255, 255, 0.85),
-    0 0 4px rgba(255, 255, 255, 0.9);
+   Everything else derives from those two colours by alpha, so the
+   secondary/tertiary/hairline steps stay in correct relative
+   contrast on either ground automatically. */
+:root,
+[data-tone="light"] {
+  color-scheme: light;
+  --paper-rgb: 242 242 243;
+  --ink-rgb: 11 11 12;
+  /* Blue is darkened slightly on the light ground to hold contrast
+     against it, and lifted on the dark ground below. */
+  --accent-rgb: 26 50 255;
 }
-.dark {
-  --surface-0: #000000;
-  --surface-1: #08080a;
-  --surface-2: #0e0e11;
-  --surface-3: #16161a;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.22);
-  --accent: #b7b7be;
 
-  --ink-rgb: 255 255 255;
-  --paper-rgb: 0 0 0;
+[data-tone="dark"] {
+  color-scheme: dark;
+  --paper-rgb: 12 12 13;
+  --ink-rgb: 241 241 242;
+  --accent-rgb: 104 124 255;
+}
 
-  --hud-rgb: 216 216 220;
-  --hud-dim-rgb: 145 145 154;
+/* ⚠ The `[data-tone]` in this selector is load-bearing — do not
+   collapse it back to a bare `:root`.
 
-  --panel-fill: rgba(0, 0, 0, 0.34);
+   Custom properties resolve their `var()` references at the element
+   where they are *declared*, and the result is what descendants
+   inherit. With these declared only on `:root`, `--ink` resolved once
+   against the light `--ink-rgb` and every descendant inherited that
+   frozen value. Flipping `--ink-rgb` inside a dark block then did
+   nothing at all for anything reading `--ink`, `--ink-2` or `--rule`,
+   which is why body copy and captions stayed near-black on the dark
+   sections while Tailwind's `text-ink` (which reads `--ink-rgb`
+   directly, at the point of use) inverted correctly.
 
-  --heading-stroke-w: 1.75px;
+   Repeating the block on `[data-tone]` forces it to re-derive inside
+   every tone container. */
+:root,
+[data-tone] {
+  /* ── Derived steps ───────────────────────────────────────────
+     All alpha over the current ink, so a block that flips tone gets
+     a correctly-weighted ramp for free. */
+  --paper: rgb(var(--paper-rgb));
+  --ink: rgb(var(--ink-rgb));
+  --ink-2: rgb(var(--ink-rgb) / 0.64); /* secondary copy */
+  --ink-3: rgb(var(--ink-rgb) / 0.44); /* captions, metadata */
+  --rule: rgb(var(--ink-rgb) / 0.14);
+  --rule-strong: rgb(var(--ink-rgb) / 0.3);
+  --accent: rgb(var(--accent-rgb));
 
-  --txt-halo:
-    0 2px 10px rgba(0, 0, 0, 0.95), 0 0 18px rgba(0, 0, 0, 0.85),
-    0 0 4px rgba(0, 0, 0, 0.9);
+  /* Kept under the name --mark, not --accent: shadcn's base layer
+     already owns `--accent` and reads it as `hsl(var(--accent))`, so
+     a non-HSL value there silently poisons `bg-accent`. */
+  --mark: var(--accent);
+
+  /* ── Legacy shims ────────────────────────────────────────────
+     Sections not yet converted still read these names. Pointed at
+     the tone-aware ramp so they invert with their block instead of
+     keeping a black-ground artefact. Each dies with its last call
+     site. */
+  --surface-0: transparent;
+  --surface-1: transparent;
+  --surface-2: rgb(var(--ink-rgb) / 0.04);
+  --surface-3: rgb(var(--ink-rgb) / 0.07);
+  --line: var(--rule);
+  --line-strong: var(--rule-strong);
+  --hud-rgb: var(--ink-rgb);
+  --hud-dim-rgb: var(--ink-rgb);
+  --panel-fill: transparent;
+  --heading-stroke-w: 1px;
+  --txt-halo: none;
+
+  /* ── Type scale ──────────────────────────────────────────────
+     One enormous display step, then a hard drop to reading sizes.
+     That gap is the design: it is what lets a page with four
+     elements on it read as composed rather than empty. */
+  --t-display: clamp(3.25rem, 13vw, 12rem);
+  --t-h1: clamp(2.4rem, 7vw, 6rem);
+  --t-h2: clamp(1.75rem, 4vw, 3.25rem);
+  --t-h3: clamp(1.15rem, 1.8vw, 1.5rem);
+  --t-lede: clamp(1.05rem, 1.5vw, 1.3rem);
+  --t-body: clamp(0.9375rem, 1vw, 1.0625rem);
+  --t-meta: 0.75rem;
+  --t-micro: 0.6875rem;
+
+  /* One gutter value drives every horizontal edge on the site. */
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --shell: 96rem;
+
+  /* Nothing is rounded. Overrides the shadcn 0.5rem further down —
+     unlayered declarations beat anything in @layer base. */
+  --radius: 0px;
+}
+
+/* next/font sets its variables on <body>, so aliases for the retired
+   faces have to be declared here rather than at :root to resolve.
+   Every remaining `font-Orbitron` / `var(--font-orbitron)` call site
+   across the sub-pages picks up the grotesk this way, instead of
+   needing several hundred class-name edits up front. */
+body {
+  --font-orbitron: var(--font-display);
+  --font-quicksand: var(--font-display);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* A tone block paints its own ground and carries it to its children. */
+[data-tone] {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 ::view-transition-old(root),
@@ -77,41 +141,41 @@
   mix-blend-mode: normal;
 }
 
+/* Ink-on-paper inverted, not a tinted wash — a marker stripe. */
 ::selection {
-  background: rgb(var(--ink-rgb) / 0.16);
-  color: rgb(var(--ink-rgb));
+  background: var(--ink);
+  color: var(--paper);
 }
 
 /* ── Scroll affordance ─────────────────────────────────────────
-   The whole site is a scroll narrative, so the bar stays — styled
-   down to a thin graphite rail rather than removed outright. */
+   The whole site is a scroll narrative, so the bar stays — a 1px
+   rail that matches the hairline language instead of a grey slug. */
 html,
 #main-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgb(var(--ink-rgb) / 0.18) transparent;
+  scrollbar-color: var(--rule-strong) transparent;
 }
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--ink-rgb) / 0.16);
-  border: 3px solid transparent;
+  background: var(--rule-strong);
+  border: 4px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--ink-rgb) / 0.34);
+  background: var(--ink-2);
   background-clip: content-box;
 }
 
-/* ── Keyboard focus ───────────────────────────────────────────
-   There was no visible focus state anywhere in the app. */
+/* ── Keyboard focus ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid rgb(var(--hud-rgb));
-  outline-offset: 2px;
+  outline: 2px solid var(--mark);
+  outline-offset: 3px;
 }
 :focus:not(:focus-visible) {
   outline: none;
@@ -130,9 +194,9 @@ html,
   letter-spacing: 0.24em;
   text-transform: uppercase;
   /* Inverted against the page: the link is a callout, not a surface. */
-  color: rgb(var(--paper-rgb));
-  background: rgb(var(--ink-rgb));
-  border: 1px solid rgb(var(--paper-rgb) / 0.28);
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
   transition: transform 0.18s ease-out;
 }
 .skip-link:focus {
@@ -157,78 +221,418 @@ html,
   }
 }
 
-/* ── HUD corner ticks ─────────────────────────────────────────
-   Was `.dark`-scoped, which left light mode with no corner ticks at
-   all. Driven off --ink-rgb now so the same marks read in both themes. */
-.hud-corners::before,
-.hud-corners::after {
+/* ══════════════════════════════════════════════════════════════════
+   EDITORIAL PRIMITIVES
+   The entire vocabulary of the redesign. Every section is built from
+   these six ideas: a shell, a hairline, a display face, a serif aside,
+   mono marginalia, and a numbered section head. If something on the
+   page can't be made out of these, it doesn't belong on the page.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Page measure. One shell, one gutter — the left edge of the site is
+   a single vertical line from the header to the footer, which is most
+   of what makes a grid read as a grid. */
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Hairline. Always 1px, always --rule, never a radius. */
+.rule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  flex-shrink: 0;
+}
+.rule-strong {
+  background: var(--rule-strong);
+}
+
+/* ── The display face ─────────────────────────────────────────
+   Sentence case, light weight, tracked tight. The earlier pass set
+   this uppercase at weight 600, which read as a poster shouting;
+   dropping to 300–400 and sentence case is most of what makes large
+   type feel calm rather than loud. Line-height under 1 is what locks
+   multi-line display type into a single block of texture.
+
+   `.display-wide` is the edge-to-edge variant: one word, uppercase,
+   sized in vw so it always meets both margins. Used once, in the
+   hero, and nowhere else. */
+.display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--t-h1);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+.display-wide {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Section headings — grotesk, sentence case, still tight. */
+.h2 {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--t-h2);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.h3 {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--t-h3);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* ── The one voice of contrast ────────────────────────────────
+   A true italic of the same grotesk, used for the second line of a
+   two-line heading. Roman states, italic answers — that call-and-
+   response is the whole personality of the type system, and it costs
+   nothing but a font style.
+
+   The previous pass used a separate serif family for this. Same
+   grotesk italic is quieter and reads as one voice inflecting rather
+   than two typefaces arguing. */
+.accent-italic {
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  color: var(--accent);
+}
+.ink-italic {
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+}
+
+/* ── Marginalia ───────────────────────────────────────────────
+   Mono, uppercase, wide-tracked. Dates, indices, counts, captions.
+   Tabular figures so columns of numbers line up down the page. */
+.meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.meta-ink {
+  color: var(--ink);
+}
+.micro {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-micro);
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Reading copy. Capped measure — the one rule of editorial layout
+   that matters more than any other. */
+.lede {
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  max-width: 34ch;
+}
+.copy {
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+/* ── Numbered section head ────────────────────────────────────
+   (01) — TITLE, hairline running the full measure beneath. Repeated
+   at the top of every section; the running count is the site's spine. */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ink);
+}
+.section-head__num {
+  color: var(--mark);
+}
+
+/* ── Editorial link ───────────────────────────────────────────
+   The rule wipes in from the left and out to the right; no colour
+   change, no glow. This replaces every glitch/ripple/shimmer hover
+   in the old build. */
+.elink {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.elink::after {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: -0.15em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hud-corners::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid rgb(var(--ink-rgb) / 0.34);
-  border-left: 1px solid rgb(var(--ink-rgb) / 0.34);
+.elink:hover::after,
+.elink:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
 }
+
+/* Permanently-ruled link, for lists where the underline is the row. */
+.elink-on::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+  background: var(--rule-strong);
+}
+.elink-on:hover::after {
+  background: currentColor;
+}
+
+/* ── Type reveal ──────────────────────────────────────────────
+   Display lines rise out of a clipped band. The only entrance
+   animation in the system — applied to headlines, nothing else. */
+.reveal-band {
+  display: block;
+  overflow: hidden;
+  /* Descenders and tight line-heights get shaved by overflow:hidden;
+     the padding gives them room and the negative margin takes the
+     space back out of the flow. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   COMPONENTS
+   The column grid, marquee and spec table from the previous pass are
+   gone — they made the page denser and more ruled, which was the
+   opposite of the brief. What replaces them is quieter and leans on
+   scale, whitespace and imagery instead of lines.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Boxed section number ─────────────────────────────────────
+   A small outlined numeral in the accent, followed by an em dash and
+   a wide-tracked label. Opens every section; the running count is the
+   spine of the document. */
+.sec-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.85rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-micro);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Big ruled list ───────────────────────────────────────────
+   Rows set at heading scale with meta right-aligned, separated by
+   hairlines. Carries the project and experience indexes: at this size
+   a list stops being a list and becomes the page's main typography,
+   which is how a section with six entries fills a screen honestly. */
+.blist {
+  border-top: 1px solid var(--rule);
+}
+.blist__row {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-block: clamp(1.1rem, 2.4vw, 2rem);
+  border-bottom: 1px solid var(--rule);
+  transition: padding-left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The row itself slides on hover — no colour change, no underline.
+   Movement is the feedback. */
+@media (hover: hover) and (min-width: 768px) {
+  .blist__row:hover {
+    padding-left: 1.25rem;
+  }
+}
+.blist__num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-micro);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.blist__title {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--t-h2);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Media block ──────────────────────────────────────────────
+   Imagery is meant to carry the page now, so the frame around it is
+   almost nothing: a hairline, a fixed aspect box, and a slow scale on
+   hover. `overflow: hidden` plus a scaling child is what gives the
+   image somewhere to move without nudging the layout. */
+.media {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: rgb(var(--ink-rgb) / 0.04);
+}
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) {
+  .media-hover:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* ── Outlined button ──────────────────────────────────────────
+   The sub-pages carried the same 200-character class string on every
+   control — a rounded pill with a translucent fill, a blur, and four
+   hover overrides, repeated a dozen times. One utility replaces all
+   of them: a hairline box that resolves to ink on hover, matching the
+   link language used everywhere else. */
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid var(--rule);
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-micro);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: transparent;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+.btn-line:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ── Status bar ───────────────────────────────────────────────
+   A line of mono marginalia pinned to the foot of a full-height
+   block: caption left, index and scroll cue right. */
+.statusbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* A step below the standard micro size. The bar carries the most text
+   of anything in the hero — four focus areas, the clock, the frame
+   counter and four profile links — and at the full 11px it competed
+   with the statement above it instead of sitting under it.
+
+   Applied to the whole bar rather than just the caption: mixing two
+   sizes across one row of marginalia reads as an accident. The
+   tighter tracking keeps it legible at the smaller size. */
+.statusbar .micro {
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+}
+
+/* ── Solid mark ───────────────────────────────────────────────
+   A filled accent rectangle, used as punctuation. */
+.block-mark {
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* ── Hero mark offset ─────────────────────────────────────────
+   The tribar's canvas is centred on the hero, but it needs to be
+   centred on the *gap between the two words* — and those are not the
+   same point.
+
+   "SACHAN" is six characters and "YASH" is four. In a centred flex
+   row those extra two characters push the gap's midpoint left of the
+   container's midpoint by half their width, so a canvas centred on
+   the container lands to the right of the gap and sits on the S.
+
+   The correction is half that width difference, expressed against the
+   same clamp that sizes the name so the two stay locked together at
+   every viewport instead of drifting apart.
+
+   0.60em rather than the geometric 0.55em: the tribar's own mass sits
+   slightly right of its canvas centre — the third arm projects toward
+   the viewer on that side — so the extra 0.05em compensates for the
+   object, not the type. Measured off a render, not derived.
+
+   Desktop only: below lg the name stacks and the mark is genuinely
+   centred, so no correction applies.
+
+   The clamp below must stay identical to the one sizing the name in
+   Hero.tsx — it is the same measurement expressed twice, and if the
+   two drift, the mark slides off the gap at whichever widths they
+   disagree on. */
+@media (min-width: 1024px) {
+  .mark-offset {
+    transform: translateX(calc(clamp(2.4rem, 13.5vw, 18rem) * -0.6));
+  }
+}
+
+/* ══ LEGACY SHIMS ════════════════════════════════════════════════
+   Classes the un-converted sections still carry. Flattened to the new
+   language rather than left as-is, so those sections degrade to plain
+   ruled boxes instead of black glass floating on a white page. Each
+   rule is deleted with its last call site. */
+.hud-corners::before,
 .hud-corners::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1px solid rgb(var(--ink-rgb) / 0.34);
-  border-right: 1px solid rgb(var(--ink-rgb) / 0.34);
+  content: none;
 }
-
-/* ── Glass card ───────────────────────────────────────────────
-   Was a navy vertical gradient; now one flat step. The inset
-   hairline does the lifting a gradient used to fake.
-
-   Fill kept thin (0.44 dark / 0.55 light) so the aurora reads through
-   the Hero panels. The blur compensates: at a thin fill it is the blur,
-   not the opacity, that keeps moving ribbons from competing with small
-   mono text. Light mode needs slightly more fill — black text over a
-   moving ribbon needs more separation than white text does. */
 .navy-glass {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 18px 48px rgba(0, 0, 0, 0.12);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
 }
-.dark .navy-glass {
-  background: rgba(8, 8, 10, 0.44);
-  backdrop-filter: blur(14px) saturate(0.85);
-  -webkit-backdrop-filter: blur(14px) saturate(0.85);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    0 18px 48px rgba(0, 0, 0, 0.6);
-}
-
-/* ══ PANEL SYSTEM ════════════════════════════════════════════════
-   Sections each rolled their own border/bg/blur combo (bg-black/40,
-   /35, /30, /60, #111111, #fafafa…). These give one surface language
-   so the page reads as a single instrument, not six. */
 .panel {
   position: relative;
-  background: var(--surface-1);
-  border: 1px solid var(--line);
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease;
+  background: transparent;
+  border: 1px solid var(--rule);
+  transition: border-color 0.25s ease;
 }
-.panel-flush {
-  background: var(--surface-0);
-}
+.panel-flush,
 .panel-raised {
-  background: var(--surface-2);
+  background: transparent;
 }
 .panel-interactive:hover {
-  border-color: var(--line-strong);
-  background: var(--surface-2);
+  border-color: var(--ink);
 }
 .panel-head {
   display: flex;
@@ -236,18 +640,15 @@ html,
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--rule);
 }
-
-/* Hairline accent along a panel's top edge — replaces the coloured
-   2px gradient strips that used to differentiate cards. */
 .panel-accent::before {
   content: "";
   position: absolute;
   inset-inline: 0;
   top: 0;
   height: 1px;
-  background: var(--line-strong);
+  background: var(--rule-strong);
   z-index: 10;
 }
 
@@ -298,52 +699,17 @@ html,
   }
 }
 
-/* ── Floating Nav: glitch text ──────────────────────────────── */
+/* ── Retired: glitch text + click ripple ──────────────────────
+   Two infinite keyframe loops and a 14× scaling ripple, both of them
+   pure noise in a print language. The class names survive only so the
+   markup that still carries them renders as ordinary ink. */
 .glitch-text {
   position: relative;
-  color: #53535b;
   display: inline-block;
-}
-.dark .glitch-text {
-  color: #b7b7be;
-}
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-.glitch-text::before {
-  color: #ffffff;
-  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
-  animation: glitch-before 4s infinite steps(1);
-}
-.glitch-text::after {
-  color: #6d6d76;
-  clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
-  animation: glitch-after 4s infinite steps(1);
-}
-@keyframes glitch-before {
-  0%,89%   { opacity: 0; transform: translate(0); }
-  90%      { opacity: 1; transform: translate(-2px, 1px); }
-  92%      { opacity: 1; transform: translate(2px, -1px); }
-  94%,100% { opacity: 0; transform: translate(0); }
-}
-@keyframes glitch-after {
-  0%,91%   { opacity: 0; transform: translate(0); }
-  92%      { opacity: 1; transform: translate(2px, 1px); }
-  94%      { opacity: 1; transform: translate(-2px, 0); }
-  96%,100% { opacity: 0; transform: translate(0); }
-}
-
-/* ── Floating Nav: click ripple ─────────────────────────────── */
-@keyframes ripple-expand {
-  0%   { transform: scale(1);  opacity: 0.6; }
-  100% { transform: scale(14); opacity: 0; }
+  color: var(--ink-2);
 }
 .animate-ripple {
-  animation: ripple-expand 0.65s ease-out forwards;
+  display: none;
 }
 @layer base {
   :root {
@@ -441,8 +807,9 @@ html,
     @apply font-bold text-4xl md:text-5xl text-center;
   }
 
+  /* Was a near-black plate. On paper it becomes the inset step. */
   .black-gradient {
-    background: #0e0e11;
+    background: var(--paper-2);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -456,29 +823,25 @@ html,
 }
 
 /* ── Heading treatments ───────────────────────────────────────────
-   These were three navy text-gradients. Gradient-clipped text also
-   defeats subpixel antialiasing, so flattening them to solid ink is
-   both a look change and a legibility win. The names are kept so no
-   call site has to change. */
-.dark .heading-gradient-dark,
-.dark .heading-gradient-blue,
-.dark .heading-gradient-multicolor {
+   Once three navy text-gradients, then two theme-scoped overrides.
+   Now: ink. Gradient-clipped text also defeats subpixel antialiasing,
+   so flattening them is a legibility win as well as a look change.
+   The names are kept so no call site has to change yet. */
+.heading-gradient-dark,
+.heading-gradient-blue,
+.heading-gradient-multicolor {
   background-image: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
   -webkit-text-fill-color: currentColor;
-  color: #ffffff;
+  color: var(--ink);
 }
-.dark .heading-gradient-multicolor {
-  color: #d8d8dc;
+.heading-gradient-multicolor {
+  color: var(--ink-2);
 }
 
-/* Was a navy radial wash; now a flat plate one step off the ground. */
 .xbox-bg {
-  background: var(--surface-1);
-}
-.dark .xbox-bg {
-  background: #08080a;
+  background: var(--paper-2);
 }
 
 /* LED glow keyframes for Approach phase cards */

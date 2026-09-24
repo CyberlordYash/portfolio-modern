@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import { cn } from "@/utils/cn";
 
-// Components
 import Approach from "@/components/Approach";
 import Certificates from "@/components/Certificates";
 import Experience from "@/components/Experience";
@@ -12,504 +12,566 @@ import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import RecentProjects from "@/components/RecentProjects";
 import Skills from "@/components/Skills";
-import { RevealText, RevealChars, DrawLine, FadeReveal } from "@/components/ui/ScrollReveal";
-import ThemeClock from "@/components/ThemeClock";
 import TerminalSnake from "./TerminalSnake";
-import dynamic from "next/dynamic";
+import { Mask, Rise, EASE } from "@/components/ui/Reveal";
 
 const SkillsGraph = dynamic(() => import("./SkillsGraph"), { ssr: false });
-const MarketWorld = dynamic(() => import("@/components/three/MarketWorld"), { ssr: false });
 
-// `short` is only for the mobile bar, where each cell is ~1/5 of the screen —
-// "Experience" doesn't fit at any legible size, the rest do.
+/* ══════════════════════════════════════════════════════════════════
+   Gone from this file: the fixed WebGL market world, the parametric
+   SVG HUD frame with its notch geometry and scroll-traced stroke, the
+   altitude telemetry readout, the solar theme dial, the full-viewport
+   dot grid, and the inner `overflow-y: auto` scroll container.
+
+   That last removal is the one that mattered most — putting the page
+   back on native document scroll is what allows Lenis to drive it,
+   and Lenis is most of the "polish" in this pass.
+
+   What structures the page now is the tone rhythm: full-bleed blocks
+   that alternate light and dark ground. Grouped rather than striped —
+   six blocks across nine sections — so it reads as chapters instead
+   of a zebra.
+══════════════════════════════════════════════════════════════════ */
+
+const MASTHEAD_H = 60;
+
+/* ── Chrome colours, resolved in JS ────────────────────────────────
+   The nav is the one element on the page that must be legible at
+   every scroll position, so it does not go through the CSS token
+   chain the sections use. That chain has two failure modes the rest
+   of the page can absorb and the nav cannot: `text-accent` compiles
+   to `hsl(var(--accent))` because shadcn's base layer owns `--accent`
+   and expects HSL, which makes it an invalid colour; and the derived
+   `--ink-*` steps only re-resolve inside a `[data-tone]` container,
+   so any ordering surprise leaves the header reading stale values.
+
+   Concrete hex, switched off the observed tone, has neither problem. */
+const CHROME = {
+  light: { fg: "#0B0B0C", dim: "rgba(11,11,12,0.52)", mark: "#1A32FF" },
+  dark: { fg: "#F1F1F2", dim: "rgba(241,241,242,0.55)", mark: "#687CFF" },
+} as const;
+
 const links = [
-  { n: "01", label: "Home",       short: "Home",     href: "#home"       },
-  { n: "02", label: "Experience", short: "Work",     href: "#experience" },
-  { n: "03", label: "About",      short: "About",    href: "#skills"     },
-  { n: "04", label: "Projects",   short: "Projects", href: "#projects"   },
-  { n: "05", label: "Contact",    short: "Contact",  href: "#contact"    },
+  { label: "Work", href: "#work" },
+  { label: "Projects", href: "#projects" },
+  { label: "Stack", href: "#stack" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
-// Mobile nav sits on the bottom edge. If this changes, update the matching
-// `pb-[calc(56px+…)]` on the scroll content below so the footer still clears it.
-const MOBILE_NAV_H = 56;
-
-// Shared entrance animation for all non-hero sections.
-// once:true + opacity-only — re-triggering transforms on full-screen
-// sections caused scroll jank over the WebGL background.
-const cardEnter = {
-  initial: { opacity: 0 },
-  whileInView: { opacity: 1 },
-  transition: { duration: 0.5, ease: "easeOut" },
-  viewport: { once: true, amount: 0.05 },
-};
-
-function TopNav() {
-  const [active, setActive] = useState("home");
-
-  useEffect(() => {
-    const root = document.getElementById("main-scroll");
-    if (!root) return;
-
-    // Track the section crossing the viewport's vertical center — works for
-    // sections taller than the screen (threshold-based detection never fires
-    // for those, since 30% of a 3-screen section is never visible at once).
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); });
-      },
-      { root, threshold: 0, rootMargin: "-45% 0px -50% 0px" },
-    );
-    links.forEach((l) => {
-      const el = document.getElementById(l.href.replace("#", ""));
-      if (el) obs.observe(el);
-    });
-
-    return () => obs.disconnect();
-  }, []);
-
-  const go = (id: string) => (e: React.MouseEvent) => {
+function go(id: string) {
+  return (e: React.MouseEvent) => {
     e.preventDefault();
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
+}
+
+/* Which nav entry is current, and what tone is passing under the
+   masthead. Two observers, because they answer different questions:
+   the first wants the section occupying the middle of the screen, the
+   second wants whatever is directly beneath a 60px-tall fixed bar. */
+function usePageState() {
+  const [active, setActive] = useState("");
+  const [tone, setTone] = useState<"light" | "dark">("light");
+  /* The element currently under the masthead — tracked as a *node*,
+     not as a tone value. See the MutationObserver below for why. */
+  const [toneEl, setToneEl] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    // Threshold detection never fires for sections taller than the
+    // viewport, so the band is defined by rootMargin instead.
+    const activeObs = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { threshold: 0, rootMargin: "-45% 0px -50% 0px" },
+    );
+    links.forEach((l) => {
+      const el = document.getElementById(l.href.slice(1));
+      if (el) activeObs.observe(el);
+    });
+
+    /* A thin band pinned just under the masthead. Whichever tone block
+       crosses it owns the masthead's colours.
+
+       Observes `[data-tone-block]`, NOT `[data-tone]` — the masthead
+       and the mobile index both carry `data-tone` themselves (that is
+       how they get their own palette), so querying the bare attribute
+       made the nav an input to the detector that decides the nav's
+       colour. Marking the page's tone containers with a separate
+       attribute keeps the chrome out of its own measurement. */
+    const toneObs = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) setToneEl(e.target as HTMLElement);
+        }),
+      { threshold: 0, rootMargin: `-${MASTHEAD_H}px 0px -92% 0px` },
+    );
+    document
+      .querySelectorAll("[data-tone-block]")
+      .forEach((el) => toneObs.observe(el));
+
+    return () => {
+      activeObs.disconnect();
+      toneObs.disconnect();
+    };
+  }, []);
+
+  /* ── Why this is not just read in the observer above ──────────────
+     Intersection callbacks fire when intersection *changes*. The hero
+     is a 240vh track whose tone flips from light to dark partway down
+     — and it stays under the masthead the entire time it does so. No
+     intersection boundary is crossed, so no callback fires, and the
+     masthead kept whatever tone it last happened to read. Scrolling
+     down turned it white and scrolling back up left it white, because
+     nothing ever told it otherwise.
+
+     So the observer now records *which node* owns the masthead, and a
+     MutationObserver watches that node's `data-tone` for changes. The
+     two answer different questions: which region, and what tone. */
+  useEffect(() => {
+    if (!toneEl) return;
+
+    const read = () => {
+      const t = toneEl.dataset.tone;
+      if (t === "dark" || t === "light") setTone(t);
+    };
+
+    read(); // the region may already be mid-flip when it takes over
+    const mo = new MutationObserver(read);
+    mo.observe(toneEl, { attributes: true, attributeFilter: ["data-tone"] });
+    return () => mo.disconnect();
+  }, [toneEl]);
+
+  return { active, tone };
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────
+   Transparent, so the tone blocks read as full-bleed and nothing is
+   clipped behind a bar. Its colours are driven from the observer
+   rather than `mix-blend-mode: difference`: blending would invert the
+   accent underline into an arbitrary colour, and it fails silently
+   (white on white) the moment an ancestor creates a stacking context. */
+function Masthead({
+  active,
+  tone,
+  menuOpen,
+  onMenuToggle,
+}: {
+  active: string;
+  tone: "light" | "dark";
+  menuOpen: boolean;
+  onMenuToggle: () => void;
+}) {
+  const c = CHROME[tone];
 
   return (
-    <>
-      {/* ── Desktop: floating top-right rail ──
-          No plate behind the links — the nav sits directly on the black
-          ground. The old radial wash existed to blend a navy tint that no
-          longer exists, and any fill here just reads as a floating grey box. */}
-      <nav className="hidden md:block fixed top-2 right-3 xl:top-3 xl:right-8 z-50">
-        <div
-          id="nav-pill-box"
-          className="relative flex items-center gap-0.5 px-1.5 py-1"
-        >
-          {links.map((link) => {
-            const id = link.href.replace("#", "");
-            const isActive = active === id;
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-current={isActive ? "true" : undefined}
-                onClick={go(id)}
-                className={cn(
-                  "relative grid min-h-[40px] place-items-center px-3 lg:px-3.5 font-mono uppercase text-[10px] lg:text-[10.5px] tracking-[0.16em] transition-colors duration-200 whitespace-nowrap",
-                  isActive ? "text-ink" : "text-ink/40 hover:text-ink/85",
-                )}
-              >
-                {link.label}
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-desktop"
-                    className="absolute inset-x-2.5 bottom-1 h-px bg-ink"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
-              </a>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* ── Mobile: bottom bar ──
-          The top-right rail collided with the Hero's own header strip and was
-          out of thumb reach, so two of the five sections were simply dropped
-          from it. Down here all five fit, nothing overlaps, and the targets
-          are full-height rather than 10px of text. */}
-      <nav
-        className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-ink/[0.14] bg-paper/90 backdrop-blur-xl"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    <header
+      className="fixed inset-x-0 top-0 z-50 transition-colors duration-500"
+      style={{ height: MASTHEAD_H, background: "transparent" }}
+    >
+      <div
+        className="shell flex h-full items-center justify-between gap-6"
+        style={{ color: c.fg }}
       >
-        <div className="grid grid-cols-5" style={{ height: MOBILE_NAV_H }}>
-          {links.map((link) => {
-            const id = link.href.replace("#", "");
-            const isActive = active === id;
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-current={isActive ? "true" : undefined}
-                onClick={go(id)}
-                className={cn(
-                  "relative flex flex-col items-center justify-center gap-1 transition-colors duration-200",
-                  isActive ? "text-ink" : "text-ink/40",
-                )}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-mobile"
-                    className="absolute inset-x-3 top-0 h-px bg-ink"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
-                <span className="font-mono text-[7px] tracking-[0.22em] text-current opacity-45">
-                  {link.n}
-                </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] whitespace-nowrap">
-                  {link.short}
-                </span>
-              </a>
-            );
-          })}
-        </div>
-      </nav>
-    </>
+        <a href="#home" onClick={go("home")} className="group flex items-baseline">
+          <span className="font-mono text-sm font-bold lowercase tracking-tight">
+            yash sachan
+          </span>
+          <span className="ml-1 text-[0.6rem]" style={{ color: c.mark }}>
+            ●
+          </span>
+        </a>
+
+        <nav className="hidden md:block">
+          <ul className="flex items-center gap-1">
+            {links.map((link) => {
+              const id = link.href.slice(1);
+              const isActive = active === id;
+              return (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={go(id)}
+                    aria-current={isActive ? "true" : undefined}
+                    className="relative block px-3 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-colors duration-300"
+                    style={{ color: isActive ? c.fg : c.dim }}
+                  >
+                    <span style={{ color: c.mark }}>/</span>
+                    {link.label}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-mark"
+                        className="absolute inset-x-3 bottom-1 h-px"
+                        style={{ background: c.mark }}
+                        transition={{ type: "spring", stiffness: 420, damping: 38 }}
+                      />
+                    )}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <a
+          href="mailto:yashsachan321@gmail.com"
+          className="elink hidden font-mono text-[0.6875rem] uppercase tracking-[0.14em] md:block"
+        >
+          Email ↗
+        </a>
+
+        {/* ── Mobile trigger ───────────────────────────────────────
+            Replaces the bottom tab bar the previous build used. Two
+            rules that cross into an X — the state of the menu is the
+            state of the icon, so nothing else has to announce it.
+            44px square: the minimum comfortable touch target. */}
+        <button
+          type="button"
+          onClick={onMenuToggle}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          className="relative -mr-2 grid h-11 w-11 place-items-center md:hidden"
+        >
+          <motion.span
+            className="absolute block h-px w-6"
+            style={{ background: c.fg }}
+            animate={{ y: menuOpen ? 0 : -4, rotate: menuOpen ? 45 : 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+          <motion.span
+            className="absolute block h-px w-6"
+            style={{ background: c.fg }}
+            animate={{ y: menuOpen ? 0 : 4, rotate: menuOpen ? -45 : 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </button>
+      </div>
+    </header>
   );
 }
 
-/* Parametric border frame — computed in real pixels so corners stay perfectly
-   round (no aspect distortion). Notch on the top-right (near nav) and bottom-left.
-   Desktop only: below md the frame's deep top-right region ate ~68px of a phone
-   screen to wrap a nav that no longer lives there. */
-function buildFramePath(
-  w: number,
-  h: number,
-  pill: { left: number; bottom: number } | null,
-) {
-  const m = 12;   // margin from edges
-  const r = 22;   // corner radius
-  const nW = 48;  // notch diagonal horizontal span
-  const left = m;
-  const right = w - m;
-  const topShallow = m;        // top edge y on the shallow (left) side
-  // Deep top-right region wraps the measured nav pill (so the notch tucks just left of it)
-  const topDeep = pill ? Math.min(pill.bottom + 12, h * 0.3) : m + 50;
-  const topNotch = pill
-    ? Math.max(left + r, pill.left - nW - 16)
-    : Math.max(left + r, right - 560);
-  const botShallow = h - m;    // bottom edge y on the shallow (right) side
-  const botDeep = h - m - 34;  // bottom edge y on the deep (left) side
-  const botNotch = w * 0.34;   // bottom slope rises toward the left
+/* ── Mobile index ──────────────────────────────────────────────────
+   The only nav in thumb reach, and all five entries fit here where a
+   top rail would have had to drop two. */
+/* ── Mobile menu ───────────────────────────────────────────────────
+   A full-screen overlay, not a bottom tab bar.
 
-  return [
-    `M ${left + r},${topShallow}`,                       // after top-left corner (left = shallow)
-    `L ${topNotch},${topShallow}`,                       // top shallow segment
-    `L ${topNotch + nW},${topDeep}`,                     // slope down to the deep right region
-    `L ${right - r},${topDeep}`,                         // top deep segment (right, holds the pill)
-    `Q ${right},${topDeep} ${right},${topDeep + r}`,     // top-right corner
-    `L ${right},${botShallow - r}`,                      // right edge
-    `Q ${right},${botShallow} ${right - r},${botShallow}`, // bottom-right corner
-    `L ${botNotch + nW},${botShallow}`,                  // bottom shallow segment (right)
-    `L ${botNotch},${botDeep}`,                          // slope up to the deep left region
-    `L ${left + r},${botDeep}`,                          // bottom deep segment (left)
-    `Q ${left},${botDeep} ${left},${botDeep - r}`,       // bottom-left corner
-    `L ${left},${topShallow + r}`,                       // left edge
-    `Q ${left},${topShallow} ${left + r},${topShallow}`, // top-left corner
-    "Z",
-  ].join(" ");
-}
+   The tab bar it replaces cost 52px of every screen permanently — on
+   a 700px-tall phone that is 7% of the viewport surrendered to five
+   words, in a design whose whole argument is scale and emptiness. An
+   overlay costs nothing until it is asked for.
 
-function LocalTime() {
-  const [time, setTime] = useState("--:--");
-  // Camera flight altitude — mirrors the WebGL rig's descent (y: 88 → 13)
-  const [alt, setAlt] = useState(88);
-
+   Set to the dark ground regardless of page tone: a menu is a mode,
+   and it should feel like the page has been replaced rather than
+   tinted. */
+function MobileMenu({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  /* Lock the page while the overlay is up, or the content behind it
+     scrolls under your finger. */
   useEffect(() => {
-    const tick = () =>
-      setTime(new Date().toLocaleTimeString("en-US", {
-        hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata",
-      }));
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const el = document.getElementById("main-scroll");
-    if (!el) return;
-    const onScroll = () => {
-      const max = el.scrollHeight - el.clientHeight;
-      const p = max > 0 ? el.scrollTop / max : 0;
-      setAlt(Math.round(88 - p * 75));
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
     };
-    onScroll();
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [open]);
+
+  // Escape closes it — the trigger scrolls out of reach once open.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   return (
-    // Hidden on mobile — it sat exactly where the bottom nav now lives, and
-    // the frame notch that used to carve room for it is desktop-only too.
-    <div className="hidden md:flex fixed bottom-3 left-5 z-50 pointer-events-none select-none items-end gap-5">
-      <div>
-        <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
-          LOCAL TIME
+    <AnimatePresence>
+      {open && (
+        <motion.nav
+          id="mobile-menu"
+          data-tone="dark"
+          className="fixed inset-0 z-40 flex flex-col justify-end px-6 pb-16 pt-24 md:hidden"
+          style={{ background: "#0C0C0D" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <ul className="flex flex-col">
+            {links.map((link, i) => {
+              const id = link.href.slice(1);
+              return (
+                <li
+                  key={link.href}
+                  className="overflow-hidden border-b"
+                  style={{ borderColor: "rgba(241,241,242,0.16)" }}
+                >
+                  <motion.a
+                    href={link.href}
+                    onClick={(e) => {
+                      go(id)(e);
+                      onClose();
+                    }}
+                    className="flex items-baseline gap-4 py-5"
+                    style={{ color: "#F1F1F2" }}
+                    initial={{ y: "110%" }}
+                    animate={{ y: "0%" }}
+                    exit={{ y: "110%" }}
+                    transition={{
+                      duration: 0.65,
+                      delay: 0.06 + i * 0.05,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    <span
+                      className="font-mono text-[0.6875rem]"
+                      style={{ color: CHROME.dark.mark }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <span
+                      className="display"
+                      style={{ fontSize: "clamp(2rem, 11vw, 3.5rem)" }}
+                    >
+                      {link.label}
+                    </span>
+                  </motion.a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <motion.a
+            href="mailto:yashsachan321@gmail.com"
+            className="mt-12 font-mono text-[0.6875rem] uppercase tracking-[0.18em]"
+            style={{ color: "rgba(241,241,242,0.6)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+          >
+            yashsachan321@gmail.com ↗
+          </motion.a>
+        </motion.nav>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ── Section head ──────────────────────────────────────────────────
+   Boxed numeral, em dash, wide-tracked label — then a two-line
+   heading where the second line turns italic. Repeated at the top of
+   every section; the running count is the spine of the document. */
+function SectionHead({
+  n,
+  label,
+  line1,
+  line2,
+  note,
+}: {
+  n: string;
+  label: string;
+  line1: string;
+  line2: string;
+  note?: string;
+}) {
+  return (
+    <div className="mb-14 md:mb-20">
+      <Rise>
+        <div className="flex items-center gap-3">
+          <span className="sec-num">{n}</span>
+          <span className="micro">— {label}</span>
         </div>
-        <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-          IST {time}
-        </div>
-      </div>
-      <div className="hidden md:block">
-        <div className="font-mono text-[7px] tracking-[0.35em] uppercase text-black/35 dark:text-white/35">
-          ALTITUDE
-        </div>
-        <div className="font-mono text-[10px] tracking-[0.18em] text-black dark:text-white">
-          <span className="text-[#91919A]">▾</span> {String(alt).padStart(3, "0")}M
-        </div>
+      </Rise>
+
+      <div className="mt-7 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+        <h2 className="display" style={{ fontSize: "var(--t-h1)" }}>
+          <Mask delay={0.05}>{line1}</Mask>
+          <Mask delay={0.14}>
+            <span className="ink-italic">{line2}</span>
+          </Mask>
+        </h2>
+        {note && (
+          <Rise delay={0.2}>
+            <span className="micro">{note}</span>
+          </Rise>
+        )}
       </div>
     </div>
   );
 }
 
-function HudFrame() {
-  const [size, setSize] = useState({ w: 0, h: 0 });
-  const [pill, setPill] = useState<{ left: number; bottom: number } | null>(null);
-  const progressRef = useRef<SVGPathElement>(null);
-
-  useEffect(() => {
-    const measure = () => {
-      setSize({ w: window.innerWidth, h: window.innerHeight });
-      const el = document.getElementById("nav-pill-box");
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        setPill({ left: rect.left, bottom: rect.bottom });
-      }
-    };
-    measure();
-    // Re-measure once after layout settles (fonts/pill width) and on resize
-    const t = setTimeout(measure, 150);
-    window.addEventListener("resize", measure);
-
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  // Scroll progress traced along the frame itself — the green stroke fills
-  // the border clockwise from the top-left corner as the journey descends.
-  // Driven imperatively (no re-render per scroll frame).
-  useEffect(() => {
-    const el = document.getElementById("main-scroll");
-    if (!el) return;
-    const onScroll = () => {
-      const max = el.scrollHeight - el.clientHeight;
-      const p = max > 0 ? el.scrollTop / max : 0;
-      progressRef.current?.setAttribute("stroke-dashoffset", String(1 - p));
-    };
-    onScroll();
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [size]);
-
-  // Desktop-only chrome (see buildFramePath).
-  if (!size.w || !size.h || size.w < 768) return null;
-
-  const frame = buildFramePath(size.w, size.h, pill);
-
+function Section({
+  id,
+  children,
+  className = "",
+}: {
+  id?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <svg
-      className="fixed inset-0 z-40 w-full h-full pointer-events-none"
-      xmlns="http://www.w3.org/2000/svg"
-      width={size.w}
-      height={size.h}
-      viewBox={`0 0 ${size.w} ${size.h}`}
+    <section
+      id={id}
+      className={cn("shell scroll-mt-24 py-24 md:py-36", className)}
     >
-      {/* Opaque mask — fills the margin OUTSIDE the frame so content can't
-          bleed past it. fill/stroke are CSS properties, so driving them from
-          `style` lets the theme variables resolve without reading the theme
-          in JS (which would need a mount guard to avoid a hydration flash). */}
-      <path
-        d={`M 0,0 H ${size.w} V ${size.h} H 0 Z ${frame}`}
-        fillRule="evenodd"
-        style={{ fill: "rgb(var(--paper-rgb))" }}
-      />
-      {/* Frame stroke */}
-      <path
-        d={frame}
-        fill="none"
-        strokeWidth="1"
-        vectorEffect="non-scaling-stroke"
-        style={{ stroke: "rgb(var(--ink-rgb) / 0.26)" }}
-      />
-      {/* Scroll progress — a trace filling the frame as you descend */}
-      <path
-        ref={progressRef}
-        d={frame}
-        pathLength={1}
-        fill="none"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeDasharray="1"
-        strokeDashoffset="1"
-        strokeOpacity="0.85"
-        vectorEffect="non-scaling-stroke"
-        style={{
-          stroke: "rgb(var(--hud-dim-rgb))",
-          filter: "drop-shadow(0 0 4px rgb(var(--ink-rgb) / 0.6))",
-        }}
-      />
-    </svg>
+      {children}
+    </section>
+  );
+}
+
+/* A full-bleed tone block. Sets the ground for everything inside it,
+   including the sections not yet converted — they use text-ink and
+   bg-paper, which are tone-aware, so they invert for free. */
+function Tone({
+  tone,
+  children,
+}: {
+  tone: "light" | "dark";
+  children: React.ReactNode;
+}) {
+  /* `data-tone-block` marks this as a *measurable* region for the
+     masthead's tone detector. `data-tone` alone would not do: the nav
+     carries that attribute too, and would end up measuring itself. */
+  return (
+    <div data-tone={tone} data-tone-block className="relative">
+      {children}
+    </div>
   );
 }
 
 export default function Home() {
+  const { active, tone } = usePageState();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <main className="relative min-h-screen bg-paper text-black dark:text-slate-200 font-Quicksand selection:bg-blue-500/30">
+    <div className="relative">
+      {/* While the menu is open the masthead is sitting on the
+          overlay, not on the page — and the overlay is always dark.
+          Feeding it the page's tone left the close button rendering
+          near-black on a near-black ground: present, focusable, and
+          completely invisible. The menu's own tone wins whenever it
+          is up. */}
+      <Masthead
+        active={active}
+        tone={menuOpen ? "dark" : tone}
+        menuOpen={menuOpen}
+        onMenuToggle={() => setMenuOpen((o) => !o)}
+      />
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      {/* Living market world — fixed WebGL layer behind everything, in both
-          themes (it composites to a light ground in light mode). */}
-      <MarketWorld />
-      <ThemeClock />
-
-      {/* The three navy aurora blobs that sat here are gone. On a black ground
-          they were near-invisible yet each forced a full-viewport 150px blur
-          composite every frame — cost with no image. Depth now comes from the
-          WebGL layer and the surface steps instead. */}
-
-      <TopNav />
-      <HudFrame />
-      <LocalTime />
-
-      {/* Main scroll container.
-          dvh, not vh: on mobile browsers 100vh is the *expanded* viewport, so
-          with the URL bar showing the last ~60px of every screen was cut off.
-          overflow-x-hidden stops any wide child from producing a sideways pan. */}
-      {/* Transparent in BOTH themes. This used to be `bg-white` in light mode,
-          which painted an opaque sheet over the fixed WebGL layer and hid the
-          aurora completely. The ground now comes from <main> + the canvas. */}
-      <div
-        id="main-scroll"
-        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-transparent"
-      >
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#9ea5e40c_1px,transparent_1px),linear-gradient(to_bottom,#9ea5e40c_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:50px_50px] pointer-events-none" />
-
-        <div className="relative z-10 w-full">
-          {/* Bottom padding clears the mobile nav bar; desktop keeps none. */}
-          <div className="max-w-full mx-auto px-2 sm:px-3 md:px-2 pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
-
-            {/* ── Card 1: Hero ── no entrance fade (landing view) */}
-            <section
-              id="home"
-              className="md:min-h-screen pt-4"
-            >
-              <Hero />
-            </section>
-
-            {/* ── Card 2: Experience ── (no scale transform: would break sticky stacking) */}
-            <section id="experience" className="px-2 md:px-0">
-              <Experience />
-            </section>
-
-            {/* ── Card 3: Skills ── */}
-            <motion.section
-              id="skills"
-              className="md:min-h-screen relative"
-              {...cardEnter}
-            >
-              <div className="flex flex-col items-center mb-8 md:mb-10 pt-8">
-                <FadeReveal delay={0} className="hud-corners relative flex items-center gap-2 border border-black/15 dark:border-[#91919A]/30 bg-white/75 dark:bg-[#08080A]/70 dark:shadow-[0_0_20px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 py-1.5 mb-5 backdrop-blur-sm">
-                  <motion.div
-                    animate={{ opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="w-1.5 h-1.5 bg-black dark:bg-[#D8D8DC] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                  />
-                  <RevealChars
-                    text="SYSTEM_RUNTIME"
-                    className="font-mono text-[9px] uppercase tracking-[0.4em] text-black dark:text-white"
-                    delay={0.1}
-                  />
-                </FadeReveal>
-                <h2
-                  className="font-black uppercase leading-none text-center whitespace-nowrap"
-                  style={{
-                    fontFamily: "var(--font-orbitron)",
-                    fontSize: "clamp(1.6rem, 6.5vw, 5.5rem)",
-                    letterSpacing: "-0.025em",
-                  }}
-                >
-                  <span className="text-black dark:text-white/90">
-                    <RevealText text="TECHNICAL" delay={0.18} />
-                  </span>{" "}
-                  <span
-                    className="text-black dark:text-white/85"
-                    style={{ WebkitTextStrokeWidth: "var(--heading-stroke-w)", WebkitTextStrokeColor: "currentColor", WebkitTextFillColor: "transparent" }}
-                  >
-                    <RevealText text="STACK" delay={0.3} />
-                  </span>
-                </h2>
-                <div className="flex items-center gap-3 mt-3">
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-r dark:from-transparent dark:to-[#91919A]/60" />
-                  <FadeReveal delay={0.6}>
-                    <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-black/45 dark:text-[#D8D8DC]/70">
-                      19 Tools · 6 Domains
-                    </span>
-                  </FadeReveal>
-                  <DrawLine delay={0.55} className="h-px w-12 bg-black/20 dark:bg-gradient-to-l dark:from-transparent dark:to-[#91919A]/60" />
-                </div>
-              </div>
-              <div className="relative mx-auto max-w-5xl">
-                {/* Side rails — frame the centered module, let the living background breathe */}
-                <div className="pointer-events-none absolute inset-y-0 -left-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#91919A]/30" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
-                </div>
-                <div className="pointer-events-none absolute inset-y-0 -right-5 hidden md:flex flex-col items-center justify-center gap-2" aria-hidden>
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-[#91919A]/30" />
-                  <span className="w-1.5 h-1.5 rotate-45 border border-black/25 dark:border-[#91919A]/50" />
-                </div>
-
-                <Skills />
-                <div className="px-2 md:px-0 mt-4">
-                  <TerminalSnake />
-                </div>
-              </div>
-            </motion.section>
-
-            {/* ── Card 5: Architecture / Grid ── */}
-            <motion.section
-              id="architecture"
-              className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[2.5rem] border border-hud-dim/20 bg-paper/55 backdrop-blur-sm shadow-[0_18px_48px_rgba(0,0,0,0.10)] dark:border-[#91919A]/15 dark:bg-gradient-to-b dark:from-[#0B0B0E]/60 dark:to-black/50 dark:backdrop-blur-none dark:shadow-[0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
-              {...cardEnter}
-            >
-              <Grid />
-            </motion.section>
-
-            {/* ── Card 6: Projects ── */}
-            <motion.section
-              id="projects"
-              className="md:min-h-screen"
-              {...cardEnter}
-            >
-              <RecentProjects />
-            </motion.section>
-
-            {/* ── Card 7: Certificates ── */}
-            <motion.section
-              id="certificates"
-              className="md:min-h-screen flex flex-col justify-center"
-              {...cardEnter}
-            >
-              <Certificates />
-            </motion.section>
-
-            {/* ── Card 8: Approach ── */}
-            <motion.section
-              id="approach"
-              className="md:min-h-screen flex flex-col justify-center pb-10"
-              {...cardEnter}
-            >
-              <Approach />
-            </motion.section>
-
-            {/* ── Card 9: Skills Graph ── */}
-            <motion.section
-              id="skills-graph"
-              className="md:min-h-screen flex flex-col justify-center px-4 md:px-0"
-              {...cardEnter}
-            >
-              <SkillsGraph />
-            </motion.section>
-
-            {/* ── Footer (no snap) ── */}
-            <Footer />
-
-          </div>
+      {/* No bottom padding any more — the tab bar that needed it has
+          been replaced by an overlay, giving every mobile screen back
+          52px it was permanently surrendering. */}
+      <div>
+        {/* ── Hero ────────────────────────────────────────────────
+            Owns its own tone: it starts light and scroll-converts to
+            dark across a 240vh track. No <Tone> wrapper — the hero
+            animates the tone tokens directly. */}
+        <div id="home">
+          <Hero />
         </div>
+
+        {/* ── Block A · dark ──────────────────────────────────────
+            Must be dark, and must follow the hero immediately. The
+            hero's track ends on a dark ground; anything light here
+            would snap the page back to white the instant the sticky
+            stage unpins, and throw away the whole conversion.
+
+            Projects belong in this block for a second reason:
+            screenshots are bright objects, so they read as lit panels
+            against dark rather than pale rectangles on a pale page. */}
+        <Tone tone="dark">
+          {/* No SectionHead: the hero resolves "01 — Experience" onto
+              its dark stage as the tribar dissolves, so this section
+              picks up mid-sentence and the entries simply continue in
+              the black. Rendering it again here showed the heading
+              twice, a screen apart. */}
+          <Section id="work" className="!pt-0">
+            <Experience />
+          </Section>
+
+          {/* No SectionHead here — this section's heading shares a row
+              with the project index, so RecentProjects renders it. */}
+          <Section id="projects">
+            <RecentProjects />
+          </Section>
+        </Tone>
+
+        {/* ── Block B · light ─────────────────────────────────── */}
+        <Tone tone="light">
+          <Section id="stack">
+            <SectionHead
+              n="03"
+              label="Toolkit"
+              line1="What I reach"
+              line2="for first."
+              /* No count here. Skills renders one derived from its own
+                 data; a second, hand-typed copy just goes stale — this
+                 one already said 19 tools when there were 20. */
+              note="Go · distributed systems · retrieval"
+            />
+            <Skills />
+            <div className="mt-20">
+              <SkillsGraph />
+            </div>
+            <div className="mt-20">
+              <TerminalSnake />
+            </div>
+          </Section>
+        </Tone>
+
+        {/* ── Block D · dark ──────────────────────────────────── */}
+        <Tone tone="dark">
+          <Section id="about">
+            <SectionHead
+              n="04"
+              label="Background"
+              line1="Briefly,"
+              line2="about me."
+              note="Greater Noida → Bengaluru"
+            />
+            <Grid />
+          </Section>
+        </Tone>
+
+        {/* ── Block E · light ─────────────────────────────────── */}
+        <Tone tone="light">
+          <Section id="credentials">
+            <SectionHead
+              n="05"
+              label="Credentials"
+              line1="Paper that"
+              line2="backs it up."
+            />
+            <Certificates />
+          </Section>
+
+          <Section id="approach">
+            <SectionHead
+              n="06"
+              label="Method"
+              line1="How I go"
+              line2="about it."
+            />
+            <Approach />
+          </Section>
+        </Tone>
+
+        {/* ── Block F · dark ──────────────────────────────────── */}
+        <Tone tone="dark">
+          <div id="contact">
+            <Footer />
+          </div>
+        </Tone>
       </div>
-    </main>
+    </div>
   );
 }
