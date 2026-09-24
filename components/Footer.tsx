@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Mask, Rise } from "@/components/ui/Reveal";
+import ContactForm from "@/components/ContactForm";
 
 /* ══════════════════════════════════════════════════════════════════
    CONTACT / FOOTER
@@ -58,6 +59,15 @@ const Footer = () => {
             that have outgrown their original design.
           </p>
         </Rise>
+      </div>
+
+      {/* ══ Form ══════════════════════════════════════════════════
+          A second way in, not a replacement for the email link below
+          it — some visitors would rather type a message right here
+          than open their mail client. Delivered through Netlify
+          Forms; see components/ContactForm.tsx for how. */}
+      <div className="mt-14 md:mt-16">
+        <ContactForm />
       </div>
 
       {/* ══ Email ═════════════════════════════════════════════════

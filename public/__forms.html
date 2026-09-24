@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<!--
+  Netlify Forms detection stub — not a page anyone visits.
+
+  Netlify registers a form by scanning the *static* HTML in the build
+  output for a `data-netlify="true"` form and its field names. This
+  site's contact form is a React component, submitted via fetch()
+  rather than a native form POST, so there's no guarantee the markup
+  Netlify's build step sees matches what the interactive version
+  renders (client component output, hydration, conditional rendering
+  can all get in the way). Netlify's own documentation for JS
+  frameworks is to keep a plain, static copy of the form here — this
+  file exists purely so the crawler has something unambiguous to
+  register the "contact" form and its fields against. The real form
+  lives in components/ContactForm.tsx and must keep its field `name`
+  attributes identical to this one, or Netlify will silently reject
+  submissions with fields it doesn't recognise.
+-->
+<body>
+  <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <textarea name="message"></textarea>
+    <input type="text" name="bot-field" />
+  </form>
+</body>
+</html>
