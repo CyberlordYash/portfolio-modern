@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Mask, Rise } from "@/components/ui/Reveal";
-import ContactForm from "@/components/ContactForm";
+// import ContactForm from "@/components/ContactForm"; // disabled — see note below
 
 /* ══════════════════════════════════════════════════════════════════
    CONTACT / FOOTER
@@ -61,14 +61,17 @@ const Footer = () => {
         </Rise>
       </div>
 
-      {/* ══ Form ══════════════════════════════════════════════════
-          A second way in, not a replacement for the email link below
-          it — some visitors would rather type a message right here
-          than open their mail client. Delivered through Netlify
-          Forms; see components/ContactForm.tsx for how. */}
-      <div className="mt-14 md:mt-16">
+      {/* ══ Form — disabled ═══════════════════════════════════════
+          Not working on the deployed Netlify site yet (the form
+          notification likely isn't wired up on the Netlify dashboard
+          side, or the static-detection file in public/__forms.html
+          isn't being picked up as expected — not diagnosed further
+          per your last message). Component and detection file are
+          both still on disk; uncomment this block to bring it back
+          once that's sorted. */}
+      {/* <div className="mt-14 md:mt-16">
         <ContactForm />
-      </div>
+      </div> */}
 
       {/* ══ Email ═════════════════════════════════════════════════
           Sized in vw so it runs near the full measure — the single
