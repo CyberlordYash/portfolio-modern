@@ -67,35 +67,39 @@ const RecentProjects = () => {
           <div className="sticky top-28">
             <Head />
 
-            {/* Framed, with the screenshot inset rather than bleeding
-                to the border. Project shots are all different shapes
-                and tints; matting them inside a shared frame makes
-                six mismatched images read as one set, the same
-                reasoning as the certificate grid.
+            {/* Fixed 16:9 frame — sizing this to each project's own
+                image ratio was tried and reverted. It removed the crop
+                and the padding, but the box then resized on every
+                hover, and everything below it (caption, tags) jumped
+                with it. A frame that moves the layout around it is a
+                worse trade than a little letterboxing.
 
-                object-contain, not object-cover: the six screenshots
-                range from a 1:1 square (fileshare) to 2.2:1 (brainbytes,
-                flowchat, mydrive), and `cover` inside a fixed 4:3 box
-                was cropping the widest ones down to well under half
-                their actual width. 16:9 is the box now — close to the
-                middle of that range, so no image is at either extreme
-                — and `contain` guarantees nothing is ever cut off,
-                whatever ratio a future screenshot comes in at; the
-                worst case is empty space in the frame, never a missing
-                piece of the picture. */}
-            <div className="mt-12 border border-rule bg-paper2 p-6 xl:p-8">
-              <div className="relative aspect-[16/9] w-full overflow-hidden">
-                {/* Crossfade. Overlapping the two absolutely lets one
-                    dissolve into the other; unmounting the outgoing
-                    image first would flash the empty frame. */}
-                <AnimatePresence initial={false}>
+                So: one fixed shape for all six, `object-contain` so
+                nothing is ever cropped regardless of the source ratio,
+                and no explicit padding — the earlier "black border"
+                was that padding class stacked on top of the letterbox,
+                not the letterbox itself. A hairline border is the only
+                framing now. */}
+            <div className="relative mt-12 aspect-[16/9] w-full overflow-hidden border border-rule">
+                {/* Crossfade — `mode="wait"` is load-bearing here, not
+                    decoration. The default AnimatePresence mode mounts
+                    the incoming image before the outgoing one finishes
+                    exiting, so sweeping the pointer across a few rows
+                    quickly left several images absolutely stacked
+                    mid-fade at once — the "stuck, on top of each other"
+                    glitch. `wait` forces the exit to finish before the
+                    next entry starts, so exactly one image is ever on
+                    screen. Shortened to 0.3s (from 0.55s) to keep a
+                    fast hover feeling responsive now that a full swap
+                    is two sequential animations instead of one. */}
+                <AnimatePresence mode="wait">
                   <motion.div
                     key={current.id}
                     className="absolute inset-0"
                     initial={{ opacity: 0, scale: 1.04 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.55, ease: EASE }}
+                    transition={{ duration: 0.3, ease: EASE }}
                   >
                     <Image
                       src={current.img}
@@ -107,7 +111,6 @@ const RecentProjects = () => {
                     />
                   </motion.div>
                 </AnimatePresence>
-              </div>
             </div>
 
             {/* Caption tracks the preview, so the image is never
@@ -252,11 +255,11 @@ const RecentProjects = () => {
                   </p>
                 </Rise>
 
-                {/* 16:9 + object-contain — same reasoning as the
-                    desktop preview: these screenshots range from 1:1 to
-                    2.2:1, and a fixed box with object-cover was cropping
-                    the widest ones by nearly half. */}
-                <Curtain delay={0.06} className="media media-hover mt-5 bg-paper2 p-3">
+                {/* Same fixed 16:9 + object-contain as the desktop
+                    preview — see the note there for why a per-image
+                    box was tried and reverted (it moved the layout
+                    around it on every hover). */}
+                <Curtain delay={0.06} className="media media-hover mt-5">
                   <div className="relative aspect-[16/9] w-full">
                     <Image
                       src={p.img}

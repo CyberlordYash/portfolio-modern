@@ -516,7 +516,18 @@ html,
   border: 1px solid var(--rule);
   background: rgb(var(--ink-rgb) / 0.04);
 }
-.media img {
+/* `:where(img)` rather than a bare `img` — a bare descendant selector
+   has specificity (0,1,1), which beats a single Tailwind utility class
+   like `.object-contain` (0,1,0) regardless of source order. That made
+   `object-fit: cover` here win silently over any `object-contain`
+   placed on an image inside `.media`, no matter which one came later
+   in the stylesheet. `:where()` always contributes zero specificity,
+   so this rule sets the *default* fit and an explicit utility class on
+   the image can still override it, which is the behaviour every call
+   site assumed was already true. The certificate grid was relying on
+   exactly that override and was silently getting `cover` instead of
+   the `contain` it asked for until this was caught. */
+.media :where(img) {
   width: 100%;
   height: 100%;
   object-fit: cover;
