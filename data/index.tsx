@@ -178,13 +178,16 @@ export const projects = [
   },
   {
     id: 4,
-    title: "Summarize It",
-    des: "Paste any URL and get the page back as a short, readable summary, powered by GPT-4.",
-    img: "/summarise.jpg",
-    tag: "Tool",
-    year: "2023",
-    tech: ["Node.js", "Express", "OpenAI", "MongoDB"],
-    link: "https://dev-yash-summarizeit.netlify.app/",
+    title: "My Drive",
+    des: "A self-hosted Drive clone — Google OAuth login, and storage that runs on local disk or S3 behind one pluggable interface, so the same code works with zero cloud account via MinIO in dev.",
+    img: "/mydrive.png",
+    tag: "Storage platform",
+    // Inferred from the stack, not confirmed with you: Node 24,
+    // Express 5, React 19 and Tailwind v4 all shipped in 2024–2025,
+    // which makes 2025 the safe read — say if that's wrong.
+    year: "2025",
+    tech: ["Node.js", "Express", "TypeScript", "MongoDB", "React", "Docker"],
+    link: "https://mydrive.yashsachan.com/drive",
   },
 ];
 

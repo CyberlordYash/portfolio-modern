@@ -486,7 +486,19 @@ html,
 .blist__title {
   font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
-  font-size: var(--t-h2);
+  /* A dedicated size rather than the shared --t-h2 token: that token
+     peaks at 3.25rem, which read oversized for a list row sitting
+     beside a small index number and meta text on a laptop screen —
+     "Order Matching System" at that size overpowered the row around
+     it. This clamp scales the same way but tops out lower.
+
+     Brought down a second time: at 2.75rem, most laptop widths
+     (1280–1920px) were still hitting the cap and landing around
+     41–44px — barely smaller than before. Lowering the cap to
+     2.25rem *and* the vw factor to 2.4 (not just the cap alone)
+     is what actually moves the size across that whole range rather
+     than just the ceiling a few widths happen to reach. */
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
   line-height: 1;
   letter-spacing: -0.035em;
   flex: 1;

@@ -78,9 +78,24 @@ const Hero = () => {
 
   /* ── The tone timeline ──────────────────────────────────────── */
   const GROUND = [0.28, 0.72];
-  const paperRgb = useRgbTrack(scrollYProgress, GROUND, [242, 242, 243], [12, 12, 13]);
-  const inkRgb = useRgbTrack(scrollYProgress, GROUND, [11, 11, 12], [241, 241, 242]);
-  const accentRgb = useRgbTrack(scrollYProgress, GROUND, [26, 50, 255], [104, 124, 255]);
+  const paperRgb = useRgbTrack(
+    scrollYProgress,
+    GROUND,
+    [242, 242, 243],
+    [12, 12, 13],
+  );
+  const inkRgb = useRgbTrack(
+    scrollYProgress,
+    GROUND,
+    [11, 11, 12],
+    [241, 241, 242],
+  );
+  const accentRgb = useRgbTrack(
+    scrollYProgress,
+    GROUND,
+    [26, 50, 255],
+    [104, 124, 255],
+  );
   const bg = useMotionTemplate`rgb(${paperRgb})`;
 
   /* The object's growth, tone crossing and dissolve all live inside
@@ -196,11 +211,29 @@ const Hero = () => {
             proportionally identical from a phone to a widescreen
             instead of drifting apart or colliding. */}
         <div className="relative flex flex-1 items-center">
+          {/* ── The real heading ─────────────────────────────────────
+              Exactly one h1 on the page, holding the plain name with
+              no layout tricks. It exists purely for crawlers and
+              screen readers.
+
+              Both blocks below render "Yash Sachan" too, but as
+              `<h1>` elements each — one hidden below lg, the other
+              above it. CSS visibility doesn't remove an element from
+              the accessibility tree or the DOM search engines parse,
+              so that was two h1s at every viewport, just with one of
+              them display:none. A page's primary heading signal
+              wants to be singular; this makes it so without changing
+              which markup is visible. */}
+          <h1 className="sr-only">Yash Sachan</h1>
+
           {/* ── Landscape: the two halves flank the mark ───────────
               Sized so the pair plus the gap very nearly meet both
               gutters; each half is nudged inward so its innermost
-              letter tucks under the object. */}
-          <motion.h1
+              letter tucks under the object. aria-hidden: the name is
+              already announced by the h1 above; this is decorative
+              typography repeating it. */}
+          <motion.p
+            aria-hidden="true"
             className="display-wide relative z-0 hidden w-full items-center justify-center lg:flex"
             /* The mark stays ~470px wide, so the *type* has to make
                room for it rather than the other way round.
@@ -259,7 +292,7 @@ const Hero = () => {
             >
               Sachan
             </motion.span>
-          </motion.h1>
+          </motion.p>
 
           {/* ── Portrait: the halves stack and the mark sits over them ─
               Side by side, each half would be ~5vw and the whole
@@ -270,8 +303,11 @@ const Hero = () => {
 
               Opposed alignment (left, then right) preserves the
               diagonal of the landscape version, so the mark still has
-              a seam to sit across. */}
-          <motion.h1
+              a seam to sit across. aria-hidden for the same reason as
+              the landscape block above: the h1 already announced the
+              name once. */}
+          <motion.p
+            aria-hidden="true"
             className="display-wide relative z-0 flex w-full flex-col lg:hidden"
             /* The gap is what makes the stacked version work. At the
                0.82 line-height `display-wide` sets, the two lines sit
@@ -309,7 +345,7 @@ const Hero = () => {
             >
               Sachan
             </motion.span>
-          </motion.h1>
+          </motion.p>
         </div>
 
         {/* ══ The mark ═════════════════════════════════════════════
@@ -354,7 +390,6 @@ const Hero = () => {
             <br />
             <span className="accent-italic">and correct while they do.</span>
           </motion.p>
-
         </motion.div>
 
         {/* ══ Hand-off: the Work heading, on the dark ══════════════
@@ -396,7 +431,7 @@ const Hero = () => {
               hero offers.
 
               Glyph *and* label, not glyph alone: GitHub and LinkedIn
-              read instantly, LeetCode and CodeChef do not, and those
+              read instantly, L`eetCode and CodeChef do not, and those
               two carry the competitive-programming record. The label
               also gives each link a real hit area rather than a 15px
               square. */}
@@ -413,7 +448,6 @@ const Hero = () => {
             <span className="micro flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 md:flex-nowrap">
               <span className="min-w-0 md:truncate">
                 {THREADS.join("  ·  ")}
-                <span className="hidden xl:inline"> — Zanskar Securities</span>
               </span>
               {/* Mounted-only: a server-rendered clock is wrong the
                   instant it reaches the client. */}

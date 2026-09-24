@@ -71,9 +71,20 @@ const RecentProjects = () => {
                 to the border. Project shots are all different shapes
                 and tints; matting them inside a shared frame makes
                 six mismatched images read as one set, the same
-                reasoning as the certificate grid. */}
+                reasoning as the certificate grid.
+
+                object-contain, not object-cover: the six screenshots
+                range from a 1:1 square (fileshare) to 2.2:1 (brainbytes,
+                flowchat, mydrive), and `cover` inside a fixed 4:3 box
+                was cropping the widest ones down to well under half
+                their actual width. 16:9 is the box now — close to the
+                middle of that range, so no image is at either extreme
+                — and `contain` guarantees nothing is ever cut off,
+                whatever ratio a future screenshot comes in at; the
+                worst case is empty space in the frame, never a missing
+                piece of the picture. */}
             <div className="mt-12 border border-rule bg-paper2 p-6 xl:p-8">
-              <div className="relative aspect-[4/3] w-full overflow-hidden">
+              <div className="relative aspect-[16/9] w-full overflow-hidden">
                 {/* Crossfade. Overlapping the two absolutely lets one
                     dissolve into the other; unmounting the outgoing
                     image first would flash the empty frame. */}
@@ -91,7 +102,7 @@ const RecentProjects = () => {
                       alt={`${current.title} — screenshot`}
                       fill
                       sizes="(max-width: 1024px) 100vw, 560px"
-                      className="object-cover"
+                      className="object-contain"
                       priority={active === 0}
                     />
                   </motion.div>
@@ -141,9 +152,19 @@ const RecentProjects = () => {
                     {String(i + 1).padStart(2, "0")}/
                   </span>
 
-                  <h3 className="blist__title">
-                    <Mask delay={i * 0.04}>{p.title}</Mask>
-                  </h3>
+                  {/* Plain text, no mask reveal.
+
+                      The reveal clips the title inside an
+                      overflow-hidden band and animates it up from 108%
+                      — so if `whileInView` never fires, the title is
+                      invisible while still occupying full height. That
+                      is exactly what happened to row 01: an empty
+                      row with the number and meta stranded at the top.
+
+                      A project title is the primary content of this
+                      list. It must not depend on an animation firing.
+                      The row already fades in with the section. */}
+                  <h3 className="blist__title">{p.title}</h3>
 
                   <span
                     className="micro hidden shrink-0 text-right transition-opacity duration-300 xl:block"
@@ -231,14 +252,18 @@ const RecentProjects = () => {
                   </p>
                 </Rise>
 
-                <Curtain delay={0.06} className="media media-hover mt-5">
-                  <div className="relative aspect-[4/3] w-full">
+                {/* 16:9 + object-contain — same reasoning as the
+                    desktop preview: these screenshots range from 1:1 to
+                    2.2:1, and a fixed box with object-cover was cropping
+                    the widest ones by nearly half. */}
+                <Curtain delay={0.06} className="media media-hover mt-5 bg-paper2 p-3">
+                  <div className="relative aspect-[16/9] w-full">
                     <Image
                       src={p.img}
                       alt={`${p.title} — screenshot`}
                       fill
                       sizes="100vw"
-                      className="object-cover"
+                      className="object-contain"
                       priority={i === 0}
                     />
                   </div>
