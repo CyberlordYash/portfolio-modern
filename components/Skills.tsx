@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Mask, Rise, Draw } from "@/components/ui/Reveal";
+import AIEngineering from "@/components/AIEngineering";
 
 /* ══════════════════════════════════════════════════════════════════
    STACK
@@ -24,6 +25,8 @@ import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 
 const Skills = () => (
   <div className="flex flex-col gap-24 md:gap-32">
+    <AIEngineering />
+
     {/* ══ Core ═══════════════════════════════════════════════════ */}
     <div className="grid grid-cols-1 gap-x-10 gap-y-14 md:grid-cols-2">
       {CORE.map((c, i) => (

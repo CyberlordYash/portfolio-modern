@@ -55,7 +55,7 @@ const Tribar3D = dynamic(() => import("@/components/three/Tribar3D"), {
    `rgb(var(--ink-rgb) / <alpha>)`, which is what lets every derived
    step keep its alpha through the transition. */
 function useRgbTrack(
-  p: MotionValue<number>,
+  p: MotionValue<number>,``
   range: number[],
   from: [number, number, number],
   to: [number, number, number],
