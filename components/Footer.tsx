@@ -174,6 +174,7 @@ const Footer = () => {
 
 const PAGES = [
   { label: "Writing", href: "/blogs", note: "Public" },
+  { label: "Typing test", href: "/typing", note: "Public" },
   { label: "Worklog", href: "/worklog", note: "Private" },
   { label: "Gym", href: "/gym", note: "Private" },
 ];

@@ -30,6 +30,7 @@ Sub-pages:
 - `/blogs` — public blog feed with admin-gated write/delete
 - `/worklog` — private work journal (password-protected)
 - `/gym` — gym tracking (password-protected)
+- `/typing` — public Monkeytype-style typing speed test (`components/TypingTest.tsx`), SEO-indexed with FAQ/WebApplication JSON-LD
 
 ### Auth System
 
