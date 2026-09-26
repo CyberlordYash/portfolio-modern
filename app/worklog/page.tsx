@@ -1,15 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  BriefcaseBusiness,
-  LoaderCircle,
-  LockKeyhole,
-  LogOut,
-  ShieldCheck,
-} from "lucide-react";
+import { Mask, Rise } from "@/components/ui/Reveal";
+import { ErrorLine, FIELD, PageFoot, SOLID, TopBar } from "@/components/ui/Folio";
 import WorkJournal from "@/components/WorkJournal";
 
 export default function WorklogPage() {
@@ -45,7 +38,10 @@ export default function WorklogPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      if (!res.ok) { setHasError(true); return; }
+      if (!res.ok) {
+        setHasError(true);
+        return;
+      }
       setIsUnlocked(true);
       setPassword("");
     } catch {
@@ -56,151 +52,92 @@ export default function WorklogPage() {
   };
 
   const handleLogout = async () => {
-    try { await fetch("/api/admin/auth", { method: "DELETE" }); } catch { /* ignored */ }
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+    } catch {
+      /* ignored */
+    }
     setIsUnlocked(false);
     setPassword("");
     setHasError(false);
   };
 
   return (
-    <main className="relative min-h-screen bg-paper text-ink">
-      
-      <div className="shell relative z-10 py-16 md:py-24">
-        {/* Header */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              href="/"
-              className="btn-line"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Portfolio
-            </Link>
+    <main className="min-h-screen bg-paper text-ink">
+      <div className="shell py-10 md:py-14">
+        <TopBar>
+          {isUnlocked ? (
+            <button type="button" onClick={handleLogout} className="elink micro text-ink">
+              Lock ×
+            </button>
+          ) : (
+            <span className="micro">Private</span>
+          )}
+        </TopBar>
 
-            {isUnlocked && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="btn-line"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Lock
-              </button>
-            )}
-          </div>
-
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-ink/20 bg-ink/[0.05] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-ink">
-            <BriefcaseBusiness className="h-3 w-3" />
-            Worklog
-          </div>
-        </div>
-
-        {/* Content */}
         {isCheckingAuth ? (
-          <div className="flex min-h-[60vh] items-center justify-center">
-            <div className="text-center">
-              <LoaderCircle className="mx-auto h-6 w-6 animate-spin text-ink" />
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-ink/40">
-                Verifying session...
-              </p>
-            </div>
-          </div>
+          <p className="micro py-40 text-center">Verifying session…</p>
         ) : isUnlocked ? (
           <WorkJournal onUnauthorized={() => setIsUnlocked(false)} />
         ) : (
-          /* Lock screen */
-          <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden rounded-2xl border border-rule bg-transparent">
-            {/* Decorations */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgb(var(--ink-rgb) / 0.04),transparent_50%),radial-gradient(circle_at_70%_70%,rgb(var(--ink-rgb) / 0.04),transparent_50%)]" />
-            <div className="pointer-events-none absolute -right-8 top-8 opacity-[0.06]">
-              <LockCircuitSvg className="h-52 w-52 text-ink" />
-            </div>
-            <div className="pointer-events-none absolute -left-6 bottom-8 opacity-[0.05]">
-              <LockCircuitSvg className="h-36 w-36 text-ink" />
-            </div>
-
-            <div className="relative z-10 w-full max-w-md px-6 py-10">
-              {/* Lock icon */}
-              <div className="mb-8 flex justify-center">
-                <div
-                  className="flex h-20 w-20 items-center justify-center rounded-2xl border border-ink/20 bg-ink/[0.06]"
-                  style={{ boxShadow: "0 0 40px rgb(var(--ink-rgb) / 0.08), 0 0 80px rgb(var(--ink-rgb) / 0.04)" }}
-                >
-                  <LockKeyhole className="h-8 w-8 text-ink" />
+          <section className="grid min-h-[70vh] grid-cols-1 content-center gap-12 py-20 md:grid-cols-12">
+            <div className="md:col-span-7">
+              <Rise>
+                <div className="flex items-center gap-3">
+                  <span className="sec-num">L</span>
+                  <span className="micro">— Worklog · Restricted</span>
                 </div>
-              </div>
-
-              <div className="mb-8 text-center space-y-3">
-                <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-ink/40">
-                  Access Control · Private
+              </Rise>
+              <h1 className="display mt-7" style={{ fontSize: "var(--t-h1)" }}>
+                <Mask delay={0.05}>The worklog</Mask>
+                <Mask delay={0.14}>
+                  <span className="ink-italic">is locked.</span>
+                </Mask>
+              </h1>
+              <Rise delay={0.22}>
+                <p className="copy mt-8">
+                  A private daily journal of what got built, what broke, and what I
+                  learned fixing it.
                 </p>
-                <h1 className="font-Orbitron text-3xl font-bold tracking-tight text-ink">
-                  Worklog
-                </h1>
-                <p className="text-sm text-ink/50">
-                  My daily work journal. Restricted access.
-                </p>
-              </div>
+              </Rise>
+            </div>
 
-              <form onSubmit={handleUnlock} className="space-y-4">
+            <Rise delay={0.28} className="md:col-span-4 md:col-start-9 md:self-end">
+              <form onSubmit={handleUnlock} className="border-t border-ink pt-6">
+                <label className="micro" htmlFor="worklog-code">
+                  Access code
+                </label>
                 <input
+                  id="worklog-code"
                   type="password"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
                     if (hasError) setHasError(false);
                   }}
-                  placeholder="Enter access code"
-                  className="w-full rounded-xl border border-rule bg-transparent px-4 py-3.5 font-mono text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/20"
+                  placeholder="••••••"
+                  autoFocus
+                  className={`${FIELD} mt-2 font-mono text-sm`}
                 />
-
                 {hasError && (
-                  <p className="text-center font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
-                    Access denied — invalid code.
-                  </p>
+                  <div className="mt-3">
+                    <ErrorLine>Access denied — wrong code.</ErrorLine>
+                  </div>
                 )}
-
                 <button
                   type="submit"
                   disabled={isSubmitting || !password.trim()}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
+                  className={`${SOLID} mt-6 w-full`}
                 >
-                  {isSubmitting ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <ShieldCheck className="h-4 w-4" />
-                  )}
-                  Authenticate
+                  {isSubmitting ? "Checking…" : "Unlock ↗"}
                 </button>
               </form>
-            </div>
-          </div>
+            </Rise>
+          </section>
         )}
+
+        <PageFoot label="Worklog" />
       </div>
     </main>
-  );
-}
-
-function LockCircuitSvg({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true">
-      <rect x="20" y="20" width="160" height="160" rx="6" stroke="currentColor" strokeWidth="1" />
-      <rect x="50" y="50" width="100" height="100" rx="4" stroke="currentColor" strokeWidth="1" />
-      <line x1="20" y1="100" x2="50" y2="100" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="150" y1="100" x2="180" y2="100" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="100" y1="20" x2="100" y2="50" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="100" y1="150" x2="100" y2="180" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="100" cy="100" r="18" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="88" y="98" width="24" height="16" rx="3" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M92 98V93a8 8 0 0116 0v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="20" cy="20" r="4" fill="currentColor" />
-      <circle cx="180" cy="20" r="4" fill="currentColor" />
-      <circle cx="20" cy="180" r="4" fill="currentColor" />
-      <circle cx="180" cy="180" r="4" fill="currentColor" />
-      <line x1="56" y1="56" x2="66" y2="66" stroke="currentColor" strokeWidth="1" />
-      <line x1="144" y1="56" x2="134" y2="66" stroke="currentColor" strokeWidth="1" />
-      <line x1="56" y1="144" x2="66" y2="134" stroke="currentColor" strokeWidth="1" />
-      <line x1="144" y1="144" x2="134" y2="134" stroke="currentColor" strokeWidth="1" />
-    </svg>
   );
 }

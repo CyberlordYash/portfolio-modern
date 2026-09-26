@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  BriefcaseBusiness,
-  CalendarDays,
-  LoaderCircle,
-  PencilLine,
-  Save,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Rise } from "@/components/ui/Reveal";
+import { ErrorLine, FIELD, PageHead, SOLID } from "@/components/ui/Folio";
 import type { WorklogEntry } from "@/lib/worklog-store";
 
 type DraftEntry = {
@@ -60,14 +52,12 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
   const sortedEntries = useMemo(
     () =>
       [...entries].sort(
-        (a, b) =>
-          b.date.localeCompare(a.date) || b.updatedAt.localeCompare(a.updatedAt),
+        (a, b) => b.date.localeCompare(a.date) || b.updatedAt.localeCompare(a.updatedAt),
       ),
     [entries],
   );
 
   const latestEntry = sortedEntries[0];
-  const totalUpdates = sortedEntries.length;
   const wordCount = draft.note.trim() ? draft.note.trim().split(/\s+/).length : 0;
 
   useEffect(() => {
@@ -76,12 +66,15 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
         setIsLoading(true);
         setRequestError("");
         const res = await fetch("/api/worklog", { cache: "no-store" });
-        if (res.status === 401) { onUnauthorized?.(); return; }
+        if (res.status === 401) {
+          onUnauthorized?.();
+          return;
+        }
         if (!res.ok) throw new Error();
         const data = (await res.json()) as { entries?: WorklogEntry[] };
         setEntries(Array.isArray(data.entries) ? data.entries : []);
       } catch {
-        setRequestError("Unable to load your worklog right now.");
+        setRequestError("Unable to load the worklog right now.");
       } finally {
         setIsLoading(false);
       }
@@ -101,7 +94,10 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: draft.id, date: draft.date, title, note }),
       });
-      if (res.status === 401) { onUnauthorized?.(); return; }
+      if (res.status === 401) {
+        onUnauthorized?.();
+        return;
+      }
       if (!res.ok) throw new Error();
       const data = (await res.json()) as { entries?: WorklogEntry[] };
       setEntries(Array.isArray(data.entries) ? data.entries : []);
@@ -115,6 +111,7 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
 
   const handleEdit = (entry: WorklogEntry) => {
     setDraft({ id: entry.id, date: entry.date, title: entry.title, note: entry.note });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = async (id: string) => {
@@ -122,7 +119,10 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
       setIsSubmitting(true);
       setRequestError("");
       const res = await fetch(`/api/worklog?id=${encodeURIComponent(id)}`, { method: "DELETE" });
-      if (res.status === 401) { onUnauthorized?.(); return; }
+      if (res.status === 401) {
+        onUnauthorized?.();
+        return;
+      }
       if (!res.ok) throw new Error();
       const data = (await res.json()) as { entries?: WorklogEntry[] };
       setEntries(Array.isArray(data.entries) ? data.entries : []);
@@ -135,287 +135,140 @@ export default function WorkJournal({ onUnauthorized }: { onUnauthorized?: () =>
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-rule bg-transparent">
-      {/* Inner ambient glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgb(var(--ink-rgb) / 0.04),transparent_45%),radial-gradient(circle_at_85%_85%,rgb(var(--ink-rgb) / 0.04),transparent_45%)]" />
+    <>
+      <PageHead
+        mark="L"
+        label="Worklog"
+        line1="What got built,"
+        line2="day by day."
+        meta={
+          <>
+            <span className="micro num">
+              {isLoading ? "Syncing…" : `${String(sortedEntries.length).padStart(2, "0")} entries`}
+            </span>
+            <span className="micro num">
+              {latestEntry ? `Last · ${formatDisplayDate(latestEntry.date)}` : "No entries yet"}
+            </span>
+          </>
+        }
+      />
 
-      <div className="relative z-10 px-4 py-8 md:px-8 md:py-10">
-        {/* ── Header ── */}
-        <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-lg border border-ink/20 bg-ink/[0.05] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.38em] text-ink">
-              <BriefcaseBusiness className="h-3 w-3" />
-              Sys · Work Log
+      {/* ── Editor ── */}
+      <Rise>
+        <section className="mb-20 grid grid-cols-1 gap-6 border-t border-ink pt-6 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <span className="micro">{draft.id ? "Editing entry" : "New entry"}</span>
+            {wordCount > 0 && <p className="micro num mt-2">{wordCount} words</p>}
+          </div>
+          <div className="flex flex-col gap-4 md:col-span-8">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[180px_1fr]">
+              <input
+                type="date"
+                value={draft.date}
+                onChange={(e) => setDraft((c) => ({ ...c, date: e.target.value }))}
+                className={`${FIELD} font-mono text-sm`}
+              />
+              <input
+                type="text"
+                value={draft.title}
+                onChange={(e) => setDraft((c) => ({ ...c, title: e.target.value }))}
+                placeholder="Headline — e.g. cut order-ack p99 by 40%"
+                className={`${FIELD} text-[1.0625rem]`}
+              />
             </div>
-            <h2 className="font-Orbitron text-3xl font-bold tracking-tight text-ink md:text-[2.6rem]">
-              Daily Notes
-            </h2>
-            <p className="max-w-md text-sm text-ink/50 md:text-base">
-              My private work journal — captured daily, secured by auth.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 md:min-w-[288px]">
-            <StatCard
-              label="Entries"
-              value={String(totalUpdates).padStart(2, "0")}
-              helper={isLoading ? "Syncing..." : "Saved"}
-              color="cyan"
+            <textarea
+              value={draft.note}
+              onChange={(e) => setDraft((c) => ({ ...c, note: e.target.value }))}
+              placeholder="What you built, what blocked you, what shipped…"
+              rows={8}
+              className={`${FIELD} resize-y text-[0.9375rem] leading-[1.8]`}
             />
-            <StatCard
-              label="Last Entry"
-              value={latestEntry ? formatDisplayDate(latestEntry.date) : "--"}
-              helper={latestEntry ? latestEntry.title : "No notes yet"}
-              color="violet"
-            />
-          </div>
-        </div>
-
-        {requestError && (
-          <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/[0.05] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
-            {requestError}
-          </div>
-        )}
-
-        {/* ── Main grid ── */}
-        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          {/* Editor panel */}
-          <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
-                  Entry Editor
-                </p>
-                <h3 className="mt-1.5 font-Orbitron text-base font-semibold text-ink">
-                  {draft.id ? "Editing Entry" : "New Entry"}
-                </h3>
-              </div>
-              <div
-                className={`rounded-lg border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.3em] ${
-                  draft.id
-                    ? "border-ink/20 bg-ink/[0.06] text-ink/70"
-                    : "border-ink/20 bg-ink/[0.06] text-ink"
-                }`}
+            <div className="mt-2 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting || !draft.title.trim() || !draft.note.trim()}
+                className={SOLID}
               >
-                {draft.id ? "Edit" : "Ready"}
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* Date */}
-              <div className="space-y-1.5">
-                <span className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
-                  Date
-                </span>
-                <div className="relative">
-                  <CalendarDays className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/40" />
-                  <input
-                    type="date"
-                    value={draft.date}
-                    onChange={(e) =>
-                      setDraft((cur) => ({ ...cur, date: e.target.value }))
-                    }
-                    className="w-full rounded-xl border border-rule bg-transparent py-3 pl-10 pr-4 font-mono text-sm text-ink/75 outline-none transition focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
-                  />
-                </div>
-              </div>
-
-              {/* Title */}
-              <div className="space-y-1.5">
-                <span className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
-                  Headline
-                </span>
-                <input
-                  type="text"
-                  value={draft.title}
-                  onChange={(e) =>
-                    setDraft((cur) => ({ ...cur, title: e.target.value }))
-                  }
-                  placeholder="Optimized order execution pipeline..."
-                  className="w-full rounded-xl border border-rule bg-transparent px-4 py-3 text-sm text-ink/90 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
-                />
-              </div>
-
-              {/* Note */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
-                    Notes
-                  </span>
-                  {wordCount > 0 && (
-                    <span className="font-mono text-[9px] text-ink/30">
-                      {wordCount}w
-                    </span>
-                  )}
-                </div>
-                <textarea
-                  value={draft.note}
-                  onChange={(e) =>
-                    setDraft((cur) => ({ ...cur, note: e.target.value }))
-                  }
-                  placeholder="What you built, blockers handled, key outcomes..."
-                  rows={9}
-                  className="w-full resize-none rounded-xl border border-rule bg-transparent px-4 py-4 text-sm leading-relaxed text-ink/75 outline-none transition placeholder:text-ink/30 focus:border-ink/40 focus:ring-1 focus:ring-ink/10"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2.5 pt-1 sm:flex-row">
+                {isSubmitting ? "Saving…" : draft.id ? "Update entry ↗" : "Save entry ↗"}
+              </button>
+              {draft.id && (
                 <button
                   type="button"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !draft.title.trim() || !draft.note.trim()}
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
+                  onClick={() => setDraft(createInitialDraft())}
+                  disabled={isSubmitting}
+                  className="btn-line"
                 >
-                  {isSubmitting ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4" />
-                  )}
-                  {draft.id ? "Update" : "Save Entry"}
+                  Cancel
                 </button>
-
-                {draft.id && (
-                  <button
-                    type="button"
-                    onClick={() => setDraft(createInitialDraft())}
-                    disabled={isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-rule bg-ink/[0.03] px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50 transition hover:border-rule hover:text-ink/75 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                    Cancel
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Timeline panel */}
-          <div className="rounded-xl border border-rule bg-ink/[0.02] p-5 md:p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.38em] text-ink/40">
-                  Timeline
-                </p>
-                <h3 className="mt-1.5 font-Orbitron text-base font-semibold text-ink">
-                  Work Log
-                </h3>
-              </div>
-              <div className="flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink/40">
-                <span className="h-1.5 w-1.5 rounded-full bg-ink animate-pulse" />
-                online
-              </div>
-            </div>
-
-            <div className="max-h-[560px] space-y-3 overflow-y-auto pr-0.5">
-              {isLoading ? (
-                <div className="rounded-xl border border-dashed border-rule px-5 py-14 text-center">
-                  <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-ink" />
-                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
-                    Syncing...
-                  </p>
-                </div>
-              ) : sortedEntries.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-rule px-5 py-14 text-center">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink/30">
-                    No entries yet
-                  </p>
-                  <p className="mt-2 text-xs text-ink/30">
-                    Save your first entry to see it here.
-                  </p>
-                </div>
-              ) : (
-                sortedEntries.map((entry, index) => (
-                  <motion.article
-                    key={entry.id}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.04, duration: 0.3 }}
-                    className={`group relative rounded-xl border p-4 transition-all ${
-                      draft.id === entry.id
-                        ? "border-ink/20 bg-ink/[0.06]"
-                        : "border-rule bg-ink/[0.015] hover:border-rule"
-                    }`}
-                  >
-                    {/* Left accent bar */}
-                    <div
-                      className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full transition-all ${
-                        draft.id === entry.id ? "bg-ink" : "bg-ink/[0.06] group-hover:bg-ink/30"
-                      }`}
-                    />
-
-                    <div className="mb-3 flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="space-y-1.5 min-w-0">
-                        <div className="inline-flex items-center gap-1.5 rounded-lg border border-ink/15 bg-ink/[0.06] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-ink">
-                          <CalendarDays className="h-3 w-3" />
-                          {formatDisplayDate(entry.date)}
-                        </div>
-                        <h4 className="text-sm font-semibold text-ink leading-snug">
-                          {entry.title}
-                        </h4>
-                      </div>
-
-                      <div className="flex flex-shrink-0 items-center gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => handleEdit(entry)}
-                          disabled={isSubmitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-ink/30 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <PencilLine className="h-3 w-3" />
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(entry.id)}
-                          disabled={isSubmitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-rule bg-ink/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/50 transition hover:border-red-500/30 hover:text-red-600 dark:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <p className="whitespace-pre-wrap text-xs leading-relaxed text-ink/50">
-                      {entry.note}
-                    </p>
-
-                    <div className="mt-3 border-t border-rule pt-2.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink/30">
-                      Synced · {formatTimestamp(entry.updatedAt)}
-                    </div>
-                  </motion.article>
-                ))
               )}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+        </section>
+      </Rise>
 
-function StatCard({
-  label,
-  value,
-  helper,
-  color,
-}: {
-  label: string;
-  value: string;
-  helper: string;
-  color: "cyan" | "violet";
-}) {
-  const border = "border-ink/15";
-  const bg = "bg-ink/[0.04]";
-  const valColor = "text-ink";
-  return (
-    <div className={`rounded-xl border p-4 ${border} ${bg}`}>
-      <p className="font-mono text-[9px] uppercase tracking-[0.34em] text-ink/30">
-        {label}
-      </p>
-      <p className={`mt-2.5 font-Orbitron text-lg font-bold ${valColor} truncate`}>
-        {value}
-      </p>
-      <p className="mt-1.5 truncate text-xs text-ink/40">{helper}</p>
-    </div>
+      {requestError && (
+        <div className="mb-8">
+          <ErrorLine>{requestError}</ErrorLine>
+        </div>
+      )}
+
+      {/* ── Timeline ── */}
+      <Rise className="mb-6 flex items-baseline justify-between gap-4">
+        <span className="micro">Timeline</span>
+        <span className="micro">Newest first</span>
+      </Rise>
+
+      <div className="border-t border-rule">
+        {isLoading ? (
+          <p className="micro border-b border-rule py-16 text-center">Syncing…</p>
+        ) : sortedEntries.length === 0 ? (
+          <div className="border-b border-rule py-20 text-center">
+            <p className="display" style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)" }}>
+              <span className="ink-italic">Nothing logged yet.</span>
+            </p>
+            <p className="micro mt-4">Save the first entry above.</p>
+          </div>
+        ) : (
+          sortedEntries.map((entry, i) => (
+            <Rise key={entry.id} delay={Math.min(i, 6) * 0.04}>
+              <article
+                className={`grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule py-8 md:grid-cols-12 ${
+                  draft.id === entry.id ? "bg-paper2" : ""
+                }`}
+              >
+                <div className="flex items-baseline gap-4 md:col-span-3 md:flex-col md:gap-2">
+                  <span className="micro num text-ink">{formatDisplayDate(entry.date)}</span>
+                  <span className="micro num">{formatTimestamp(entry.updatedAt)}</span>
+                </div>
+                <div className="md:col-span-7">
+                  <h3 className="h3">{entry.title}</h3>
+                  <p className="copy mt-3 whitespace-pre-wrap text-[0.9375rem]">{entry.note}</p>
+                </div>
+                <div className="flex gap-6 md:col-span-2 md:flex-col md:items-end md:gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(entry)}
+                    disabled={isSubmitting}
+                    className="elink micro text-ink disabled:opacity-40"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(entry.id)}
+                    disabled={isSubmitting}
+                    className="elink micro disabled:opacity-40"
+                    style={{ color: "var(--mark)" }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            </Rise>
+          ))
+        )}
+      </div>
+    </>
   );
 }
