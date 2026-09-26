@@ -1945,3 +1945,28 @@ html,
     100% 100%;
   -webkit-mask-composite: source-in;
 }
+
+/* ── Company logos, flattened to ink ─────────────────────────
+   The source files are opaque (white grounds, brand colours). Greyscale
+   + blend drops the white into whatever tone sits behind: multiply on
+   paper, invert + screen on the dark ground. */
+.logo-ink {
+  filter: grayscale(1) contrast(1.25);
+  mix-blend-mode: multiply;
+  transition: filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-tone="dark"] .logo-ink {
+  filter: grayscale(1) invert(1) contrast(1.25);
+  mix-blend-mode: screen;
+}
+.logo-tile {
+  background: var(--paper);
+  transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.job:hover .logo-tile {
+  background: #ffffff;
+}
+.job:hover .logo-tile .logo-ink {
+  filter: none;
+  mix-blend-mode: normal;
+}

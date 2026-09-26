@@ -1,7 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Mask, Rise, Draw } from "@/components/ui/Reveal";
+
+import LogoZanskar from "../public/zanskar.jpg";
+import LogoOnefinnet from "../public/onefinnet.png";
+import LogoAmbill from "../public/ambill.jpg";
 
 /* ══════════════════════════════════════════════════════════════════
    EXPERIENCE
@@ -23,12 +29,47 @@ import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 
 type Job = (typeof JOBS)[number];
 
-function Entry({ job, i }: { job: Job; i: number }) {
+function LogoTile({ logo, alt, scale = 1 }: { logo: StaticImageData; alt: string; scale?: number }) {
   return (
-    <article className="grid grid-cols-1 gap-x-10 gap-y-8 border-t border-rule py-14 md:py-20 lg:grid-cols-12">
+    <span className="logo-tile relative block h-16 w-16 shrink-0 overflow-hidden border border-rule p-2">
+      <Image
+        src={logo}
+        alt={alt}
+        className="logo-ink h-full w-full object-contain"
+        style={{ transform: `scale(${scale})` }}
+        sizes="96px"
+      />
+    </span>
+  );
+}
+
+function Entry({ job }: { job: Job }) {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [120, -120]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [-6, 6]);
+
+  return (
+    <article
+      ref={ref}
+      id={`job-${job.idx}`}
+      className="job relative grid scroll-mt-24 grid-cols-1 gap-x-10 gap-y-8 overflow-hidden border-t border-rule py-14 md:py-20 lg:grid-cols-12"
+    >
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -right-[6%] top-16 hidden w-[38%] max-w-[480px] opacity-[0.06] lg:block"
+        style={{ y, rotate }}
+      >
+        <Image src={job.logo} alt="" className="logo-ink h-auto w-full" sizes="480px" />
+      </motion.div>
+
       {/* ── Identity ───────────────────────────────────────────── */}
-      <div className="lg:col-span-4">
+      <div className="relative lg:col-span-4">
         <Rise>
+          <LogoTile logo={job.logo} alt={job.logoAlt} scale={job.logoScale} />
+        </Rise>
+
+        <Rise delay={0.04} className="mt-6">
           <div className="flex items-baseline gap-3">
             <span className="micro num">{job.idx}/</span>
             {job.status === "ACTIVE" && (
@@ -68,7 +109,7 @@ function Entry({ job, i }: { job: Job; i: number }) {
       </div>
 
       {/* ── Evidence ───────────────────────────────────────────── */}
-      <div className="lg:col-span-7 lg:col-start-6">
+      <div className="relative lg:col-span-7 lg:col-start-6">
         <Rise delay={0.05}>
           <p className="lede max-w-[46ch]">{job.summary}</p>
         </Rise>
@@ -123,8 +164,8 @@ function Entry({ job, i }: { job: Job; i: number }) {
 
 const Experience = () => (
   <div>
-    {JOBS.map((job, i) => (
-      <Entry key={job.idx} job={job} i={i} />
+    {JOBS.map((job) => (
+      <Entry key={job.idx} job={job} />
     ))}
 
     {/* ── Outside the job history ──────────────────────────────── */}
@@ -163,6 +204,9 @@ const JOBS = [
   {
     idx: "01",
     company: "Zanskar Securities",
+    logo: LogoZanskar,
+    logoAlt: "Zanskar logo",
+    logoScale: 1.5,
     role: "Analyst · Software Engineer",
     location: "Bengaluru, India",
     period: "Jul 2025 — Present",
@@ -197,6 +241,9 @@ const JOBS = [
   {
     idx: "02",
     company: "Onefinnet",
+    logo: LogoOnefinnet,
+    logoAlt: "Onefinnet logo",
+    logoScale: 1.1,
     role: "Software Engineering Intern",
     location: "Noida NCR, India",
     period: "Jan 2025 — Jun 2025",
@@ -228,6 +275,9 @@ const JOBS = [
   {
     idx: "03",
     company: "Modulus Technologies",
+    logo: LogoAmbill,
+    logoAlt: "Ambill logo",
+    logoScale: 1,
     role: "Software Engineering Intern",
     location: "Remote",
     period: "Jul 2024 — Oct 2024",
