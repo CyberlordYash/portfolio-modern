@@ -79,8 +79,6 @@ const FACE_PZ = 0.26;
 
 const INK_ON_LIGHT = "#3A3A41";
 const INK_ON_DARK = "#FFFFFF";
-const ACCENT_ON_LIGHT = "#1A32FF";
-const ACCENT_ON_DARK = "#687CFF";
 
 /* Contact shadow. Not a real light — a flat offset copy of the
    geometry, which is all an orthographic scene with no lighting can
@@ -200,6 +198,46 @@ function shadedCube() {
   return geo;
 }
 
+/* The accent cube's skin: the same grainy blue mesh as .flow-panel
+   in globals.css, painted once into a canvas. Soft pools of the one
+   accent family, then per-pixel grain — the grain is what hides the
+   gradient banding and makes it read as light rather than CSS. Face
+   shading still applies on top through the vertex colours. */
+function flowTexture() {
+  const S = 512;
+  const c = document.createElement("canvas");
+  c.width = c.height = S;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#1A32FF";
+  g.fillRect(0, 0, S, S);
+  const pools: [number, number, number, string][] = [
+    [0.05, 0.0, 0.75, "40,22,170"],
+    [0.95, 0.1, 0.6, "130,150,255"],
+    [0.8, 0.75, 0.6, "80,56,240"],
+    [0.3, 1.05, 0.8, "30,130,255"],
+  ];
+  for (const [x, y, r, rgb] of pools) {
+    const grad = g.createRadialGradient(x * S, y * S, 0, x * S, y * S, r * S);
+    grad.addColorStop(0, `rgba(${rgb},0.95)`);
+    grad.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = grad;
+    g.fillRect(0, 0, S, S);
+  }
+  const img = g.getImageData(0, 0, S, S);
+  const d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const n = (Math.random() - 0.5) * 34;
+    d[i] += n;
+    d[i + 1] += n;
+    d[i + 2] += n;
+  }
+  g.putImageData(img, 0, 0);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
 /** Cube centres forming a Y in the ground plane. See the note on
     SHADOW_SCALE for why these three directions read as a letter. */
 function buildYCells() {
@@ -297,6 +335,19 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     [],
   );
 
+  /* The accent cube is drawn on its own so it can carry the flow
+     texture; the instanced mesh renders every cube but the last. */
+  const liar = useRef<THREE.Mesh>(null);
+  const liarMaterial = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        map: flowTexture(),
+        vertexColors: true,
+        transparent: true,
+      }),
+    [],
+  );
+
   /* The shadow shares the cube geometry but ignores its vertex colours
      — it is one flat silhouette, not a shaded solid.
 
@@ -354,8 +405,6 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
   const groundDark = useMemo(() => new THREE.Color(GROUND_DARK), []);
   const groundMix = useMemo(() => new THREE.Color(), []);
 
-  const accLight = useMemo(() => new THREE.Color(ACCENT_ON_LIGHT), []);
-  const accDark = useMemo(() => new THREE.Color(ACCENT_ON_DARK), []);
   const tint = useMemo(() => new THREE.Color(), []);
   const lastTone = useRef(-1);
 
@@ -383,8 +432,10 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       geometry.dispose();
       material.dispose();
       shadowMaterial.dispose();
+      liarMaterial.map?.dispose();
+      liarMaterial.dispose();
     },
-    [geometry, material, shadowMaterial],
+    [geometry, material, shadowMaterial, liarMaterial],
   );
 
   useFrame((_, delta) => {
@@ -399,21 +450,18 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     const tone = track(p, [0.28, 0.72], [0, 1]);
     if (Math.abs(tone - lastTone.current) > 0.002) {
       lastTone.current = tone;
-      for (let i = 0; i < cells.length; i++) {
-        // The final cube is the one whose projection lands on the
-        // first, i.e. the cube that tells the lie. It stays accent
-        // coloured so the eye has somewhere to be when the figure
-        // opens and the join is revealed.
-        const isLiar = i === cells.length - 1;
-        tint
-          .copy(isLiar ? accLight : inkLight)
-          .lerp(isLiar ? accDark : inkDark, tone);
+      // The final cube — the one whose projection lands on the first,
+      // i.e. the cube that tells the lie — is the separate flow-textured
+      // mesh, so the eye has somewhere to be when the join is revealed.
+      for (let i = 0; i < cells.length - 1; i++) {
+        tint.copy(inkLight).lerp(inkDark, tone);
         m.setColorAt(i, tint);
       }
       if (m.instanceColor) m.instanceColor.needsUpdate = true;
     }
 
     material.opacity = track(p, [0, 0.62, 0.92], [1, 1, 0]);
+    liarMaterial.opacity = material.opacity;
     m.visible = material.opacity > 0.001;
 
     /* ── Disassembly ───────────────────────────────────────────
@@ -431,6 +479,7 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       dummy.scale.setScalar(1);
       dummy.updateMatrix();
       m.setMatrixAt(i, dummy.matrix);
+      if (i === cells.length - 1) liar.current?.matrix.copy(dummy.matrix);
     }
     m.instanceMatrix.needsUpdate = true;
 
@@ -535,8 +584,20 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       <instancedMesh
         ref={mesh}
         args={[geometry, material, cells.length]}
+        count={cells.length - 1}
         frustumCulled={false}
-      />
+      >
+        {/* Child of the instanced mesh, so it inherits the group's
+            turn, tilt and scale; its local matrix is the last
+            instance's, written each frame. */}
+        <mesh
+          ref={liar}
+          geometry={geometry}
+          material={liarMaterial}
+          matrixAutoUpdate={false}
+          frustumCulled={false}
+        />
+      </instancedMesh>
     </>
   );
 }

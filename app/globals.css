@@ -135,6 +135,34 @@ body {
   color: var(--ink);
 }
 
+/* ══ FLOW PANEL — grainy blue mesh ═══════════════════════════════
+   For the solid-blue blocks only (About panel, page loader). Soft
+   overlapping pools of the one accent family under film grain; the
+   grain dithers away gradient banding so it reads photographic.
+   Pools stay dark enough that white type holds contrast throughout.
+   The element must be positioned (relative/fixed) for the grain. */
+.flow-panel {
+  isolation: isolate;
+  background-color: #1a32ff;
+  background-image:
+    radial-gradient(70% 60% at 6% 0%, rgb(40 22 170 / 0.95), transparent 70%),
+    radial-gradient(55% 55% at 96% 8%, rgb(120 140 255 / 0.75), transparent 70%),
+    radial-gradient(60% 55% at 78% 70%, rgb(70 50 235 / 0.7), transparent 72%),
+    radial-gradient(75% 60% at 30% 108%, rgb(30 125 255 / 0.95), transparent 70%);
+}
+
+.flow-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;

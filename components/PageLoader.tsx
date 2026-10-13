@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { EASE } from "@/components/ui/Reveal";
 
-// Same flood colour as the About panel, fixed rather than var(--accent) so white type holds contrast in dark mode too.
-const PANEL = "#1A32FF";
+// Flood is the shared .flow-panel (globals.css) — fixed blues, not var(--accent), so white type holds contrast in dark mode too.
 const INK = "#FFFFFF";
 const INK_SOFT = "rgba(255,255,255,0.7)";
 const ITALIC = "#A9B6FF";
@@ -80,8 +79,8 @@ export default function PageLoader() {
         <motion.div
           key="loader"
           aria-hidden
-          className="fixed inset-0 z-[9999] flex flex-col justify-between py-8 md:py-12"
-          style={{ background: PANEL, color: INK }}
+          className="flow-panel fixed inset-0 z-[9999] flex flex-col justify-between py-8 md:py-12"
+          style={{ color: INK }}
           initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
           exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
           transition={{ duration: reduce ? 0.2 : 0.95, ease: EASE }}

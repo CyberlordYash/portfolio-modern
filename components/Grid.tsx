@@ -33,7 +33,6 @@ import { Mask, Rise } from "@/components/ui/Reveal";
    to say who this person is.
 ══════════════════════════════════════════════════════════════════ */
 
-const PANEL = "#1A32FF";
 const INK = "#FFFFFF";
 const INK_SOFT = "rgba(255,255,255,0.74)";
 const ITALIC = "#A9B6FF";
@@ -42,8 +41,8 @@ const RULE = "rgba(255,255,255,0.22)";
 const Grid = () => (
   <Rise>
     <div
-      className="grid grid-cols-1 gap-x-14 gap-y-14 p-7 md:p-12 lg:grid-cols-12 lg:p-16"
-      style={{ background: PANEL, color: INK }}
+      className="flow-panel relative grid grid-cols-1 gap-x-14 gap-y-14 p-7 md:p-12 lg:grid-cols-12 lg:p-16"
+      style={{ color: INK }}
     >
       {/* ══ Left: who, and what ═══════════════════════════════════ */}
       <div className="flex flex-col lg:col-span-7">
