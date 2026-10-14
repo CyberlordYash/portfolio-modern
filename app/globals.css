@@ -550,6 +550,83 @@ html,
   min-width: 0;
 }
 
+/* ── Project frame ───────────────────────────────────────────
+   A screenshot in a hairline window: an address bar in mono over a
+   quiet well. No chrome colour, no shadow — just enough frame to say
+   "this is a running thing". */
+.pframe {
+  border: 1px solid var(--rule);
+  background: rgb(var(--ink-rgb) / 0.03);
+}
+.pframe__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 2.1rem;
+  padding-inline: 0.85rem;
+  border-bottom: 1px solid var(--rule);
+}
+.pframe__dots {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.pframe__dots i {
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 1px solid var(--rule-strong);
+}
+
+/* ── Project index row ───────────────────────────────────────
+   A blist row that is a button: same scale and hairlines, plus a
+   plus/minus that is the only state change. */
+.prow {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 3rem);
+  width: 100%;
+  padding-block: clamp(1.1rem, 2.4vw, 2rem);
+  text-align: left;
+  color: inherit;
+  transition: padding-left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (min-width: 768px) {
+  .prow:hover {
+    padding-left: 1.25rem;
+  }
+}
+.prow:focus-visible {
+  outline: 1px solid var(--mark);
+  outline-offset: 4px;
+}
+.prow__toggle {
+  position: relative;
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  align-self: center;
+}
+.prow__toggle::before,
+.prow__toggle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.prow__toggle::after {
+  transform: rotate(90deg);
+}
+.prow__toggle.is-open::after {
+  transform: rotate(0deg);
+}
+.prow__toggle.is-open::before {
+  background: var(--mark);
+}
+
 /* ── Media block ──────────────────────────────────────────────
    Imagery is meant to carry the page now, so the frame around it is
    almost nothing: a hairline, a fixed aspect box, and a slow scale on

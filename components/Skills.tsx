@@ -3,6 +3,7 @@
 import React from "react";
 import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 import AIEngineering from "@/components/AIEngineering";
+import { SiTerraform, SiAnsible, SiGo, SiCplusplus } from "react-icons/si";
 
 /* ══════════════════════════════════════════════════════════════════
    STACK
@@ -11,12 +12,10 @@ import AIEngineering from "@/components/AIEngineering";
    around — set large, with a sentence each explaining why. Then
    everything else as a ruled index, grouped by domain.
 
-   Every brand icon is gone. The previous version rendered nineteen
-   react-icons at their official brand colours (#00ADD8, #E76F00,
-   #9D5BD2, #FF4438 …), which is nineteen accent colours in a palette
-   that allows one. Set as text, the same list reads faster, works at
-   any size, and says "PostgreSQL" rather than asking the reader to
-   recognise an elephant.
+   Brand marks are kept only where they earn it: beside Go and C++,
+   and in the infrastructure-as-code row. The index below stays plain
+   text — at that density nineteen brand colours would be nineteen
+   accents in a palette that allows one.
 
    The hierarchy also does something the old flat grid could not: it
    says Go and C++ matter more than the other seventeen, which is the
@@ -35,12 +34,14 @@ const Skills = () => (
             <span className="micro">{c.label}</span>
           </Rise>
 
-          <h3
-            className="display mt-4"
-            style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}
-          >
-            <Mask delay={i * 0.06}>{c.name}</Mask>
-          </h3>
+          <div className="mt-4 flex items-center gap-[0.35em]" style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}>
+            <Rise delay={0.08 + i * 0.06} y={10}>
+              <c.Icon aria-hidden className="h-[0.9em] w-[0.9em]" style={{ color: c.color }} />
+            </Rise>
+            <h3 className="display" style={{ fontSize: "1em" }}>
+              <Mask delay={i * 0.06}>{c.name}</Mask>
+            </h3>
+          </div>
 
           <Draw delay={0.1 + i * 0.06} className="mt-6" />
 
@@ -50,6 +51,20 @@ const Skills = () => (
         </div>
       ))}
     </div>
+
+    {/* ══ Infrastructure as code ════════════════════════════════
+        One compact row of vendor marks — the one place brand marks
+        are kept. Terraform keeps its purple; Ansible's mark is
+        monochrome anyway, so it takes the ink. */}
+    <Rise className="-mt-12 flex flex-wrap items-center gap-x-10 gap-y-4 md:-mt-20">
+      <span className="micro">Infrastructure as code</span>
+      {IAC.map((t) => (
+        <span key={t.name} className="flex items-center gap-3">
+          <t.Icon aria-hidden className="h-7 w-7 shrink-0" style={{ color: t.color }} />
+          <span className="h3 text-ink" style={{ fontSize: "1.375rem" }}>{t.name}</span>
+        </span>
+      ))}
+    </Rise>
 
     {/* ══ Everything else ════════════════════════════════════════
         A ruled index: domain on the left, the tools in it on the
@@ -89,21 +104,28 @@ const Skills = () => (
 );
 
 /* ─── content ─────────────────────────────────────────────────────
-   Same nineteen tools as before; the `icon` and `color` fields are
-   dropped and the explanatory `note` is retained as a title
-   attribute. */
+   The explanatory `note` is retained as a title attribute. */
 
 const CORE = [
   {
     name: "Go",
     label: "Primary language",
+    Icon: SiGo,
+    color: "#00ADD8",
     desc: "What I build production systems in — trading engines, real-time pipelines, distributed services. Chosen for its concurrency model and its predictable latency under load.",
   },
   {
     name: "C++",
     label: "Systems language",
+    Icon: SiCplusplus,
+    color: "#00599C",
     desc: "For the performance-critical paths — order books, memory-tight engines — and the language behind my competitive programming. Raw control, zero-cost abstractions.",
   },
+];
+
+const IAC = [
+  { name: "Terraform", Icon: SiTerraform, color: "#7B42BC" },
+  { name: "Ansible", Icon: SiAnsible, color: "var(--ink)" },
 ];
 
 const DOMAINS = [
@@ -125,6 +147,8 @@ const DOMAINS = [
       { name: "Google Cloud", note: "Cloud-native deployments" },
       { name: "Docker", note: "Containerised builds and runtimes" },
       { name: "Kubernetes", note: "Service orchestration" },
+      { name: "Terraform", note: "Infrastructure as code" },
+      { name: "Ansible", note: "Configuration management" },
       { name: "Prometheus", note: "Metrics and alerting" },
       { name: "Grafana", note: "Dashboards and visualisation" },
     ],
