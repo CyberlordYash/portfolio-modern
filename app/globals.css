@@ -143,12 +143,29 @@ body {
    The element must be positioned (relative/fixed) for the grain. */
 .flow-panel {
   isolation: isolate;
-  background-color: #1a32ff;
+  background-color: #0e1a9e;
   background-image:
-    radial-gradient(70% 60% at 6% 0%, rgb(40 22 170 / 0.95), transparent 70%),
-    radial-gradient(55% 55% at 96% 8%, rgb(120 140 255 / 0.75), transparent 70%),
-    radial-gradient(60% 55% at 78% 70%, rgb(70 50 235 / 0.7), transparent 72%),
-    radial-gradient(75% 60% at 30% 108%, rgb(30 125 255 / 0.95), transparent 70%);
+    radial-gradient(70% 60% at 6% 0%, rgb(14 8 70 / 0.95), transparent 70%),
+    radial-gradient(55% 55% at 96% 8%, rgb(70 88 220 / 0.6), transparent 70%),
+    radial-gradient(60% 55% at 78% 70%, rgb(30 20 130 / 0.75), transparent 72%),
+    radial-gradient(75% 60% at 30% 108%, rgb(20 90 220 / 0.8), transparent 70%);
+}
+
+/* Clay variant for the Claude panel (AIEngineering): Anthropic's
+   clay with rust, coral and peach pools. Ink stays dark — white on
+   clay is ~3:1 — so the pools are kept mid-tone, never deep. */
+.flow-panel.flow-clay {
+  --ink-rgb: 20 20 19;
+  --ink: #141413;
+  --ink-2: rgb(20 20 19 / 0.72);
+  --ink-3: rgb(20 20 19 / 0.6);
+  --rule: rgb(20 20 19 / 0.22);
+  background-color: #c4643f;
+  background-image:
+    radial-gradient(70% 60% at 6% 0%, rgb(150 70 44 / 0.75), transparent 70%),
+    radial-gradient(55% 55% at 96% 8%, rgb(222 150 112 / 0.6), transparent 70%),
+    radial-gradient(60% 55% at 78% 72%, rgb(176 84 70 / 0.65), transparent 72%),
+    radial-gradient(75% 60% at 28% 108%, rgb(214 120 74 / 0.85), transparent 70%);
 }
 
 .flow-panel::after {
@@ -1989,12 +2006,4 @@ html,
 }
 .logo-tile {
   background: var(--paper);
-  transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.job:hover .logo-tile {
-  background: #ffffff;
-}
-.job:hover .logo-tile .logo-ink {
-  filter: none;
-  mix-blend-mode: normal;
 }

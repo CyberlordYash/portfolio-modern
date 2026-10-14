@@ -66,8 +66,8 @@ const AIEngineering = () => {
     <Rise>
       <div
         ref={ref}
-        className="grid grid-cols-1 gap-x-14 gap-y-10 p-6 md:p-9 lg:grid-cols-12 lg:p-10"
-        style={{ background: PANEL, color: INK }}
+        className="flow-panel flow-clay relative grid grid-cols-1 gap-x-14 gap-y-10 p-6 md:p-9 lg:grid-cols-12 lg:p-10"
+        style={{ color: INK }}
       >
         <div className="flex flex-col lg:col-span-7">
           <div className="flex items-start justify-between gap-6">
