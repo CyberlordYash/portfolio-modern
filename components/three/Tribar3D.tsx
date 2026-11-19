@@ -33,15 +33,19 @@ import * as THREE from "three";
    legible — you can see the individual blocks pull out of line.
 
    ── The scroll timeline ──
-     0.00 → 0.18  assembled, turning about the view axis — the figure
-                  stays impossible while its silhouette moves.
-     0.18 → 0.60  settles to a clean isometric view while every block
-                  flies a staggered arc into a microchip — die, raised
-                  core, pins on all four sides. The liar cube lands as
-                  the core.
-     0.60 → 1.00  the chip holds with a signal pulse running from the
-                  core out along the pins, then scales up and dissolves
-                  into the dark ground the page has converted to.
+     0.00 → 0.12  the impossible triangle, turning about the view axis.
+     0.12 → 0.45  every block flies a staggered arc, left to right along
+                  the data flow, into a small system architecture:
+                  clients → gateway → three services → event log →
+                  cache + database, joined by pipes. The liar cube lands
+                  as the gateway.
+     0.45 → 0.62  the architecture holds and is interactive: requests
+                  flow along the pipes, hovering (or tapping) a component
+                  lifts it and lights its links. Until the
+                  visitor touches it, the highlight walks the components
+                  on its own.
+     0.62 → 0.97  data floods in and the servers fill with light, then
+                  fracture into their blocks, which scatter and fade.
 
    ── Why the faces are painted, not lit ──
    A previous pass used MeshStandardMaterial and a light rig. Every
@@ -56,33 +60,41 @@ const GAP = 1; // lattice spacing (cube size is 1, so arms are solid)
 
 const BASE_ANGLE = -0.42;
 const TURN = Math.PI * 1.15; // travel about the view axis across the track
-const TILT_MAX = 0.25; // slight tilt off the iso axis once the chip forms
-const YAW = Math.PI * 0.5; // quarter turn about world up while morphing (chip is 4-fold symmetric)
+const TILT_MAX = 0.2; // slight tilt off the iso axis once the architecture forms
+const YAW = 0; // the architecture is asymmetric, so it lands unturned
 
-const MORPH = [0.18, 0.6]; // scroll window for triangle → chip
+const MORPH = [0.12, 0.45]; // scroll window for triangle → architecture
 const STAGGER = 0.45; // share of the window spent staggering block starts
+const LIVE = [MORPH[1] - 0.02, MORPH[1] + 0.02, 0.62, 0.65]; // interactive window
 
-/* Microchip, in lattice units (drawn at CHIP_SCALE so it reads at the
-   tribar's size):
-     body   DIE×DIE package, one cube tall
-     lid    (DIE-2)² heat spreader, a thin plate stepped in one cell
-     core   one flat slab of silicon on the lid — the liar cube, so it
-            carries the blue flow texture
-     mark   pin-1 dot on the lid corner
-     traces hairlines on the body's exposed rim, one per pin
-     pins   solid flat legs on every lattice column but the corners */
-const DIE = 7;
-const PIN_LEN = 2;
-const CHIP_SCALE = 0.68;
-const LID_H = 0.32;
-const CORE_W = 2.6;
-const CORE_H = 0.22;
-const PIN_W = 0.42;
-const PIN_H = 0.16;
+/* The ending, all scroll-driven:
+     RECEIVE  packets flood in and each server fills with light, bottom up
+     CRACK    the full servers fracture — every block pulls away from its
+              neighbours with a little tumble
+     SCATTER  the blocks fly apart, accelerating, and fade */
+const RECEIVE = [0.62, 0.75];
+const CRACK = [0.74, 0.82];
+const SCATTER = [0.8, 0.97];
+const ARCH_SCALE = 0.47; // lattice → mesh units, so it reads at the tribar's size
 
 const ACCENT_ON_LIGHT = "#1A32FF";
 const ACCENT_ON_DARK = "#687CFF";
-const PULSE_PERIOD = 1.8; // seconds per core → pin-tip sweep
+const PACKET_SPEED = 5.5; // lattice units per second
+const AUTO_STEP = 2.2; // seconds per component in the idle walk
+
+/* Components: clients, gateway, three services, Kafka, Redis, Postgres.
+   Indices are referenced by the builder and ROUTES. */
+const NODE_COUNT = 8;
+
+/* Request paths for the packets, as lattice (x, z) waypoints at pipe
+   height. Each passes through the gateway, one service and Kafka. */
+const ROUTES: [number, number][][] = [
+  [[-6.6, 0], [-1.5, 0], [-1.5, -4], [4, -4], [4, -2.5], [6.6, -2.5]],
+  [[-6.6, 0], [-1.5, 0], [4, 0], [4, 2.5], [6.6, 2.5]],
+  [[-6.6, 0], [-1.5, 0], [-1.5, 4], [4, 4], [4, 2.5], [6.6, 2.5]],
+];
+const PIPE_Y = 0.22;
+const PACKETS_PER_ROUTE = 3;
 
 /* ── Face values ───────────────────────────────────────────────────
    Relative shades multiplied by the per-instance tint. +Y (top) full,
@@ -306,101 +318,115 @@ function buildCells() {
   return cells;
 }
 
-type ChipKind = "core" | "body" | "lid" | "mark" | "trace" | "pin";
-type ChipCell = {
+type ArchKind = "gateway" | "node" | "pipe" | "queue";
+type ArchCell = {
   pos: THREE.Vector3;
   size: THREE.Vector3;
-  kind: ChipKind;
-  ring: number; // lattice distance from the centre, drives the pulse
+  kind: ArchKind;
+  node: number; // component index, -1 for pipes
+  links: number[]; // components a pipe joins
 };
 
-/* Base shade per part, multiplied into the ink tint, so the package
-   reads as distinct materials rather than one grey mass. */
-const SHADE: Record<ChipKind, number> = {
-  core: 1,
-  body: 0.72,
-  lid: 1,
-  mark: 1,
-  trace: 0.5,
-  pin: 0.9,
-};
-const PULSE_WEIGHT: Record<ChipKind, number> = {
-  core: 0,
-  body: 0.12,
-  lid: 0.18,
-  mark: 0,
-  trace: 1,
-  pin: 1,
-};
+/* Base shade per part, multiplied into the ink tint, so components,
+   the log and the pipes read as distinct materials. */
+const SHADE: Record<ArchKind, number> = { gateway: 1, node: 1, queue: 0.82, pipe: 0.5 };
 
-/** The microchip's cells, centred on the origin. Index 0 is the core slab,
+/** The architecture's cells in lattice units. Index 0 is the gateway,
     which the liar flies to. */
-function buildChipCells(): ChipCell[] {
-  const out: ChipCell[] = [];
-  const h = (DIE - 1) / 2;
-  const one = new THREE.Vector3(1, 1, 1);
-  const ring = (x: number, z: number) => Math.max(Math.abs(x), Math.abs(z));
-  const top = 0.5; // body top face
-  const lidTop = top + LID_H;
-  const add = (x: number, y: number, z: number, size: THREE.Vector3, kind: ChipKind) =>
-    out.push({ pos: new THREE.Vector3(x, y, z), size, kind, ring: ring(x, z) });
+function buildArchCells(raw = false): ArchCell[] {
+  const out: ArchCell[] = [];
+  const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+  const add = (pos: THREE.Vector3, size: THREE.Vector3, kind: ArchKind, node: number, links: number[] = []) =>
+    out.push({ pos, size, kind, node, links });
 
-  add(0, lidTop + CORE_H / 2, 0, new THREE.Vector3(CORE_W, CORE_H, CORE_W), "core");
-
-  for (let x = -h; x <= h; x++) for (let z = -h; z <= h; z++) add(x, 0, z, one, "body");
-
-  const lidCell = new THREE.Vector3(1, LID_H, 1);
-  for (let x = -h + 1; x <= h - 1; x++)
-    for (let z = -h + 1; z <= h - 1; z++) add(x, top + LID_H / 2, z, lidCell, "lid");
-
-  const m = h - 1.35;
-  add(-m, lidTop + 0.03, -m, new THREE.Vector3(0.34, 0.06, 0.34), "mark");
-
-  // Pins on every column but the corners; a trace on the rim feeds each.
-  const alongX = new THREE.Vector3(1, PIN_H, PIN_W);
-  const alongZ = new THREE.Vector3(PIN_W, PIN_H, 1);
-  const traceX = new THREE.Vector3(1, 0.04, 0.16);
-  const traceZ = new THREE.Vector3(0.16, 0.04, 1);
-  for (let o = -h + 1; o <= h - 1; o++) {
-    add(h, top + 0.02, o, traceX, "trace");
-    add(-h, top + 0.02, o, traceX, "trace");
-    add(o, top + 0.02, h, traceZ, "trace");
-    add(o, top + 0.02, -h, traceZ, "trace");
-    for (let k = 1; k <= PIN_LEN; k++) {
-      const d = h + k;
-      const y = -0.18;
-      add(d, y, o, alongX, "pin");
-      add(-d, y, o, alongX, "pin");
-      add(o, y, d, alongZ, "pin");
-      add(o, y, -d, alongZ, "pin");
+  // A footprint w×d of stacked layers; the gaps between layers read as
+  // rack units / disc platters.
+  const block = (node: number, cx: number, cz: number, w: number, d: number, layers: number, lh: number, gap: number) => {
+    for (let ix = 0; ix < w; ix++)
+      for (let iz = 0; iz < d; iz++)
+        for (let l = 0; l < layers; l++)
+          add(
+            v(cx + ix - (w - 1) / 2, l * lh + (lh - gap) / 2, cz + iz - (d - 1) / 2),
+            v(1, lh - gap, 1),
+            "node",
+            node,
+          );
+  };
+  // Axis-aligned pipe from (ax, az) to (bx, bz), split into ~unit cells.
+  const pipe = (links: number[], ax: number, az: number, bx: number, bz: number) => {
+    const len = Math.abs(bx - ax) + Math.abs(bz - az);
+    const n = Math.max(1, Math.round(len));
+    const alongX = Math.abs(bx - ax) > 0;
+    for (let k = 0; k < n; k++) {
+      const t = (k + 0.5) / n;
+      add(
+        v(ax + (bx - ax) * t, PIPE_Y, az + (bz - az) * t),
+        alongX ? v(len / n, 0.18, 0.18) : v(0.18, 0.18, len / n),
+        "pipe",
+        -1,
+        links,
+      );
     }
+  };
+
+  add(v(-3.2, 0.42, 0), v(1.8, 0.84, 2.6), "gateway", 1); // liar
+
+  for (const z of [-1.3, 0, 1.3]) add(v(-7, 0.4, z), v(0.8, 0.8, 0.8), "node", 0);
+  pipe([0, 1], -6.6, 0, -4.1, 0);
+
+  pipe([1, 2, 3, 4], -2.3, 0, -1.5, 0);
+  pipe([1, 2], -1.5, 0, -1.5, -4);
+  pipe([1, 4], -1.5, 0, -1.5, 4);
+  const services: [number, number][] = [[2, -4], [3, 0], [4, 4]];
+  for (const [node, z] of services) {
+    pipe([1, node], -1.5, z, 0, z);
+    block(node, 1, z, 2, 2, 3, 0.62, 0.09);
+    pipe([node, 5], 2, z, 3.45, z);
   }
 
-  out.forEach((v) => {
-    v.pos.y -= 0.25;
-    v.pos.multiplyScalar(CHIP_SCALE);
-  });
+  for (let z = -4; z <= 4; z++) add(v(4, 0.26, z), v(1.1, 0.52, 0.84), "queue", 5);
+
+  pipe([5, 6], 4.55, -2.5, 6.5, -2.5);
+  pipe([5, 7], 4.55, 2.5, 6.5, 2.5);
+  block(6, 7.5, -2.5, 2, 2, 2, 0.5, 0.08);
+  block(7, 7.5, 2.5, 2, 2, 4, 0.55, 0.1);
+
+  if (raw) return out;
+  // Centre on the bounding box and bring down to mesh units.
+  const box = new THREE.Box3();
+  out.forEach((c) => box.expandByPoint(c.pos));
+  const centre = box.getCenter(new THREE.Vector3());
+  out.forEach((c) => c.pos.sub(centre).multiplyScalar(ARCH_SCALE));
   return out;
+}
+
+/** Centre of the uncentred lattice, for route waypoints. */
+function archCentre() {
+  const box = new THREE.Box3();
+  buildArchCells(true).forEach((c) => box.expandByPoint(c.pos));
+  return box.getCenter(new THREE.Vector3());
 }
 
 type Flight = {
   from: THREE.Vector3;
   to: THREE.Vector3;
-  size: THREE.Vector3; // landed scale
-  kind: ChipKind;
-  ring: number;
+  size: THREE.Vector3; // landed scale, lattice units
+  kind: ArchKind;
+  node: number;
+  links: number[];
   arc: THREE.Vector3; // outward bulge of the flight path
   delay: number; // 0..1 share of STAGGER
   spin: THREE.Vector3; // wobble axis
+  out: THREE.Vector3; // burst direction at the end of the hero
 };
 
-/* Pairs every chip cell with a tribar cell. The liar is pinned to the core
-   centre; every other tribar cube claims its nearest unique target
-   (greedy over all pairs, shortest first) so paths don't cross, and the
-   remaining chip cells split off the nearest tribar cube. The liar's
+/* Pairs every architecture cell with a tribar cell. The liar is pinned
+   to the gateway; every other tribar cube claims its nearest unique
+   target (greedy over all pairs, shortest first) so paths don't cross,
+   and the remaining cells split off the nearest tribar cube. The liar's
    flight is moved last so it stays the separately textured mesh. */
 function buildFlights(src: THREE.Vector3[], liarIdx: number): Flight[] {
-  const D = buildChipCells();
+  const D = buildArchCells();
   const sc = src.reduce((a, v) => a.add(v), new THREE.Vector3()).divideScalar(src.length);
   const S = src.map((v) => v.clone().sub(sc));
 
@@ -424,23 +450,44 @@ function buildFlights(src: THREE.Vector3[], liarIdx: number): Flight[] {
     owner[j] = best;
   });
 
-  const maxRing = (DIE - 1) / 2 + PIN_LEN;
+  const xs = D.map((c) => c.pos.x);
+  const minX = Math.min(...xs);
+  const spanX = Math.max(...xs) - minX || 1;
   const flights: Flight[] = D.map((cell, j) => {
     const from = S[owner[j]];
     const to = cell.pos;
     const mid = from.clone().add(to).multiplyScalar(0.5);
     const arc =
       mid.lengthSq() > 1e-4 ? mid.normalize().multiplyScalar(1.6) : new THREE.Vector3(0, 1.6, 0);
-    // Assembles inside-out — core, then package, then pins — with a little
-    // hash so a ring doesn't move as one slab.
+    // Assembles along the data flow — clients first, storage last — with
+    // a little hash so a column doesn't move as one slab.
     const h = Math.abs(Math.sin(j * 12.9898) * 43758.5453) % 1;
-    const delay = Math.min(1, (cell.ring / maxRing) * 0.75 + h * 0.25);
+    const delay = Math.min(1, ((to.x - minX) / spanX) * 0.75 + h * 0.25);
     const spin = new THREE.Vector3(h - 0.5, 1, 0.5 - h).normalize();
-    return { from, to, size: cell.size, kind: cell.kind, ring: cell.ring, arc, delay, spin };
+    const out = to.lengthSq() > 1e-4 ? to.clone().normalize() : new THREE.Vector3(0, 1, 0);
+    return { from, to, size: cell.size, kind: cell.kind, node: cell.node, links: cell.links, arc, delay, spin, out };
   });
   const [liar] = flights.splice(0, 1);
   flights.push(liar);
   return flights;
+}
+
+/** Route polylines in mesh units, with cumulative lengths for sampling. */
+function buildRoutes() {
+  const c = archCentre();
+  return ROUTES.map((r) => {
+    const pts = r.map(([x, z]) => new THREE.Vector3(x, PIPE_Y, z).sub(c).multiplyScalar(ARCH_SCALE));
+    const cum = [0];
+    for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i].distanceTo(pts[i - 1]));
+    return { pts, cum, len: cum[cum.length - 1] };
+  });
+}
+
+function sampleRoute(r: ReturnType<typeof buildRoutes>[number], d: number, out: THREE.Vector3) {
+  let i = 1;
+  while (i < r.cum.length - 1 && r.cum[i] < d) i++;
+  const seg = r.cum[i] - r.cum[i - 1] || 1;
+  return out.copy(r.pts[i - 1]).lerp(r.pts[i], (d - r.cum[i - 1]) / seg);
 }
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -483,12 +530,16 @@ function Rig() {
   return null;
 }
 
-function Voxels({ progress }: { progress?: MotionValue<number> }) {
+function Voxels({
+  progress,
+}: {
+  progress?: MotionValue<number>;
+}) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const shadow = useRef<THREE.InstancedMesh>(null);
   const reduced = usePrefersReducedMotion();
   const angle = useRef(BASE_ANGLE);
-  const { camera, size } = useThree();
+  const { camera, size, gl } = useThree();
 
   const cells = useMemo(buildCells, []);
   const flights = useMemo(
@@ -496,6 +547,50 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     [cells],
   );
   const yCells = useMemo(buildYCells, []);
+  const routes = useMemo(buildRoutes, []);
+
+  /* Interaction state lives in refs — it is read every frame. */
+  const hovered = useRef<number | null>(null);
+  const touched = useRef(false); // stops the idle walk once the visitor engages
+  const live = useRef(false);
+  const lift = useRef(Array.from({ length: NODE_COUNT }, () => 0));
+
+  /* Per-component data for the exploded-view burst: each component
+     leaves as one rigid unit from its own centre, in its own direction,
+     on its own beat. */
+  const parts = useMemo(
+    () =>
+      Array.from({ length: NODE_COUNT }, (_, n) => {
+        const own = flights.filter((f) => f.node === n);
+        const c = new THREE.Vector3();
+        let base = Infinity;
+        let top = -Infinity;
+        own.forEach((f) => {
+          c.add(f.to);
+          base = Math.min(base, f.to.y - (f.size.y * ARCH_SCALE) / 2);
+          top = Math.max(top, f.to.y + (f.size.y * ARCH_SCALE) / 2);
+        });
+        c.divideScalar(own.length || 1);
+        const dir = new THREE.Vector3(c.x, 0, c.z);
+        if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
+        dir.normalize();
+        dir.y = 0.45;
+        const h = Math.abs(Math.sin((n + 1) * 78.233) * 43758.5453) % 1;
+        return { c, base, height: Math.max(1e-3, top - base), dir, delay: h };
+      }),
+    [flights],
+  );
+  const qTumble = useMemo(() => new THREE.Quaternion(), []);
+  const away = useMemo(() => new THREE.Vector3(), []);
+  const qWobble = useMemo(() => new THREE.Quaternion(), []);
+
+  const packets = useRef<THREE.InstancedMesh>(null);
+  const packetCount = ROUTES.length * PACKETS_PER_ROUTE;
+  const packetMaterial = useMemo(
+    () => new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true }),
+    [],
+  );
+  const packetPos = useMemo(() => new THREE.Vector3(), []);
   const geometry = useMemo(shadedCube, []);
   const material = useMemo(
     () =>
@@ -572,7 +667,6 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
   const accentDark = useMemo(() => new THREE.Color(ACCENT_ON_DARK), []);
   const accent = useMemo(() => new THREE.Color(), []);
   const scaleTmp = useMemo(() => new THREE.Vector3(), []);
-  const lastTone = useRef(-1);
 
   /* The Y's cubes never move relative to one another, so their
      matrices are written once on mount rather than every frame — only
@@ -600,8 +694,9 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       shadowMaterial.dispose();
       liarMaterial.map?.dispose();
       liarMaterial.dispose();
+      packetMaterial.dispose();
     },
-    [geometry, material, shadowMaterial, liarMaterial],
+    [geometry, material, shadowMaterial, liarMaterial, packetMaterial],
   );
 
   useFrame((state, delta) => {
@@ -610,62 +705,140 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
 
     const p = progress ? progress.get() : 0;
 
-    /* ── Tone ──────────────────────────────────────────────────
-       Repainting instance tints is cheap but pointless when nothing has
-       moved, so it is gated on tone, part-shading and pulse. Per-part
+    /* ── Interaction window ────────────────────────────────────
+       Only while the architecture is fully formed and before the burst.
+       Until the visitor hovers something, the highlight walks the
+       components on its own so it is obvious they can be explored. */
+    const liveAmt = track(p, LIVE, [0, 1, 1, 0]);
+    const receive = track(p, RECEIVE, [0, 1]);
+    const crack = easeInOut(track(p, CRACK, [0, 1]));
+    const scatter = track(p, SCATTER, [0, 1]);
+    live.current = liveAmt > 0.5;
+    let focus: number | null = null;
+    if (live.current) {
+      if (hovered.current !== null) focus = hovered.current;
+      else if (!touched.current && !reduced)
+        focus = Math.floor(state.clock.elapsedTime / AUTO_STEP) % NODE_COUNT;
+    }
+
+    /* ── Tone + highlight ──────────────────────────────────────
+       ~100 instances, so tints are simply repainted every frame. Per-part
        shades blend in with the morph so the tribar stays one flat ink. */
     const tone = track(p, [0.28, 0.72], [0, 1]);
     const partMix = track(p, MORPH, [0, 1]);
-    /* Signal pulse: once the chip has landed, a band of accent runs from
-       the core out along the traces and pins, on a loop. */
-    const formed = reduced ? 0 : track(p, [MORPH[1] - 0.04, MORPH[1] + 0.02, 0.8], [0, 1, 0]);
-    const paintKey = tone + partMix * 10;
-    if (formed > 0.001 || Math.abs(paintKey - lastTone.current) > 0.002) {
-      lastTone.current = formed > 0.001 ? -1 : paintKey;
-      const maxRing = (DIE - 1) / 2 + PIN_LEN;
-      const wave = ((state.clock.elapsedTime % PULSE_PERIOD) / PULSE_PERIOD) * (maxRing + 2) - 1;
-      accent.copy(accentLight).lerp(accentDark, tone);
-      // The last instance is the liar — the separate flow-textured mesh.
-      for (let i = 0; i < flights.length - 1; i++) {
-        const f = flights[i];
-        tint.copy(inkLight).lerp(inkDark, tone);
-        if (f.kind === "mark") {
-          tint.lerp(accent, partMix);
-        } else {
-          tint.multiplyScalar(1 + (SHADE[f.kind] - 1) * partMix);
-          if (formed > 0.001) {
-            const band = Math.max(0, 1 - Math.abs(f.ring - wave) / 1.1);
-            tint.lerp(accent, band * PULSE_WEIGHT[f.kind] * formed);
-          }
-        }
-        m.setColorAt(i, tint);
-      }
-      if (m.instanceColor) m.instanceColor.needsUpdate = true;
-    }
+    accent.copy(accentLight).lerp(accentDark, tone);
+    const k = Math.min(1, delta * 10);
+    for (let n = 0; n < NODE_COUNT; n++)
+      lift.current[n] += ((focus === n ? 1 : 0) - lift.current[n]) * k;
 
-    material.opacity = track(p, [0, 0.68, 0.92], [1, 1, 0]);
+    // The last instance is the liar — the separate flow-textured mesh.
+    for (let i = 0; i < flights.length - 1; i++) {
+      const f = flights[i];
+      tint.copy(inkLight).lerp(inkDark, tone);
+      tint.multiplyScalar(1 + (SHADE[f.kind] - 1) * partMix);
+      let glow: number;
+      if (f.node >= 0) {
+        const part = parts[f.node];
+        // Fills bottom-up as data arrives; the fracture flashes it.
+        const level = (f.to.y - part.base) / part.height;
+        const fill = Math.min(1, Math.max(0, (receive * 1.25 - level) * 4)) * 0.6;
+        glow = Math.max(lift.current[f.node] * 0.55, fill + crack * (1 - crack) * 1.2);
+      } else {
+        // Pipes run hot while the servers are receiving.
+        glow = Math.max(Math.max(0, ...f.links.map((n) => lift.current[n])) * 0.9, receive * 0.85);
+      }
+      if (glow > 0.001) tint.lerp(accent, Math.min(1, glow));
+      m.setColorAt(i, tint);
+    }
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
+
+    // Fades as it bursts.
+    material.opacity = track(p, [0, 0.86, 0.97], [1, 1, 0]);
     liarMaterial.opacity = material.opacity;
     m.visible = material.opacity > 0.001;
 
-    /* ── Morph: triangle → microchip ─────────────────────────
+    /* ── Morph: triangle → architecture ──────────────────────
        Each block eases along an outward arc on its own staggered clock,
        dips in scale and wobbles mid-flight, then lands axis-aligned (so
-       the painted face values read correctly) at its chip-cell size. */
+       the painted face values read correctly) at its cell size. A
+       focused component lifts off the ground. */
     const morph = track(p, MORPH, [0, 1]);
+    // Pipes retract as the servers crack.
+    const retract = easeInOut(track(p, [RECEIVE[1] - 0.02, CRACK[1]], [0, 1]));
     for (let i = 0; i < flights.length; i++) {
       const f = flights[i];
       const local = Math.min(1, Math.max(0, (morph - f.delay * STAGGER) / (1 - STAGGER)));
       const t = easeInOut(local);
       const bump = Math.sin(Math.PI * t);
       dummy.position.copy(f.from).lerp(f.to, t).addScaledVector(f.arc, bump);
-      dummy.quaternion.setFromAxisAngle(f.spin, bump * 0.9);
-      scaleTmp.set(1, 1, 1).lerp(f.size, t).multiplyScalar(1 + (CHIP_SCALE - 1) * t);
+      qWobble.setFromAxisAngle(f.spin, bump * 0.9);
+      dummy.quaternion.copy(qWobble);
+      scaleTmp.set(1, 1, 1).lerp(f.size, t).multiplyScalar(1 + (ARCH_SCALE - 1) * t);
       dummy.scale.copy(scaleTmp).multiplyScalar(1 - 0.28 * bump);
+
+      if (f.node >= 0) {
+        const part = parts[f.node];
+        dummy.position.y += lift.current[f.node] * 0.35 * ARCH_SCALE;
+        if (crack > 0) {
+          // Each block's own way out: away from its component's centre,
+          // biased along the component's direction from the middle.
+          away.copy(f.to).sub(part.c);
+          away.y += (f.to.y - part.base) * 0.6;
+          const spread = away.length();
+          away.multiplyScalar(spread > 1e-4 ? 1 / spread : 0).addScaledVector(part.dir, 0.9).normalize();
+
+          // Fracture: blocks pull apart from their neighbours and tumble a little.
+          dummy.position.addScaledVector(away, crack * 0.32);
+          dummy.position.y += (f.to.y - part.base) * crack * 0.5;
+          const fly = Math.min(1, Math.max(0, (scatter - f.delay * 0.25 - part.delay * 0.1) / 0.65));
+          qTumble.setFromAxisAngle(f.spin, crack * 0.35 + fly * fly * 2.6);
+          dummy.quaternion.premultiply(qTumble);
+
+          // Scatter: accelerating outward, shrinking slightly as it goes.
+          dummy.position.addScaledVector(away, fly * fly * 7);
+          dummy.scale.multiplyScalar(1 - fly * 0.35);
+        }
+      } else if (retract > 0) {
+        // Pipes shrink back to nothing before the components move.
+        dummy.scale.multiplyScalar(1 - retract);
+      }
       dummy.updateMatrix();
       m.setMatrixAt(i, dummy.matrix);
       if (i === flights.length - 1) liar.current?.matrix.copy(dummy.matrix);
     }
     m.instanceMatrix.needsUpdate = true;
+    // Instances move every frame, so the raycast bounds must follow.
+    if (live.current) m.computeBoundingSphere();
+
+    /* ── Packets ───────────────────────────────────────────────
+       Requests flowing along the pipes while the architecture is live.
+       Children of the main mesh, so they share its turn, tilt and scale. */
+    const pk = packets.current;
+    if (pk) {
+      packetMaterial.opacity =
+        track(p, [LIVE[0], LIVE[1], RECEIVE[1] - 0.01, RECEIVE[1] + 0.02], [0, 1, 1, 0]) * material.opacity;
+      pk.visible = packetMaterial.opacity > 0.01;
+      if (pk.visible) {
+        // Scrolling through RECEIVE pushes the packets in faster.
+        const clock =
+          (reduced ? 0 : state.clock.elapsedTime * PACKET_SPEED * ARCH_SCALE) + receive * 3;
+        for (let r = 0; r < routes.length; r++)
+          for (let j = 0; j < PACKETS_PER_ROUTE; j++) {
+            const route = routes[r];
+            const d = (clock + (j / PACKETS_PER_ROUTE) * route.len + r * 0.37 * route.len) % route.len;
+            sampleRoute(route, d, packetPos);
+            dummy.position.copy(packetPos);
+            dummy.quaternion.identity();
+            dummy.scale.setScalar(0.34 * ARCH_SCALE);
+            dummy.updateMatrix();
+            const i = r * PACKETS_PER_ROUTE + j;
+            pk.setMatrixAt(i, dummy.matrix);
+            pk.setColorAt(i, accent);
+          }
+        pk.instanceMatrix.needsUpdate = true;
+        if (pk.instanceColor) pk.instanceColor.needsUpdate = true;
+      }
+    }
 
     /* ── Orientation ───────────────────────────────────────────
        Rotation is scroll position, not elapsed time — an idle spin is
@@ -687,7 +860,7 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     qYaw.setFromAxisAngle(worldUp, easeInOut(track(p, [MORPH[0], 0.72], [0, 1])) * YAW);
     m.quaternion.copy(qTilt).multiply(qYaw).multiply(qView);
 
-    m.scale.setScalar(track(p, [0, 0.62, 1], [1, 2.1, 6.5]));
+    m.scale.setScalar(track(p, [0, 0.62, 1], [1, 2.1, 2.5]));
 
     /* ── Vertical alignment ────────────────────────────────────
        The canvas covers the whole sticky stage, so its centre sits
@@ -773,6 +946,18 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
         args={[geometry, material, flights.length]}
         count={flights.length - 1}
         frustumCulled={false}
+        onPointerMove={(e) => {
+          if (!live.current || e.instanceId === undefined) return;
+          e.stopPropagation();
+          const n = flights[e.instanceId]?.node ?? -1;
+          hovered.current = n >= 0 ? n : (flights[e.instanceId]?.links[1] ?? null);
+          touched.current = true;
+          gl.domElement.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          hovered.current = null;
+          gl.domElement.style.cursor = "";
+        }}
       >
         {/* Child of the instanced mesh, so it inherits the group's
             turn, tilt and scale; its local matrix is the last
@@ -783,6 +968,23 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
           material={liarMaterial}
           matrixAutoUpdate={false}
           frustumCulled={false}
+          onPointerMove={(e) => {
+            if (!live.current) return;
+            e.stopPropagation();
+            hovered.current = 1;
+            touched.current = true;
+            gl.domElement.style.cursor = "pointer";
+          }}
+          onPointerOut={() => {
+            hovered.current = null;
+            gl.domElement.style.cursor = "";
+          }}
+        />
+        <instancedMesh
+          ref={packets}
+          args={[geometry, packetMaterial, packetCount]}
+          frustumCulled={false}
+          raycast={() => null}
         />
       </instancedMesh>
     </>
@@ -797,17 +999,19 @@ export default function Tribar3D({
   progress?: MotionValue<number>;
 }) {
   return (
-    <Canvas
-      className={className}
-      orthographic
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
-      style={{ background: "transparent" }}
-    >
-      <Rig />
-      {/* No lights — the material is unlit and its face values are
-          painted into the geometry. See the header note. */}
-      <Voxels progress={progress} />
-    </Canvas>
+    <div className={`relative ${className ?? ""}`} style={{ pointerEvents: "auto" }}>
+      <Canvas
+        className="!h-full !w-full"
+        orthographic
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: true }}
+        style={{ background: "transparent" }}
+      >
+        <Rig />
+        {/* No lights — the material is unlit and its face values are
+            painted into the geometry. See the header note. */}
+        <Voxels progress={progress} />
+      </Canvas>
+    </div>
   );
 }
