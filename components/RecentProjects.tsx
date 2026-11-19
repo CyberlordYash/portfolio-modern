@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { projects } from "@/data";
 import { Draw, Mask, Rise, EASE } from "@/components/ui/Reveal";
 
@@ -20,6 +20,9 @@ type Project = (typeof projects)[number];
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
+// Same `sizes` everywhere so the preload and the opened frame request the identical URL.
+const FRAME_SIZES = "(max-width: 1024px) 100vw, 760px";
+
 /* What a link actually is, read off its host — a repo and a live
    deployment are different promises, so they get different labels. */
 function linkMeta(link: string) {
@@ -35,8 +38,9 @@ function linkMeta(link: string) {
 
 /* Screenshot in a hairline window. The bar carries the address the
    project lives at, or its name when it has no public one. */
-function Frame({ p, priority = false }: { p: Project; priority?: boolean }) {
+function Frame({ p }: { p: Project }) {
   const meta = linkMeta(p.link);
+  const [loaded, setLoaded] = useState(false);
   return (
     <div className="pframe">
       <div className="pframe__bar">
@@ -51,14 +55,15 @@ function Frame({ p, priority = false }: { p: Project; priority?: boolean }) {
             : p.title.toLowerCase().replace(/\s+/g, "-")}
         </span>
       </div>
-      <div className="relative aspect-[16/10] w-full">
+      <div className="relative aspect-[16/10] w-full bg-[rgb(var(--ink-rgb)/0.04)]">
         <Image
           src={p.img}
           alt={`${p.title} — screenshot`}
           fill
-          sizes="(max-width: 1024px) 100vw, 760px"
-          className="object-cover object-top"
-          priority={priority}
+          sizes={FRAME_SIZES}
+          loading="eager"
+          onLoad={() => setLoaded(true)}
+          className={`object-cover object-top transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
         />
       </div>
     </div>
@@ -188,9 +193,21 @@ function Row({
 /* ── Section ────────────────────────────────────────────────────── */
 const RecentProjects = () => {
   const [open, setOpen] = useState<number | null>(null);
+  // Warm the screenshots well before the list is reached, so opening a row is instant.
+  const root = useRef<HTMLDivElement>(null);
+  const near = useInView(root, { once: true, margin: "1200px 0px" });
 
   return (
-    <div>
+    <div ref={root}>
+      {near && (
+        <div aria-hidden className="pointer-events-none fixed left-0 top-0 h-px w-px overflow-hidden opacity-0">
+          {projects.map((p) => (
+            <div key={p.id} className="relative h-px w-px">
+              <Image src={p.img} alt="" fill sizes={FRAME_SIZES} loading="eager" />
+            </div>
+          ))}
+        </div>
+      )}
       <Head />
 
       <div className="mt-16 md:mt-20">
