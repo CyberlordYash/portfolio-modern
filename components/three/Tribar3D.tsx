@@ -33,16 +33,15 @@ import * as THREE from "three";
    legible — you can see the individual blocks pull out of line.
 
    ── The scroll timeline ──
-     0.00 → 0.35  assembled, turning about the view axis. A rotation
-                  within the image plane leaves the projected
-                  coincidence and the depth order untouched, so the
-                  figure stays impossible while its silhouette moves.
-     0.35 → 0.75  tilts off that axis and the cubes stagger apart. The
-                  moment the view axis is abandoned the two ends
-                  separate and the trick is exposed — this is the
-                  payoff, not a glitch.
-     0.75 → 1.00  scales up and dissolves into the dark ground the
-                  page has meanwhile converted to.
+     0.00 → 0.18  assembled, turning about the view axis — the figure
+                  stays impossible while its silhouette moves.
+     0.18 → 0.60  settles to a clean isometric view while every block
+                  flies a staggered arc into a microchip — die, raised
+                  core, pins on all four sides. The liar cube lands as
+                  the core.
+     0.60 → 1.00  the chip holds with a signal pulse running from the
+                  core out along the pins, then scales up and dissolves
+                  into the dark ground the page has converted to.
 
    ── Why the faces are painted, not lit ──
    A previous pass used MeshStandardMaterial and a light rig. Every
@@ -57,7 +56,33 @@ const GAP = 1; // lattice spacing (cube size is 1, so arms are solid)
 
 const BASE_ANGLE = -0.42;
 const TURN = Math.PI * 1.15; // travel about the view axis across the track
-const TILT_MAX = 0.92; // radians off-axis — how far the illusion opens
+const TILT_MAX = 0.25; // slight tilt off the iso axis once the chip forms
+const YAW = Math.PI * 0.5; // quarter turn about world up while morphing (chip is 4-fold symmetric)
+
+const MORPH = [0.18, 0.6]; // scroll window for triangle → chip
+const STAGGER = 0.45; // share of the window spent staggering block starts
+
+/* Microchip, in lattice units (drawn at CHIP_SCALE so it reads at the
+   tribar's size):
+     body   DIE×DIE package, one cube tall
+     lid    (DIE-2)² heat spreader, a thin plate stepped in one cell
+     core   one flat slab of silicon on the lid — the liar cube, so it
+            carries the blue flow texture
+     mark   pin-1 dot on the lid corner
+     traces hairlines on the body's exposed rim, one per pin
+     pins   solid flat legs on every lattice column but the corners */
+const DIE = 7;
+const PIN_LEN = 2;
+const CHIP_SCALE = 0.68;
+const LID_H = 0.32;
+const CORE_W = 2.6;
+const CORE_H = 0.22;
+const PIN_W = 0.42;
+const PIN_H = 0.16;
+
+const ACCENT_ON_LIGHT = "#1A32FF";
+const ACCENT_ON_DARK = "#687CFF";
+const PULSE_PERIOD = 1.8; // seconds per core → pin-tip sweep
 
 /* ── Face values ───────────────────────────────────────────────────
    Relative shades multiplied by the per-instance tint. +Y (top) full,
@@ -281,6 +306,145 @@ function buildCells() {
   return cells;
 }
 
+type ChipKind = "core" | "body" | "lid" | "mark" | "trace" | "pin";
+type ChipCell = {
+  pos: THREE.Vector3;
+  size: THREE.Vector3;
+  kind: ChipKind;
+  ring: number; // lattice distance from the centre, drives the pulse
+};
+
+/* Base shade per part, multiplied into the ink tint, so the package
+   reads as distinct materials rather than one grey mass. */
+const SHADE: Record<ChipKind, number> = {
+  core: 1,
+  body: 0.72,
+  lid: 1,
+  mark: 1,
+  trace: 0.5,
+  pin: 0.9,
+};
+const PULSE_WEIGHT: Record<ChipKind, number> = {
+  core: 0,
+  body: 0.12,
+  lid: 0.18,
+  mark: 0,
+  trace: 1,
+  pin: 1,
+};
+
+/** The microchip's cells, centred on the origin. Index 0 is the core slab,
+    which the liar flies to. */
+function buildChipCells(): ChipCell[] {
+  const out: ChipCell[] = [];
+  const h = (DIE - 1) / 2;
+  const one = new THREE.Vector3(1, 1, 1);
+  const ring = (x: number, z: number) => Math.max(Math.abs(x), Math.abs(z));
+  const top = 0.5; // body top face
+  const lidTop = top + LID_H;
+  const add = (x: number, y: number, z: number, size: THREE.Vector3, kind: ChipKind) =>
+    out.push({ pos: new THREE.Vector3(x, y, z), size, kind, ring: ring(x, z) });
+
+  add(0, lidTop + CORE_H / 2, 0, new THREE.Vector3(CORE_W, CORE_H, CORE_W), "core");
+
+  for (let x = -h; x <= h; x++) for (let z = -h; z <= h; z++) add(x, 0, z, one, "body");
+
+  const lidCell = new THREE.Vector3(1, LID_H, 1);
+  for (let x = -h + 1; x <= h - 1; x++)
+    for (let z = -h + 1; z <= h - 1; z++) add(x, top + LID_H / 2, z, lidCell, "lid");
+
+  const m = h - 1.35;
+  add(-m, lidTop + 0.03, -m, new THREE.Vector3(0.34, 0.06, 0.34), "mark");
+
+  // Pins on every column but the corners; a trace on the rim feeds each.
+  const alongX = new THREE.Vector3(1, PIN_H, PIN_W);
+  const alongZ = new THREE.Vector3(PIN_W, PIN_H, 1);
+  const traceX = new THREE.Vector3(1, 0.04, 0.16);
+  const traceZ = new THREE.Vector3(0.16, 0.04, 1);
+  for (let o = -h + 1; o <= h - 1; o++) {
+    add(h, top + 0.02, o, traceX, "trace");
+    add(-h, top + 0.02, o, traceX, "trace");
+    add(o, top + 0.02, h, traceZ, "trace");
+    add(o, top + 0.02, -h, traceZ, "trace");
+    for (let k = 1; k <= PIN_LEN; k++) {
+      const d = h + k;
+      const y = -0.18;
+      add(d, y, o, alongX, "pin");
+      add(-d, y, o, alongX, "pin");
+      add(o, y, d, alongZ, "pin");
+      add(o, y, -d, alongZ, "pin");
+    }
+  }
+
+  out.forEach((v) => {
+    v.pos.y -= 0.25;
+    v.pos.multiplyScalar(CHIP_SCALE);
+  });
+  return out;
+}
+
+type Flight = {
+  from: THREE.Vector3;
+  to: THREE.Vector3;
+  size: THREE.Vector3; // landed scale
+  kind: ChipKind;
+  ring: number;
+  arc: THREE.Vector3; // outward bulge of the flight path
+  delay: number; // 0..1 share of STAGGER
+  spin: THREE.Vector3; // wobble axis
+};
+
+/* Pairs every chip cell with a tribar cell. The liar is pinned to the core
+   centre; every other tribar cube claims its nearest unique target
+   (greedy over all pairs, shortest first) so paths don't cross, and the
+   remaining chip cells split off the nearest tribar cube. The liar's
+   flight is moved last so it stays the separately textured mesh. */
+function buildFlights(src: THREE.Vector3[], liarIdx: number): Flight[] {
+  const D = buildChipCells();
+  const sc = src.reduce((a, v) => a.add(v), new THREE.Vector3()).divideScalar(src.length);
+  const S = src.map((v) => v.clone().sub(sc));
+
+  const owner = new Array<number>(D.length).fill(-1);
+  owner[0] = liarIdx;
+  const srcUsed = new Set<number>([liarIdx]);
+  const pairs: [number, number, number][] = [];
+  S.forEach((a, i) => D.forEach((b, j) => pairs.push([a.distanceToSquared(b.pos), i, j])));
+  pairs.sort((a, b) => a[0] - b[0]);
+  for (const [, i, j] of pairs) {
+    if (srcUsed.has(i) || owner[j] !== -1) continue;
+    owner[j] = i;
+    srcUsed.add(i);
+  }
+  D.forEach((b, j) => {
+    if (owner[j] !== -1) return;
+    let best = 0;
+    S.forEach((a, i) => {
+      if (a.distanceToSquared(b.pos) < S[best].distanceToSquared(b.pos)) best = i;
+    });
+    owner[j] = best;
+  });
+
+  const maxRing = (DIE - 1) / 2 + PIN_LEN;
+  const flights: Flight[] = D.map((cell, j) => {
+    const from = S[owner[j]];
+    const to = cell.pos;
+    const mid = from.clone().add(to).multiplyScalar(0.5);
+    const arc =
+      mid.lengthSq() > 1e-4 ? mid.normalize().multiplyScalar(1.6) : new THREE.Vector3(0, 1.6, 0);
+    // Assembles inside-out — core, then package, then pins — with a little
+    // hash so a ring doesn't move as one slab.
+    const h = Math.abs(Math.sin(j * 12.9898) * 43758.5453) % 1;
+    const delay = Math.min(1, (cell.ring / maxRing) * 0.75 + h * 0.25);
+    const spin = new THREE.Vector3(h - 0.5, 1, 0.5 - h).normalize();
+    return { from, to, size: cell.size, kind: cell.kind, ring: cell.ring, arc, delay, spin };
+  });
+  const [liar] = flights.splice(0, 1);
+  flights.push(liar);
+  return flights;
+}
+
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
 function Rig() {
   const { camera, size } = useThree();
   useEffect(() => {
@@ -327,6 +491,10 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
   const { camera, size } = useThree();
 
   const cells = useMemo(buildCells, []);
+  const flights = useMemo(
+    () => buildFlights(cells.map((c) => c.pos), cells.length - 1),
+    [cells],
+  );
   const yCells = useMemo(buildYCells, []);
   const geometry = useMemo(shadedCube, []);
   const material = useMemo(
@@ -377,14 +545,6 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     [],
   );
 
-  /* Centre of the lattice, so the group turns about the figure rather
-     than orbiting the world origin. */
-  const centre = useMemo(() => {
-    const c = new THREE.Vector3();
-    cells.forEach((cell) => c.add(cell.pos));
-    return c.divideScalar(cells.length);
-  }, [cells]);
-
   const viewAxis = useMemo(() => new THREE.Vector3(1, 1, 1).normalize(), []);
   // Any axis perpendicular to the view direction will open the figure;
   // this one keeps the separation broadly horizontal on screen.
@@ -396,6 +556,8 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const qView = useMemo(() => new THREE.Quaternion(), []);
   const qTilt = useMemo(() => new THREE.Quaternion(), []);
+  const qYaw = useMemo(() => new THREE.Quaternion(), []);
+  const worldUp = useMemo(() => new THREE.Vector3(0, 1, 0), []);
 
   const inkLight = useMemo(() => new THREE.Color(INK_ON_LIGHT), []);
   const inkDark = useMemo(() => new THREE.Color(INK_ON_DARK), []);
@@ -406,6 +568,10 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
   const groundMix = useMemo(() => new THREE.Color(), []);
 
   const tint = useMemo(() => new THREE.Color(), []);
+  const accentLight = useMemo(() => new THREE.Color(ACCENT_ON_LIGHT), []);
+  const accentDark = useMemo(() => new THREE.Color(ACCENT_ON_DARK), []);
+  const accent = useMemo(() => new THREE.Color(), []);
+  const scaleTmp = useMemo(() => new THREE.Vector3(), []);
   const lastTone = useRef(-1);
 
   /* The Y's cubes never move relative to one another, so their
@@ -438,48 +604,66 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
     [geometry, material, shadowMaterial, liarMaterial],
   );
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const m = mesh.current;
     if (!m) return;
 
     const p = progress ? progress.get() : 0;
 
     /* ── Tone ──────────────────────────────────────────────────
-       Repainting instance tints is cheap but pointless when the value
-       hasn't moved, so it is gated to the frames during the ramp. */
+       Repainting instance tints is cheap but pointless when nothing has
+       moved, so it is gated on tone, part-shading and pulse. Per-part
+       shades blend in with the morph so the tribar stays one flat ink. */
     const tone = track(p, [0.28, 0.72], [0, 1]);
-    if (Math.abs(tone - lastTone.current) > 0.002) {
-      lastTone.current = tone;
-      // The final cube — the one whose projection lands on the first,
-      // i.e. the cube that tells the lie — is the separate flow-textured
-      // mesh, so the eye has somewhere to be when the join is revealed.
-      for (let i = 0; i < cells.length - 1; i++) {
+    const partMix = track(p, MORPH, [0, 1]);
+    /* Signal pulse: once the chip has landed, a band of accent runs from
+       the core out along the traces and pins, on a loop. */
+    const formed = reduced ? 0 : track(p, [MORPH[1] - 0.04, MORPH[1] + 0.02, 0.8], [0, 1, 0]);
+    const paintKey = tone + partMix * 10;
+    if (formed > 0.001 || Math.abs(paintKey - lastTone.current) > 0.002) {
+      lastTone.current = formed > 0.001 ? -1 : paintKey;
+      const maxRing = (DIE - 1) / 2 + PIN_LEN;
+      const wave = ((state.clock.elapsedTime % PULSE_PERIOD) / PULSE_PERIOD) * (maxRing + 2) - 1;
+      accent.copy(accentLight).lerp(accentDark, tone);
+      // The last instance is the liar — the separate flow-textured mesh.
+      for (let i = 0; i < flights.length - 1; i++) {
+        const f = flights[i];
         tint.copy(inkLight).lerp(inkDark, tone);
+        if (f.kind === "mark") {
+          tint.lerp(accent, partMix);
+        } else {
+          tint.multiplyScalar(1 + (SHADE[f.kind] - 1) * partMix);
+          if (formed > 0.001) {
+            const band = Math.max(0, 1 - Math.abs(f.ring - wave) / 1.1);
+            tint.lerp(accent, band * PULSE_WEIGHT[f.kind] * formed);
+          }
+        }
         m.setColorAt(i, tint);
       }
       if (m.instanceColor) m.instanceColor.needsUpdate = true;
     }
 
-    material.opacity = track(p, [0, 0.62, 0.92], [1, 1, 0]);
+    material.opacity = track(p, [0, 0.68, 0.92], [1, 1, 0]);
     liarMaterial.opacity = material.opacity;
     m.visible = material.opacity > 0.001;
 
-    /* ── Disassembly ───────────────────────────────────────────
-       Each cube slides along its own arm, scaled by how far down the
-       arm it sits, so the arms stretch into staircases rather than
-       translating rigidly. */
-    const spread = track(p, [0.35, 0.78], [0, 1]) * 0.55;
-    for (let i = 0; i < cells.length; i++) {
-      const cell = cells[i];
-      dummy.position
-        .copy(cell.pos)
-        .sub(centre)
-        .addScaledVector(cell.dir, cell.step * spread);
-      dummy.rotation.set(0, 0, 0);
-      dummy.scale.setScalar(1);
+    /* ── Morph: triangle → microchip ─────────────────────────
+       Each block eases along an outward arc on its own staggered clock,
+       dips in scale and wobbles mid-flight, then lands axis-aligned (so
+       the painted face values read correctly) at its chip-cell size. */
+    const morph = track(p, MORPH, [0, 1]);
+    for (let i = 0; i < flights.length; i++) {
+      const f = flights[i];
+      const local = Math.min(1, Math.max(0, (morph - f.delay * STAGGER) / (1 - STAGGER)));
+      const t = easeInOut(local);
+      const bump = Math.sin(Math.PI * t);
+      dummy.position.copy(f.from).lerp(f.to, t).addScaledVector(f.arc, bump);
+      dummy.quaternion.setFromAxisAngle(f.spin, bump * 0.9);
+      scaleTmp.set(1, 1, 1).lerp(f.size, t).multiplyScalar(1 + (CHIP_SCALE - 1) * t);
+      dummy.scale.copy(scaleTmp).multiplyScalar(1 - 0.28 * bump);
       dummy.updateMatrix();
       m.setMatrixAt(i, dummy.matrix);
-      if (i === cells.length - 1) liar.current?.matrix.copy(dummy.matrix);
+      if (i === flights.length - 1) liar.current?.matrix.copy(dummy.matrix);
     }
     m.instanceMatrix.needsUpdate = true;
 
@@ -495,12 +679,15 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       angle.current += (targetAngle - angle.current) * Math.min(1, delta * 6);
     }
 
-    qView.setFromAxisAngle(viewAxis, angle.current);
-    // Leaving the view axis is what breaks the illusion open.
-    qTilt.setFromAxisAngle(tiltAxis, track(p, [0.35, 0.78], [0, TILT_MAX]));
-    m.quaternion.copy(qTilt).multiply(qView);
+    // The in-plane turn unwinds as the chip forms so it lands squarely
+    // isometric instead of rotated on screen.
+    const settle = easeInOut(track(p, MORPH, [0, 1]));
+    qView.setFromAxisAngle(viewAxis, angle.current * (1 - settle));
+    qTilt.setFromAxisAngle(tiltAxis, settle * TILT_MAX);
+    qYaw.setFromAxisAngle(worldUp, easeInOut(track(p, [MORPH[0], 0.72], [0, 1])) * YAW);
+    m.quaternion.copy(qTilt).multiply(qYaw).multiply(qView);
 
-    m.scale.setScalar(track(p, [0, 0.62, 1], [1, 2.6, 6.5]));
+    m.scale.setScalar(track(p, [0, 0.62, 1], [1, 2.1, 6.5]));
 
     /* ── Vertical alignment ────────────────────────────────────
        The canvas covers the whole sticky stage, so its centre sits
@@ -561,7 +748,7 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       /* Faded by colour, not alpha — the material is opaque. Lerping
          the shadow tone toward the page ground dissolves it with no
          blending, so no seams can appear. */
-      const strength = track(p, [0, 0.5, 0.78], [1, 0.72, 0]);
+      const strength = track(p, [0, MORPH[0], MORPH[0] + 0.2], [1, 1, 0]);
       groundMix.copy(groundLight).lerp(groundDark, tone);
       shadowMaterial.color
         .copy(shadowLight)
@@ -583,8 +770,8 @@ function Voxels({ progress }: { progress?: MotionValue<number> }) {
       />
       <instancedMesh
         ref={mesh}
-        args={[geometry, material, cells.length]}
-        count={cells.length - 1}
+        args={[geometry, material, flights.length]}
+        count={flights.length - 1}
         frustumCulled={false}
       >
         {/* Child of the instanced mesh, so it inherits the group's
