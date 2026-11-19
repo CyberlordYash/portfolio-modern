@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { EASE } from "@/components/ui/Reveal";
+import { signalLoaderDone } from "@/lib/loader-ready";
 
 const WORDS = [
   "Engineering",
@@ -72,6 +73,10 @@ export default function PageLoader() {
     };
   }, [reduce]);
 
+  useEffect(() => {
+    if (!visible) signalLoaderDone();
+  }, [visible]);
+
   const dark = index % 2 === 0;
 
   return (
@@ -82,9 +87,9 @@ export default function PageLoader() {
           aria-hidden
           className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
           style={{ background: dark ? "#000" : "#fff", color: dark ? "#fff" : "#000" }}
-          initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
-          exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
-          transition={{ duration: reduce ? 0.2 : 0.8, ease: EASE }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reduce ? 0.15 : 0.45, ease: EASE }}
         >
           <span
             className="text-center font-normal leading-none tracking-tight"

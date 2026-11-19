@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { EASE } from "@/components/ui/Reveal";
 import Streaks from "@/components/ui/Streaks";
+import { useLoaderDone } from "@/lib/loader-ready";
 /* Brand glyphs come from react-icons' Simple Icons set (already a
    dependency) rather than being hand-drawn here — one import, correct
    marks, and they track upstream when a brand refreshes its logo. */
@@ -70,6 +71,8 @@ const Hero = () => {
   const track = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState<string | null>(null);
   const [dark, setDark] = useState(false);
+  // Entrances hold until the page loader has gone, so they play on screen rather than behind it.
+  const ready = useLoaderDone();
 
   const { scrollYProgress } = useScroll({
     target: track,
@@ -272,7 +275,7 @@ const Hero = () => {
             <motion.span
               className="block"
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={ready ? { opacity: 1, y: 0 } : undefined}
               transition={{ duration: 1.3, ease: EASE }}
               /* Nudged inward far enough that the H crosses under the
                  mark's left edge. In em, so the overlap holds its
@@ -285,7 +288,7 @@ const Hero = () => {
             <motion.span
               className="block"
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={ready ? { opacity: 1, y: 0 } : undefined}
               transition={{ duration: 1.3, delay: 0.12, ease: EASE }}
               /* Mirrored: the S crosses under the mark's right edge. */
               style={{ translateX: "-0.24em", translateY: "0.15em" }}
@@ -329,7 +332,7 @@ const Hero = () => {
             <motion.span
               className="block self-start"
               initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={ready ? { opacity: 1, y: 0 } : undefined}
               transition={{ duration: 1.3, ease: EASE }}
               style={{ translateX: "-0.04em" }}
             >
@@ -339,7 +342,7 @@ const Hero = () => {
             <motion.span
               className="block self-end"
               initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={ready ? { opacity: 1, y: 0 } : undefined}
               transition={{ duration: 1.3, delay: 0.12, ease: EASE }}
               style={{ translateX: "0.04em" }}
             >
@@ -363,7 +366,7 @@ const Hero = () => {
         <motion.div
           className="pointer-events-none absolute inset-0 z-10"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={ready ? { opacity: 1 } : undefined}
           transition={{ duration: 1.4, delay: 0.3, ease: EASE }}
         >
           {/* Inner div carries the horizontal correction, not the
@@ -382,7 +385,7 @@ const Hero = () => {
           <motion.p
             className="display max-w-[22ch] text-balance"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={ready ? { opacity: 1, y: 0 } : undefined}
             transition={{ duration: 1, delay: 0.55, ease: EASE }}
             style={{ fontSize: "clamp(1.35rem, 2.6vw, 2.35rem)" }}
           >
@@ -422,7 +425,12 @@ const Hero = () => {
             Deliberately *not* faded out with the rest of the copy: it
             is the readout for the transition, so it has to survive
             the whole track. */}
-        <div className="shell relative z-40 mt-12 md:mt-16">
+        <motion.div
+          className="shell relative z-40 mt-12 md:mt-16"
+          initial={{ opacity: 0, y: 12 }}
+          animate={ready ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 1, delay: 0.75, ease: EASE }}
+        >
           {/* The scroll cue that used to sit on the right is gone. It
               told the reader to do the one thing a long page already
               invites, and it occupied the most valuable slot in the
@@ -482,7 +490,7 @@ const Hero = () => {
               ))}
             </ul>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
