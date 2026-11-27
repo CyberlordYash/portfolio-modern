@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
+import { easeInOut, shadedCube, track, usePrefersReducedMotion } from "./voxel";
 
 /* ══════════════════════════════════════════════════════════════════
    IMPOSSIBLE TRIBAR — assembled from cubes, disassembled by scroll
@@ -136,48 +137,6 @@ const FACE_PZ = 0.26;
 
 const INK_ON_LIGHT = "#3A3A41";
 const INK_ON_DARK = "#FFFFFF";
-
-/** Piecewise-linear sample of `stops` → `values`, clamped at both ends. */
-function track(p: number, stops: number[], values: number[]) {
-  if (p <= stops[0]) return values[0];
-  for (let i = 1; i < stops.length; i++) {
-    if (p <= stops[i]) {
-      const t = (p - stops[i - 1]) / (stops[i] - stops[i - 1]);
-      return values[i - 1] + (values[i] - values[i - 1]) * t;
-    }
-  }
-  return values[values.length - 1];
-}
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-  return reduced;
-}
-
-/* BoxGeometry emits faces in a fixed order — +X, −X, +Y, −Y, +Z, −Z,
-   four vertices each — so a value can be written per face by index
-   without inspecting normals. Hidden faces take their opposite's
-   value; they are never rasterised. */
-function shadedCube() {
-  const geo = new THREE.BoxGeometry(1, 1, 1);
-  const perFace = [FACE_PX, FACE_PX, FACE_PY, FACE_PY, FACE_PZ, FACE_PZ];
-  const colors = new Float32Array(24 * 3);
-  for (let f = 0; f < 6; f++) {
-    for (let v = 0; v < 4; v++) {
-      const i = (f * 4 + v) * 3;
-      colors[i] = colors[i + 1] = colors[i + 2] = perFace[f];
-    }
-  }
-  geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  return geo;
-}
 
 /* The accent cube's skin: the same grainy blue mesh as .flow-panel
    in globals.css, painted once into a canvas. Soft pools of the one
@@ -467,7 +426,6 @@ function sampleRoute(r: ReturnType<typeof buildRoutes>[number], d: number, out: 
   return out.copy(r.pts[i - 1]).lerp(r.pts[i], (d - r.cum[i - 1]) / seg);
 }
 
-const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 function Rig() {
   const { camera, size } = useThree();
@@ -566,7 +524,7 @@ function Voxels({
     [],
   );
   const packetPos = useMemo(() => new THREE.Vector3(), []);
-  const geometry = useMemo(shadedCube, []);
+  const geometry = useMemo(() => shadedCube(FACE_PX, FACE_PY, FACE_PZ), []);
   const material = useMemo(
     () =>
       new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true }),

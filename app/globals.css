@@ -2084,3 +2084,28 @@ html,
 .logo-tile {
   background: var(--paper);
 }
+
+/* ══ TRAVELLING SPARK ════════════════════════════════════════════
+   components/three/SparkTravel sets `data-spark-active` on whichever
+   stop the spark is parked on. The stop's `.spark-hl` text takes the
+   accent; rows also slide in a touch behind an accent rule. */
+.spark-stop .spark-hl {
+  transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.spark-stop[data-spark-active] .spark-hl {
+  color: rgb(var(--accent-rgb));
+}
+.spark-row {
+  transition: padding-left 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: inset 0 0 0 0 rgb(var(--accent-rgb));
+}
+.spark-row[data-spark-active] {
+  padding-left: 14px;
+  box-shadow: inset 2px 0 0 0 rgb(var(--accent-rgb));
+}
+@media (prefers-reduced-motion: reduce) {
+  .spark-row {
+    transition: none;
+  }
+}

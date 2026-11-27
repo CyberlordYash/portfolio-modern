@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "framer-motion";
 import { EASE, Mask, Rise } from "@/components/ui/Reveal";
 
 // Dark ink on clay: white on #D97757 is ~3:1, too low for the mono body copy.
@@ -11,56 +17,39 @@ const INK_SOFT = "rgba(20,20,19,0.72)";
 const ITALIC = "#FAF9F5";
 const RULE = "rgba(20,20,19,0.22)";
 
-const RAYS = Array.from({ length: 12 }, (_, i) => ({
-  angle: i * 30,
-  len: i % 2 === 0 ? 44 : 32,
-}));
-
-function Spark({ live }: { live: boolean }) {
-  return (
-    <motion.svg
-      viewBox="0 0 100 100"
-      className="h-16 w-16 shrink-0 md:h-20 md:w-20"
-      aria-hidden
-      animate={live ? { rotate: 360 } : { rotate: 0 }}
-      transition={live ? { duration: 36, repeat: Infinity, ease: "linear" } : { duration: 0 }}
-    >
-      {RAYS.map((r, i) => (
-        <g key={r.angle} transform={`rotate(${r.angle} 50 50)`}>
-          <motion.line
-            x1={50}
-            y1={50}
-            x2={50}
-            y2={50 - r.len}
-            stroke={INK}
-            strokeWidth={7}
-            strokeLinecap="round"
-            style={{ originX: 0.5, originY: 1 }}
-            animate={live ? { scaleY: [1, 0.45, 1] } : { scaleY: 1 }}
-            transition={
-              live
-                ? { duration: 1.8, repeat: Infinity, delay: i * 0.15, ease: EASE }
-                : { duration: 0 }
-            }
-          />
-        </g>
-      ))}
-    </motion.svg>
-  );
-}
+/* Share of the slot's run-in (viewport bottom → the reading line,
+   where the spark departs) over which the chips are walked. */
+const SKILL_SCROLL: [number, number] = [0.08, 0.92];
 
 const AIEngineering = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const slot = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
   const reduce = useReducedMotion();
   const live = inView && !reduce;
   const [step, setStep] = useState(0);
+  const [skill, setSkill] = useState(-1);
 
   useEffect(() => {
     if (!live) return;
     const t = setInterval(() => setStep((s) => (s + 1) % WORKFLOW.length), 1600);
     return () => clearInterval(t);
   }, [live]);
+
+  /* Scroll walks the skills while the spark is still home: it lights
+     the ray belonging to the active chip (read off data-spark-skill),
+     and the walk finishes exactly as the slot reaches the reading line
+     at 45% — the moment the spark leaves to travel through the stack.
+     Keep 0.45 in step with LINE in SparkTravel.tsx. */
+  const { scrollYProgress } = useScroll({
+    target: slot,
+    offset: ["center end", "center 0.45"],
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const [a, b] = SKILL_SCROLL;
+    const next = v < a ? -1 : Math.min(TOOLS.length - 1, Math.floor(((v - a) / (b - a)) * TOOLS.length));
+    setSkill((s) => (s === next ? s : next));
+  });
 
   return (
     <Rise>
@@ -82,7 +71,6 @@ const AIEngineering = () => {
                 Agentic engineering
               </span>
             </div>
-            <Spark live={live} />
           </div>
 
           <h3
@@ -105,13 +93,56 @@ const AIEngineering = () => {
           </Rise>
 
           <Rise delay={0.22}>
-            <p className="mt-6 font-mono text-[0.6875rem] uppercase tracking-[0.16em]">
-              {TOOLS.join("  ·  ")}
-            </p>
+            <ul className="mt-6 flex flex-wrap gap-x-1 gap-y-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em]">
+              {TOOLS.map((t, i) => {
+                const on = i === skill;
+                return (
+                  <li
+                    key={t}
+                    className="relative border px-2.5 py-1.5 transition-colors duration-500"
+                    style={{ borderColor: on ? INK : RULE, color: on ? PANEL : INK }}
+                  >
+                    {on && (
+                      <motion.span
+                        layoutId="ai-skill"
+                        className="absolute inset-0"
+                        style={{ background: INK }}
+                        transition={{ duration: 0.55, ease: EASE }}
+                      />
+                    )}
+                    <span className="relative">{t}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </Rise>
         </div>
 
         <div className="lg:col-span-4 lg:col-start-9">
+          {/* Home of the travelling spark (components/three/SparkTravel). */}
+          <div
+            ref={slot}
+            data-spark-anchor="slot"
+            data-spark-skill={skill}
+            className="-mx-2 h-60 md:h-72"
+            aria-hidden
+          />
+          <div
+            className="mb-8 mt-2 flex items-baseline justify-between border-t pt-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em]"
+            style={{ borderColor: RULE }}
+          >
+            <span style={{ color: INK_SOFT }}>
+              {String(Math.max(0, skill) + 1).padStart(2, "0")} / {String(TOOLS.length).padStart(2, "0")}
+            </span>
+            <motion.span
+              key={skill}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              {TOOLS[Math.max(0, skill)]}
+            </motion.span>
+          </div>
           <Rise delay={0.12}>
             <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em]">
               The workflow

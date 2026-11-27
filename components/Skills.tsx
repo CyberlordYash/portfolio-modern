@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import dynamic from "next/dynamic";
+import { useInView } from "framer-motion";
 import { Mask, Rise, Draw } from "@/components/ui/Reveal";
 import AIEngineering from "@/components/AIEngineering";
 import { SiTerraform, SiAnsible, SiGo, SiCplusplus } from "react-icons/si";
@@ -22,23 +24,39 @@ import { SiTerraform, SiAnsible, SiGo, SiCplusplus } from "react-icons/si";
    single most useful thing this section can communicate.
 ══════════════════════════════════════════════════════════════════ */
 
-const Skills = () => (
-  <div className="flex flex-col gap-24 md:gap-32">
+/* The AI panel's spark leaves home and travels down through the stack,
+   parking on each `data-spark-anchor` in turn and highlighting it. A
+   fixed overlay, loaded lazily and mounted only while this block is
+   near the viewport. */
+const SparkTravel = dynamic(() => import("@/components/three/SparkTravel"), {
+  ssr: false,
+});
+
+const Skills = () => {
+  const region = useRef<HTMLDivElement>(null);
+  const near = useInView(region, { margin: "300px" });
+  return (
+  <div ref={region} className="flex flex-col gap-24 md:gap-32">
+    {near && <SparkTravel />}
     <AIEngineering />
 
     {/* ══ Core ═══════════════════════════════════════════════════ */}
     <div className="grid grid-cols-1 gap-x-10 gap-y-14 md:grid-cols-2">
       {CORE.map((c, i) => (
-        <div key={c.name}>
+        <div key={c.name} data-spark-anchor className="spark-stop">
           <Rise delay={i * 0.06}>
-            <span className="micro">{c.label}</span>
+            <span className="micro spark-hl">{c.label}</span>
           </Rise>
 
-          <div className="mt-4 flex items-center gap-[0.35em]" style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}>
+          <div
+            data-spark-point
+            className="mt-4 flex items-center gap-[0.35em]"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}
+          >
             <Rise delay={0.08 + i * 0.06} y={10}>
               <c.Icon aria-hidden className="h-[0.9em] w-[0.9em]" style={{ color: c.color }} />
             </Rise>
-            <h3 className="display" style={{ fontSize: "1em" }}>
+            <h3 className="display spark-hl" style={{ fontSize: "1em" }}>
               <Mask delay={i * 0.06}>{c.name}</Mask>
             </h3>
           </div>
@@ -56,14 +74,16 @@ const Skills = () => (
         One compact row of vendor marks — the one place brand marks
         are kept. Terraform keeps its purple; Ansible's mark is
         monochrome anyway, so it takes the ink. */}
-    <Rise className="-mt-12 flex flex-wrap items-center gap-x-10 gap-y-4 md:-mt-20">
-      <span className="micro">Infrastructure as code</span>
+    <Rise className="-mt-12 md:-mt-20">
+      <div data-spark-anchor className="spark-stop flex flex-wrap items-center gap-x-10 gap-y-4">
+      <span className="micro spark-hl">Infrastructure as code</span>
       {IAC.map((t) => (
         <span key={t.name} className="flex items-center gap-3">
           <t.Icon aria-hidden className="h-7 w-7 shrink-0" style={{ color: t.color }} />
-          <span className="h3 text-ink" style={{ fontSize: "1.375rem" }}>{t.name}</span>
+          <span className="h3 text-ink spark-hl" style={{ fontSize: "1.375rem" }}>{t.name}</span>
         </span>
       ))}
+      </div>
     </Rise>
 
     {/* ══ Everything else ════════════════════════════════════════
@@ -80,15 +100,18 @@ const Skills = () => (
       <dl className="border-t border-rule">
         {DOMAINS.map((d, i) => (
           <Rise key={d.id} delay={i * 0.04}>
-            <div className="grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule py-6 md:grid-cols-12 md:py-7">
-              <dt className="micro md:col-span-4">{d.label}</dt>
+            <div
+              data-spark-anchor
+              className="spark-stop spark-row grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule py-6 md:grid-cols-12 md:py-7"
+            >
+              <dt data-spark-point className="micro spark-hl md:col-span-4">{d.label}</dt>
               <dd className="md:col-span-8">
                 <ul className="flex flex-wrap gap-x-5 gap-y-2">
                   {d.techs.map((t) => (
                     <li
                       key={t.name}
                       title={t.note}
-                      className="text-[0.9375rem] tracking-[-0.01em] text-ink"
+                      className="spark-hl text-[0.9375rem] tracking-[-0.01em] text-ink"
                     >
                       {t.name}
                     </li>
@@ -101,7 +124,8 @@ const Skills = () => (
       </dl>
     </div>
   </div>
-);
+  );
+};
 
 /* ─── content ─────────────────────────────────────────────────────
    The explanatory `note` is retained as a title attribute. */
