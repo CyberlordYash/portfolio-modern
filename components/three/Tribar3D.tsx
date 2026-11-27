@@ -34,16 +34,16 @@ import * as THREE from "three";
 
    ── The scroll timeline ──
      0.00 → 0.12  the impossible triangle, turning about the view axis.
-     0.12 → 0.45  every block flies a staggered arc, left to right along
-                  the data flow, into a small system architecture:
-                  clients → gateway → three services → event log →
-                  cache + database, joined by pipes. The liar cube lands
-                  as the gateway.
-     0.45 → 0.62  the architecture holds and is interactive: requests
-                  flow along the pipes, hovering (or tapping) a component
-                  lifts it and lights its links. Until the
-                  visitor touches it, the highlight walks the components
-                  on its own.
+     0.12 → 0.45  every block flies a staggered arc and the cluster
+                  stacks itself bottom-up: three server racks (plinth,
+                  recessed frame, rack units with drive bays and status
+                  LEDs, lid) fed by an overhead cable tray. The liar cube
+                  lands as the blue 2U core in the centre rack.
+     0.45 → 0.62  the cluster is live: LEDs flicker with disk activity,
+                  packets run the tray and drop into each rack, and
+                  hovering (or tapping) a rack lifts it, lights its LEDs
+                  solid and slides one server out on its rails. Until the
+                  visitor touches it, the focus walks the racks on its own.
      0.62 → 0.97  data floods in and the servers fill with light, then
                   fracture into their blocks, which scatter and fade.
 
@@ -75,26 +75,46 @@ const LIVE = [MORPH[1] - 0.02, MORPH[1] + 0.02, 0.62, 0.65]; // interactive wind
 const RECEIVE = [0.62, 0.75];
 const CRACK = [0.74, 0.82];
 const SCATTER = [0.8, 0.97];
-const ARCH_SCALE = 0.47; // lattice → mesh units, so it reads at the tribar's size
+const ARCH_SCALE = 0.7; // lattice → mesh units, so the cluster reads at the tribar's size
 
 const ACCENT_ON_LIGHT = "#1A32FF";
 const ACCENT_ON_DARK = "#687CFF";
 const PACKET_SPEED = 5.5; // lattice units per second
-const AUTO_STEP = 2.2; // seconds per component in the idle walk
+const AUTO_STEP = 2.2; // seconds per rack in the idle walk
 
-/* Components: clients, gateway, three services, Kafka, Redis, Postgres.
-   Indices are referenced by the builder and ROUTES. */
-const NODE_COUNT = 8;
+/* ── The server cluster ────────────────────────────────────────────
+   Three racks in a row along Z, fronts facing +X so the LED faces sit
+   on the mid-tone plane the camera sees squarely. The centre rack is
+   taller and carries the core: a 2U unit that the liar cube becomes.
+   The overhead trunk enters from far off along −Z — which projects
+   up and to the right — so it arrives out of the top-right corner of
+   the frame, runs over the row and drops into each rack. It is left
+   out of the centring so the racks, not the cable, sit mid-frame. */
+const NODE_COUNT = 3;
+const FEED_Z = -42; // far end of the trunk, well past the viewport corner
+const ROUTE_START_Z = -30; // packets appear already off-screen
+const RACK_Z = [-2.7, 0, 2.7];
+const RACK_UNITS = [7, 10, 7];
+const UH = 0.44; // rack-unit pitch
+const UGAP = 0.07; // seam between units — shows the recessed frame
+const RD = 2.2; // rack depth (X)
+const RW = 2.0; // rack width (Z)
+const PLINTH = 0.26;
+const CAP = 0.16;
+const CORE_UNIT = 5; // centre rack, first unit of the 2U core
+const SLED_UNIT = [3, 2, 3]; // the unit that slides out when a rack is focused
+const TRAY_Y = PLINTH + RACK_UNITS[1] * UH + CAP + 0.95;
+const TRAY_END_Z = RACK_Z[2] + 0.55;
+const rackTop = (r: number) => PLINTH + RACK_UNITS[r] * UH + CAP;
 
-/* Request paths for the packets, as lattice (x, z) waypoints at pipe
-   height. Each passes through the gateway, one service and Kafka. */
-const ROUTES: [number, number][][] = [
-  [[-6.6, 0], [-1.5, 0], [-1.5, -4], [4, -4], [4, -2.5], [6.6, -2.5]],
-  [[-6.6, 0], [-1.5, 0], [4, 0], [4, 2.5], [6.6, 2.5]],
-  [[-6.6, 0], [-1.5, 0], [-1.5, 4], [4, 4], [4, 2.5], [6.6, 2.5]],
-];
-const PIPE_Y = 0.22;
-const PACKETS_PER_ROUTE = 3;
+/* One request path per rack: in along the trunk from off-screen, then
+   down the drop into the rack's lid. Lattice coordinates. */
+const ROUTES: [number, number, number][][] = RACK_Z.map((z, r) => [
+  [0, TRAY_Y, ROUTE_START_Z],
+  [0, TRAY_Y, z],
+  [0, rackTop(r), z],
+]);
+const PACKETS_PER_ROUTE = 6;
 
 /* ── Face values ───────────────────────────────────────────────────
    Relative shades multiplied by the per-instance tint. +Y (top) full,
@@ -116,82 +136,6 @@ const FACE_PZ = 0.26;
 
 const INK_ON_LIGHT = "#3A3A41";
 const INK_ON_DARK = "#FFFFFF";
-
-/* Contact shadow. Not a real light — a flat offset copy of the
-   geometry, which is all an orthographic scene with no lighting can
-   honestly do. */
-const SHADOW_ON_LIGHT = "#C9C9CE";
-const SHADOW_ON_DARK = "#202124";
-
-/* The page grounds, so the shadow can be rendered fully opaque and
-   still fade: instead of dropping alpha, its colour is lerped toward
-   the ground it sits on. See the material note for why opacity is off
-   the table. */
-const GROUND_LIGHT = "#F2F2F3";
-const GROUND_DARK = "#0C0C0D";
-
-
-/* The shadow is a Y — the initial — laid flat on the ground.
-
-   ── Why a Y falls out of this geometry for free ──
-   With the camera on the (1,1,1) axis, the ground plane's own axes
-   project to screen as:
-
-       −X  →  up-left        −Z  →  up-right
-       +X  →  down-right     +Z  →  down-left
-
-   so +X+Z together point straight down. Two arms along −X and −Z
-   plus a stem along the +X+Z diagonal is therefore a Y on screen,
-   built from three of the object's own lattice directions. It is the
-   same cube vocabulary as the tribar, not a foreign shape dropped
-   underneath it.
-
-   ── How it moves ──
-   It turns on world Y with the same scroll-driven angle as the tribar
-   above, so it sweeps the floor as the object spins — which is what
-   makes it read as that object's shadow rather than a separate mark
-   parked underneath.
-
-   Only world Y, never the object's full rotation: a shadow stays flat
-   on the ground. The letterform is therefore cleanest near the
-   resting angle and reads as three swept arms further round, which is
-   the right trade for the motion. */
-const SHADOW_SCALE = 0.52;
-
-const Y_ARM = 5; // cubes per upper arm
-const Y_STEM = 10; // steps down the diagonal stem
-/* The stem runs at 45° to the lattice, so a full-unit step would leave
-   the axis-aligned cubes touching only at their corners. Half-steps
-   overlap them into a solid bar. */
-const Y_STEM_STEP = 0.5;
-
-/* Screen displacement. Screen-left is (-1,0,1)/√2 for a camera on the
-   (1,1,1) axis and world −Y projects to screen-down, so this throws
-   the shadow down and to the left — a key light from the upper right.
-
-   Magnitude matters more than direction here. At 3.4 the shadow
-   cleared the object entirely and read as a second figure standing
-   beside it; a cast shadow should stay in contact with the thing
-   casting it and be mostly hidden behind it. 1.9 on a ~6-unit object
-   leaves roughly a third of it showing at the lower left, which is
-   what the reference does. */
-/* Mostly downward, so the shadow pools beneath the object rather than
-   standing beside it. The Y component lands it near the base of the
-   figure — with the squash above, the shadow has almost no height of
-   its own, so its centre needs to sit where the object's floor is. */
-/* Where the ground sits relative to the object's centre, plus a lean
-   down-left for a key light from the upper right. The Y component
-   places the plane at the base of the figure — the lattice is six
-   units tall and centred, so roughly three below. */
-const SHADOW_OFFSET = new THREE.Vector3(-1.1, -3.3, 1.1);
-
-/* Pure depth displacement, away from the camera along the view axis.
-   Under orthographic projection this moves nothing on screen — it
-   exists only so the shadow sits definitively behind the object in
-   the depth buffer, which is what lets it write depth (see below). */
-const SHADOW_DEPTH_PUSH = new THREE.Vector3(-1, -1, -1)
-  .normalize()
-  .multiplyScalar(7);
 
 /** Piecewise-linear sample of `stops` → `values`, clamped at both ends. */
 function track(p: number, stops: number[], values: number[]) {
@@ -275,21 +219,6 @@ function flowTexture() {
   return tex;
 }
 
-/** Cube centres forming a Y in the ground plane. See the note on
-    SHADOW_SCALE for why these three directions read as a letter. */
-function buildYCells() {
-  const cells: THREE.Vector3[] = [new THREE.Vector3(0, 0, 0)];
-  for (let i = 1; i <= Y_ARM; i++) {
-    cells.push(new THREE.Vector3(-i, 0, 0)); // up-left on screen
-    cells.push(new THREE.Vector3(0, 0, -i)); // up-right on screen
-  }
-  for (let i = 1; i <= Y_STEM; i++) {
-    const d = i * Y_STEM_STEP;
-    cells.push(new THREE.Vector3(d, 0, d)); // straight down on screen
-  }
-  return cells;
-}
-
 /** The sixteen lattice cells, with the arm axis each one travels along
     when the figure comes apart. */
 function buildCells() {
@@ -318,83 +247,114 @@ function buildCells() {
   return cells;
 }
 
-type ArchKind = "gateway" | "node" | "pipe" | "queue";
+type ArchKind = "core" | "unit" | "frame" | "led" | "bay" | "pipe";
 type ArchCell = {
   pos: THREE.Vector3;
   size: THREE.Vector3;
   kind: ArchKind;
-  node: number; // component index, -1 for pipes
-  links: number[]; // components a pipe joins
+  node: number; // rack index, -1 for cabling
+  links: number[]; // racks a pipe feeds
+  sled: boolean; // slides out of the rack when focused
+  feed?: boolean; // the off-screen run of the trunk, ignored when centring
+  phase: number; // LED blink phase
+  rate: number; // LED blink rate
 };
 
-/* Base shade per part, multiplied into the ink tint, so components,
-   the log and the pipes read as distinct materials. */
-const SHADE: Record<ArchKind, number> = { gateway: 1, node: 1, queue: 0.82, pipe: 0.5 };
+/* Base shade per part, multiplied into the ink tint, so chassis, frame,
+   drive bays and cabling read as distinct materials. */
+const SHADE: Record<ArchKind, number> = {
+  core: 1,
+  unit: 1,
+  frame: 0.4,
+  led: 1,
+  bay: 0.55,
+  pipe: 0.5,
+};
 
-/** The architecture's cells in lattice units. Index 0 is the gateway,
-    which the liar flies to. */
+/** The cluster's cells in lattice units. Index 0 is the core, which the
+    liar flies to. */
 function buildArchCells(raw = false): ArchCell[] {
   const out: ArchCell[] = [];
   const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
-  const add = (pos: THREE.Vector3, size: THREE.Vector3, kind: ArchKind, node: number, links: number[] = []) =>
-    out.push({ pos, size, kind, node, links });
+  let seed = 0;
+  const hash = () => Math.abs(Math.sin(++seed * 91.3458) * 47453.5453) % 1;
+  const add = (
+    pos: THREE.Vector3,
+    size: THREE.Vector3,
+    kind: ArchKind,
+    node: number,
+    extra: Partial<Pick<ArchCell, "links" | "sled">> = {},
+  ) =>
+    out.push({
+      pos,
+      size,
+      kind,
+      node,
+      links: extra.links ?? [],
+      sled: extra.sled ?? false,
+      phase: hash() * Math.PI * 2,
+      rate: 1.4 + hash() * 5,
+    });
+  const unitY0 = (u: number) => PLINTH + u * UH + UGAP / 2;
 
-  // A footprint w×d of stacked layers; the gaps between layers read as
-  // rack units / disc platters.
-  const block = (node: number, cx: number, cz: number, w: number, d: number, layers: number, lh: number, gap: number) => {
-    for (let ix = 0; ix < w; ix++)
-      for (let iz = 0; iz < d; iz++)
-        for (let l = 0; l < layers; l++)
-          add(
-            v(cx + ix - (w - 1) / 2, l * lh + (lh - gap) / 2, cz + iz - (d - 1) / 2),
-            v(1, lh - gap, 1),
-            "node",
-            node,
-          );
-  };
-  // Axis-aligned pipe from (ax, az) to (bx, bz), split into ~unit cells.
-  const pipe = (links: number[], ax: number, az: number, bx: number, bz: number) => {
-    const len = Math.abs(bx - ax) + Math.abs(bz - az);
-    const n = Math.max(1, Math.round(len));
-    const alongX = Math.abs(bx - ax) > 0;
+  // The core — 2U, flow-textured, standing proud of the rack. Must be first.
+  const coreH = 2 * UH - UGAP;
+  add(v(0.06, unitY0(CORE_UNIT) + coreH / 2, RACK_Z[1]), v(RD + 0.12, coreH, RW), "core", 1);
+
+  // Axis-aligned cable from a to b, split into short cells.
+  const pipe = (links: number[], a: THREE.Vector3, b: THREE.Vector3, w = 0.16, step = 0.8) => {
+    const d = b.clone().sub(a);
+    const len = d.length();
+    const n = Math.max(1, Math.round(len / step));
     for (let k = 0; k < n; k++) {
       const t = (k + 0.5) / n;
-      add(
-        v(ax + (bx - ax) * t, PIPE_Y, az + (bz - az) * t),
-        alongX ? v(len / n, 0.18, 0.18) : v(0.18, 0.18, len / n),
-        "pipe",
-        -1,
-        links,
+      const size = v(
+        Math.abs(d.x) > 1e-6 ? len / n : w,
+        Math.abs(d.y) > 1e-6 ? len / n : w * 0.7,
+        Math.abs(d.z) > 1e-6 ? len / n : w,
       );
+      add(a.clone().lerp(b, t), size, "pipe", -1, { links });
     }
   };
 
-  add(v(-3.2, 0.42, 0), v(1.8, 0.84, 2.6), "gateway", 1); // liar
+  RACK_Z.forEach((rz, r) => {
+    const n = RACK_UNITS[r];
+    const body = n * UH;
+    // Plinth, recessed frame (shows through the seams), lid.
+    add(v(0, PLINTH / 2, rz), v(RD + 0.22, PLINTH, RW + 0.22), "frame", r);
+    add(v(-0.18, PLINTH + body / 2, rz), v(RD - 0.36, body, RW - 0.3), "frame", r);
+    add(v(0, PLINTH + body + CAP / 2, rz), v(RD + 0.12, CAP, RW + 0.12), "unit", r);
 
-  for (const z of [-1.3, 0, 1.3]) add(v(-7, 0.4, z), v(0.8, 0.8, 0.8), "node", 0);
-  pipe([0, 1], -6.6, 0, -4.1, 0);
+    for (let u = 0; u < n; u++) {
+      if (r === 1 && (u === CORE_UNIT || u === CORE_UNIT + 1)) continue;
+      const sled = u === SLED_UNIT[r];
+      const h = UH - UGAP;
+      const y = unitY0(u) + h / 2;
+      add(v(0, y, rz), v(RD, h, RW), "unit", r, { sled });
+      // Drive-bay strip and two status LEDs on the front face.
+      const fx = RD / 2;
+      add(v(fx + 0.02, y, rz + 0.3), v(0.05, h * 0.5, RW * 0.48), "bay", r, { sled });
+      add(v(fx + 0.04, y, rz - RW / 2 + 0.28), v(0.08, h * 0.32, 0.16), "led", r, { sled });
+      add(v(fx + 0.04, y, rz - RW / 2 + 0.52), v(0.08, h * 0.32, 0.16), "led", r, { sled });
+    }
 
-  pipe([1, 2, 3, 4], -2.3, 0, -1.5, 0);
-  pipe([1, 2], -1.5, 0, -1.5, -4);
-  pipe([1, 4], -1.5, 0, -1.5, 4);
-  const services: [number, number][] = [[2, -4], [3, 0], [4, 4]];
-  for (const [node, z] of services) {
-    pipe([1, node], -1.5, z, 0, z);
-    block(node, 1, z, 2, 2, 3, 0.62, 0.09);
-    pipe([node, 5], 2, z, 3.45, z);
-  }
+    // Drop from the tray into this rack's lid.
+    pipe([r], v(0, TRAY_Y, rz), v(0, rackTop(r), rz));
+  });
 
-  for (let z = -4; z <= 4; z++) add(v(4, 0.26, z), v(1.1, 0.52, 0.84), "queue", 5);
-
-  pipe([5, 6], 4.55, -2.5, 6.5, -2.5);
-  pipe([5, 7], 4.55, 2.5, 6.5, 2.5);
-  block(6, 7.5, -2.5, 2, 2, 2, 0.5, 0.08);
-  block(7, 7.5, 2.5, 2, 2, 4, 0.55, 0.1);
+  // Overhead trunk over the row, capped past the last rack.
+  const trayStart = RACK_Z[0] - RW / 2 - 0.4;
+  pipe([], v(0, TRAY_Y, trayStart), v(0, TRAY_Y, TRAY_END_Z), 0.24);
+  add(v(0, TRAY_Y, TRAY_END_Z + 0.06), v(0.34, 0.24, 0.12), "pipe", -1);
+  // Its run in from the corner: few long cells, excluded from centring.
+  const inStart = out.length;
+  pipe([], v(0, TRAY_Y, FEED_Z), v(0, TRAY_Y, trayStart), 0.24, 3);
+  for (let i = inStart; i < out.length; i++) out[i].feed = true;
 
   if (raw) return out;
   // Centre on the bounding box and bring down to mesh units.
   const box = new THREE.Box3();
-  out.forEach((c) => box.expandByPoint(c.pos));
+  out.forEach((c) => !c.feed && box.expandByPoint(c.pos));
   const centre = box.getCenter(new THREE.Vector3());
   out.forEach((c) => c.pos.sub(centre).multiplyScalar(ARCH_SCALE));
   return out;
@@ -403,7 +363,7 @@ function buildArchCells(raw = false): ArchCell[] {
 /** Centre of the uncentred lattice, for route waypoints. */
 function archCentre() {
   const box = new THREE.Box3();
-  buildArchCells(true).forEach((c) => box.expandByPoint(c.pos));
+  buildArchCells(true).forEach((c) => !c.feed && box.expandByPoint(c.pos));
   return box.getCenter(new THREE.Vector3());
 }
 
@@ -414,6 +374,9 @@ type Flight = {
   kind: ArchKind;
   node: number;
   links: number[];
+  sled: boolean;
+  phase: number;
+  rate: number;
   arc: THREE.Vector3; // outward bulge of the flight path
   delay: number; // 0..1 share of STAGGER
   spin: THREE.Vector3; // wobble axis
@@ -450,22 +413,36 @@ function buildFlights(src: THREE.Vector3[], liarIdx: number): Flight[] {
     owner[j] = best;
   });
 
-  const xs = D.map((c) => c.pos.x);
-  const minX = Math.min(...xs);
-  const spanX = Math.max(...xs) - minX || 1;
+  const ys = D.map((c) => c.pos.y);
+  const minY = Math.min(...ys);
+  const spanY = Math.max(...ys) - minY || 1;
   const flights: Flight[] = D.map((cell, j) => {
     const from = S[owner[j]];
     const to = cell.pos;
     const mid = from.clone().add(to).multiplyScalar(0.5);
     const arc =
       mid.lengthSq() > 1e-4 ? mid.normalize().multiplyScalar(1.6) : new THREE.Vector3(0, 1.6, 0);
-    // Assembles along the data flow — clients first, storage last — with
-    // a little hash so a column doesn't move as one slab.
+    // Racks stack bottom-up, unit by unit, with a little hash so a
+    // layer doesn't land as one slab.
     const h = Math.abs(Math.sin(j * 12.9898) * 43758.5453) % 1;
-    const delay = Math.min(1, ((to.x - minX) / spanX) * 0.75 + h * 0.25);
+    const delay = Math.min(1, ((to.y - minY) / spanY) * 0.8 + h * 0.2);
     const spin = new THREE.Vector3(h - 0.5, 1, 0.5 - h).normalize();
     const out = to.lengthSq() > 1e-4 ? to.clone().normalize() : new THREE.Vector3(0, 1, 0);
-    return { from, to, size: cell.size, kind: cell.kind, node: cell.node, links: cell.links, arc, delay, spin, out };
+    return {
+      from,
+      to,
+      size: cell.size,
+      kind: cell.kind,
+      node: cell.node,
+      links: cell.links,
+      sled: cell.sled,
+      phase: cell.phase,
+      rate: cell.rate,
+      arc,
+      delay,
+      spin,
+      out,
+    };
   });
   const [liar] = flights.splice(0, 1);
   flights.push(liar);
@@ -476,7 +453,7 @@ function buildFlights(src: THREE.Vector3[], liarIdx: number): Flight[] {
 function buildRoutes() {
   const c = archCentre();
   return ROUTES.map((r) => {
-    const pts = r.map(([x, z]) => new THREE.Vector3(x, PIPE_Y, z).sub(c).multiplyScalar(ARCH_SCALE));
+    const pts = r.map(([x, y, z]) => new THREE.Vector3(x, y, z).sub(c).multiplyScalar(ARCH_SCALE));
     const cum = [0];
     for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i].distanceTo(pts[i - 1]));
     return { pts, cum, len: cum[cum.length - 1] };
@@ -536,7 +513,6 @@ function Voxels({
   progress?: MotionValue<number>;
 }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
-  const shadow = useRef<THREE.InstancedMesh>(null);
   const reduced = usePrefersReducedMotion();
   const angle = useRef(BASE_ANGLE);
   const { camera, size, gl } = useThree();
@@ -546,7 +522,6 @@ function Voxels({
     () => buildFlights(cells.map((c) => c.pos), cells.length - 1),
     [cells],
   );
-  const yCells = useMemo(buildYCells, []);
   const routes = useMemo(buildRoutes, []);
 
   /* Interaction state lives in refs — it is read every frame. */
@@ -572,7 +547,7 @@ function Voxels({
         });
         c.divideScalar(own.length || 1);
         const dir = new THREE.Vector3(c.x, 0, c.z);
-        if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
+        if (dir.lengthSq() < 1e-2) dir.set(1, 0, 0); // the centre rack bursts toward the viewer
         dir.normalize();
         dir.y = 0.45;
         const h = Math.abs(Math.sin((n + 1) * 78.233) * 43758.5453) % 1;
@@ -611,35 +586,6 @@ function Voxels({
     [],
   );
 
-  /* The shadow shares the cube geometry but ignores its vertex colours
-     — it is one flat silhouette, not a shaded solid.
-
-     Fully opaque, which is the fix for the voxel seams showing
-     through it. Any translucent value lets sixteen overlapping cubes
-     blend against each other, so alpha compounds wherever they cross
-     and the internal cube boundaries print through the silhouette —
-     the clearest tell that it was a copy of the object rather than a
-     shadow of it. Adding depthWrite helped but could not fix the
-     coplanar faces where cubes meet exactly.
-
-     Opaque removes the problem at the source: no blending, so no
-     compounding, and the silhouette fills flat. It still fades — by
-     lerping its colour toward the page ground rather than by dropping
-     alpha, which is indistinguishable on screen and has no failure
-     mode.
-
-     Safe to write depth only because SHADOW_DEPTH_PUSH puts the whole
-     thing behind the object, where it can never win a depth test. */
-  const shadowMaterial = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        vertexColors: false,
-        transparent: false,
-        depthWrite: true,
-      }),
-    [],
-  );
-
   const viewAxis = useMemo(() => new THREE.Vector3(1, 1, 1).normalize(), []);
   // Any axis perpendicular to the view direction will open the figure;
   // this one keeps the separation broadly horizontal on screen.
@@ -653,50 +599,28 @@ function Voxels({
   const qTilt = useMemo(() => new THREE.Quaternion(), []);
   const qYaw = useMemo(() => new THREE.Quaternion(), []);
   const worldUp = useMemo(() => new THREE.Vector3(0, 1, 0), []);
+  // Screen-right for a camera on the (1,1,1) axis looking at the origin.
+  const screenRight = useMemo(() => new THREE.Vector3(1, 0, -1).normalize(), []);
 
   const inkLight = useMemo(() => new THREE.Color(INK_ON_LIGHT), []);
   const inkDark = useMemo(() => new THREE.Color(INK_ON_DARK), []);
-  const shadowLight = useMemo(() => new THREE.Color(SHADOW_ON_LIGHT), []);
-  const shadowDark = useMemo(() => new THREE.Color(SHADOW_ON_DARK), []);
-  const groundLight = useMemo(() => new THREE.Color(GROUND_LIGHT), []);
-  const groundDark = useMemo(() => new THREE.Color(GROUND_DARK), []);
-  const groundMix = useMemo(() => new THREE.Color(), []);
 
   const tint = useMemo(() => new THREE.Color(), []);
   const accentLight = useMemo(() => new THREE.Color(ACCENT_ON_LIGHT), []);
   const accentDark = useMemo(() => new THREE.Color(ACCENT_ON_DARK), []);
   const accent = useMemo(() => new THREE.Color(), []);
+  const accentHot = useMemo(() => new THREE.Color(), []);
   const scaleTmp = useMemo(() => new THREE.Vector3(), []);
-
-  /* The Y's cubes never move relative to one another, so their
-     matrices are written once on mount rather than every frame — only
-     the mesh-level position and scale change after this. */
-  useEffect(() => {
-    const sh = shadow.current;
-    if (!sh) return;
-    const centre = new THREE.Vector3();
-    yCells.forEach((c) => centre.add(c));
-    centre.divideScalar(yCells.length);
-
-    const tmp = new THREE.Object3D();
-    yCells.forEach((c, i) => {
-      tmp.position.copy(c).sub(centre);
-      tmp.updateMatrix();
-      sh.setMatrixAt(i, tmp.matrix);
-    });
-    sh.instanceMatrix.needsUpdate = true;
-  }, [yCells]);
 
   useEffect(
     () => () => {
       geometry.dispose();
       material.dispose();
-      shadowMaterial.dispose();
       liarMaterial.map?.dispose();
       liarMaterial.dispose();
       packetMaterial.dispose();
     },
-    [geometry, material, shadowMaterial, liarMaterial, packetMaterial],
+    [geometry, material, liarMaterial, packetMaterial],
   );
 
   useFrame((state, delta) => {
@@ -731,6 +655,12 @@ function Voxels({
     for (let n = 0; n < NODE_COUNT; n++)
       lift.current[n] += ((focus === n ? 1 : 0) - lift.current[n]) * k;
 
+    /* LEDs sit on the +X face, which the vertex shading halves, so
+       they are driven past 1 to land at full accent there — and their
+       tops clip toward white, which is what makes them read as lit. */
+    accentHot.copy(accent).multiplyScalar(1 / FACE_PX);
+    const now = state.clock.elapsedTime;
+
     // The last instance is the liar — the separate flow-textured mesh.
     for (let i = 0; i < flights.length - 1; i++) {
       const f = flights[i];
@@ -739,13 +669,23 @@ function Voxels({
       let glow: number;
       if (f.node >= 0) {
         const part = parts[f.node];
+        const lit = lift.current[f.node];
         // Fills bottom-up as data arrives; the fracture flashes it.
         const level = (f.to.y - part.base) / part.height;
-        const fill = Math.min(1, Math.max(0, (receive * 1.25 - level) * 4)) * 0.6;
-        glow = Math.max(lift.current[f.node] * 0.55, fill + crack * (1 - crack) * 1.2);
+        const fill = Math.min(1, Math.max(0, (receive * 1.25 - level) * 4));
+        if (f.kind === "led") {
+          // Disk-activity flicker; a focused rack goes solid; full racks blaze.
+          const blink = reduced ? 1 : Math.sin(now * f.rate + f.phase) > -0.3 ? 1 : 0.18;
+          glow = partMix * Math.max(blink, lit, fill);
+          if (glow > 0.001) tint.lerp(accentHot, Math.min(1, glow));
+          m.setColorAt(i, tint);
+          continue;
+        }
+        glow = Math.max(lit * 0.32, fill * 0.6 + crack * (1 - crack) * 1.2);
       } else {
-        // Pipes run hot while the servers are receiving.
-        glow = Math.max(Math.max(0, ...f.links.map((n) => lift.current[n])) * 0.9, receive * 0.85);
+        // Cables light for the rack they feed, and run hot while receiving.
+        const feed = f.links.length ? Math.max(...f.links.map((n) => lift.current[n])) : 0;
+        glow = Math.max(feed * 0.9, receive * 0.85);
       }
       if (glow > 0.001) tint.lerp(accent, Math.min(1, glow));
       m.setColorAt(i, tint);
@@ -778,7 +718,10 @@ function Voxels({
 
       if (f.node >= 0) {
         const part = parts[f.node];
-        dummy.position.y += lift.current[f.node] * 0.35 * ARCH_SCALE;
+        const lit = easeInOut(lift.current[f.node]);
+        dummy.position.y += lit * 0.3 * ARCH_SCALE;
+        // A focused rack slides one server out on its rails.
+        if (f.sled) dummy.position.x += lit * 1.1 * ARCH_SCALE;
         if (crack > 0) {
           // Each block's own way out: away from its component's centre,
           // biased along the component's direction from the middle.
@@ -829,7 +772,7 @@ function Voxels({
             sampleRoute(route, d, packetPos);
             dummy.position.copy(packetPos);
             dummy.quaternion.identity();
-            dummy.scale.setScalar(0.34 * ARCH_SCALE);
+            dummy.scale.setScalar(0.3 * ARCH_SCALE);
             dummy.updateMatrix();
             const i = r * PACKETS_PER_ROUTE + j;
             pk.setMatrixAt(i, dummy.matrix);
@@ -873,74 +816,22 @@ function Voxels({
        units through the current zoom so the offset stays constant in
        pixels at every viewport and through the scroll-driven scale. */
     const zoom = (camera as THREE.OrthographicCamera).zoom || 1;
-    m.position.y = (size.height * 0.11) / zoom;
-
-    /* ── Shadow ────────────────────────────────────────────────
-       A flat offset copy: same per-instance matrices, same rotation
-       and scale, displaced down-left in world space. With no lights
-       in the scene this is the only honest way to cast one, and it is
-       what keeps the object from floating against the ground.
-
-       The offset scales with the object so the apparent light
-       direction stays fixed as the mark grows through the scroll —
-       a constant offset would have the shadow slide under the object
-       and vanish. It fades out ahead of the object, since a shadow
-       outliving the thing casting it reads as a bug. */
-    const sh = shadow.current;
-    if (sh) {
-      const s = m.scale.x;
-
-      /* Turns with the object, on the same scroll-driven angle, so it
-         sweeps the ground as the tribar spins above it — the thing
-         that sells it as a cast shadow rather than a mark that
-         happens to sit underneath.
-
-         World Y only, not the object's full quaternion: a shadow
-         stays flat on the floor. Copying the tilt as well would stand
-         it up into a second solid, which is what an earlier version
-         did wrong.
-
-         The trade is that the Y is only a clean letterform near its
-         resting angle and reads as three swept arms elsewhere — worth
-         it for the motion. */
-      sh.position.set(
-        m.position.x + SHADOW_OFFSET.x * s + SHADOW_DEPTH_PUSH.x,
-        m.position.y + SHADOW_OFFSET.y * s + SHADOW_DEPTH_PUSH.y,
-        m.position.z + SHADOW_OFFSET.z * s + SHADOW_DEPTH_PUSH.z,
-      );
-      /* Relative to the resting angle, not absolute. The object starts
-         at BASE_ANGLE so that the tribar presents well; feeding that
-         same angle to the shadow rotated the Y about 16° off upright
-         before a single pixel had been scrolled, which tipped the stem
-         off vertical. Subtracting it zeroes the shadow at rest — a
-         true Y on load — while it still tracks every degree the
-         object turns afterwards. */
-      sh.rotation.set(0, angle.current - BASE_ANGLE, 0);
-      sh.scale.setScalar(s * SHADOW_SCALE);
-
-      /* Faded by colour, not alpha — the material is opaque. Lerping
-         the shadow tone toward the page ground dissolves it with no
-         blending, so no seams can appear. */
-      const strength = track(p, [0, MORPH[0], MORPH[0] + 0.2], [1, 1, 0]);
-      groundMix.copy(groundLight).lerp(groundDark, tone);
-      shadowMaterial.color
-        .copy(shadowLight)
-        .lerp(shadowDark, tone)
-        .lerp(groundMix, 1 - strength);
-      sh.visible = strength > 0.01;
-    }
+    /* Both framing corrections belong to the tribar sitting in the
+       name — the lift here and `.mark-offset`'s leftward shift on
+       desktop. The cluster stands alone in the frame, so they ease out
+       as it forms and it lands dead centre of the viewport. The CSS
+       shift can't be animated from here, so it is cancelled by moving
+       the object the same pixels right along the camera's screen axis. */
+    const centred = easeInOut(track(p, MORPH, [0, 1]));
+    const cssShift =
+      size.width >= 1024 ? Math.min(Math.max(38.4, size.width * 0.135), 288) * 0.6 : 0;
+    m.position
+      .set(0, ((size.height * 0.11) / zoom) * (1 - centred), 0)
+      .addScaledVector(screenRight, (cssShift * centred) / zoom);
   });
 
   return (
     <>
-      {/* Drawn first and explicitly ordered behind. A single flat mesh
-          now, not an instanced copy of the object. */}
-      <instancedMesh
-        ref={shadow}
-        args={[geometry, shadowMaterial, yCells.length]}
-        frustumCulled={false}
-        renderOrder={-1}
-      />
       <instancedMesh
         ref={mesh}
         args={[geometry, material, flights.length]}
@@ -950,7 +841,7 @@ function Voxels({
           if (!live.current || e.instanceId === undefined) return;
           e.stopPropagation();
           const n = flights[e.instanceId]?.node ?? -1;
-          hovered.current = n >= 0 ? n : (flights[e.instanceId]?.links[1] ?? null);
+          hovered.current = n >= 0 ? n : (flights[e.instanceId]?.links[0] ?? null);
           touched.current = true;
           gl.domElement.style.cursor = "pointer";
         }}
