@@ -163,7 +163,7 @@ const Hero = () => {
        screens of scrolling before any content arrives — tolerable with
        a mouse wheel, tedious with a thumb. The whole conversion still
        plays out, just over less distance. */
-    <div ref={track} className="relative h-[170vh] md:h-[240vh]">
+    <div ref={track} className="relative h-[420vh] md:h-[240vh]">
       <motion.div
         data-tone={dark ? "dark" : "light"}
         /* Measurable by the masthead's tone detector — the hero is the
